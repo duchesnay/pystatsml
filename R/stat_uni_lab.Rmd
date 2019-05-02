@@ -1,0 +1,228 @@
+---
+title: "Brain volumes study"
+---
+
+```{r setup}
+library(ggplot2)
+library(writexl)
+library(readxl)
+library(car)
+theme_set(theme_bw())
+```
+
+The study provides the brain volumes of grey matter (gm), white matter (wm) and cerebrospinal fluid) (csf) of 808 anatomical MRI scans.
+
+## Manipulate data
+
+Set the working directory within a directory called `brainvol` ; create 2 subdirectories: `data` that will contain downloaded data and `reports` for results of the analysis.
+
+```{r dirs}
+WD <- paste0(tempdir(), "/brainvol")
+dir.create(WD)
+dir.create(file.path(WD, "data"))
+dir.create(file.path(WD, "reports")) 
+setwd(WD)
+```
+
+Fetch data:
+
+- *Demographic data* `demo.csv` (columns: `participant_id`, `site`, `group`, `age`, `sex`) and tissue volume data: `group` is Control or Patient, `site` is the recruiting site.
+- *Gray matter volume* `gm.csv` (columns: `participant_id`, `session`, `gm_vol`)
+- *White matter volume* `wm.csv` (columns: `participant_id`, `session`, `wm_vol`)  
+- *Cerebrospinal Fluid* `csf.csv` (columns: `participant_id`, `session`, `csf_vol`)
+
+```{r download, cache = TRUE}
+base_url <- "https://raw.github.com/neurospin/pystatsml/master/datasets/brain_volumes/"
+files <- c("demo.csv", "gm.csv", "wm.csv", "csf.csv")
+dest_dir <- paste0(WD, "/data/")
+for (f in files)
+  download.file(paste0(base_url, f), paste0(dest_dir, f))
+```
+
+```{r}
+fl <- list.files(dest_dir, pattern = "*.csv", full.names = TRUE)
+dd <- lapply(fl, read.csv)
+names(dd) <- gsub(".csv", "", files)
+```
+
+```{r}
+str(dd)
+cat("tables can be merge using shared columns:\n")
+head(dd[["demo"]])
+head(dd[["gm"]])
+```
+
+**Merge tables** according to `participant_id`. Drop row with missing values.
+
+```{r}
+d <- merge(dd[["demo"]], dd[["gm"]], all = TRUE, by = "participant_id")
+brain_vol <- Reduce(function(x, y) merge(x, y, all = TRUE, by = c("participant_id", "session")), 
+                    list(d, dd[[3]], dd[[4]]), accumulate = FALSE)
+dim(brain_vol) == c(808, 9)
+```
+
+**Compute Total Intra-cranial volume**
+
+`tiv_vol` = `gm_vol` + `csf_vol` + `wm_vol`
+
+```{r}
+brain_vol["tiv_vol"] <- brain_vol["gm_vol"] + brain_vol["wm_vol"] + brain_vol["csf_vol"]
+```
+
+** Compute tissue fractions**
+
+`gm_f = gm_vol / tiv_vol`, `wm_f  = wm_vol / tiv_vol`.
+
+```{r}
+brain_vol["gm_f"] <- brain_vol["gm_vol"] / brain_vol["tiv_vol"]
+brain_vol["wm_f"] <- brain_vol["wm_vol"] / brain_vol["tiv_vol"]
+```
+
+**Save in a excel file `brain_vol.xlsx`**
+
+```{r}
+write_xlsx(list(data = brain_vol), "brain_vol.xlsx")  # {writexl}
+```
+
+```{r, echo = FALSE}
+rm(list = ls())
+```
+
+## Descriptive statistics
+
+Load excel file `brain_vol.xlsx`
+
+```{r}
+brain_vol <- read_excel("brain_vol.xlsx", sheet_name = "data")  # {readxl}
+options(digits = 2)
+```
+
+Most of participants have several MRI sessions (column `session`). Select on rows from session one `"ses-01"`
+
+```{r}
+brain_vol1 <- brain_vol[brain_vol["session"] == "ses-01",]
+```
+
+Global descriptives statistics of all variables (unlike Python `describe`, `summary` work with either numerical or categorical variables)
+
+```{r}
+summary(brain_vol1)
+```
+
+Remove the single participant from site 6
+
+```{r}
+brain_vol <- brain_vol[brain_vol["site"] != "S6",]
+brain_vol1 <- brain_vol[brain_vol["session"] == "ses-01",]
+num_var <- unlist(lapply(brain_vol1, is.numeric))
+summary(brain_vol1[!num_var])
+```
+
+Descriptives statistics of numerical variables per clinical status
+
+```{r}
+aggregate(. ~ group, brain_vol1[c(names(which(num_var)), "group")], 
+          quantile, probs = c(.25, .5, .75))
+```
+
+## Statistics
+
+Objectives:
+
+1. Site effect of gray matter atrophy
+2. Test the association between the age and gray matter atrophy in the control and patient population independently.
+3. Test for differences of atrophy between the patients and the controls
+4. Test for interaction between age and clinical status, ie: is the brain atrophy process in patient population faster than in the control population.
+5. The effect of the medication in the patient population.
+
+Test the association between the age and gray matter atrophy in the control and patient population independently.
+
+**Effect of site on Grey Matter atrophy**: Model  is Oneway Anova gm_f ~ site
+
+The ANOVA test has important assumptions that must be satisfied in order for the associated p-value to be valid.
+
+- The samples are independent.
+- Each sample is from a normally distributed population.
+- The population standard deviations of the groups are all equal. This property is known as homoscedasticity.
+
+Plot
+
+```{r}
+p <- ggplot(data = brain_vol1, aes(x = site, y = gm_f)) +
+  geom_violin(draw_quantiles = .5)
+p + labs(x = "Site", y = "Grey matter")
+```
+
+Stats with base/external functions
+
+```{r}
+m <- aov(gm_f ~ site, data = brain_vol1)
+summary(m)
+Anova(m, type = 2)  # {car}
+```
+
+Test the association between the age and gray matter atrophy in the control and patient population independently.
+
+Plot
+
+```{r}
+p <- ggplot(data= brain_vol1, aes(x = age, y = gm_f, color = group)) +
+  geom_point()
+p + labs(x = "Age", y = "Grey matter")
+```
+
+```{r}
+brain_vol1_ctl <- brain_vol1[brain_vol1["group"] == "Control"]
+brain_vol1_pat <- brain_vol1[brain_vol1["group"] == "Patient"]
+```
+
+```{r}
+m1 <- lm(gm_f ~ age, data = brain_vol1_ctl)
+summary(m1)
+m2 <- lm(gm_f ~ age, data = brain_vol1_pat)
+summary(m2)
+```
+
+Before testing for differences of atrophy between the patients and the controls, preliminary tests of age x group (patients would be older or younger than controls)
+
+```{r}
+p <- ggplot(data = brain_vol1, aes(x = group, y = age)) +
+  geom_violin(draw_quantiles = .5)
+p + labs(x = "Age", y = "Grey matter")
+```
+
+```{r}
+m <- lm(age ~ group, data = brain_vol1)
+summary(m)
+```
+
+Preliminary tests of sex x group (more/less males in patients than in controls)
+
+```{r}
+tab <- table(brain_vol1[,"sex"], brain_vol1[,"group"])
+tab
+chisq.test(tab)
+chisq.test(tab)$expected
+```
+
+Test for differences of atrophy between the patients and the controls
+
+```{r}
+m <- lm(gm_f ~ group, data = brain_vol1)
+Anova(m, type = 2)
+```
+
+This model is simplistic we should adjust for age and site
+
+```{r}
+m <- lm(gm_f ~ group + age + site, data = brain_vol1)
+Anova(m, type = 2)
+```
+
+Test for interaction between age and clinical status, ie: is the brain atrophy process in patient population faster than in the control population.
+
+```{r}
+m <- lm(gm_f ~ group:age + age + site, data = brain_vol1)
+Anova(m, type = 2)
+```
+
