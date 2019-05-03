@@ -59,6 +59,10 @@ d <- merge(dd[["demo"]], dd[["gm"]], all = TRUE, by = "participant_id")
 brain_vol <- Reduce(function(x, y) merge(x, y, all = TRUE, by = c("participant_id", "session")), 
                     list(d, dd[[3]], dd[[4]]), accumulate = FALSE)
 dim(brain_vol) == c(808, 9)
+brain_vol <- na.omit(brain_vol)
+brain_vol["group"] <- droplevels(brain_vol["group"])
+brain_vol["sex"] <- droplevels(brain_vol["sex"])
+brain_vol["site"] <- droplevels(brain_vol["site"])
 ```
 
 **Compute Total Intra-cranial volume**
