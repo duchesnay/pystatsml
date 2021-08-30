@@ -10,7 +10,8 @@ Python ecosystem for data-science
 Python language
 ~~~~~~~~~~~~~~~
 
-- Interpreted
+- Python is popular `Google trends <https://trends.google.com/trends/explore?cat=31&date=all&q=python,R,matlab,spss,stata>`_
+- Interpreted: source file ``.py`` => interpretor => processor versus compiled, two steps (1) source file => compilaton => binary file. (2) Execution is simply binary file => processor.
 - Garbage collector (do not prevent from memory leak)
 - Dynamically-typed language (Java is statically typed)
 

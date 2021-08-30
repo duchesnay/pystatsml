@@ -400,6 +400,17 @@ languages.update('go', 'spark') # add multiple elements (can also pass a list or
 # get a sorted list of unique elements from a list
 sorted(set([9, 0, 2, 1, 0]))    # returns [0, 1, 2, 9]
 
+
+###############################################################################
+# Iterators
+# ~~~~~~~~~
+#
+# Cartesian product
+
+import itertools
+
+print([[x, y] for x, y in itertools.product(['a', 'b', 'c'], [1, 2])])
+
 ###############################################################################
 # Execution control statements
 # ----------------------------

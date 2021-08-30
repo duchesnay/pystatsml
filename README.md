@@ -10,9 +10,9 @@ Structure
 
 Courses are available in three formats:
 
-1. Jupyter notebooks.
+1. Jupyter notebooks `*/*.ipynb` files.
 
-2. Python files using sphinx-gallery.
+2. Python files using [sphinx-gallery](https://sphinx-gallery.github.io/stable/index.html) `*/*.py` files.
 
 3. ReStructuredText files.
 
@@ -49,6 +49,7 @@ Directories and main files:
     ├── decomposition_solutions.ipynb
     ├── linear_classification.ipynb
     ├── linear_regression.ipynb
+    ├── manifold.ipynb
     ├── non_linear_prediction.ipynb
     ├── resampling.ipynb
     ├── resampling_solution.py
@@ -103,7 +104,7 @@ Then install:
 1. [sphinx-gallery](https://sphinx-gallery.readthedocs.io)
 
 ```
-pip install sphinx-gallery
+conda install -c conda-forge sphinx-gallery
 ```
 
 2. [nbstripout](https://github.com/kynan/nbstripout)
@@ -115,7 +116,6 @@ conda install -c conda-forge nbstripout
 Configure your git repository with nbstripout pre-commit hook for users who don't want to track output in VCS.
 
 ```
-cd pystatsml
 nbstripout --install
 ```
 

@@ -6,9 +6,9 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
-NTBOOK        = $(shell ls scientific_python/*.ipynb statistics/*.ipynb  machine_learning/*.ipynb optimization/*.ipynb deep_learning/*.ipynb)
+NTBOOK        = $(shell ls scientific_python/*.ipynb statistics/*.ipynb  statistics/lmm/lmm.ipynb machine_learning/*.ipynb optimization/*.ipynb deep_learning/*.ipynb)
 # Notebook to execute. Exclude DL file (requires GPU)
-NTBOOK_TO_EXE = $(shell ls scientific_python/*.ipynb statistics/*.ipynb  machine_learning/*.ipynb optimization/*.ipynb)
+NTBOOK_TO_EXE = $(shell ls scientific_python/*.ipynb statistics/*.ipynb  statistics/lmm/lmm.ipynb machine_learning/*.ipynb optimization/*.ipynb)
 
 #NTBOOK        = $(shell ls statistics/*.ipynb)
 NTBOOK_FILES  = $(NTBOOK:.ipynb=_files)

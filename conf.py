@@ -304,6 +304,18 @@ sphinx_gallery_conf = {
     'filename_pattern': '/',
     # path where to save gallery generated examples
     'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery'],
-    'backreferences_dir': False}
+    'backreferences_dir': None}
 
+# -- Options for docxbuilder -----------------------------------------------
+
+docx_documents = [
+    ('index', 'StatisticsMachineLearningPython.docx', {
+         'title': 'Statistics and Machine Learning in Python',
+         'created': 'Edouard Duchesnay',
+         'subject': 'Statistics and Machine Learning in Python',
+         'keywords': ['Python', 'Numpy', 'Pandas', 'statsmodels']
+     }, True),
+]
+# docx_style = 'path/to/custom_style.docx'
+# docx_pagebreak_before_section = 1
 

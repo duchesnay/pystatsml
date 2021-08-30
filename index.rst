@@ -15,7 +15,7 @@ Important links:
 
 - `Web page <https://duchesnay.github.io/pystatsml/>`_
 - `Github <https://github.com/duchesnay/pystatsml>`_
-- `Latest pdf <ftp://ftp.cea.fr/pub/unati/people/educhesnay/pystatml/StatisticsMachineLearningPython.pdf>`_
+- `Latest pdf <https://github.com/duchesnay/data/raw/master/pdf/StatisticsMachineLearningPython.pdf>`_
 - `Official deposit for citation <https://hal.archives-ouvertes.fr/hal-03038776>`_.
 
 This document describes statistics and machine learning in Python using:
@@ -60,6 +60,7 @@ Statistics
 
     statistics/stat_univ.rst
     auto_gallery/stat_univ_lab_brain-volume.rst
+    statistics/lmm/lmm.rst
     statistics/stat_multiv.rst
     statistics/time_series.rst
 
