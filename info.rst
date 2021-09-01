@@ -69,13 +69,23 @@ gedit index.html
 
 Replace:
 ```
-  <div class="section" id="phantom">
+  <section id="phantom">
 <h1>Phantom<a class="headerlink" href="#phantom" title="Permalink to this headline">¶</a></h1>
-</div>
+</section>
 ```
 by
 
 ```
+  <section id="phantom">
+<h1 style="font-weight:bold;">Statistics and Machine Learning in
+Python<a class="headerlink" href="#phantom" title="Permalink to this headline">¶</a></h1>
+</section>
+
+<hr>
+
+<p><a href="https://duchesnay.github.io/">Edouard Duchesnay</a>, <a href="https://www.umu.se/en/staff/toklot02/">Tommy Löfstedt</a>, Feki Younes</p>
+
+old:
 <div class="section" id="phantom">
 <h1 style="font-weight:bold;">Statistics and Machine Learning in
 Python<a class="headerlink" href="#phantom" title="Permalink to this headline">¶</a></h1>
