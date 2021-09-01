@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Exercise 1: functions &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-gallery-python-lang-solutions-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<p class="sphx-glr-example-title" id="sphx-glr-auto-gallery-python-lang-solutions-py">Created on Sat Jan 16 10:03:29 2016</p>
+<p>&#64;author: <a class="reference external" href="mailto:edouard&#46;duchesnay&#37;&#52;&#48;gmail&#46;com">edouard<span>&#46;</span>duchesnay<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<section id="exercise-1-functions">
+<h1>Exercise 1: functions<a class="headerlink" href="#exercise-1-functions" title="Permalink to this headline">¶</a></h1>
+<p>Create a function that acts as a simple calulator If the operation is
+not specified, default to addition If the operation is misspecified,
+return an prompt message Ex: <code class="docutils literal notranslate"><span class="pre">calc(4,5,&quot;multiply&quot;)</span></code> returns 20 Ex:
+<code class="docutils literal notranslate"><span class="pre">calc(3,5)</span></code> returns 8 Ex: <code class="docutils literal notranslate"><span class="pre">calc(1,</span> <span class="pre">2,</span> <span class="pre">&quot;something&quot;)</span></code> returns error
+message</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;add&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;sub&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;valid operations are add and sub&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># call the function</span>
+<span class="n">calc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">)</span>   <span class="c1"># returns 14</span>
+<span class="n">calc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;add&#39;</span><span class="p">)</span>      <span class="c1"># also returns 14: unnamed arguments are inferred by position</span>
+<span class="n">calc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>             <span class="c1"># also returns 14: default for &#39;op&#39; is &#39;add&#39;</span>
+<span class="n">calc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;sub&#39;</span><span class="p">)</span>      <span class="c1"># returns 6</span>
+<span class="n">calc</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;div&#39;</span><span class="p">)</span>      <span class="c1"># prints &#39;valid operations are add and sub&#39;</span>
+
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">op</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">calc2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">):</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="s2">&quot;%.f </span><span class="si">%s</span><span class="s2"> %.f&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">st</span><span class="p">)</span>
+
+
+<span class="n">calc2</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>valid operations are add and sub
+
+6
+</pre></div>
+</div>
+</section>
+<section id="exercise-2-functions-list-loop">
+<h1>Exercise 2: functions + list + loop<a class="headerlink" href="#exercise-2-functions-list-loop" title="Permalink to this headline">¶</a></h1>
+<p>Given a list of numbers, return a list where all adjacent duplicate
+elements have been reduced to a single element. Ex: <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">2]</span></code>
+returns <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">2]</span></code>. You may create a new list or modify the passed
+in list.</p>
+<p>Remove all duplicate values (adjacent or not) Ex: <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">2]</span></code>
+returns <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">remove_adjacent_duplicates</span><span class="p">(</span><span class="n">original_list</span><span class="p">):</span>
+    <span class="n">new_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">new_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">original_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">original_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">!=</span> <span class="n">new_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">new_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_list</span>
+
+<span class="n">remove_adjacent_duplicates</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="n">original_list</span><span class="p">):</span>
+    <span class="n">new_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">original_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_list</span><span class="p">:</span>
+            <span class="n">new_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_list</span>
+
+<span class="n">remove_duplicates</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="c1"># or this solution mights modify the order</span>
+
+<span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="n">original_list</span><span class="p">):</span>
+    <span class="k">return</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">original_list</span><span class="p">)))</span>
+
+<span class="n">remove_duplicates</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[1, 2, 3]
+</pre></div>
+</div>
+</section>
+<section id="exercise-3-file-i-o">
+<h1>Exercise 3: File I/O<a class="headerlink" href="#exercise-3-file-i-o" title="Permalink to this headline">¶</a></h1>
+<p>1. Copy/paste the BSD 4 clause license (<a class="reference external" href="https://en.wikipedia.org/wiki/BSD_licenses">https://en.wikipedia.org/wiki/BSD_licenses</a>)
+into a text file. Read, the file and count the occurrences of each
+word within the file. Store the words’ occurrence number in a dictionary.</p>
+<p>2. Write an executable python command <code class="docutils literal notranslate"><span class="pre">count_words.py</span></code> that parse
+a list of input files provided after <code class="docutils literal notranslate"><span class="pre">--input</span></code> parameter.
+The dictionary of occurrence is save in a csv file provides by <code class="docutils literal notranslate"><span class="pre">--output</span></code>.
+with default value word_count.csv.
+Use:
+- open
+- regular expression
+- argparse (<a class="reference external" href="https://docs.python.org/3/howto/argparse.html">https://docs.python.org/3/howto/argparse.html</a>)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bsd_4clause</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Copyright (c) &lt;year&gt;, &lt;copyright holder&gt;</span>
+<span class="s2">All rights reserved.</span>
+
+<span class="s2">Redistribution and use in source and binary forms, with or without</span>
+<span class="s2">modification, are permitted provided that the following conditions are met:</span>
+<span class="s2">1. Redistributions of source code must retain the above copyright</span>
+<span class="s2">   notice, this list of conditions and the following disclaimer.</span>
+<span class="s2">2. Redistributions in binary form must reproduce the above copyright</span>
+<span class="s2">   notice, this list of conditions and the following disclaimer in the</span>
+<span class="s2">   documentation and/or other materials provided with the distribution.</span>
+<span class="s2">3. All advertising materials mentioning features or use of this software</span>
+<span class="s2">   must display the following acknowledgement:</span>
+<span class="s2">   This product includes software developed by the &lt;organization&gt;.</span>
+<span class="s2">4. Neither the name of the &lt;organization&gt; nor the</span>
+<span class="s2">   names of its contributors may be used to endorse or promote products</span>
+<span class="s2">   derived from this software without specific prior written permission.</span>
+
+<span class="s2">THIS SOFTWARE IS PROVIDED BY &lt;COPYRIGHT HOLDER&gt; &#39;&#39;AS IS&#39;&#39; AND ANY</span>
+<span class="s2">EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED</span>
+<span class="s2">WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</span>
+<span class="s2">DISCLAIMED. IN NO EVENT SHALL &lt;COPYRIGHT HOLDER&gt; BE LIABLE FOR ANY</span>
+<span class="s2">DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES</span>
+<span class="s2">(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<span class="s2">LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</span>
+<span class="s2">ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
+<span class="s2">(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS</span>
+<span class="s2">SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="n">tmpfilename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span>
+                       <span class="s2">&quot;bsd.txt&quot;</span><span class="p">)</span>
+
+<span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfilename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">bsd_4clause</span><span class="p">)</span>
+<span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpfilename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+<span class="n">count</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fd</span><span class="p">:</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">count</span><span class="p">:</span>
+            <span class="n">count</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">count</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Comment to deal with missing import of urllib2</span>
+
+<span class="sd">import urllib2</span>
+<span class="sd">url = &quot;https://www.gnu.org/licenses/gpl-3.0.txt&quot;</span>
+<span class="sd">f = urllib2.urlopen(url)</span>
+<span class="sd">content = f.read()</span>
+<span class="sd">f.close()</span>
+<span class="sd">content = content.replace(&quot;\n&quot;, &quot; &quot;)</span>
+<span class="sd">content = content.lower()</span>
+<span class="sd">c = content.split(&#39; &#39;)</span>
+<span class="sd">print(len(c))</span>
+<span class="sd">from collections import Counter</span>
+<span class="sd">print(Counter(c))</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;copyright&#39;: 3, &#39;(c)&#39;: 1, &#39;&lt;year&gt;,&#39;: 1, &#39;&lt;copyright&#39;: 3, &#39;holder&gt;&#39;: 3, &#39;all&#39;: 2, &#39;rights&#39;: 1, &#39;reserved.&#39;: 1, &#39;redistribution&#39;: 1, &#39;and&#39;: 7, &#39;use&#39;: 3, &#39;in&#39;: 6, &#39;source&#39;: 2, &#39;binary&#39;: 2, &#39;forms,&#39;: 1, &#39;with&#39;: 2, &#39;or&#39;: 10, &#39;without&#39;: 2, &#39;modification,&#39;: 1, &#39;are&#39;: 3, &#39;permitted&#39;: 1, &#39;provided&#39;: 3, &#39;that&#39;: 1, &#39;the&#39;: 15, &#39;following&#39;: 4, &#39;conditions&#39;: 3, &#39;met:&#39;: 1, &#39;1.&#39;: 1, &#39;redistributions&#39;: 2, &#39;of&#39;: 14, &#39;code&#39;: 1, &#39;must&#39;: 3, &#39;retain&#39;: 1, &#39;above&#39;: 2, &#39;notice,&#39;: 2, &#39;this&#39;: 7, &#39;list&#39;: 2, &#39;disclaimer.&#39;: 1, &#39;2.&#39;: 1, &#39;form&#39;: 1, &#39;reproduce&#39;: 1, &#39;disclaimer&#39;: 1, &#39;documentation&#39;: 1, &#39;and/or&#39;: 1, &#39;other&#39;: 1, &#39;materials&#39;: 2, &#39;distribution.&#39;: 1, &#39;3.&#39;: 1, &#39;advertising&#39;: 1, &#39;mentioning&#39;: 1, &#39;features&#39;: 1, &#39;software&#39;: 4, &#39;display&#39;: 1, &#39;acknowledgement:&#39;: 1, &#39;product&#39;: 1, &#39;includes&#39;: 1, &#39;developed&#39;: 1, &#39;by&#39;: 2, &#39;&lt;organization&gt;.&#39;: 1, &#39;4.&#39;: 1, &#39;neither&#39;: 1, &#39;name&#39;: 1, &#39;&lt;organization&gt;&#39;: 1, &#39;nor&#39;: 1, &#39;names&#39;: 1, &#39;its&#39;: 1, &#39;contributors&#39;: 1, &#39;may&#39;: 1, &#39;be&#39;: 2, &#39;used&#39;: 1, &#39;to&#39;: 1, &#39;endorse&#39;: 1, &#39;promote&#39;: 1, &#39;products&#39;: 1, &#39;derived&#39;: 1, &#39;from&#39;: 1, &#39;specific&#39;: 1, &#39;prior&#39;: 1, &#39;written&#39;: 1, &#39;permission.&#39;: 1, &#39;is&#39;: 1, &quot;&#39;&#39;as&quot;: 1, &quot;is&#39;&#39;&quot;: 1, &#39;any&#39;: 4, &#39;express&#39;: 1, &#39;implied&#39;: 2, &#39;warranties,&#39;: 1, &#39;including,&#39;: 1, &#39;but&#39;: 2, &#39;not&#39;: 2, &#39;limited&#39;: 2, &#39;to,&#39;: 2, &#39;warranties&#39;: 1, &#39;merchantability&#39;: 1, &#39;fitness&#39;: 1, &#39;for&#39;: 2, &#39;a&#39;: 1, &#39;particular&#39;: 1, &#39;purpose&#39;: 1, &#39;disclaimed.&#39;: 1, &#39;no&#39;: 1, &#39;event&#39;: 1, &#39;shall&#39;: 1, &#39;liable&#39;: 1, &#39;direct,&#39;: 1, &#39;indirect,&#39;: 1, &#39;incidental,&#39;: 1, &#39;special,&#39;: 1, &#39;exemplary,&#39;: 1, &#39;consequential&#39;: 1, &#39;damages&#39;: 1, &#39;(including,&#39;: 1, &#39;procurement&#39;: 1, &#39;substitute&#39;: 1, &#39;goods&#39;: 1, &#39;services;&#39;: 1, &#39;loss&#39;: 1, &#39;use,&#39;: 1, &#39;data,&#39;: 1, &#39;profits;&#39;: 1, &#39;business&#39;: 1, &#39;interruption)&#39;: 1, &#39;however&#39;: 1, &#39;caused&#39;: 1, &#39;on&#39;: 1, &#39;theory&#39;: 1, &#39;liability,&#39;: 2, &#39;whether&#39;: 1, &#39;contract,&#39;: 1, &#39;strict&#39;: 1, &#39;tort&#39;: 1, &#39;(including&#39;: 1, &#39;negligence&#39;: 1, &#39;otherwise)&#39;: 1, &#39;arising&#39;: 1, &#39;way&#39;: 1, &#39;out&#39;: 1, &#39;software,&#39;: 1, &#39;even&#39;: 1, &#39;if&#39;: 1, &#39;advised&#39;: 1, &#39;possibility&#39;: 1, &#39;such&#39;: 1, &#39;damage.&#39;: 1}
+
+&#39;\nComment to deal with missing import of urllib2\n\nimport urllib2\nurl = &quot;https://www.gnu.org/licenses/gpl-3.0.txt&quot;\nf = urllib2.urlopen(url)\ncontent = f.read()\nf.close()\ncontent = content.replace(&quot;\n&quot;, &quot; &quot;)\ncontent = content.lower()\nc = content.split(\&#39; \&#39;)\nprint(len(c))\nfrom collections import Counter\nprint(Counter(c))\n&#39;
+</pre></div>
+</div>
+</section>
+<section id="exercise-4-oop">
+<h1>Exercise 4: OOP<a class="headerlink" href="#exercise-4-oop" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic simple">
+<li><p>Create a class <code class="docutils literal notranslate"><span class="pre">Employee</span></code> with 2 attributes provided in the
+constructor: <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">years_of_service</span></code>. With one method
+<code class="docutils literal notranslate"><span class="pre">salary</span></code> with is obtained by <code class="docutils literal notranslate"><span class="pre">1500</span> <span class="pre">+</span> <span class="pre">100</span> <span class="pre">*</span> <span class="pre">years_of_service</span></code>.</p></li>
+<li><p>Create a subclass <code class="docutils literal notranslate"><span class="pre">Manager</span></code> which redefine <code class="docutils literal notranslate"><span class="pre">salary</span></code> method
+<code class="docutils literal notranslate"><span class="pre">2500</span> <span class="pre">+</span> <span class="pre">120</span> <span class="pre">*</span> <span class="pre">years_of_service</span></code>.</p></li>
+<li><p>Create a small dictionary database where the key is the
+employee’s name. Populate the database with: samples =
+Employee(‘lucy’, 3), Employee(‘john’, 1), Manager(‘julie’, 10),
+Manager(‘paul’, 3)</p></li>
+<li><p>Return a table of made name, salary rows, i.e. a list of list [[name,
+salary]]</p></li>
+<li><p>Compute the average salary</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">years_of_service</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">years_of_service</span> <span class="o">=</span> <span class="n">years_of_service</span>
+
+    <span class="k">def</span> <span class="nf">salary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1500</span> <span class="o">+</span> <span class="mi">100</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">years_of_service</span>
+
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">salary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">2500</span> <span class="o">+</span> <span class="mi">120</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">years_of_service</span>
+
+
+<span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="n">Employee</span><span class="p">(</span><span class="s2">&quot;lucy&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+           <span class="n">Employee</span><span class="p">(</span><span class="s2">&quot;john&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+           <span class="n">Manager</span><span class="p">(</span><span class="s1">&#39;julie&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+           <span class="n">Manager</span><span class="p">(</span><span class="s1">&#39;paul&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+
+<span class="n">employees</span> <span class="o">=</span> <span class="p">{</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">}</span>
+
+<span class="n">employees</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">salary</span><span class="p">()]</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">employees</span><span class="o">.</span><span class="n">items</span><span class="p">()],</span>
+             <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;salary&#39;</span><span class="p">])</span>
+
+<span class="p">[[</span><span class="n">name</span><span class="p">,</span> <span class="n">employees</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">salary</span><span class="p">()]</span> <span class="k">for</span> <span class="n">name</span>
+      <span class="ow">in</span> <span class="n">employees</span><span class="p">]</span>
+
+<span class="nb">sum</span><span class="p">([</span><span class="n">e</span><span class="o">.</span><span class="n">salary</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">employees</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">employees</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2220.0
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.179 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-python-lang-solutions-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/786607b539b5eeda0b23e090a93dfd9d/python_lang_solutions.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">python_lang_solutions.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/9fb3c8ca9c2abac85144da8687d76904/python_lang_solutions.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">python_lang_solutions.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/auto_gallery/python_lang_solutions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

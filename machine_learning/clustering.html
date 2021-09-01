@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Clustering &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Linear models for regression problems" href="linear_regression.html" />
+    <link rel="prev" title="Manifold learning: non-linear dimension reduction" href="manifold.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="clustering">
+<h1>Clustering<a class="headerlink" href="#clustering" title="Permalink to this headline">¶</a></h1>
+<p>Wikipedia: Cluster analysis or clustering is the task of grouping a set
+of objects in such a way that objects in the same group (called a
+cluster) are more similar (in some sense or another) to each other than
+to those in other groups (clusters). Clustering is one of the main task
+of exploratory data mining, and a common technique for statistical data
+analysis, used in many fields, including machine learning, pattern
+recognition, image analysis, information retrieval, and bioinformatics.</p>
+<p>Sources: <a class="reference external" href="http://scikit-learn.org/stable/modules/clustering.html">http://scikit-learn.org/stable/modules/clustering.html</a></p>
+<section id="k-means-clustering">
+<h2>K-means clustering<a class="headerlink" href="#k-means-clustering" title="Permalink to this headline">¶</a></h2>
+<p>Source: C. M. Bishop <em>Pattern Recognition and Machine Learning</em>,
+Springer, 2006</p>
+<p>Suppose we have a data set <span class="math notranslate nohighlight">\(X = \{x_1 , \cdots , x_N\}\)</span> that
+consists of <span class="math notranslate nohighlight">\(N\)</span> observations of a random <span class="math notranslate nohighlight">\(D\)</span>-dimensional
+Euclidean variable <span class="math notranslate nohighlight">\(x\)</span>. Our goal is to partition the data set into
+some number, <span class="math notranslate nohighlight">\(K\)</span>, of clusters, where we shall suppose for the
+moment that the value of <span class="math notranslate nohighlight">\(K\)</span> is given. Intuitively, we might think
+of a cluster as comprising a group of data points whose inter-point
+distances are small compared to the distances to points outside of the
+cluster. We can formalize this notion by first introducing a set of
+<span class="math notranslate nohighlight">\(D\)</span>-dimensional vectors <span class="math notranslate nohighlight">\(\mu_k\)</span>, where
+<span class="math notranslate nohighlight">\(k = 1, \ldots, K\)</span>, in which <span class="math notranslate nohighlight">\(\mu_k\)</span> is a <strong>prototype</strong>
+associated with the <span class="math notranslate nohighlight">\(k^{th}\)</span> cluster. As we shall see shortly, we
+can think of the <span class="math notranslate nohighlight">\(\mu_k\)</span> as representing the centres of the
+clusters. Our goal is then to find an assignment of data points to
+clusters, as well as a set of vectors <span class="math notranslate nohighlight">\(\{\mu_k\}\)</span>, such that the
+sum of the squares of the distances of each data point to its closest
+prototype vector <span class="math notranslate nohighlight">\(\mu_k\)</span>, is at a minimum.</p>
+<p>It is convenient at this point to define some notation to describe the
+assignment of data points to clusters. For each data point <span class="math notranslate nohighlight">\(x_i\)</span> ,
+we introduce a corresponding set of binary indicator variables
+<span class="math notranslate nohighlight">\(r_{ik} \in \{0, 1\}\)</span>, where <span class="math notranslate nohighlight">\(k = 1, \ldots, K\)</span>, that
+describes which of the <span class="math notranslate nohighlight">\(K\)</span> clusters the data point <span class="math notranslate nohighlight">\(x_i\)</span> is
+assigned to, so that if data point <span class="math notranslate nohighlight">\(x_i\)</span> is assigned to cluster
+<span class="math notranslate nohighlight">\(k\)</span> then <span class="math notranslate nohighlight">\(r_{ik} = 1\)</span>, and <span class="math notranslate nohighlight">\(r_{ij} = 0\)</span> for
+<span class="math notranslate nohighlight">\(j \neq k\)</span>. This is known as the 1-of-<span class="math notranslate nohighlight">\(K\)</span> coding scheme. We
+can then define an objective function, denoted <strong>inertia</strong>, as</p>
+<div class="math notranslate nohighlight">
+\[J(r, \mu) = \sum_i^N \sum_k^K r_{ik} \|x_i - \mu_k\|_2^2\]</div>
+<p>which represents the sum of the squares of the Euclidean distances of
+each data point to its assigned vector <span class="math notranslate nohighlight">\(\mu_k\)</span>. Our goal is to
+find values for the <span class="math notranslate nohighlight">\(\{r_{ik}\}\)</span> and the <span class="math notranslate nohighlight">\(\{\mu_k\}\)</span> so as
+to minimize the function <span class="math notranslate nohighlight">\(J\)</span>. We can do this through an iterative
+procedure in which each iteration involves two successive steps
+corresponding to successive optimizations with respect to the
+<span class="math notranslate nohighlight">\(r_{ik}\)</span> and the <span class="math notranslate nohighlight">\(\mu_k\)</span> . First we choose some initial
+values for the <span class="math notranslate nohighlight">\(\mu_k\)</span>. Then in the first phase we minimize
+<span class="math notranslate nohighlight">\(J\)</span> with respect to the <span class="math notranslate nohighlight">\(r_{ik}\)</span>, keeping the <span class="math notranslate nohighlight">\(\mu_k\)</span>
+fixed. In the second phase we minimize <span class="math notranslate nohighlight">\(J\)</span> with respect to the
+<span class="math notranslate nohighlight">\(\mu_k\)</span>, keeping <span class="math notranslate nohighlight">\(r_{ik}\)</span> fixed. This two-stage optimization
+process is then repeated until convergence. We shall see that these two
+stages of updating <span class="math notranslate nohighlight">\(r_{ik}\)</span> and <span class="math notranslate nohighlight">\(\mu_k\)</span> correspond
+respectively to the expectation (E) and maximization (M) steps of the
+expectation-maximisation (EM) algorithm, and to emphasize this we shall
+use the terms E step and M step in the context of the <span class="math notranslate nohighlight">\(K\)</span>-means
+algorithm.</p>
+<p>Consider first the determination of the <span class="math notranslate nohighlight">\(r_{ik}\)</span> . Because
+<span class="math notranslate nohighlight">\(J\)</span> in is a linear function of <span class="math notranslate nohighlight">\(r_{ik}\)</span> , this optimization
+can be performed easily to give a closed form solution. The terms
+involving different <span class="math notranslate nohighlight">\(i\)</span> are independent and so we can optimize for
+each <span class="math notranslate nohighlight">\(i\)</span> separately by choosing <span class="math notranslate nohighlight">\(r_{ik}\)</span> to be 1 for
+whichever value of <span class="math notranslate nohighlight">\(k\)</span> gives the minimum value of
+<span class="math notranslate nohighlight">\(||x_i - \mu_k||^2\)</span> . In other words, we simply assign the
+<span class="math notranslate nohighlight">\(i\)</span>th data point to the closest cluster centre. More formally,
+this can be expressed as</p>
+<p>Now consider the optimization of the <span class="math notranslate nohighlight">\(\mu_k\)</span> with the
+<span class="math notranslate nohighlight">\(r_{ik}\)</span> held fixed. The objective function <span class="math notranslate nohighlight">\(J\)</span> is a
+quadratic function of <span class="math notranslate nohighlight">\(\mu_k\)</span>, and it can be minimized by setting
+its derivative with respect to <span class="math notranslate nohighlight">\(\mu_k\)</span> to zero giving</p>
+<div class="math notranslate nohighlight">
+\[2 \sum_i r_{ik}(x_i - \mu_k) = 0\]</div>
+<p>which we can easily solve for <span class="math notranslate nohighlight">\(\mu_k\)</span> to give</p>
+<div class="math notranslate nohighlight">
+\[\mu_k = \frac{\sum_i r_{ik}x_i}{\sum_i r_{ik}}.\]</div>
+<p>The denominator in this expression is equal to the number of points
+assigned to cluster <span class="math notranslate nohighlight">\(k\)</span>, and so this result has a simple
+interpretation, namely set <span class="math notranslate nohighlight">\(\mu_k\)</span> equal to the mean of all of the
+data points <span class="math notranslate nohighlight">\(x_i\)</span> assigned to cluster <span class="math notranslate nohighlight">\(k\)</span>. For this reason,
+the procedure is known as the <span class="math notranslate nohighlight">\(K\)</span>-means algorithm.</p>
+<p>The two phases of re-assigning data points to clusters and re-computing
+the cluster means are repeated in turn until there is no further change
+in the assignments (or until some maximum number of iterations is
+exceeded). Because each phase reduces the value of the objective
+function <span class="math notranslate nohighlight">\(J\)</span>, convergence of the algorithm is assured. However, it
+may converge to a local rather than global minimum of <span class="math notranslate nohighlight">\(J\)</span>.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">datasets</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>  <span class="c1"># nice color</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># use only &#39;sepal length and sepal width&#39;</span>
+<span class="n">y_iris</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+
+<span class="n">km2</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">km3</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">km4</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">km2</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K=2, J=</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">km2</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">km3</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K=3, J=</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">km3</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">km4</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span><span class="c1">#.astype(np.float))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K=4, J=</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">km4</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;K=4, J=27.99&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/clustering_2_1.png" src="../_images/clustering_2_1.png" />
+<section id="exercises">
+<h3>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h3>
+<section id="analyse-clusters">
+<h4>1. Analyse clusters<a class="headerlink" href="#analyse-clusters" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>Analyse the plot above visually. What would a good value of <span class="math notranslate nohighlight">\(K\)</span>
+be?</p></li>
+<li><p>If you instead consider the inertia, the value of <span class="math notranslate nohighlight">\(J\)</span>, what
+would a good value of <span class="math notranslate nohighlight">\(K\)</span> be?</p></li>
+<li><p>Explain why there is such difference.</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(K=2\)</span> why did <span class="math notranslate nohighlight">\(K\)</span>-means clustering not find the two
+“natural” clusters? See the assumptions of <span class="math notranslate nohighlight">\(K\)</span>-means: <a class="reference external" href="http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_assumptions.html#example-cluster-plot-kmeans-assumptions-py">See
+sklearn
+doc</a>.</p></li>
+</ul>
+</section>
+<section id="re-implement-the-k-means-clustering-algorithm-homework">
+<h4>2. Re-implement the <span class="math notranslate nohighlight">\(K\)</span>-means clustering algorithm (homework)<a class="headerlink" href="#re-implement-the-k-means-clustering-algorithm-homework" title="Permalink to this headline">¶</a></h4>
+<p>Write a function <code class="docutils literal notranslate"><span class="pre">kmeans(X,</span> <span class="pre">K)</span></code> that return an integer vector of the
+samples’ labels.</p>
+</section>
+</section>
+</section>
+<section id="gaussian-mixture-models">
+<h2>Gaussian mixture models<a class="headerlink" href="#gaussian-mixture-models" title="Permalink to this headline">¶</a></h2>
+<p>The Gaussian mixture model (GMM) is a simple linear superposition of
+Gaussian components over the data, aimed at providing a rich class of
+density models. We turn to a formulation of Gaussian mixtures in terms
+of discrete latent variables: the <span class="math notranslate nohighlight">\(K\)</span> hidden classes to be
+discovered.</p>
+<p>Differences compared to <span class="math notranslate nohighlight">\(K\)</span>-means:</p>
+<ul class="simple">
+<li><p>Whereas the <span class="math notranslate nohighlight">\(K\)</span>-means algorithm performs a hard assignment of
+data points to clusters, in which each data point is associated
+uniquely with one cluster, the GMM algorithm makes a soft assignment
+based on posterior probabilities.</p></li>
+<li><p>Whereas the classic <span class="math notranslate nohighlight">\(K\)</span>-means is only based on Euclidean
+distances, classic GMM use a Mahalanobis distances that can deal with
+non-spherical distributions. It should be noted that Mahalanobis
+could be plugged within an improved version of <span class="math notranslate nohighlight">\(K\)</span>-Means
+clustering. The Mahalanobis distance is unitless and scale-invariant,
+and takes into account the correlations of the data set.</p></li>
+</ul>
+<p>The Gaussian mixture distribution can be written as a linear
+superposition of <span class="math notranslate nohighlight">\(K\)</span> Gaussians in the form:</p>
+<div class="math notranslate nohighlight">
+\[p(x) = \sum_{k=1}^K \mathcal{N}(x \,|\, \mu_k, \Sigma_k)p(k),\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p>The <span class="math notranslate nohighlight">\(p(k)\)</span> are the mixing coefficients also know as the class
+probability of class <span class="math notranslate nohighlight">\(k\)</span>, and they sum to one:
+<span class="math notranslate nohighlight">\(\sum_{k=1}^K p(k) = 1\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{N}(x \,|\, \mu_k, \Sigma_k) = p(x \,|\, k)\)</span> is the
+conditional distribution of <span class="math notranslate nohighlight">\(x\)</span> given a particular class
+<span class="math notranslate nohighlight">\(k\)</span>. It is the multivariate Gaussian distribution defined over
+a <span class="math notranslate nohighlight">\(P\)</span>-dimensional vector <span class="math notranslate nohighlight">\(x\)</span> of continuous variables.</p></li>
+</ul>
+<p>The goal is to maximize the log-likelihood of the GMM:</p>
+<div class="math notranslate nohighlight">
+\[\ln \prod_{i=1}^N p(x_i)= \ln \prod_{i=1}^N \left\{ \sum_{k=1}^K \mathcal{N}(x_i \,|\, \mu_k, \Sigma_k)p(k) \right\} = \sum_{i=1}^N \ln\left\{ \sum_{k=1}^K  \mathcal{N}(x_i \,|\, \mu_k, \Sigma_k) p(k) \right\}.\]</div>
+<p>To compute the classes parameters: <span class="math notranslate nohighlight">\(p(k), \mu_k, \Sigma_k\)</span> we sum
+over all samples, by weighting each sample <span class="math notranslate nohighlight">\(i\)</span> by its
+responsibility or contribution to class <span class="math notranslate nohighlight">\(k\)</span>:
+<span class="math notranslate nohighlight">\(p(k \,|\, x_i)\)</span> such that for each point its contribution to all
+classes sum to one <span class="math notranslate nohighlight">\(\sum_k p(k \,|\, x_i) = 1\)</span>. This contribution
+is the conditional probability of class <span class="math notranslate nohighlight">\(k\)</span> given <span class="math notranslate nohighlight">\(x\)</span>:
+<span class="math notranslate nohighlight">\(p(k \,|\, x)\)</span> (sometimes called the posterior). It can be
+computed using Bayes’ rule:</p>
+<p>Since the class parameters, <span class="math notranslate nohighlight">\(p(k)\)</span>, <span class="math notranslate nohighlight">\(\mu_k\)</span> and
+<span class="math notranslate nohighlight">\(\Sigma_k\)</span>, depend on the responsibilities <span class="math notranslate nohighlight">\(p(k \,|\, x)\)</span>
+and the responsibilities depend on class parameters, we need a two-step
+iterative algorithm: the expectation-maximization (EM) algorithm. We
+discuss this algorithm next.</p>
+<p>### The expectation-maximization (EM) algorithm for Gaussian mixtures</p>
+<p>Given a Gaussian mixture model, the goal is to maximize the likelihood
+function with respect to the parameters (comprised of the means and
+covariances of the components and the mixing coefficients).</p>
+<p>Initialize the means <span class="math notranslate nohighlight">\(\mu_k\)</span>, covariances <span class="math notranslate nohighlight">\(\Sigma_k\)</span> and
+mixing coefficients <span class="math notranslate nohighlight">\(p(k)\)</span></p>
+<ol class="arabic simple">
+<li><p><strong>E step</strong>. For each sample <span class="math notranslate nohighlight">\(i\)</span>, evaluate the responsibilities
+for each class <span class="math notranslate nohighlight">\(k\)</span> using the current parameter values</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[p(k \,|\, x_i) = \frac{\mathcal{N}(x_i \,|\, \mu_k, \Sigma_k)p(k)}{\sum_{k=1}^K \mathcal{N}(x_i \,|\, \mu_k, \Sigma_k)p(k)}\]</div>
+<ol class="arabic simple" start="2">
+<li><p><strong>M step</strong>. For each class, re-estimate the parameters using the
+current responsibilities</p></li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><p>Evaluate the log-likelihood</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^N \ln \left\{ \sum_{k=1}^K \mathcal{N}(x|\mu_k, \Sigma_k) p(k) \right\},\]</div>
+<p>and check for convergence of either the parameters or the
+log-likelihood. If the convergence criterion is not satisfied return to
+step 1.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>  <span class="c1"># nice color</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn.mixture</span> <span class="kn">import</span> <span class="n">GaussianMixture</span>
+
+<span class="kn">import</span> <span class="nn">pystatsml.plot_utils</span>
+
+<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()</span>
+
+<span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># &#39;sepal length (cm)&#39;&#39;sepal width (cm)&#39;</span>
+<span class="n">y_iris</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+
+<span class="n">gmm2</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">gmm3</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">gmm4</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="n">lab</span><span class="p">]</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">gmm2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)])</span><span class="c1">#, color=colors)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gmm2</span><span class="o">.</span><span class="n">covariances_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">pystatsml</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">plot_cov_ellipse</span><span class="p">(</span><span class="n">cov</span><span class="o">=</span><span class="n">gmm2</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">pos</span><span class="o">=</span><span class="n">gmm2</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span>
+                     <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">gmm2</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">gmm2</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K=2&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="n">lab</span><span class="p">]</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">gmm3</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gmm3</span><span class="o">.</span><span class="n">covariances_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">pystatsml</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">plot_cov_ellipse</span><span class="p">(</span><span class="n">cov</span><span class="o">=</span><span class="n">gmm3</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">pos</span><span class="o">=</span><span class="n">gmm3</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span>
+                     <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">gmm3</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">gmm3</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K=3&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="n">lab</span><span class="p">]</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">gmm4</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)])</span>  <span class="c1"># .astype(np.float))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gmm4</span><span class="o">.</span><span class="n">covariances_</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">pystatsml</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">plot_cov_ellipse</span><span class="p">(</span><span class="n">cov</span><span class="o">=</span><span class="n">gmm4</span><span class="o">.</span><span class="n">covariances_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">pos</span><span class="o">=</span><span class="n">gmm4</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:],</span>
+                     <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">gmm4</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">gmm4</span><span class="o">.</span><span class="n">means_</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K=4&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/clustering_5_0.png" src="../_images/clustering_5_0.png" />
+<p>Models of covariances: parmeter <code class="docutils literal notranslate"><span class="pre">covariance_type</span></code> see <a class="reference external" href="https://scikit-learn.org/stable/auto_examples/mixture/plot_gmm_covariances.html">Sklearn
+doc</a>.
+K-means is almost a GMM with spherical covariance.</p>
+</section>
+<section id="model-selection">
+<h2>Model selection<a class="headerlink" href="#model-selection" title="Permalink to this headline">¶</a></h2>
+<section id="bayesian-information-criterion">
+<h3>Bayesian information criterion<a class="headerlink" href="#bayesian-information-criterion" title="Permalink to this headline">¶</a></h3>
+<p>In statistics, the Bayesian information criterion (BIC) is a criterion
+for model selection among a finite set of models; the model with the
+lowest BIC is preferred. It is based, in part, on the likelihood
+function and it is closely related to the Akaike information criterion
+(AIC).</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span>
+<span class="n">y_iris</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+
+<span class="n">bic</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="c1">#print(X)</span>
+
+<span class="n">ks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ks</span><span class="p">:</span>
+    <span class="n">gmm</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">)</span>
+    <span class="n">gmm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">bic</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gmm</span><span class="o">.</span><span class="n">bic</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+<span class="n">k_chosen</span> <span class="o">=</span> <span class="n">ks</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">bic</span><span class="p">)]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span> <span class="n">bic</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;BIC&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Choose k=&quot;</span><span class="p">,</span> <span class="n">k_chosen</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Choose</span> <span class="n">k</span><span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<img alt="../_images/clustering_8_1.png" src="../_images/clustering_8_1.png" />
+</section>
+</section>
+<section id="hierarchical-clustering">
+<h2>Hierarchical clustering<a class="headerlink" href="#hierarchical-clustering" title="Permalink to this headline">¶</a></h2>
+<p>Hierarchical clustering is an approach to clustering that build
+hierarchies of clusters in two main approaches:</p>
+<ul class="simple">
+<li><p><strong>Agglomerative</strong>: A <em>bottom-up</em> strategy, where each observation
+starts in their own cluster, and pairs of clusters are merged upwards
+in the hierarchy.</p></li>
+<li><p><strong>Divisive</strong>: A <em>top-down</em> strategy, where all observations start out
+in the same cluster, and then the clusters are split recursively
+downwards in the hierarchy.</p></li>
+</ul>
+<p>In order to decide which clusters to merge or to split, a measure of
+dissimilarity between clusters is introduced. More specific, this
+comprise a <em>distance</em> measure and a <em>linkage</em> criterion. The distance
+measure is just what it sounds like, and the linkage criterion is
+essentially a function of the distances between points, for instance the
+minimum distance between points in two clusters, the maximum distance
+between points in two clusters, the average distance between points in
+two clusters, etc. One particular linkage criterion, the Ward criterion,
+will be discussed next.</p>
+<section id="ward-clustering">
+<h3>Ward clustering<a class="headerlink" href="#ward-clustering" title="Permalink to this headline">¶</a></h3>
+<p>Ward clustering belongs to the family of agglomerative hierarchical
+clustering algorithms. This means that they are based on a “bottoms up”
+approach: each sample starts in its own cluster, and pairs of clusters
+are merged as one moves up the hierarchy.</p>
+<p>In Ward clustering, the criterion for choosing the pair of clusters to
+merge at each step is the minimum variance criterion. Ward’s minimum
+variance criterion minimizes the total within-cluster variance by each
+merge. To implement this method, at each step: find the pair of clusters
+that leads to minimum increase in total within-cluster variance after
+merging. This increase is a weighted squared distance between cluster
+centers.</p>
+<p>The main advantage of agglomerative hierarchical clustering over
+<span class="math notranslate nohighlight">\(K\)</span>-means clustering is that you can benefit from known
+neighborhood information, for example, neighboring pixels in an image.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">datasets</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>  <span class="c1"># nice color</span>
+
+<span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># &#39;sepal length (cm)&#39;&#39;sepal width (cm)&#39;</span>
+<span class="n">y_iris</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+
+<span class="n">ward2</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linkage</span><span class="o">=</span><span class="s1">&#39;ward&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">ward3</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">linkage</span><span class="o">=</span><span class="s1">&#39;ward&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">ward4</span> <span class="o">=</span> <span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">linkage</span><span class="o">=</span><span class="s1">&#39;ward&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">ward2</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K=2&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">ward3</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K=3&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">ward4</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span>  <span class="c1"># .astype(np.float))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;K=4&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;K=4&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/clustering_10_1.png" src="../_images/clustering_10_1.png" />
+</section>
+</section>
+<section id="id1">
+<h2>Exercises<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Perform clustering of the iris dataset based on all variables using
+Gaussian mixture models. Use PCA to visualize clusters.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Clustering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#k-means-clustering">K-means clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gaussian-mixture-models">Gaussian mixture models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-selection">Model selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hierarchical-clustering">Hierarchical clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Exercises</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="manifold.html" title="previous chapter">Manifold learning: non-linear dimension reduction</a></li>
+      <li>Next: <a href="linear_regression.html" title="next chapter">Linear models for regression problems</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/machine_learning/clustering.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

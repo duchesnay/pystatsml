@@ -1,0 +1,309 @@
+Lab: Gradient Descent with numpy
+================================
+
+.. code:: ipython3
+
+    %matplotlib inline
+
+Gradient Descent
+----------------
+
+Simple regression problem
+
+`source Daniel
+Godoy <https://towardsdatascience.com/understanding-pytorch-with-an-example-a-step-by-step-tutorial-81fc5f8c4e8e>`__
+
+.. math::
+
+
+   y = w_0 + w x + \varepsilon
+
+Data Generation
+~~~~~~~~~~~~~~~
+
+Let’s start generating some synthetic data: we start with a vector of
+100 points for our feature x and create our labels using a = 1, b = 2
+and some Gaussian noise. Next, let’s split our synthetic data into train
+and validation sets, shuffling the array of indices and using the first
+80 shuffled points for training.
+
+.. code:: ipython3
+
+    import numpy as np
+    
+    # Data Generation
+    np.random.seed(42)
+    x = np.random.rand(100, 1)
+    y = 1 + 2 * x + .1 * np.random.randn(100, 1)
+    
+    # Shuffles the indices
+    idx = np.arange(100)
+    np.random.shuffle(idx)
+    
+    # Uses first 80 random indices for train
+    train_idx = idx[:80]
+    # Uses the remaining indices for validation
+    val_idx = idx[80:]
+    
+    # Generates train and validation sets
+    x_train, y_train = x[train_idx], y[train_idx]
+    x_val, y_val = x[val_idx], y[val_idx]
+
+Gradient Descent: Theory
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are comfortable with the inner workings of gradient descent, feel
+free to skip this section. It goes beyond the scope of this post to
+fully explain how gradient descent works, but I’ll cover the four basic
+steps you’d need to go through to compute it.
+
+Step 1: Compute the Loss
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+For a regression problem, the loss is given by the Mean Square Error
+(MSE), that is, the average of all squared differences between labels
+(y) and predictions (a + bx). It is worth mentioning that, if we use all
+points in the training set (N) to compute the loss, we are performing a
+batch gradient descent. If we were to use a single point at each time,
+it would be a stochastic gradient descent. Anything else (n) in-between
+1 and N characterizes a mini-batch gradient descent.
+
+.. raw:: latex
+
+   \begin{align*}
+   MSE &= \frac{1}{N}\sum_{i=1}^{N}(y_i - \hat{y}_i)^2\\
+   &=\frac{1}{N}\sum_{i=1}^{N}(y_i - w_0 - w x_i)^2
+   \end{align*}
+
+Step 2: Compute the Gradients
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A gradient is a partial derivative — why partial? Because one computes
+it with respect to (w.r.t.) a single parameter. We have two parameters,
+a and b, so we must compute two partial derivatives. A derivative tells
+you how much a given quantity changes when you slightly vary some other
+quantity. In our case, how much does our MSE loss change when we vary
+each one of our two parameters? The right-most part of the equations
+below is what you usually see in implementations of gradient descent for
+a simple linear regression. In the intermediate step, I show you all
+elements that pop-up from the application of the chain rule, so you know
+how the final expression came to be.
+
+.. raw:: latex
+
+   \begin{align*}
+   \frac{\partial MSE}{\partial w_0} &= \frac{\partial MSE}{\partial \hat{y}} \frac{\partial \hat{y}}{\partial w_0}\\
+    &= \frac{1}{N}\sum_{i=1}^{N} 2 (y_i - w_0 - w x_i) (-1) =  \frac{1}{N}\sum_{i=1}^{N} -2 (y_i - \hat{y}_i)
+   \end{align*}
+
+.. raw:: latex
+
+   \begin{align*}
+   \frac{\partial MSE}{\partial w} &= \frac{\partial MSE}{\partial \hat{y}} \frac{\partial \hat{y}}{\partial w}\\
+   &= \frac{1}{N}\sum_{i=1}^{N} 2 (y_i - w_0 - w x_i) (-1 x_i) =  \frac{1}{N}\sum_{i=1}^{N}-2 x_i(y_i - \hat{y}_i)
+   \end{align*}
+
+Step 3: Update the Parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In the final step, we use the gradients to update the parameters. Since
+we are trying to minimize our losses, we reverse the sign of the
+gradient for the update.
+
+There is still another parameter to consider: the learning rate, denoted
+by the Greek letter eta (that looks like the letter n), which is the
+multiplicative factor that we need to apply to the gradient for the
+parameter update.
+
+.. raw:: latex
+
+   \begin{align*}
+   w_0 &= w_0 - \eta \frac{\partial MSE}{\partial w_0}\\
+     &= w_0 - \eta \frac{1}{N}\sum_{i=1}^{N} (-2) (y_i - \hat{y}_i)\\
+   w &= w - \eta \frac{\partial MSE}{\partial w}\\
+   &= w - \eta  \frac{1}{N}\sum_{i=1}^{N} (-2) x_i(y_i - \hat{y}_i)
+   \end{align*}
+
+How to choose a learning rate? That is a topic on its own and beyond the
+scope of this post as well.
+
+See: - LeCun Y.A., Bottou L., Orr G.B., Müller KR. (2012) `Efficient
+BackProp <http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf>`__. In:
+Montavon G., Orr G.B., Müller KR. (eds) Neural Networks: Tricks of the
+Trade. Lecture Notes in Computer Science, vol 7700. Springer, Berlin,
+Heidelberg
+
+-  Introduction to `Gradient Descent
+   Algorithm <https://www.analyticsvidhya.com/blog/2017/03/introduction-to-gradient-descent-algorithm-along-its-variants/>`__
+   (along with variants) in Machine Learning: Gradient Descent with
+   Momentum, ADAGRAD and ADAM.
+
+Step 4: Repeat!
+^^^^^^^^^^^^^^^
+
+Now we use the updated parameters to go back to Step 1 and restart the
+process.
+
+An epoch is complete whenever every point has been already used for
+computing the loss. For batch gradient descent, this is trivial, as it
+uses all points for computing the loss — one epoch is the same as one
+update. For stochastic gradient descent, one epoch means N updates,
+while for mini-batch (of size n), one epoch has N/n updates.
+
+Repeating this process over and over, for many epochs, is, in a
+nutshell, training a model.
+
+Gradient Descent: 1D with numpy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It’s time to implement our linear regression model using gradient
+descent using Numpy only.
+
+For training a model, there are two initialization steps:
+
+-  Random initialization of parameters/weights (we have only two, a and
+   b);
+-  Initialization of hyper-parameters (in our case, only learning rate
+   and number of epochs);
+
+Make sure to always initialize your random seed to ensure
+reproducibility of your results. As usual, the random seed is 42, the
+least random of all random seeds one could possibly choose :-)
+
+For each epoch, there are four training steps: - Compute model’s
+predictions — this is the forward pass; - Compute the loss, using
+predictions; - Compute the gradients for every parameter; - Update the
+parameters;
+
+Just keep in mind that, if you don’t use batch gradient descent (our
+example does), you’ll have to write an inner loop to perform the four
+training steps for either each individual point (stochastic) or n points
+(mini-batch). We’ll see a mini-batch example later down the line.
+
+.. code:: ipython3
+
+    # Initializes parameters "b" and "w" randomly
+    np.random.seed(42)
+    b = np.random.randn(1)
+    w = np.random.randn(1)
+    
+    # Sets learning rate
+    lr = 1e-1
+    # Defines number of epochs
+    n_epochs = 1000
+    
+    for epoch in range(n_epochs):
+        # Computes our model's predicted output
+        yhat = b + w * x_train
+        
+        # How wrong is our model? That's the error! 
+        error = (y_train - yhat)
+        # It is a regression, so it computes mean squared error (MSE)
+        loss = (error ** 2).mean()
+        
+        # Computes gradients for both "a" and "b" parameters
+        b_grad = -2 * error.mean()
+        w_grad = -2 * (x_train * error).mean()
+        
+        # Updates parameters using gradients and the learning rate
+        b = b - lr * b_grad
+        w = w - lr * w_grad
+        
+    print("Numpy:", w, b)
+    
+    # Sanity Check: do we get the same results as our gradient descent?
+    from sklearn.linear_model import LinearRegression
+    linr = LinearRegression()
+    linr.fit(x_train, y_train)
+    print("Sklearn:",linr.coef_, linr.intercept_)
+
+
+.. parsed-literal::
+
+    Numpy: [1.96896411] [1.02354094]
+    Sklearn: [[1.96896447]] [1.02354075]
+
+
+Gradient Descent: Multivariate with numpy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Dataset:
+
+.. code:: ipython3
+
+    N, P = 100, 5
+    
+    # Data Generation
+    w_ = np.array([1, 0.5, 0.1] + [0] * (P - 3))
+    b_ = 1
+    
+    np.random.seed(42)
+    x = np.random.randn(N, P)
+    y = np.dot(x, w_) + b_ + np.random.randn(N)
+    
+    # Shuffles the indices
+    idx = np.arange(N)
+    np.random.shuffle(idx)
+    
+    # Uses first 80 random indices for train
+    train_idx = idx[:80]
+    # Uses the remaining indices for validation
+    val_idx = idx[80:]
+    
+    # Generates train and validation sets
+    x_train, y_train = x[train_idx], y[train_idx]
+    x_val, y_val = x[val_idx], y[val_idx]
+
+Solve
+
+.. code:: ipython3
+
+    # Initializes parameters "b" and "w" randomly
+    np.random.seed(42)
+    b = np.random.randn(1)
+    w = np.random.randn(P)
+    
+    #print(b, w)
+    
+    # Sets learning rate
+    lr = 1e-1
+    # Defines number of epochs
+    n_epochs = 1000
+    
+    for epoch in range(n_epochs):
+        # Computes our model's predicted output
+        yhat = b + np.dot(x_train, w)
+    
+        # How wrong is our model? That's the error!
+        error = (y_train - yhat)
+        # It is a regression, so it computes mean squared error (MSE)
+        loss = (error ** 2).mean()
+        #print(yhat.shape, y_train.shape, error.shape, loss.shape, x_train.shape)
+    
+        # Computes gradients for both "a" and "b" parameters
+        b_grad = -2 * error.mean()
+        # w_grad = -2 * (x_train * error).mean()
+        w_grad = -2 * (x_train * error[:, np.newaxis]).mean(axis=0)
+    
+        # Updates parameters using gradients and the learning rate
+        b = b - lr * b_grad
+        w = w - lr * w_grad
+    
+    print("Numpy:", w, b)
+    
+    # Sanity Check: do we get the same results as our gradient descent?
+    from sklearn.linear_model import LinearRegression
+    linr = LinearRegression()
+    linr.fit(x_train, y_train)
+    print("Sklearn:",linr.coef_, linr.intercept_)
+
+
+.. parsed-literal::
+
+    Numpy: [ 1.11102401  0.59753905  0.07637166  0.21517518 -0.10522686] [0.87878807]
+    Sklearn: [ 1.11102401  0.59753905  0.07637166  0.21517518 -0.10522686] 0.8787880683719964
+
+
+Weigths vector associated to each output class is a “template” pattern
+of the class:
+

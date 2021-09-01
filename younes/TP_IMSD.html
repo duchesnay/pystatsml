@@ -1,0 +1,1184 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Objectifs &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <center><h1><p>Travaux dirigés   Module : Data Science</p>
+</h3></h1></center><div align="right"><h5><p>Année universitaire : 19-20 Enseignant : Feki Younès          Durée : 5H</p>
+</h5></div><hr><section id="objectifs">
+<h1>Objectifs<a class="headerlink" href="#objectifs" title="Permalink to this headline">¶</a></h1>
+<p>   Dans le cadre de ce TD/TP, vous serez amener à résoudre des
+problématiques courantes de data science.</p>
+<p><strong>les objectifs de ce TP</strong></p>
+<ol class="arabic simple">
+<li><p>Maîtriser quelques notions de mathématiques qui sont derrière vos
+modélisations</p></li>
+<li><p>Analyser les jeux de données que vous avez à disposition et en tirer
+des conclusions pertinentes</p></li>
+<li><p>Implémentation d’un moldèle de regréssion</p></li>
+<li><p>Implémentation d’un moldèle de classification</p></li>
+</ol>
+<p>Pour l’ensemble le TP, vous auriez accès à des squeulettes de codes
+(fonctions) que vous devez compléter où a des celles blanches pour y
+écrire les réponses.</p>
+</section>
+<section id="partie-i-la-descente-de-gradient">
+<h1>Partie I - la déscente de gradient<a class="headerlink" href="#partie-i-la-descente-de-gradient" title="Permalink to this headline">¶</a></h1>
+<hr class="docutils" />
+<p style="color:red;"><p>Solution Numérique :</p>
+</p><hr class="docutils" />
+<p style="color:red;"><p>Preuve mathématiques :</p>
+</p><p>Prouvez numériquement la descente de gradient Vous rendez cet exercice
+sur un papier.</p>
+<hr class="docutils" />
+<p style="color:red;"><p>Implémentation :</p>
+</p><p>Codez les fonctions suivantes pour contruire un algorithme de descente
+de gradient</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+
+<span class="k">def</span> <span class="nf">gradient_descent</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">numIterations</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Cette fonction devrait retourner la liste</span>
+<span class="sd">        des estimateurs qui sont arrondis au 1000ème</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+
+    <span class="n">lengthData</span><span class="p">,</span> <span class="n">nbColumns</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nbColumns</span><span class="p">)</span> <span class="c1"># [0...0] with a len == Nb Columns</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numIterations</span><span class="p">):</span>
+
+        <span class="c1"># Forward pass: compute predicted y</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+        <span class="c1"># Compute and print loss</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">y_pred</span> <span class="o">-</span> <span class="n">y</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">loss</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">40000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;After </span><span class="si">{}</span><span class="s2"> itérations, loss = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">cost</span><span class="p">))</span>
+
+        <span class="c1"># Backprop to compute gradients</span>
+        <span class="n">gradient</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span> <span class="o">/</span> <span class="n">lengthData</span>
+
+        <span class="c1"># Update weights</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">gradient</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+
+
+
+<span class="c1"># gen numPoints points with a bias of 25 and 10 variance as a bit of noise</span>
+<span class="k">def</span> <span class="nf">gen_data</span><span class="p">(</span><span class="n">nb_points</span><span class="p">,</span><span class="n">bias</span><span class="p">,</span><span class="n">var</span><span class="p">):</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nb_points</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="c1"># [numPoints, 2] = Shape of data</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">nb_points</span><span class="p">)</span>
+    <span class="c1"># basically a straight line</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nb_points</span><span class="p">):</span>
+        <span class="c1"># bias feature</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="c1"># our target variable</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">bias</span><span class="p">)</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">var</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># gen 100 points with a bias of 25 and 10 variance as a bit of noise</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">gen_data</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">num_iterations</span><span class="o">=</span> <span class="mi">180000</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.0004</span>
+<span class="n">sol1</span> <span class="o">=</span> <span class="n">gradient_descent</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">num_iterations</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sol1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">After</span> <span class="mi">0</span> <span class="n">itérations</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="mf">151061.51615880022</span>
+<span class="n">After</span> <span class="mi">40000</span> <span class="n">itérations</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="mf">732.0244826499469</span>
+<span class="n">After</span> <span class="mi">80000</span> <span class="n">itérations</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="mf">720.5871742912071</span>
+<span class="n">After</span> <span class="mi">120000</span> <span class="n">itérations</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="mf">720.5837685376808</span>
+<span class="n">After</span> <span class="mi">160000</span> <span class="n">itérations</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="mf">720.5837675235299</span>
+<span class="p">[</span><span class="mf">39.9189</span>  <span class="mf">0.9971</span><span class="p">]</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p style="color:red;"><p>Visualisation :</p>
+</p><p>Mettez sur un graphe les données initiales et la droite ajuster !</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">plot_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        X : X Data</span>
+<span class="sd">        Y : Y Data</span>
+<span class="sd">        W : Weights</span>
+<span class="sd">        code à écrire ici</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">plot_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sol1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Réponse</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="k">def</span> <span class="nf">plot_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot; données initiales &quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">w</span><span class="p">)),</span> <span class="s2">&quot;r-&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Droite Ajustée&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Visualisation des des données et de la ligne ajustée &quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">plot_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sol1</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/TP_IMSD_9_0.png" src="../_images/TP_IMSD_9_0.png" />
+<hr class="docutils" />
+<p style="color:red;"><p>Solution Analytique :</p>
+</p><hr class="docutils" />
+<p style="color:red;"><p>Preuve mathématiques :</p>
+</p><p>Prouvez analytiquement la descente de gradient (En utilisant l’algèbre
+linéaire ) Vous rendez cet exercice sur un papier.</p>
+<hr class="docutils" />
+<p style="color:red;"><p>Implémentation :</p>
+</p><p>Codez une fonction qui, en prenant en entrée X &amp; Y, renvoie les
+estimateurs.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_analytical_resolution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        cette fonction utilsiera de l&#39;algébre linéaire pour</span>
+<span class="sd">        résoudre en une deux ou trois ligne, la descente de gradient.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">x</span><span class="p">)),</span><span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">y</span><span class="p">),</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol2</span> <span class="o">=</span> <span class="n">_analytical_resolution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">sol2</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">array</span><span class="p">([</span><span class="mf">39.9189</span><span class="p">,</span>  <span class="mf">0.9971</span><span class="p">])</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p style="color:red;"><p>Comparaison :</p>
+</p><p>Comparer les deux solutions en utilisant numpy, c’est dire comparer les
+tableaux de coéfficients de la régressions !</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Réponse</span>
+<span class="k">if</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">sol1</span><span class="p">,</span><span class="n">sol2</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;les deux solutions sont égales&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;les deux solutions sont différentes&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">les</span> <span class="n">deux</span> <span class="n">solutions</span> <span class="n">sont</span> <span class="n">égales</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">####</span>
+<span class="c1"># Ecrire la réponse ici</span>
+<span class="c1"># Replace &#39;&#39;&#39; .... &#39;&#39;&#39; par la bonne fonction numpy</span>
+<span class="c1">####</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="s1">&#39;&#39;&#39; .... &#39;&#39;&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;les deux solutions sont égales&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;les deux solutions sont différentes&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">les</span> <span class="n">deux</span> <span class="n">solutions</span> <span class="n">sont</span> <span class="n">égales</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p style="color:red;"><p>Question</p>
+</p><p>Dans le cas d’ <strong>une regréssion linéaire</strong> pensez vous que les
+estimateurs sont uniques ? Expliquez la raison ? :</p>
+<p><strong>Réponse</strong> écrire ici la réponse</p>
+<p><strong>Réponse</strong> L’unicité des estimateurs dans le cadre d’une regréssion
+lineaire est garantie à cause de la convexité de la fonction du coût de
+la regréssion linéaire. La déscente de gradient converge toujours vers
+une solution absolu, un minimum global.</p>
+<p>La fonction est une somme de fonctions carré, et donc une somme de
+fonction convexe, alors elle est convexe.</p>
+</section>
+<section id="partie-ii-analyse-de-donnees">
+<h1>Partie II - Analyse de données<a class="headerlink" href="#partie-ii-analyse-de-donnees" title="Permalink to this headline">¶</a></h1>
+<p>Sur le lien ci-contre, vous pouvez récupérer le <strong>premier jeu de
+données</strong> : link to dataset</p>
+<p style="color:red"><p>Importez directement le dataset</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">us_china</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;https://github.com/F3kih/Course_DS/blob/master/us_china_trade.xls?raw=true&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p style="color:red"><p>En utilisant la fonction head, affichez les 15 premiers lignes du
+dataset</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">us_china</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Month</th>
+      <th>Exports</th>
+      <th>Imports</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>January 2012</td>
+      <td>8359.5</td>
+      <td>34417.5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>February 2012</td>
+      <td>8785.7</td>
+      <td>28105.2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>March 2012</td>
+      <td>9811.6</td>
+      <td>31431.3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>April 2012</td>
+      <td>8468.1</td>
+      <td>33016.3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>May 2012</td>
+      <td>8960.2</td>
+      <td>34937.8</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>June 2012</td>
+      <td>8478.1</td>
+      <td>35949.4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>July 2012</td>
+      <td>8515.1</td>
+      <td>37930.8</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>August 2012</td>
+      <td>8613.3</td>
+      <td>37280.6</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>September 2012</td>
+      <td>8804.2</td>
+      <td>37891.8</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>October 2012</td>
+      <td>10824.4</td>
+      <td>40257.1</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>November 2012</td>
+      <td>10587.8</td>
+      <td>39543.7</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>December 2012</td>
+      <td>10308.6</td>
+      <td>34857.6</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>January 2013</td>
+      <td>9382.9</td>
+      <td>37193.7</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>February 2013</td>
+      <td>9133.3</td>
+      <td>32742.7</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>March 2013</td>
+      <td>9539.0</td>
+      <td>27294.1</td>
+    </tr>
+  </tbody>
+</table>
+</div><p style="color:red"><p>En utilisant la fonction apply, créez une colonne Balance qui est le
+résultat de la soustraction des colonnes Exports &amp; Imports:</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">us_china</span><span class="p">[</span><span class="s2">&quot;Balance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">us_china</span><span class="p">[[</span><span class="s2">&quot;Exports&quot;</span><span class="p">,</span><span class="s2">&quot;Imports&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Faite un filtrage dataset pour enlever la ligne correponsant au July
+2019 et gardez le nouveau dataset et affichez les 2 dernières ligne du
+dataset :</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">us_china</span> <span class="o">=</span> <span class="n">us_china</span><span class="p">[</span><span class="n">us_china</span><span class="p">[</span><span class="s2">&quot;Month&quot;</span><span class="p">]</span><span class="o">!=</span><span class="s2">&quot;July 2019&quot;</span><span class="p">]</span>
+<span class="n">us_china</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Month</th>
+      <th>Exports</th>
+      <th>Imports</th>
+      <th>Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>88</th>
+      <td>May 2019</td>
+      <td>9074.5</td>
+      <td>39269.1</td>
+      <td>-30194.6</td>
+    </tr>
+    <tr>
+      <th>89</th>
+      <td>June 2019</td>
+      <td>9034.7</td>
+      <td>39002.3</td>
+      <td>-29967.6</td>
+    </tr>
+  </tbody>
+</table>
+</div><p style="color:red"><p>En utilisant la fonction apply, créez une colonne Trim qui indiquera le
+trimestre et l’année de chaque ligne :</p>
+</p><p>la colonne sera de la forme 2013-Q1 pour les trois lignes suivantes
+ayant les dates January 2013, February 2013 et March 2013</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">affect_to_Trim</span><span class="p">(</span><span class="n">month_year</span><span class="p">):</span>
+    <span class="n">months</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Jan&quot;</span><span class="p">,</span><span class="s2">&quot;Feb&quot;</span><span class="p">,</span><span class="s2">&quot;Mar&quot;</span><span class="p">,</span><span class="s2">&quot;Apr&quot;</span><span class="p">,</span><span class="s2">&quot;May&quot;</span><span class="p">,</span><span class="s2">&quot;Jun&quot;</span><span class="p">,</span><span class="s2">&quot;Jul&quot;</span><span class="p">,</span><span class="s2">&quot;Aug&quot;</span><span class="p">,</span><span class="s2">&quot;Sep&quot;</span><span class="p">,</span><span class="s2">&quot;Oct&quot;</span><span class="p">,</span><span class="s2">&quot;Nov&quot;</span><span class="p">,</span><span class="s2">&quot;Dec&quot;</span><span class="p">]</span>
+    <span class="n">trim</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+    <span class="k">return</span> <span class="n">trim</span>
+
+<span class="n">us_china</span><span class="p">[</span><span class="s2">&quot;Trim&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Réponse</span>
+<span class="k">def</span> <span class="nf">affect_to_Trim</span><span class="p">(</span><span class="n">month_year</span><span class="p">):</span>
+
+    <span class="n">months</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Jan&quot;</span><span class="p">,</span><span class="s2">&quot;Feb&quot;</span><span class="p">,</span><span class="s2">&quot;Mar&quot;</span><span class="p">,</span><span class="s2">&quot;Apr&quot;</span><span class="p">,</span><span class="s2">&quot;May&quot;</span><span class="p">,</span><span class="s2">&quot;Jun&quot;</span><span class="p">,</span><span class="s2">&quot;Jul&quot;</span><span class="p">,</span><span class="s2">&quot;Aug&quot;</span><span class="p">,</span><span class="s2">&quot;Sep&quot;</span><span class="p">,</span><span class="s2">&quot;Oct&quot;</span><span class="p">,</span><span class="s2">&quot;Nov&quot;</span><span class="p">,</span><span class="s2">&quot;Dec&quot;</span><span class="p">]</span>
+    <span class="p">[</span><span class="n">month</span><span class="p">,</span><span class="n">year</span><span class="p">]</span>  <span class="o">=</span> <span class="n">month_year</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">index_month</span> <span class="o">=</span> <span class="n">months</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">month</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">trim</span> <span class="o">=</span> <span class="n">year</span><span class="o">+</span><span class="s2">&quot;-&quot;</span><span class="o">+</span><span class="s2">&quot;Q&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">index_month</span><span class="o">//</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">trim</span>
+
+<span class="n">us_china</span><span class="p">[</span><span class="s2">&quot;Trim&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">us_china</span><span class="p">[</span><span class="s2">&quot;Month&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">affect_to_Trim</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Utilisez la fonction groupBy et arrangez le présent dataset sous format
+trimestriel, en sommant les colonnes Imports,Exports et Balance :</p>
+</p><p>Conserez le résultat dans un dataframe us_china_trim</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">us_china_trim</span> <span class="o">=</span> <span class="n">us_china</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;Trim&quot;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<p style="color:red"><p>En utilisant la fonction apply, créez une colonne Year qui indiquera
+l’année de chaque ligne :</p>
+  </p>
+
+Il faut que l’année soit un entier<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">us_china_trim</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Reponse</span>
+<span class="n">us_china_trim</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">us_china_trim</span><span class="p">[</span><span class="s2">&quot;Trim&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Sur 3 graphes, montrez l’évolution d’activité comerciale trimestrielle
+de entre les US et la Chine:</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">us_china_trim</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">us_china_trim</span><span class="p">[</span><span class="s2">&quot;Imports&quot;</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Imports&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">us_china_trim</span><span class="p">[</span><span class="s2">&quot;Trim&quot;</span><span class="p">],</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Variation of Imports amount between US &amp; CHINA&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/TP_IMSD_41_0.png" src="../_images/TP_IMSD_41_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">us_china_trim</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">us_china_trim</span><span class="p">[</span><span class="s2">&quot;Exports&quot;</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exports&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">us_china_trim</span><span class="p">[</span><span class="s2">&quot;Trim&quot;</span><span class="p">],</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Variation of Exports amount between US &amp; CHINA&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/TP_IMSD_42_0.png" src="../_images/TP_IMSD_42_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">us_china_trim</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">us_china_trim</span><span class="p">[</span><span class="s2">&quot;Balance&quot;</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Balance&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">us_china_trim</span><span class="p">[</span><span class="s2">&quot;Trim&quot;</span><span class="p">],</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Variation of trade&#39;s Balance between US &amp; CHINA&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/TP_IMSD_43_0.png" src="../_images/TP_IMSD_43_0.png" />
+<p style="color:red"><p>Sachant que les taxes d’exporation de certains produits agricoles sont
+passées de 1.5% à 26% pendant le deuxième semestre de 2018 et que ces
+produits représentent 40% de la valeur des exportations américaine, avez
+vous remarqué un impacte ?</p>
+<p>Ecrivez votre réponse ici</p>
+<p>Chute des transactions entre les US et la chine entre les Q3 et Q4 de
+l’année 2018. Suite à l’application de ces nouvelles taxes. C’est du à
+la crise entre les deux pays et les taxes que Trump a imposées.</p>
+<p style="color:red"><p>En regardant la courbes de Balance, que pensez vous des mesures prises
+par le président américain ? C’était quoi son but ?</p>
+</p><p>Réponse à écrire ici</p>
+<p>Les mesures prises ont ammené une négociation du commerce entre les deux
+pays, ce qui fait que les US maintenant achète moins et vend plus à la
+chine. L’objéctif était de re-équilibrer les échanges commerciaux pour
+que les deux pays en tirer profits.</p>
+</section>
+<section id="partie-iii-data-analysis-linear-regression">
+<h1>Partie III - Data Analysis &amp; Linear Regression<a class="headerlink" href="#partie-iii-data-analysis-linear-regression" title="Permalink to this headline">¶</a></h1>
+<p>Sur le lien ci-contre, vous pouvez récupérer le <strong>deuxième jeu de
+données</strong> : link to dataset Il s’agit des données de location
+d’appartement à paris. Ces données datent de Fin 2017 début 2018. Elles
+ont été scrappées du site : boncoin.</p>
+<p style="color:red"><p>Importez the excel des données (ce sont les données Train après)</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+<span class="n">df_housing</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;https://github.com/F3kih/Course_DS/blob/master/train_Regression_Housing_Paris.xlsx?raw=true&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Utilisez une fonction de l’objet pandas vous permettant d’avoir des
+informations sur le nombre de ligne, le nombre de colonne, leurs types
+et le nombre des éléments nuls par colonne</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ecrivez la réponse ici</span>
+<span class="c1">#df_housing.(...)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_housing</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 1500 entries, 0 to 1499
+Data columns (total 5 columns):
+Rooms Number        1500 non-null int64
+is furnished        1500 non-null int64
+Area                1500 non-null int64
+Rent from Agency    1500 non-null int64
+Rent(€)             1500 non-null int64
+dtypes: int64(5)
+memory usage: 58.7 KB
+</pre></div>
+</div>
+<p style="color:red"><p>Sachant que la colonne “is furnished” est un booleén, est ce que le
+calcul de corrélation entre cette variable et le loyer à du sens</p>
+</p><p>########Ecrire la réponse ici########</p>
+<p>Non car il s’agit d’une variable catégorielle et donc cela n’a pas de
+sens de calculer la corrélation. Pour le calcul de corrélation, il
+necéssite deux variables continues</p>
+<p style="color:red"><p>Si on souhaite de voir l’impact de la variable catégorielle is Furnished
+sur le loyer, quel type de test peut-on utiliser ? Utilisez de test pour
+voir s’ilya une relation significative entre les deux variables</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ecrivez le reste de la réponse ici en mentionant le nom du test</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+
+<span class="c1">#lenom du test est : ....</span>
+<span class="c1"># Ecrire Code et interprétation :</span>
+
+<span class="c1">#code</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">....</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="c1"># Inteprétation : Il ya une relation ou pas ? et pouquoi ?  ...</span>
+</pre></div>
+</div>
+<pre class="literal-block">'n....nn'</pre>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ecrivez le reste de la réponse ici en mentionant le nom du test</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+
+<span class="c1">#lenom du test est : Anova one-way</span>
+<span class="c1"># Ecrire Code et interprétation :</span>
+
+<span class="n">stats</span><span class="o">.</span><span class="n">f_oneway</span><span class="p">(</span><span class="n">df_housing</span><span class="p">[</span><span class="n">df_housing</span><span class="p">[</span><span class="s2">&quot;is furnished&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;Rent(€)&quot;</span><span class="p">],</span><span class="n">df_housing</span><span class="p">[</span><span class="n">df_housing</span><span class="p">[</span><span class="s2">&quot;is furnished&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;Rent(€)&quot;</span><span class="p">])</span>
+
+<span class="c1"># Inteprétation : Il ya une relation ou pas ? et pouquoi ?  l&#39;hypothèse nulle dit que les deux populations ont</span>
+<span class="c1"># la même moyenne et donc les variables sont indépendantes. En comparant, la p-value &lt;&lt;&lt; 005 on peut rejeter l&#39;hypothèse</span>
+<span class="c1"># nulle et donc les deux variables sont dépendantes.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F_onewayResult</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="mf">49.733746512862645</span><span class="p">,</span> <span class="n">pvalue</span><span class="o">=</span><span class="mf">2.680205545156138e-12</span><span class="p">)</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Utilisez les boîtes à moustaches (Searborn.boxplot) pour montrer les
+statistiques du loyer en fonction de l’ammeublement ou pas de l’appart</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="c1"># Code ici</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Corréction</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="c1"># Code ici</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;is furnished&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Rent(€)&quot;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df_housing</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;Set1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/TP_IMSD_65_0.png" src="../_images/TP_IMSD_65_0.png" />
+<p style="color:red"><p>En utilisant un dataframe intermédiaire pour compter les instances et 3
+graphes camemberts :</p>
+</p><ol style="color:red"><p>calculer le pourcentage des appartements meublés et non meublés</p>
+</ol><ol style="color:red"><p>calculer le pourcentage des appartements meublés et non meublés loués
+par des agences</p>
+</ol><ol style="color:red"><p>calculer le pourcentage des appartements meublés et non meublés loués
+par des particuliers</p>
+</ol><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_repartition</span> <span class="o">=</span> <span class="n">df_housing</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;Rent from Agency&quot;</span><span class="p">,</span><span class="s1">&#39;is furnished&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+<span class="n">df_repartition</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Rent from Agency</th>
+      <th>is furnished</th>
+      <th>counts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>163</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>1</td>
+      <td>590</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0</td>
+      <td>439</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>1</td>
+      <td>308</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="k">as</span> <span class="nn">gridspec</span>
+
+<span class="c1"># Create 1x3 sub plots</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="c1"># row 0, col 0</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">pie</span><span class="p">([</span><span class="n">df_repartition</span><span class="p">[</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;is furnished&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span><span class="n">df_repartition</span><span class="p">[</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;is furnished&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()]</span>
+<span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;unfurnished&quot;</span><span class="p">,</span><span class="s2">&quot;furnished&quot;</span><span class="p">],</span><span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">],</span><span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;All appartments&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="c1"># row 0, col 1</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">pie</span><span class="p">([</span><span class="n">df_repartition</span><span class="p">[((</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;is furnished&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;Rent from Agency&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">))][</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span><span class="n">df_repartition</span><span class="p">[((</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;is furnished&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;Rent from Agency&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">))][</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()]</span>
+<span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;unfurnished&quot;</span><span class="p">,</span><span class="s2">&quot;furnished&quot;</span><span class="p">],</span><span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">],</span><span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Agencies appartments&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="c1"># row 1, span all columns</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">pie</span><span class="p">([</span><span class="n">df_repartition</span><span class="p">[((</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;is furnished&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;Rent from Agency&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">))][</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span><span class="n">df_repartition</span><span class="p">[((</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;is furnished&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_repartition</span><span class="p">[</span><span class="s2">&quot;Rent from Agency&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">))][</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()]</span>
+<span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;unfurnished&quot;</span><span class="p">,</span><span class="s2">&quot;furnished&quot;</span><span class="p">],</span><span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">],</span><span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Individuals appartments&quot;</span><span class="p">)</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[]</span>
+</pre></div>
+</div>
+<img alt="../_images/TP_IMSD_68_1.png" src="../_images/TP_IMSD_68_1.png" />
+<p style="color:red"><p>Retrouvez le tableau de contingences des deux variables “is furnished”
+et “Rent from Agency”, en utilisant la fonction crosstab de pandas</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ecrivez le code ici</span>
+<span class="n">table_contingence</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">table_contingence</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">df_housing</span><span class="p">[</span><span class="s1">&#39;is furnished&#39;</span><span class="p">],</span><span class="n">columns</span><span class="o">=</span><span class="n">df_housing</span><span class="p">[</span><span class="s1">&#39;Rent from Agency&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p style="color:red"><p>On souhaite faire un test statistique pour avoir un idée sur la
+dépendance ou pas des variables “is furnished” &amp; “Rent from agency”.
+Quel type de test doit-on utiliser ? Ecrivez le code corrépondant et
+interprétez les résultats</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># quel test ?</span>
+<span class="c1"># Ecriver le Code</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+
+<span class="c1"># Interpretez les résultats</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Réponse</span>
+<span class="c1"># Khi2 : H0 indépendence entre les variables catégorielles</span>
+
+<span class="n">stats</span><span class="o">.</span><span class="n">chi2_contingency</span><span class="p">(</span><span class="n">table_contingence</span><span class="p">)</span>
+
+<span class="c1"># Comme p &lt;&lt;&lt; 0.05 on rejete H0, les deux variables sont liées... (Les agences suivent plutôt une politique pour</span>
+<span class="c1"># maximiser leurs gains)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">213.5321842009827</span><span class="p">,</span> <span class="mf">2.3295560096749608e-48</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">array</span><span class="p">([[</span><span class="mf">302.204</span><span class="p">,</span> <span class="mf">299.796</span><span class="p">],</span>
+        <span class="p">[</span><span class="mf">450.796</span><span class="p">,</span> <span class="mf">447.204</span><span class="p">]]))</span>
+</pre></div>
+</div>
+<p style="color:red"><p>On souhaite dans cette partie comprendre si on est capable de résoudre
+notre problème avec un regréssion linéaire ? Il parait intuitif que le
+loyer dépend directement de la surface, Mentionnez le nom du test
+statistique qui nous permet de vérifier s’il ya une relation de
+corréaltion entre ces deux variables et implémentez le code</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Nom du test : Test ...</span>
+<span class="c1"># Code et intéprétation</span>
+<span class="c1">#...</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Réponse</span>
+
+<span class="c1"># Nom du test : Test de Student (Test t) : H0 les deux variables continues sont indépendantes</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">df_housing</span><span class="p">[</span><span class="s2">&quot;Area&quot;</span><span class="p">],</span><span class="n">df_housing</span><span class="p">[</span><span class="s2">&quot;Rent(€)&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># 0.96, corrélation très grande, ce qui confirme la linéarité de notre problème</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;Area&#39;</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;Rent(€)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df_housing</span><span class="p">,</span><span class="n">truncate</span> <span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Varation of the Rent Amount&#39;</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;facecolor&#39;</span><span class="p">:</span><span class="s1">&#39;0.8&#39;</span><span class="p">,</span> <span class="s1">&#39;pad&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">},</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">0.9660359715618149</span>
+</pre></div>
+</div>
+<pre class="literal-block">/home/younes/anaconda3/envs/py36/lib/python3.6/site-packages/scipy/stats/stats.py:1713: FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use <cite>arr[tuple(seq)]</cite> instead of <cite>arr[seq]</cite>. In the future this will be interpreted as an array index, <cite>arr[np.array(seq)]</cite>, which will result either in an error or a different result.
+  return np.add.reduce(sorted[indexer] * weights, axis=axis) / sumval</pre>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[]</span>
+</pre></div>
+</div>
+<img alt="../_images/TP_IMSD_77_3.png" src="../_images/TP_IMSD_77_3.png" />
+<section id="la-regression-lineaire">
+<h2>La regréssion linéaire<a class="headerlink" href="#la-regression-lineaire" title="Permalink to this headline">¶</a></h2>
+<p style="color:red"><p>Que va faire la variable booléenne “is furnished” dans le cadre de cette
+regréssion</p>
+</p><p>Ecrivez la réponse ici</p>
+<p>Réponse :</p>
+<p>La variable booléenne va décaler la droite ajutée pour mieux illustrer
+son impacte sur le prix</p>
+<p style="color:red"><p>Implémentez un modèle de forêt aléatoire et un modèle de regréssion
+linéaire qui permettent d’estimer le loyer</p>
+</p><p>Voilà les caratéristiques de chacun des modèles : Forêt aléatoire :
+profondeur_maximale = 2, random_state=2020, nombre d’estimateur = 100
+Regression linéaire : Rien</p>
+<p style="color:red"><p>Utilisez l’ensemble des données pour faire votre train</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Réponse</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+
+<span class="c1"># .... X,y, fit ...</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">df_housing</span><span class="p">[</span><span class="n">df_housing</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">df_housing</span><span class="p">[</span><span class="n">df_housing</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">reg_random_forest</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">reg_linear_regression</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+
+<span class="n">reg_random_forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">reg_linear_regression</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LinearRegression</span><span class="p">(</span><span class="n">copy_X</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+         <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Sur le lien ci-contre, vous pouvez récupérer le <strong>troisième jeu de
+données</strong> : link to dataset</p>
+<p style="color:red"><p>Importez l’excel du jeu de données de test</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_housing_test</span> <span class="o">=</span> <span class="s2">&quot;....&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_housing_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;https://github.com/F3kih/Course_DS/blob/master/test_Regression_Housing_Paris.xlsx?raw=true&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Faire les prédictions de chacun des modèles sur les jeu de données de
+test (xtest, ytest, predict …)</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ecrivez le Code ici</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_test</span> <span class="o">=</span> <span class="n">df_housing_test</span><span class="p">[</span><span class="n">df_housing_test</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_test</span> <span class="o">=</span><span class="n">df_housing_test</span><span class="p">[</span><span class="n">df_housing_test</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y_pred_rf</span> <span class="o">=</span> <span class="n">reg_random_forest</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+<span class="n">y_pred_lin</span> <span class="o">=</span> <span class="n">reg_linear_regression</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Choisissez une metric pour comparer les deux modèles (import and test
+..)</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Ecrivez le Code ici</span>
+
+<span class="k">if</span><span class="p">(</span><span class="s2">&quot; ..... &quot;</span><span class="p">)</span> <span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Linear regression is the better Model&quot;</span><span class="p">)</span>
+<span class="k">else</span> <span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Random Forest is the better Model&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Linear</span> <span class="n">regression</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">better</span> <span class="n">Model</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Réponse</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">r2_score</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="n">y_pred_lin</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="n">y_pred_rf</span><span class="p">))</span> <span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Linear regression is the better Model&quot;</span><span class="p">)</span>
+<span class="k">else</span> <span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Random Forest is the better Model&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Linear</span> <span class="n">regression</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">better</span> <span class="n">Model</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="partie-iv-analyse-de-donnees-classfication">
+<h1>Partie IV - Analyse de données &amp; Classfication<a class="headerlink" href="#partie-iv-analyse-de-donnees-classfication" title="Permalink to this headline">¶</a></h1>
+<p>Sur le lien ci-contre, vous pouvez récupérer le <strong>Troisème jeu de
+données</strong> : link to dataset Il s’agit des données de Banque . Ces
+données datent permettent de savoir automatiquement si une entreprise
+est solvable ou pas. Voilà les différentes explications des colonnes,
+elles resultent d’un scoring interne à la banque suivi d’un attribution
+d’un label :</p>
+<p style="color:red"><p>Importez the excel des données</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Réponse</span>
+<span class="n">data_Banking_Ruptcy</span> <span class="o">=</span> <span class="s2">&quot;....&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_Banking_Ruptcy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;https://github.com/F3kih/Course_DS/blob/master/umbalancedRuptcy.xls?raw=true&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Montrez sur un bar plot la variation de nombres d’instances pour la
+variable cible ? Qu’est ce que vous remarquez ?</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Code bar plot</span>
+
+<span class="c1"># Remarque : .....</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Code histogramme</span>
+
+<span class="n">data_Banking_Ruptcy</span><span class="p">[</span><span class="s1">&#39;Class&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span>
+                                    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
+                                    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Number for each Owner Name&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># Remarque : jeu de données non équilibré car il&#39;ya une classe minoritaire &lt; 0.05 % du dataset</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">_subplots</span><span class="o">.</span><span class="n">AxesSubplot</span> <span class="n">at</span> <span class="mh">0x7fb96c1ee208</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<img alt="../_images/TP_IMSD_102_1.png" src="../_images/TP_IMSD_102_1.png" />
+<p style="color:red"><p>Si on applique sur le présent jeu de données, un algorithme de
+classification sans faire de modifications de ses paramètres, qu’est ce
+qu’il va se passer ?</p>
+</p><p>Ecrire la réponse ici :</p>
+<p>Réponse : Comme l’objectif, lors du training du modèle, est de minimiser
+le Log de la Vraie Semblance, afin d’améliorer l’accuracy du modèle, le
+modèle donnera le label de la classe majoritaire à toutes les instances.
+Cette solution maximiserait l’accuracy.</p>
+<p style="color:red"><p>Proposez au moins 2 techniques, pour résoudre ce problème ? Une sur
+l’agorithme et l’autre agissant sur la base de données ?</p>
+</p><p>Ecrire la réponse ici :</p>
+<p><strong>Algorithmes</strong> : Technique de boosting, Appliquer des poids sur les
+classes afin de pénaliser plus l’erreur sur la classe minoritaire
+<strong>Données</strong> : faire du boostraping (Echantillonage), faire un opération
+d’oversampling ( ne fonctionne par car si on est capable de générer des
+individus appartenant à une classe c’est qu’on sait à l’avance la
+distribution de cette dernière et donc on est surement capable de
+clasifier … ce qui n’est pas le cas )</p>
+<p style="color:red"><p>On souhaite implémenté un algorithme de classification linéaire SVM sur
+ce jeu de données. Avant de faire le training, on va diviser notre jeu
+de données en Train et Test. On compte utiliser la fonction de sklearn
+train_test_split. Qu’est ce qui va se passer si on ne fait pas attention
+à la stratification ?</p>
+</p><p>Ecrire la réponse ici : ….</p>
+<p>Réponse: On peut très bien avoir une accuracy de 100% car sur le test
+dataset on aura aucune instance de la classe minoritaire. Ou bien on
+peut avoir toutes les instances dans la partie test et donc notre modèle
+ne va rien apprendre sur cette classe.</p>
+<p style="color:red"><p>Afin d’implemeter un SVM lineaire, on aura besoin de coder les features
+en numérique, pour cela on souahite utiliser la fonction labelEncoder de
+Sklearn</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Import</span>
+<span class="c1">#Fit &amp; Transform</span>
+
+<span class="n">data_Banking_Ruptcy_Label_encoded</span> <span class="o">=</span> <span class="s2">&quot;.....&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+
+<span class="c1">#Réponse:</span>
+<span class="n">data_Banking_Ruptcy_Label_encoded</span> <span class="o">=</span> <span class="n">data_Banking_Ruptcy</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">)</span>
+<span class="n">data_Banking_Ruptcy_Label_encoded</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>IR</th>
+      <th>MR</th>
+      <th>FF</th>
+      <th>CR</th>
+      <th>CO</th>
+      <th>OP</th>
+      <th>Class</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div><p style="color:red"><p>Creez un set de training avec une taille de 70% et un test de 30% ?</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import ..</span>
+<span class="c1"># Split .. random_state=2020</span>
+<span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span><span class="s2">&quot;,&quot;</span><span class="p">,</span><span class="s2">&quot;,&quot;</span><span class="p">,</span><span class="s2">&quot;,&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">x_data</span> <span class="o">=</span> <span class="n">data_Banking_Ruptcy_Label_encoded</span><span class="p">[</span><span class="n">data_Banking_Ruptcy</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">y_data</span> <span class="o">=</span> <span class="n">data_Banking_Ruptcy_Label_encoded</span><span class="p">[</span><span class="n">data_Banking_Ruptcy</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y_data</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Implemetez un SVM lineaire, entrainez le, testez et affichez son
+accuracy, sa précision et son rappel. Commentez ces résultats</p>
+</p><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Imports</span>
+<span class="c1"># create (random_state=2020) , fit, predict , measure</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="s2">&quot;....&quot;</span>
+
+<span class="c1"># Commentaire sur les metrics :</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+
+<span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">rec</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">pre</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Commentaire sur les metrics : Recall 1.0, c&#39;est à dire la capacité de distinguer la classe majoritaire parfaitement</span>
+<span class="c1"># Précision très haute car on prédit tout comme étant classe majoritaire</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy = </span><span class="si">{}</span><span class="s2">, Precision = </span><span class="si">{}</span><span class="s2">, Recall = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span><span class="n">pre</span><span class="p">,</span><span class="n">rec</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Accuracy</span> <span class="o">=</span> <span class="mf">0.95556</span><span class="p">,</span> <span class="n">Precision</span> <span class="o">=</span> <span class="mf">0.95556</span><span class="p">,</span> <span class="n">Recall</span> <span class="o">=</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p style="color:red"><p>Expliquez c’est quoi le compromis biais variance briènement ? Qu’est
+qu’un modèle à haute variance et à haut biais</p>
+</p><p>Ecrire la réponse ici : … <strong>Le compromis biais variance</strong> <strong>modèle à
+haute variance :</strong> <strong>modèle à haut biais :</strong></p>
+<p>Réponse : <strong>Le compromis biais variance</strong> consiste à retrouver un modèle
+qui est au juste milieu c’est à dire qui reste capable d’apprendre
+correctement sur le jeu de données d’apprentissage et généraliser sur le
+jeu de données de test corréctement, c’est à dire avec des performances
+comparables. <strong>modèle à haute variance :</strong> Overfitting où le modèle ne
+peut pas généraliser ce qu’il a appris, car il apprend même le bruit
+<strong>modèle à haut biais :</strong> Underfitting où le modèle n’est pas capable
+d’apprendre des caractéristiques du jeu de données c’et à dire les
+relations entre les différentes variables</p>
+<p style="color:red"><p>Dans cette dernière section, on va implementez un modèle de stacking et
+un modèle non linéaire. On va les étalonner (tunning) à en utilisant un
+gridSearch , on va les comparer avec les courbes de roc et les matrices
+de confusions</p>
+</p><p>Pour le reste du TP, un dataset re-équilibré est fourni sur ce lien .
+Vous devez l’utiliser pour le reste du TP.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/younes/TP_IMSD.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,1836 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Pandas: data manipulation &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data visualization: matplotlib &amp; seaborn" href="../scientific_python/scipy_matplotlib.html" />
+    <link rel="prev" title="Numpy: arrays and matrices" href="scipy_numpy.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-gallery-scipy-pandas-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="pandas-data-manipulation">
+<span id="sphx-glr-auto-gallery-scipy-pandas-py"></span><h1>Pandas: data manipulation<a class="headerlink" href="#pandas-data-manipulation" title="Permalink to this headline">¶</a></h1>
+<p>It is often said that 80% of data analysis is spent on the cleaning and
+small, but important, aspect of data manipulation and cleaning with Pandas.</p>
+<p><strong>Sources</strong>:</p>
+<ul class="simple">
+<li><p>Kevin Markham: <a class="reference external" href="https://github.com/justmarkham">https://github.com/justmarkham</a></p></li>
+<li><p>Pandas doc: <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/index.html">http://pandas.pydata.org/pandas-docs/stable/index.html</a></p></li>
+</ul>
+<p><strong>Data structures</strong></p>
+<ul class="simple">
+<li><p><strong>Series</strong> is a one-dimensional labeled array capable of holding any data
+type (integers, strings, floating point numbers, Python objects, etc.).
+The axis labels are collectively referred to as the index. The basic method
+to create a Series is to call <cite>pd.Series([1,3,5,np.nan,6,8])</cite></p></li>
+<li><p><strong>DataFrame</strong> is a 2-dimensional labeled data structure with columns of
+potentially different types. You can think of it like a spreadsheet or SQL
+table, or a dict of Series objects. It stems from the <cite>R data.frame()</cite>
+object.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<section id="create-dataframe">
+<h2>Create DataFrame<a class="headerlink" href="#create-dataframe" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;job&#39;</span><span class="p">]</span>
+
+<span class="n">user1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;alice&#39;</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;student&quot;</span><span class="p">],</span>
+                      <span class="p">[</span><span class="s1">&#39;john&#39;</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;student&quot;</span><span class="p">]],</span>
+                     <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="n">user2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;eric&#39;</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;student&quot;</span><span class="p">],</span>
+                      <span class="p">[</span><span class="s1">&#39;paul&#39;</span><span class="p">,</span> <span class="mi">58</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;manager&quot;</span><span class="p">]],</span>
+                     <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="n">user3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;peter&#39;</span><span class="p">,</span> <span class="s1">&#39;julie&#39;</span><span class="p">],</span>
+                          <span class="n">age</span><span class="o">=</span><span class="p">[</span><span class="mi">33</span><span class="p">,</span> <span class="mi">44</span><span class="p">],</span> <span class="n">gender</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">],</span>
+                          <span class="n">job</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;engineer&#39;</span><span class="p">,</span> <span class="s1">&#39;scientist&#39;</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">user3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender        job
+0  peter   33      M   engineer
+1  julie   44      F  scientist
+</pre></div>
+</div>
+</section>
+<section id="combining-dataframes">
+<h2>Combining DataFrames<a class="headerlink" href="#combining-dataframes" title="Permalink to this headline">¶</a></h2>
+<section id="concatenate-dataframe">
+<h3>Concatenate DataFrame<a class="headerlink" href="#concatenate-dataframe" title="Permalink to this headline">¶</a></h3>
+<p>Concatenate columns (axis = 1).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">height</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="p">[</span><span class="mf">1.65</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">user1</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">user1</span><span class="p">,</span> <span class="n">height</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender      job
+0  alice   19      F  student
+1   john   26      M  student
+    height
+0    1.65
+1    1.80
+    name  age gender      job  height
+0  alice   19      F  student    1.65
+1   john   26      M  student    1.80
+</pre></div>
+</div>
+<p>Concatenate rows (default: axis = 0)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">user1</span><span class="p">,</span> <span class="n">user2</span><span class="p">,</span> <span class="n">user3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender        job
+0  alice   19      F    student
+1   john   26      M    student
+0   eric   22      M    student
+1   paul   58      F    manager
+0  peter   33      M   engineer
+1  julie   44      F  scientist
+</pre></div>
+</div>
+<p>Concatenate rows: append</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>alice</td>
+      <td>19</td>
+      <td>F</td>
+      <td>student</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>john</td>
+      <td>26</td>
+      <td>M</td>
+      <td>student</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>eric</td>
+      <td>22</td>
+      <td>M</td>
+      <td>student</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>paul</td>
+      <td>58</td>
+      <td>F</td>
+      <td>manager</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="join-dataframe">
+<h3>Join DataFrame<a class="headerlink" href="#join-dataframe" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user4</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;alice&#39;</span><span class="p">,</span> <span class="s1">&#39;john&#39;</span><span class="p">,</span> <span class="s1">&#39;eric&#39;</span><span class="p">,</span> <span class="s1">&#39;julie&#39;</span><span class="p">],</span>
+                          <span class="n">height</span><span class="o">=</span><span class="p">[</span><span class="mi">165</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">171</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">user4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  height
+0  alice     165
+1   john     180
+2   eric     175
+3  julie     171
+</pre></div>
+</div>
+<p>Use intersection of keys from both frames</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">merge_inter</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">user4</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">merge_inter</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender        job  height
+0  alice   19      F    student     165
+1   john   26      M    student     180
+2   eric   22      M    student     175
+3  julie   44      F  scientist     171
+</pre></div>
+</div>
+<p>Use union of keys from both frames</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">user4</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender        job  height
+0  alice   19      F    student   165.0
+1   john   26      M    student   180.0
+2   eric   22      M    student   175.0
+3   paul   58      F    manager     NaN
+4  peter   33      M   engineer     NaN
+5  julie   44      F  scientist   171.0
+</pre></div>
+</div>
+</section>
+<section id="reshaping-by-pivoting">
+<h3>Reshaping by pivoting<a class="headerlink" href="#reshaping-by-pivoting" title="Permalink to this headline">¶</a></h3>
+<p>“Unpivots” a DataFrame from wide format to long (stacked) format,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">staked</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">id_vars</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">staked</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>     name variable      value
+0   alice      age         19
+1    john      age         26
+2    eric      age         22
+3    paul      age         58
+4   peter      age         33
+5   julie      age         44
+6   alice   gender          F
+7    john   gender          M
+8    eric   gender          M
+9    paul   gender          F
+10  peter   gender          M
+11  julie   gender          F
+12  alice      job    student
+13   john      job    student
+14   eric      job    student
+15   paul      job    manager
+16  peter      job   engineer
+17  julie      job  scientist
+18  alice   height        165
+19   john   height        180
+20   eric   height        175
+21   paul   height        NaN
+22  peter   height        NaN
+23  julie   height        171
+</pre></div>
+</div>
+<p>“pivots” a DataFrame from long (stacked) format to wide format,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">staked</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;variable&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>variable age gender height        job
+name
+alice     19      F    165    student
+eric      22      M    175    student
+john      26      M    180    student
+julie     44      F    171  scientist
+paul      58      F    NaN    manager
+peter     33      M    NaN   engineer
+</pre></div>
+</div>
+</section>
+</section>
+<section id="summarizing">
+<h2>Summarizing<a class="headerlink" href="#summarizing" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span>                   <span class="c1"># print the first 30 and last 30 rows</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>             <span class="c1"># DataFrame</span>
+<span class="n">users</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>            <span class="c1"># print the first 5 rows</span>
+<span class="n">users</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>            <span class="c1"># print the last 5 rows</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>john</td>
+      <td>26</td>
+      <td>M</td>
+      <td>student</td>
+      <td>180.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>eric</td>
+      <td>22</td>
+      <td>M</td>
+      <td>student</td>
+      <td>175.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>paul</td>
+      <td>58</td>
+      <td>F</td>
+      <td>manager</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>peter</td>
+      <td>33</td>
+      <td>M</td>
+      <td>engineer</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>julie</td>
+      <td>44</td>
+      <td>F</td>
+      <td>scientist</td>
+      <td>171.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Descriptive statistics</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>6</td>
+      <td>6.000000</td>
+      <td>6</td>
+      <td>6</td>
+      <td>4.000000</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>6</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>4</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>julie</td>
+      <td>NaN</td>
+      <td>F</td>
+      <td>student</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>1</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>NaN</td>
+      <td>33.666667</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>172.750000</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>NaN</td>
+      <td>14.895189</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6.344289</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>NaN</td>
+      <td>19.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>165.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>NaN</td>
+      <td>23.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>169.500000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>NaN</td>
+      <td>29.500000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>173.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>NaN</td>
+      <td>41.250000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>176.250000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>NaN</td>
+      <td>58.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>180.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Meta-information</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span><span class="o">.</span><span class="n">index</span>             <span class="c1"># &quot;Row names&quot;</span>
+<span class="n">users</span><span class="o">.</span><span class="n">columns</span>           <span class="c1"># column names</span>
+<span class="n">users</span><span class="o">.</span><span class="n">dtypes</span>            <span class="c1"># data types of each column</span>
+<span class="n">users</span><span class="o">.</span><span class="n">values</span>            <span class="c1"># underlying numpy array</span>
+<span class="n">users</span><span class="o">.</span><span class="n">shape</span>             <span class="c1"># number of rows and columns</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(6, 5)
+</pre></div>
+</div>
+</section>
+<section id="columns-selection">
+<h2>Columns selection<a class="headerlink" href="#columns-selection" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span>         <span class="c1"># select one column</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">users</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">])</span>   <span class="c1"># Series</span>
+<span class="n">users</span><span class="o">.</span><span class="n">gender</span>            <span class="c1"># select one column using the DataFrame</span>
+
+<span class="c1"># select multiple columns</span>
+<span class="n">users</span><span class="p">[[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">]]</span>        <span class="c1"># select two columns</span>
+<span class="n">my_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">]</span>     <span class="c1"># or, create a list...</span>
+<span class="n">users</span><span class="p">[</span><span class="n">my_cols</span><span class="p">]</span>                  <span class="c1"># ...and use that list to select columns</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">users</span><span class="p">[</span><span class="n">my_cols</span><span class="p">])</span>            <span class="c1"># DataFrame</span>
+</pre></div>
+</div>
+</section>
+<section id="rows-selection-basic">
+<h2>Rows selection (basic)<a class="headerlink" href="#rows-selection-basic" title="Permalink to this headline">¶</a></h2>
+<p><cite>iloc</cite> is strictly integer position based</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>     <span class="c1"># first row</span>
+<span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># first row</span>
+<span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># first item of first row</span>
+<span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">55</span>
+</pre></div>
+</div>
+<p><cite>loc</cite> supports mixed integer and label based access.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>         <span class="c1"># first row</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>      <span class="c1"># first row</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span>  <span class="c1"># age item of first row</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">55</span>
+</pre></div>
+</div>
+<p>Selection and index</p>
+<p>Select females into a new DataFrame</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="o">.</span><span class="n">gender</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender        job  height
+0  alice   19      F    student   165.0
+3   paul   58      F    manager     NaN
+5  julie   44      F  scientist   171.0
+</pre></div>
+</div>
+<p>Get the two first rows using <cite>iloc</cite> (strictly integer position)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">:]</span>  <span class="c1"># Ok, but watch the index: 0, 3</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>alice</td>
+      <td>19</td>
+      <td>F</td>
+      <td>student</td>
+      <td>165.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>paul</td>
+      <td>58</td>
+      <td>F</td>
+      <td>manager</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Use <cite>loc</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">:]</span>  <span class="c1"># Failed</span>
+<span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&quot;Passing list-likes to .loc or [] with any missing labels is no longer supported. The following labels were missing: Int64Index([1], dtype=&#39;int64&#39;). See https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#deprecate-loc-reindex-listlike&quot;
+</pre></div>
+</div>
+<p>Reset index</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Watch the index</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">:])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender        job  height
+0  alice   19      F    student   165.0
+1   paul   58      F    manager     NaN
+2  julie   44      F  scientist   171.0
+    name  age gender      job  height
+0  alice   19      F  student   165.0
+1   paul   58      F  manager     NaN
+</pre></div>
+</div>
+</section>
+<section id="sorting">
+<h2>Sorting<a class="headerlink" href="#sorting" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="rows-iteration">
+<h2>Rows iteration<a class="headerlink" href="#rows-iteration" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><cite>iterrows()</cite>: slow, get series, <strong>read-only</strong></p>
+<ul class="simple">
+<li><p>Returns (index, Series) pairs.</p></li>
+<li><p>Slow because iterrows boxes the data into a Series.</p></li>
+<li><p>Retrieve fields with column name</p></li>
+<li><p><strong>Don’t modify something you are iterating over</strong>. Depending on the data types,
+the iterator returns a copy and not a view, and writing to it will have no
+effect.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>alice 19
+john 26
+</pre></div>
+</div>
+<p><cite>itertuples()</cite>: fast, get namedtuples, <strong>read-only</strong></p>
+<ul class="simple">
+<li><p>Returns namedtuples of the values and which is generally faster than iterrows.</p></li>
+<li><p>Fast, because itertuples does not box the data into a Series.</p></li>
+<li><p>Retrieve fields with integer index starting from 0.</p></li>
+<li><p>Names will be renamed to positional names if they are invalid Python</p></li>
+</ul>
+<p>identifier</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tup</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>alice 19
+john 26
+</pre></div>
+</div>
+<p>iter using <cite>loc[i, …]</cite>: read and <strong>write</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">10</span>  <span class="c1"># df is modified</span>
+</pre></div>
+</div>
+</section>
+<section id="rows-selection-filtering">
+<h2>Rows selection (filtering)<a class="headerlink" href="#rows-selection-filtering" title="Permalink to this headline">¶</a></h2>
+<p>simple logical filtering on numerical values</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="o">.</span><span class="n">age</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">]</span>        <span class="c1"># only show users with age &lt; 20</span>
+<span class="n">young_bool</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">age</span> <span class="o">&lt;</span> <span class="mi">20</span>  <span class="c1"># or, create a Series of booleans...</span>
+<span class="n">young</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">young_bool</span><span class="p">]</span>            <span class="c1"># ...and use that Series to filter rows</span>
+<span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="o">.</span><span class="n">age</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">]</span><span class="o">.</span><span class="n">job</span>    <span class="c1"># select one column from the filtered results</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">young</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender      job  height
+0  alice   19      F  student   165.0
+</pre></div>
+</div>
+<p>simple logical filtering on categorial values</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="o">.</span><span class="n">job</span> <span class="o">==</span> <span class="s1">&#39;student&#39;</span><span class="p">]</span>
+<span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;student&#39;</span><span class="p">,</span> <span class="s1">&#39;engineer&#39;</span><span class="p">])]</span>
+<span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="p">[</span><span class="s1">&#39;job&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;stu|scient&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>alice</td>
+      <td>19</td>
+      <td>F</td>
+      <td>student</td>
+      <td>165.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>john</td>
+      <td>26</td>
+      <td>M</td>
+      <td>student</td>
+      <td>180.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>eric</td>
+      <td>22</td>
+      <td>M</td>
+      <td>student</td>
+      <td>175.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>julie</td>
+      <td>44</td>
+      <td>F</td>
+      <td>scientist</td>
+      <td>171.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Advanced logical filtering</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="o">.</span><span class="n">age</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">][[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;job&#39;</span><span class="p">]]</span>            <span class="c1"># select multiple columns</span>
+<span class="n">users</span><span class="p">[(</span><span class="n">users</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">gender</span> <span class="o">==</span> <span class="s1">&#39;M&#39;</span><span class="p">)]</span>  <span class="c1"># use multiple conditions</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>john</td>
+      <td>26</td>
+      <td>M</td>
+      <td>student</td>
+      <td>180.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>eric</td>
+      <td>22</td>
+      <td>M</td>
+      <td>student</td>
+      <td>175.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>peter</td>
+      <td>33</td>
+      <td>M</td>
+      <td>engineer</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="id1">
+<h2>Sorting<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">age</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>                      <span class="c1"># only works for a Series</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;age&#39;</span><span class="p">)</span>                  <span class="c1"># sort rows by a specific column</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># use descending order instead</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;job&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">])</span>         <span class="c1"># sort by multiple columns</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;job&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># modify df</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender        job  height
+4  peter   33      M   engineer     NaN
+3   paul   58      F    manager     NaN
+5  julie   44      F  scientist   171.0
+0  alice   19      F    student   165.0
+2   eric   22      M    student   175.0
+1   john   26      M    student   180.0
+</pre></div>
+</div>
+</section>
+<section id="descriptive-statistics">
+<h2>Descriptive statistics<a class="headerlink" href="#descriptive-statistics" title="Permalink to this headline">¶</a></h2>
+<p>Summarize all numeric columns</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>             age      height
+count   6.000000    4.000000
+mean   33.666667  172.750000
+std    14.895189    6.344289
+min    19.000000  165.000000
+25%    23.000000  169.500000
+50%    29.500000  173.000000
+75%    41.250000  176.250000
+max    58.000000  180.000000
+</pre></div>
+</div>
+<p>Summarize all columns</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">]))</span>  <span class="c1"># limit to one (or more) types</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         name        age gender      job      height
+count       6   6.000000      6        6    4.000000
+unique      6        NaN      2        4         NaN
+top     peter        NaN      F  student         NaN
+freq        1        NaN      3        3         NaN
+mean      NaN  33.666667    NaN      NaN  172.750000
+std       NaN  14.895189    NaN      NaN    6.344289
+min       NaN  19.000000    NaN      NaN  165.000000
+25%       NaN  23.000000    NaN      NaN  169.500000
+50%       NaN  29.500000    NaN      NaN  173.000000
+75%       NaN  41.250000    NaN      NaN  176.250000
+max       NaN  58.000000    NaN      NaN  180.000000
+         name gender      job
+count       6      6        6
+unique      6      2        4
+top     peter      F  student
+freq        1      3        3
+</pre></div>
+</div>
+<p>Statistics per group (groupby)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;job&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;job&quot;</span><span class="p">)[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;job&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>                 age      height
+job
+engineer   33.000000         NaN
+manager    58.000000         NaN
+scientist  44.000000  171.000000
+student    22.333333  173.333333
+job
+engineer     33.000000
+manager      58.000000
+scientist    44.000000
+student      22.333333
+Name: age, dtype: float64
+           name                               ...    height
+          count unique    top freq mean  std  ...       std    min    25%    50%    75%    max
+job                                           ...
+engineer      1      1  peter    1  NaN  NaN  ...       NaN    NaN    NaN    NaN    NaN    NaN
+manager       1      1   paul    1  NaN  NaN  ...       NaN    NaN    NaN    NaN    NaN    NaN
+scientist     1      1  julie    1  NaN  NaN  ...       NaN  171.0  171.0  171.0  171.0  171.0
+student       3      3   eric    1  NaN  NaN  ...  7.637626  165.0  170.0  175.0  177.5  180.0
+
+[4 rows x 44 columns]
+</pre></div>
+</div>
+<p>Groupby in a loop</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">grp</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;job&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>engineer     name  age gender       job  height
+4  peter   33      M  engineer     NaN
+manager    name  age gender      job  height
+3  paul   58      F  manager     NaN
+scientist     name  age gender        job  height
+5  julie   44      F  scientist   171.0
+student     name  age gender      job  height
+0  alice   19      F  student   165.0
+2   eric   22      M  student   175.0
+1   john   26      M  student   180.0
+</pre></div>
+</div>
+</section>
+<section id="quality-check">
+<h2>Quality check<a class="headerlink" href="#quality-check" title="Permalink to this headline">¶</a></h2>
+<section id="remove-duplicate-data">
+<h3>Remove duplicate data<a class="headerlink" href="#remove-duplicate-data" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">())</span>                 <span class="c1"># Series of booleans</span>
+<span class="c1"># (True if a row is identical to a previous row)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>                  <span class="c1"># count of duplicates</span>
+<span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()]</span>                    <span class="c1"># only show duplicates</span>
+<span class="n">df</span><span class="o">.</span><span class="n">age</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span>                    <span class="c1"># check a single column for duplicates</span>
+<span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">([</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="c1"># specify columns for finding duplicates</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>              <span class="c1"># drop duplicate rows</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0    False
+1    False
+2    False
+3    False
+4    False
+5    False
+6     True
+dtype: bool
+</pre></div>
+</div>
+</section>
+<section id="missing-data">
+<h3>Missing data<a class="headerlink" href="#missing-data" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Missing values are often just excluded</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+<span class="c1"># find missing values in a Series</span>
+<span class="n">df</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>           <span class="c1"># True if NaN, False otherwise</span>
+<span class="n">df</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>          <span class="c1"># False if NaN, True otherwise</span>
+<span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">notnull</span><span class="p">()]</span>      <span class="c1"># only show rows where age is not NaN</span>
+<span class="n">df</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>     <span class="c1"># count the missing values</span>
+
+<span class="c1"># find missing values in a DataFrame</span>
+<span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>             <span class="c1"># DataFrame of booleans</span>
+<span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>       <span class="c1"># calculate the sum of each column</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>name      0
+age       0
+gender    0
+job       0
+height    2
+dtype: int64
+</pre></div>
+</div>
+<p>Strategy 1: drop missing values</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>             <span class="c1"># drop a row if ANY values are missing</span>
+<span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>    <span class="c1"># drop a row only if ALL values are missing</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>alice</td>
+      <td>19</td>
+      <td>F</td>
+      <td>student</td>
+      <td>165.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>john</td>
+      <td>26</td>
+      <td>M</td>
+      <td>student</td>
+      <td>180.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>eric</td>
+      <td>22</td>
+      <td>M</td>
+      <td>student</td>
+      <td>175.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>paul</td>
+      <td>58</td>
+      <td>F</td>
+      <td>manager</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>peter</td>
+      <td>33</td>
+      <td>M</td>
+      <td>engineer</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>julie</td>
+      <td>44</td>
+      <td>F</td>
+      <td>scientist</td>
+      <td>171.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Strategy 2: fill in missing values</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span> <span class="s2">&quot;height&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>    name  age gender        job  height
+0  alice   19      F    student  165.00
+1   john   26      M    student  180.00
+2   eric   22      M    student  175.00
+3   paul   58      F    manager  172.75
+4  peter   33      M   engineer  172.75
+5  julie   44      F  scientist  171.00
+</pre></div>
+</div>
+</section>
+</section>
+<section id="operation-multiplication">
+<h2>Operation: multiplication<a class="headerlink" href="#operation-multiplication" title="Permalink to this headline">¶</a></h2>
+<p>Multiplication of dataframe and other, element-wise</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>   random   name  age gender        job  height
+0       0  alice   19      F    student   165.0
+1       1   john   26      M    student   180.0
+2       2   eric   22      M    student   175.0
+5       3  julie   44      F  scientist   171.0
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>26</td>
+      <td>180.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>44</td>
+      <td>350.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>132</td>
+      <td>513.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="renaming">
+<h2>Renaming<a class="headerlink" href="#renaming" title="Permalink to this headline">¶</a></h2>
+<p>Rename columns</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;NAME&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>NAME</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>alice</td>
+      <td>19</td>
+      <td>F</td>
+      <td>student</td>
+      <td>165.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>john</td>
+      <td>26</td>
+      <td>M</td>
+      <td>student</td>
+      <td>180.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>eric</td>
+      <td>22</td>
+      <td>M</td>
+      <td>student</td>
+      <td>175.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>paul</td>
+      <td>58</td>
+      <td>F</td>
+      <td>manager</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>peter</td>
+      <td>33</td>
+      <td>M</td>
+      <td>engineer</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>julie</td>
+      <td>44</td>
+      <td>F</td>
+      <td>scientist</td>
+      <td>171.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Rename values</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">job</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;student&#39;</span><span class="p">:</span> <span class="s1">&#39;etudiant&#39;</span><span class="p">,</span> <span class="s1">&#39;manager&#39;</span><span class="p">:</span> <span class="s1">&#39;manager&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;engineer&#39;</span><span class="p">:</span> <span class="s1">&#39;ingenieur&#39;</span><span class="p">,</span> <span class="s1">&#39;scientist&#39;</span><span class="p">:</span> <span class="s1">&#39;scientific&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</section>
+<section id="dealing-with-outliers">
+<h2>Dealing with outliers<a class="headerlink" href="#dealing-with-outliers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">size</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">175</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="c1"># Corrupt the first 3 measures</span>
+<span class="n">size</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">500</span>
+</pre></div>
+</div>
+<section id="based-on-parametric-statistics-use-the-mean">
+<h3>Based on parametric statistics: use the mean<a class="headerlink" href="#based-on-parametric-statistics-use-the-mean" title="Permalink to this headline">¶</a></h3>
+<p>Assume random variable follows the normal distribution
+Exclude data outside 3 standard-deviations:
+- Probability that a sample lies within 1 sd: 68.27%
+- Probability that a sample lies within 3 sd: 99.73% (68.27 + 2 * 15.73)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">size_outlr_mean</span> <span class="o">=</span> <span class="n">size</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">size_outlr_mean</span><span class="p">[((</span><span class="n">size</span> <span class="o">-</span> <span class="n">size</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">size</span><span class="o">.</span><span class="n">std</span><span class="p">())]</span> <span class="o">=</span> <span class="n">size</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">size_outlr_mean</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>248.48963819938044
+</pre></div>
+</div>
+</section>
+<section id="based-on-non-parametric-statistics-use-the-median">
+<h3>Based on non-parametric statistics: use the median<a class="headerlink" href="#based-on-non-parametric-statistics-use-the-median" title="Permalink to this headline">¶</a></h3>
+<p>Median absolute deviation (MAD), based on the median, is a robust non-parametric statistics.
+<a class="reference external" href="https://en.wikipedia.org/wiki/Median_absolute_deviation">https://en.wikipedia.org/wiki/Median_absolute_deviation</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mad</span> <span class="o">=</span> <span class="mf">1.4826</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">size</span> <span class="o">-</span> <span class="n">size</span><span class="o">.</span><span class="n">median</span><span class="p">()))</span>
+<span class="n">size_outlr_mad</span> <span class="o">=</span> <span class="n">size</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">size_outlr_mad</span><span class="p">[((</span><span class="n">size</span> <span class="o">-</span> <span class="n">size</span><span class="o">.</span><span class="n">median</span><span class="p">())</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">mad</span><span class="p">)]</span> <span class="o">=</span> <span class="n">size</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">size_outlr_mad</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">size_outlr_mad</span><span class="o">.</span><span class="n">median</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>173.80000467192673 178.7023568870694
+</pre></div>
+</div>
+</section>
+</section>
+<section id="file-i-o">
+<h2>File I/O<a class="headerlink" href="#file-i-o" title="Permalink to this headline">¶</a></h2>
+<section id="csv">
+<h3>csv<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tempfile</span><span class="o">,</span> <span class="nn">os.path</span>
+
+<span class="n">tmpdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+<span class="n">csv_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;users.csv&quot;</span><span class="p">)</span>
+<span class="n">users</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_filename</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">other</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_filename</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="read-csv-from-url">
+<h3>Read csv from url<a class="headerlink" href="#read-csv-from-url" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv&#39;</span>
+<span class="n">salary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="excel">
+<h3>Excel<a class="headerlink" href="#excel" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xls_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;users.xlsx&quot;</span><span class="p">)</span>
+<span class="n">users</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">xls_filename</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls_filename</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;users&#39;</span><span class="p">)</span>
+
+<span class="c1"># Multiple sheets</span>
+<span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="n">xls_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+    <span class="n">users</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;salary&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls_filename</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;users&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls_filename</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;salary&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>age</th>
+      <th>gender</th>
+      <th>job</th>
+      <th>height</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>alice</td>
+      <td>19</td>
+      <td>F</td>
+      <td>etudiant</td>
+      <td>165.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>john</td>
+      <td>26</td>
+      <td>M</td>
+      <td>etudiant</td>
+      <td>180.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>eric</td>
+      <td>22</td>
+      <td>M</td>
+      <td>etudiant</td>
+      <td>175.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>paul</td>
+      <td>58</td>
+      <td>F</td>
+      <td>manager</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>peter</td>
+      <td>33</td>
+      <td>M</td>
+      <td>ingenieur</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>julie</td>
+      <td>44</td>
+      <td>F</td>
+      <td>scientific</td>
+      <td>171.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="sql-sqlite">
+<h3>SQL (SQLite)<a class="headerlink" href="#sql-sqlite" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="n">db_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;users.db&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Connect</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Creating tables with pandas</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv&#39;</span>
+<span class="n">salary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="n">salary</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="s2">&quot;salary&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Push modifications</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">14000</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span>  <span class="s1">&#39;Bachelor&#39;</span><span class="p">,</span> <span class="s1">&#39;N&#39;</span><span class="p">)</span>
+<span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;insert into salary values (?, ?, ?, ?, ?)&quot;</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Reading results into a pandas DataFrame</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">salary_sql</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;select * from salary;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">salary_sql</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;select * from salary;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s1">&#39;select * from salary where salary&gt;25000;&#39;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s1">&#39;select * from salary where experience=16;&#39;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s1">&#39;select * from salary where education=&quot;Master&quot;;&#39;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>   index  salary  experience education management
+0      0   13876           1  Bachelor          Y
+1      1   11608           1      Ph.D          N
+2      2   18701           1      Ph.D          Y
+3      3   11283           1    Master          N
+4      4   11767           1      Ph.D          N
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>salary</th>
+      <th>experience</th>
+      <th>education</th>
+      <th>management</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3</td>
+      <td>11283</td>
+      <td>1</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5</td>
+      <td>20872</td>
+      <td>2</td>
+      <td>Master</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>6</td>
+      <td>11772</td>
+      <td>2</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>9</td>
+      <td>12313</td>
+      <td>3</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11</td>
+      <td>21371</td>
+      <td>3</td>
+      <td>Master</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>16</td>
+      <td>12884</td>
+      <td>4</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>17</td>
+      <td>13245</td>
+      <td>5</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>22</td>
+      <td>13839</td>
+      <td>6</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>23</td>
+      <td>22884</td>
+      <td>6</td>
+      <td>Master</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>25</td>
+      <td>14803</td>
+      <td>8</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>30</td>
+      <td>15942</td>
+      <td>10</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>32</td>
+      <td>23780</td>
+      <td>10</td>
+      <td>Master</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>33</td>
+      <td>25410</td>
+      <td>11</td>
+      <td>Master</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>35</td>
+      <td>16882</td>
+      <td>12</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>38</td>
+      <td>26330</td>
+      <td>13</td>
+      <td>Master</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>39</td>
+      <td>17949</td>
+      <td>14</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>41</td>
+      <td>27837</td>
+      <td>16</td>
+      <td>Master</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>42</td>
+      <td>18838</td>
+      <td>16</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>44</td>
+      <td>19207</td>
+      <td>17</td>
+      <td>Master</td>
+      <td>N</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<section id="data-frame">
+<h3>Data Frame<a class="headerlink" href="#data-frame" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Read the iris dataset at ‘<a class="reference external" href="https://github.com/neurospin/pystatsml/tree/master/datasets/iris.csv">https://github.com/neurospin/pystatsml/tree/master/datasets/iris.csv</a>’</p></li>
+<li><p>Print column names</p></li>
+<li><p>Get numerical columns</p></li>
+<li><p>For each species compute the mean of numerical columns and store it in  a <code class="docutils literal notranslate"><span class="pre">stats</span></code> table like:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="n">species</span>  <span class="n">sepal_length</span>  <span class="n">sepal_width</span>  <span class="n">petal_length</span>  <span class="n">petal_width</span>
+<span class="mi">0</span>      <span class="n">setosa</span>         <span class="mf">5.006</span>        <span class="mf">3.428</span>         <span class="mf">1.462</span>        <span class="mf">0.246</span>
+<span class="mi">1</span>  <span class="n">versicolor</span>         <span class="mf">5.936</span>        <span class="mf">2.770</span>         <span class="mf">4.260</span>        <span class="mf">1.326</span>
+<span class="mi">2</span>   <span class="n">virginica</span>         <span class="mf">6.588</span>        <span class="mf">2.974</span>         <span class="mf">5.552</span>        <span class="mf">2.026</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>Missing data<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Add some missing data to the previous table <code class="docutils literal notranslate"><span class="pre">users</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;gender&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>1. Write a function <code class="docutils literal notranslate"><span class="pre">fillmissing_with_mean(df)</span></code> that fill all missing
+value of numerical column with the mean of the current columns.</p>
+<p>2. Save the original users and “imputed” frame in a single excel file
+“users.xlsx” with 2 sheets: original, imputed.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.125 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-scipy-pandas-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/4e66d1e5bdd8321ce16a6e7d776403ca/scipy_pandas.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">scipy_pandas.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/cb8f42576f22ad68a03accbdb10435d8/scipy_pandas.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">scipy_pandas.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pandas: data manipulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-dataframe">Create DataFrame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#combining-dataframes">Combining DataFrames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#summarizing">Summarizing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#columns-selection">Columns selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rows-selection-basic">Rows selection (basic)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sorting">Sorting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rows-iteration">Rows iteration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rows-selection-filtering">Rows selection (filtering)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Sorting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#descriptive-statistics">Descriptive statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quality-check">Quality check</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#operation-multiplication">Operation: multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#renaming">Renaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dealing-with-outliers">Dealing with outliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-i-o">File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="scipy_numpy.html" title="previous chapter">Numpy: arrays and matrices</a></li>
+      <li>Next: <a href="../scientific_python/scipy_matplotlib.html" title="next chapter">Data visualization: matplotlib &amp; seaborn</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/auto_gallery/scipy_pandas.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

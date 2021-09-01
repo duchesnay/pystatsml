@@ -1,0 +1,776 @@
+Linear dimension reduction and feature extraction
+=================================================
+
+Introduction
+------------
+
+In machine learning and statistics, dimensionality reduction or
+dimension reduction is the process of reducing the number of features
+under consideration, and can be divided into feature selection (not
+addressed here) and feature extraction.
+
+Feature extraction starts from an initial set of measured data and
+builds derived values (features) intended to be informative and
+non-redundant, facilitating the subsequent learning and generalization
+steps, and in some cases leading to better human interpretations.
+Feature extraction is related to dimensionality reduction.
+
+The input matrix :math:`\mathbf{X}`, of dimension :math:`N \times P`, is
+
+.. math::
+
+
+   \begin{bmatrix}
+   x_{11} & \ldots     &     x_{1P}\\
+          &            &      \\
+   \vdots & \mathbf{X} & \vdots\\
+          &            &      \\
+   x_{N1} & \ldots     &     x_{NP}
+   \end{bmatrix}
+
+where the rows represent the samples and columns represent the
+variables. The goal is to learn a transformation that extracts a few
+relevant features.
+
+Models:
+
+1. Linear matrix decomposition/factorisation SVD/PCA. Those models
+   exploit the covariance :math:`\mathbf{\Sigma_{XX}}` between the input
+   features.
+2. Non-linear models based on manifold learning: Isomap, t-SNE. Those
+   models
+
+Singular value decomposition and matrix factorization
+-----------------------------------------------------
+
+Matrix factorization principles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Decompose the data matrix :math:`\mathbf{X}_{N \times P}` into a product
+of a mixing matrix :math:`\mathbf{U}_{N \times K}` and a dictionary
+matrix :math:`\mathbf{V}_{P \times K}`.
+
+.. math::
+
+
+   \mathbf{X} = \mathbf{U} \mathbf{V}^{T},
+
+If we consider only a subset of components
+:math:`K<rank(\mathbf{X}) < \min(P, N-1)` , :math:`\mathbf{X}` is
+approximated by a matrix :math:`\hat{\mathbf{X}}`:
+
+.. math::
+
+
+   \mathbf{X} \approx \hat{\mathbf{X}} = \mathbf{U} \mathbf{V}^{T},
+
+Each line of :math:`\mathbf{x_i}` is a linear combination (mixing
+:math:`\mathbf{u_i}`) of dictionary items :math:`\mathbf{V}`.
+
+:math:`N` :math:`P`-dimensional data points lie in a space whose
+dimension is less than :math:`N-1` (2 dots lie on a line, 3 on a plane,
+etc.).
+
+.. figure:: images/svd_mixing_dict.png
+   :alt: Matrix factorization
+
+   Matrix factorization
+
+Singular value decomposition (SVD) principles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Singular-value decomposition (SVD) factorises the data matrix
+:math:`\mathbf{X}_{N \times P}` into a product:
+
+.. math::
+
+
+   \mathbf{X} = \mathbf{U}\mathbf{D}\mathbf{V}^{T},
+
+where
+
+.. math::
+
+
+   \begin{bmatrix}
+   x_{11} &            & x_{1P}\\
+          &            &       \\
+          & \mathbf{X} &       \\
+          &            &       \\
+   x_{N1} &            & x_{NP}
+   \end{bmatrix} = 
+   \begin{bmatrix}
+   u_{11} &            & u_{1K}\\
+          &            &       \\
+          & \mathbf{U} &       \\
+          &            &       \\
+   u_{N1} &            & u_{NK}
+   \end{bmatrix}
+   \begin{bmatrix}
+   d_{1}&            & 0\\
+        & \mathbf{D} &\\
+    0   &            & d_{K}
+   \end{bmatrix}
+   \begin{bmatrix}
+   v_{11}&              & v_{1P}\\
+         & \mathbf{V}^T &       \\
+   v_{K1}&              & v_{KP}
+   \end{bmatrix}.
+
+:math:`\mathbf{U}`: **right-singular**
+
+-  :math:`\mathbf{V} = [\mathbf{v}_1,\cdots , \mathbf{v}_K]` is a
+   :math:`P \times K` orthogonal matrix.
+
+-  It is a **dictionary** of patterns to be combined (according to the
+   mixing coefficients) to reconstruct the original samples.
+
+-  :math:`\mathbf{V}` perfoms the initial **rotations** (**projection**)
+   along the :math:`K=\min(N, P)` **principal component directions**,
+   also called **loadings**.
+
+-  Each :math:`\mathbf{v}_j` performs the linear combination of the
+   variables that has maximum sample variance, subject to being
+   uncorrelated with the previous :math:`\mathbf{v}_{j-1}`.
+
+:math:`\mathbf{D}`: **singular values**
+
+-  :math:`\mathbf{D}` is a :math:`K \times K` diagonal matrix made of
+   the singular values of :math:`\mathbf{X}` with
+   :math:`d_1 \geq d_2 \geq \cdots \geq d_K \geq 0`.
+
+-  :math:`\mathbf{D}` scale the projection along the coordinate axes by
+   :math:`d_1, d_2, \cdots, d_K`.
+
+-  Singular values are the square roots of the eigenvalues of
+   :math:`\mathbf{X}^{T}\mathbf{X}`.
+
+:math:`\mathbf{V}`: **left-singular vectors**
+
+-  :math:`\mathbf{U} = [\mathbf{u}_1, \cdots , \mathbf{u}_K]` is an
+   :math:`N \times K` orthogonal matrix.
+
+-  Each row :math:`\mathbf{v_i}` provides the **mixing coefficients** of
+   dictionary items to reconstruct the sample :math:`\mathbf{x_i}`
+
+-  It may be understood as the coordinates on the new orthogonal basis
+   (obtained after the initial rotation) called **principal components**
+   in the PCA.
+
+SVD for variables transformation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:math:`\mathbf{V}` transforms correlated variables (:math:`\mathbf{X}`)
+into a set of uncorrelated ones (:math:`\mathbf{U}\mathbf{D}`) that
+better expose the various relationships among the original data items.
+
+.. raw:: latex
+
+   \begin{align}
+   \mathbf{X}           &= \mathbf{U}\mathbf{D}\mathbf{V}^{T},\\
+   \mathbf{X}\mathbf{V} &= \mathbf{U}\mathbf{D}\mathbf{V}^{T}\mathbf{V},\\
+   \mathbf{X}\mathbf{V} &= \mathbf{U}\mathbf{D}\mathbf{I},\\
+   \mathbf{X}\mathbf{V} &= \mathbf{U}\mathbf{D}
+   \end{align}
+
+At the same time, SVD is a method for identifying and ordering the
+dimensions along which data points exhibit the most variation.
+
+.. code:: ipython3
+
+    import numpy as np
+    import scipy
+    from sklearn.decomposition import PCA
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    %matplotlib inline
+    
+    np.random.seed(42)
+     
+    # dataset
+    n_samples = 100
+    experience = np.random.normal(size=n_samples)
+    salary = 1500 + experience + np.random.normal(size=n_samples, scale=.5)
+    X = np.column_stack([experience, salary])
+    print(X.shape)
+    
+    # PCA using SVD
+    X -= X.mean(axis=0)  # Centering is required
+    U, s, Vh = scipy.linalg.svd(X, full_matrices=False)
+    # U : Unitary matrix having left singular vectors as columns.
+    #     Of shape (n_samples,n_samples) or (n_samples,n_comps), depending on
+    #     full_matrices.
+    #
+    # s : The singular values, sorted in non-increasing order. Of shape (n_comps,), 
+    #     with n_comps = min(n_samples, n_features).
+    #
+    # Vh: Unitary matrix having right singular vectors as rows. 
+    #     Of shape (n_features, n_features) or (n_comps, n_features) depending 
+    # on full_matrices.
+    
+    plt.figure(figsize=(9, 3)) 
+    
+    plt.subplot(131)
+    plt.scatter(U[:, 0], U[:, 1], s=50)
+    plt.axis('equal')
+    plt.title("U: Rotated and scaled data")
+    
+    plt.subplot(132)
+    
+    # Project data
+    PC = np.dot(X, Vh.T)
+    plt.scatter(PC[:, 0], PC[:, 1], s=50)
+    plt.axis('equal')
+    plt.title("XV: Rotated data")
+    plt.xlabel("PC1")
+    plt.ylabel("PC2")
+    
+    plt.subplot(133)
+    plt.scatter(X[:, 0], X[:, 1], s=50)
+    for i in range(Vh.shape[0]):
+        plt.arrow(x=0, y=0, dx=Vh[i, 0], dy=Vh[i, 1], head_width=0.2, 
+                  head_length=0.2, linewidth=2, fc='r', ec='r')
+        plt.text(Vh[i, 0], Vh[i, 1],'v%i' % (i+1), color="r", fontsize=15,
+                 horizontalalignment='right', verticalalignment='top')
+    plt.axis('equal')
+    plt.ylim(-4, 4)
+    
+    plt.title("X: original data (v1, v2:PC dir.)")
+    plt.xlabel("experience")
+    plt.ylabel("salary")
+               
+    plt.tight_layout()
+
+
+.. parsed-literal::
+
+    (100, 2)
+
+
+
+.. image:: decomposition_files/decomposition_2_1.png
+
+
+Principal components analysis (PCA)
+-----------------------------------
+
+Sources:
+
+-  C. M. Bishop *Pattern Recognition and Machine Learning*, Springer,
+   2006
+
+-  `Everything you did and didn’t know about
+   PCA <http://alexhwilliams.info/itsneuronalblog/2016/03/27/pca/>`__
+
+-  `Principal Component Analysis in 3 Simple
+   Steps <http://sebastianraschka.com/Articles/2015_pca_in_3_steps.html>`__
+
+Principles
+~~~~~~~~~~
+
+-  Principal components analysis is the main method used for linear
+   dimension reduction.
+
+-  The idea of principal component analysis is to find the :math:`K`
+   **principal components directions** (called the **loadings**)
+   :math:`\mathbf{V}_{K\times P}` that capture the variation in the data
+   as much as possible.
+
+-  It converts a set of :math:`N` :math:`P`-dimensional observations
+   :math:`\mathbf{N}_{N\times P}` of possibly correlated variables into
+   a set of :math:`N` :math:`K`-dimensional samples
+   :math:`\mathbf{C}_{N\times K}`, where the :math:`K < P`. The new
+   variables are linearly uncorrelated. The columns of
+   :math:`\mathbf{C}_{N\times K}` are called the **principal
+   components**.
+
+-  The dimension reduction is obtained by using only :math:`K < P`
+   components that exploit correlation (covariance) among the original
+   variables.
+
+-  PCA is mathematically defined as an orthogonal linear transformation
+   :math:`\mathbf{V}_{K\times P}` that transforms the data to a new
+   coordinate system such that the greatest variance by some projection
+   of the data comes to lie on the first coordinate (called the first
+   principal component), the second greatest variance on the second
+   coordinate, and so on.
+
+   .. math::
+
+
+      \mathbf{C}_{N\times K} = \mathbf{X}_{N \times P} \mathbf{V}_{P \times K} 
+
+-  PCA can be thought of as fitting a :math:`P`-dimensional ellipsoid to
+   the data, where each axis of the ellipsoid represents a principal
+   component. If some axis of the ellipse is small, then the variance
+   along that axis is also small, and by omitting that axis and its
+   corresponding principal component from our representation of the
+   dataset, we lose only a commensurately small amount of information.
+
+-  Finding the :math:`K` largest axes of the ellipse will permit to
+   project the data onto a space having dimensionality :math:`K < P`
+   while maximizing the variance of the projected data.
+
+Dataset preprocessing
+~~~~~~~~~~~~~~~~~~~~~
+
+Centering
+^^^^^^^^^
+
+Consider a data matrix, :math:`\mathbf{X}` , with column-wise zero
+empirical mean (the sample mean of each column has been shifted to
+zero), ie. :math:`\mathbf{X}` is replaced by
+:math:`\mathbf{X} - \mathbf{1}\bar{\mathbf{x}}^T`.
+
+Standardizing
+^^^^^^^^^^^^^
+
+Optionally, standardize the columns, i.e., scale them by their
+standard-deviation. Without standardization, a variable with a high
+variance will capture most of the effect of the PCA. The principal
+direction will be aligned with this variable. Standardization will,
+however, raise noise variables to the save level as informative
+variables.
+
+The covariance matrix of centered standardized data is the correlation
+matrix.
+
+Eigendecomposition of the data covariance matrix
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To begin with, consider the projection onto a one-dimensional space
+(:math:`K = 1`). We can define the direction of this space using a
+:math:`P`-dimensional vector :math:`\mathbf{v}`, which for convenience
+(and without loss of generality) we shall choose to be a unit vector so
+that :math:`\|\mathbf{v}\|_2 = 1` (note that we are only interested in
+the direction defined by :math:`\mathbf{v}`, not in the magnitude of
+:math:`\mathbf{v}` itself). PCA consists of two mains steps:
+
+**Projection in the directions that capture the greatest variance**
+
+Each :math:`P`-dimensional data point :math:`\mathbf{x}_i` is then
+projected onto :math:`\mathbf{v}`, where the coordinate (in the
+coordinate system of :math:`\mathbf{v}`) is a scalar value, namely
+:math:`\mathbf{x}_i^T \mathbf{v}`. I.e., we want to find the vector
+:math:`\mathbf{v}` that maximizes these coordinates along
+:math:`\mathbf{v}`, which we will see corresponds to maximizing the
+variance of the projected data. This is equivalently expressed as
+
+.. math::
+
+
+   \mathbf{v} = \arg \max_{\|\mathbf{v}\|=1}\frac{1}{N}\sum_i \left(\mathbf{x}_i^T \mathbf{v}\right)^2.
+
+We can write this in matrix form as
+
+.. math::
+
+
+   \mathbf{v} = \arg \max_{\|\mathbf{v}\|=1} \frac{1}{N} \|\mathbf{X} \mathbf{v}\|^2 = \frac{1}{N} \mathbf{v}^T \mathbf{X}^T \mathbf{X} \mathbf{v} = \mathbf{v}^T\mathbf{S_{XX}}\mathbf{v},
+
+where :math:`\mathbf{S_{XX}}` is a biased estiamte of the covariance
+matrix of the data, i.e.
+
+.. math::
+
+
+   \mathbf{S_{XX}} = \frac{1}{N} \mathbf{X}^T\mathbf{X}.
+
+We now maximize the projected variance
+:math:`\mathbf{v}^T \mathbf{S_{XX}} \mathbf{v}` with respect to
+:math:`\mathbf{v}`. Clearly, this has to be a constrained maximization
+to prevent :math:`\|\mathbf{v}_2\| \rightarrow \infty`. The appropriate
+constraint comes from the normalization condition
+:math:`\|\mathbf{v}\|_2 \equiv \|\mathbf{v}\|_2^2 = \mathbf{v}^T \mathbf{v} = 1`.
+To enforce this constraint, we introduce a `Lagrange
+multiplier <https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/constrained-optimization/a/lagrange-multipliers-single-constraint>`__
+that we shall denote by :math:`\lambda`, and then make an unconstrained
+maximization of
+
+.. math::
+
+
+   \mathbf{v}^T\mathbf{S_{XX}} \mathbf{v} - \lambda (\mathbf{v}^T \mathbf{v} - 1).
+
+By setting the gradient with respect to :math:`\mathbf{v}` equal to
+zero, we see that this quantity has a stationary point when
+
+.. math::
+
+
+   \mathbf{S_{XX}} \mathbf{v} = \lambda \mathbf{v}.
+
+We note that :math:`\mathbf{v}` is an eigenvector of
+:math:`\mathbf{S_{XX}}`.
+
+If we left-multiply the above equation by :math:`\mathbf{v}^T` and make
+use of :math:`\mathbf{v}^T \mathbf{v} = 1`, we see that the variance is
+given by
+
+.. math::
+
+
+   \mathbf{v}^T \mathbf{S_{XX}} \mathbf{v} = \lambda,
+
+and so the variance will be at a maximum when :math:`\mathbf{v}` is
+equal to the eigenvector corresponding to the largest eigenvalue,
+:math:`\lambda`. This eigenvector is known as the first principal
+component.
+
+We can define additional principal components in an incremental fashion
+by choosing each new direction to be that which maximizes the projected
+variance amongst all possible directions that are orthogonal to those
+already considered. If we consider the general case of a
+:math:`K`-dimensional projection space, the optimal linear projection
+for which the variance of the projected data is maximized is now defined
+by the :math:`K` eigenvectors,
+:math:`\mathbf{v_1}, \ldots , \mathbf{v_K}`, of the data covariance
+matrix :math:`\mathbf{S_{XX}}` that corresponds to the :math:`K` largest
+eigenvalues,
+:math:`\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_K`.
+
+Back to SVD
+^^^^^^^^^^^
+
+The sample covariance matrix of **centered data** :math:`\mathbf{X}` is
+given by
+
+.. math::
+
+
+   \mathbf{S_{XX}} = \frac{1}{N-1}\mathbf{X}^T\mathbf{X}.
+
+We rewrite :math:`\mathbf{X}^T\mathbf{X}` using the SVD decomposition of
+:math:`\mathbf{X}` as
+
+.. raw:: latex
+
+   \begin{align*}
+       \mathbf{X}^T\mathbf{X}
+        &= (\mathbf{U}\mathbf{D}\mathbf{V}^T)^T(\mathbf{U}\mathbf{D}\mathbf{V}^T)\\
+        &= \mathbf{V}\mathbf{D}^T\mathbf{U}^T\mathbf{U}\mathbf{D}\mathbf{V}^T\\
+        &=\mathbf{V}\mathbf{D}^2\mathbf{V}^T\\
+       \mathbf{V}^T\mathbf{X}^T\mathbf{X}\mathbf{V} &= \mathbf{D}^2\\
+       \frac{1}{N-1} \mathbf{V}^T\mathbf{X}^T\mathbf{X}\mathbf{V} &= \frac{1}{N-1}\mathbf{D}^2\\
+       \mathbf{V}^T\mathbf{S_{XX}}\mathbf{V} &= \frac{1}{N-1}\mathbf{D}^2
+   \end{align*}.
+
+Considering only the :math:`k^{th}` right-singular vectors
+:math:`\mathbf{v}_k` associated to the singular value :math:`d_k`
+
+.. math::
+
+
+   \mathbf{v_k}^T\mathbf{S_{XX}}\mathbf{v_k} = \frac{1}{N-1}d_k^2,
+
+It turns out that if you have done the singular value decomposition then
+you already have the Eigenvalue decomposition for
+:math:`\mathbf{X}^T\mathbf{X}`. Where - The eigenvectors of
+:math:`\mathbf{S_{XX}}` are equivalent to the right singular vectors,
+:math:`\mathbf{V}`, of :math:`\mathbf{X}`. - The eigenvalues,
+:math:`\lambda_k`, of :math:`\mathbf{S_{XX}}`, i.e. the variances of the
+components, are equal to :math:`\frac{1}{N-1}` times the squared
+singular values, :math:`d_k`.
+
+Moreover computing PCA with SVD do not require to form the matrix
+:math:`\mathbf{X}^T\mathbf{X}`, so computing the SVD is now the standard
+way to calculate a principal components analysis from a data matrix,
+unless only a handful of components are required.
+
+PCA outputs
+^^^^^^^^^^^
+
+The SVD or the eigendecomposition of the data covariance matrix provides
+three main quantities:
+
+1. **Principal component directions** or **loadings** are the
+   **eigenvectors** of :math:`\mathbf{X}^T\mathbf{X}`. The
+   :math:`\mathbf{V}_{K \times P}` or the **right-singular vectors** of
+   an SVD of :math:`\mathbf{X}` are called principal component
+   directions of :math:`\mathbf{X}`. They are generally computed using
+   the SVD of :math:`\mathbf{X}`.
+
+2. **Principal components** is the :math:`{N\times K}` matrix
+   :math:`\mathbf{C}` which is obtained by projecting :math:`\mathbf{X}`
+   onto the principal components directions, i.e.
+
+.. math::
+
+
+       \mathbf{C}_{N\times K} = \mathbf{X}_{N \times P} \mathbf{V}_{P \times K}.
+
+Since :math:`\mathbf{X} = \mathbf{UDV}^T` and :math:`\mathbf{V}` is
+orthogonal (:math:`\mathbf{V}^T \mathbf{V} = \mathbf{I}`):
+
+.. raw:: latex
+
+   \begin{align}
+       \mathbf{C}_{N\times K} &= \mathbf{UDV}^T_{N \times P} \mathbf{V}_{P \times K}\\ 
+       \mathbf{C}_{N\times K} &= \mathbf{UD}^T_{N \times K} \mathbf{I}_{K \times K}\\
+       \mathbf{C}_{N\times K} &= \mathbf{UD}^T_{N \times K}\\
+   \end{align}
+
+Thus :math:`\mathbf{c}_j = \mathbf{X}\mathbf{v}_j = \mathbf{u}_j d_j`,
+for :math:`j=1, \ldots K`. Hence :math:`\mathbf{u}_j` is simply the
+projection of the row vectors of :math:`\mathbf{X}`, i.e., the input
+predictor vectors, on the direction :math:`\mathbf{v}_j`, scaled by
+:math:`d_j`.
+
+.. math::
+
+
+   \mathbf{c}_1=
+   \begin{bmatrix}
+   x_{1,1}v_{1,1}+ \ldots +x_{1,P}v_{1,P}\\
+   x_{2,1}v_{1,1}+ \ldots +x_{2,P}v_{1,P}\\
+   \vdots\\
+   x_{N,1}v_{1,1}+ \ldots +x_{N,P}v_{1,P}
+   \end{bmatrix}
+
+3. The **variance** of each component is given by the eigen values
+   :math:`\lambda_k, k=1, \dots K`. It can be obtained from the singular
+   values:
+
+.. raw:: latex
+
+   \begin{align}
+   var(\mathbf{c}_k) =& \frac{1}{N-1}(\mathbf{X} \mathbf{v}_k)^2\\
+                     =& \frac{1}{N-1}(\mathbf{u}_k d_k)^2\\
+                     =& \frac{1}{N-1}d_k^2
+   \end{align}
+
+Determining the number of PCs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We must choose :math:`K^* \in [1, \ldots, K]`, the number of required
+components. This can be done by calculating the explained variance ratio
+of the :math:`K^*` first components and by choosing :math:`K^*` such
+that the **cumulative explained variance** ratio is greater than some
+given threshold (e.g., :math:`\approx 90\%`). This is expressed as
+
+.. math::
+
+
+   \mathrm{cumulative~explained~variance}(\mathbf{c}_k) = \frac{\sum_j^{K^*} var(\mathbf{c}_k)}{\sum_j^K var(\mathbf{c}_k)}.
+
+Interpretation and visualization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**PCs**
+
+Plot the samples projeted on first the principal components as e.g. PC1
+against PC2.
+
+**PC directions**
+
+Exploring the loadings associated with a component provides the
+contribution of each original variable in the component.
+
+Remark: The loadings (PC directions) are the coefficients of multiple
+regression of PC on original variables:
+
+.. raw:: latex
+
+   \begin{align}
+       \mathbf{c}                                             & = \mathbf{X} \mathbf{v}\\
+       \mathbf{X}^T \mathbf{c}                                & = \mathbf{X}^T \mathbf{X} \mathbf{v}\\
+       (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{c} & = \mathbf{v}
+   \end{align}
+
+Another way to evaluate the contribution of the original variables in
+each PC can be obtained by computing the correlation between the PCs and
+the original variables, i.e. columns of :math:`\mathbf{X}`, denoted
+:math:`\mathbf{x}_j`, for :math:`j=1, \ldots, P`. For the :math:`k^{th}`
+PC, compute and plot the correlations with all original variables
+
+.. math::
+
+
+   cor(\mathbf{c}_k, \mathbf{x}_j),  j=1 \ldots K, j=1 \ldots K.
+
+These quantities are sometimes called the *correlation loadings*.
+
+.. code:: ipython3
+
+    import numpy as np
+    from sklearn.decomposition import PCA
+    import matplotlib.pyplot as plt
+    
+    np.random.seed(42)
+     
+    # dataset
+    n_samples = 100
+    experience = np.random.normal(size=n_samples)
+    salary = 1500 + experience + np.random.normal(size=n_samples, scale=.5)
+    X = np.column_stack([experience, salary])
+    
+    # PCA with scikit-learn
+    pca = PCA(n_components=2)
+    pca.fit(X)
+    print(pca.explained_variance_ratio_)
+    
+    PC = pca.transform(X)
+    
+    plt.subplot(121)
+    plt.scatter(X[:, 0], X[:, 1])
+    plt.xlabel("x1"); plt.ylabel("x2")
+    
+    plt.subplot(122)
+    plt.scatter(PC[:, 0], PC[:, 1])
+    plt.xlabel("PC1 (var=%.2f)" % pca.explained_variance_ratio_[0])
+    plt.ylabel("PC2 (var=%.2f)" % pca.explained_variance_ratio_[1])
+    plt.axis('equal')
+    plt.tight_layout()
+
+
+.. parsed-literal::
+
+    [0.93646607 0.06353393]
+
+
+
+.. image:: decomposition_files/decomposition_4_1.png
+
+
+.. code:: ipython3
+
+    from time import time
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from matplotlib import offsetbox
+    from sklearn import (manifold, datasets, decomposition, ensemble,
+                         discriminant_analysis, random_projection, neighbors)
+    print(__doc__)
+    
+    digits = datasets.load_digits(n_class=6)
+    X = digits.data
+    y = digits.target
+    n_samples, n_features = X.shape
+    n_neighbors = 30
+
+
+.. parsed-literal::
+
+    Automatically created module for IPython interactive environment
+
+
+Eigen faces
+-----------
+
+Sources: `Scikit learn Faces
+decompositions <https://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html>`__
+
+Load data
+
+.. code:: ipython3
+
+    import matplotlib.pyplot as plt
+    from sklearn.datasets import fetch_olivetti_faces
+    from sklearn import decomposition
+    
+    n_row, n_col = 2, 3
+    n_components = n_row * n_col
+    image_shape = (64, 64)
+    
+    faces, _ = fetch_olivetti_faces(return_X_y=True, shuffle=True,
+                                    random_state=1)
+    n_samples, n_features = faces.shape
+    
+    
+    # Utils function
+    def plot_gallery(title, images, n_col=n_col, n_row=n_row, cmap=plt.cm.gray):
+        plt.figure(figsize=(2. * n_col, 2.26 * n_row))
+        plt.suptitle(title, size=16)
+        for i, comp in enumerate(images):
+            plt.subplot(n_row, n_col, i + 1)
+            vmax = max(comp.max(), -comp.min())
+            plt.imshow(comp.reshape(image_shape), cmap=cmap,
+                       interpolation='nearest',
+                       vmin=-vmax, vmax=vmax)
+            plt.xticks(())
+            plt.yticks(())
+        plt.subplots_adjust(0.01, 0.05, 0.99, 0.93, 0.04, 0.)
+
+Preprocessing
+
+.. code:: ipython3
+
+    # global centering
+    faces_centered = faces - faces.mean(axis=0)
+    
+    # local centering
+    faces_centered -= faces_centered.mean(axis=1).reshape(n_samples, -1)
+
+First centered Olivetti faces
+
+.. code:: ipython3
+
+    plot_gallery("First centered Olivetti faces", faces_centered[:n_components])
+
+
+
+.. image:: decomposition_files/decomposition_11_0.png
+
+
+.. code:: ipython3
+
+    pca = decomposition.PCA(n_components=n_components)
+    pca.fit(faces_centered)
+    plot_gallery("PCA first %i loadings" % n_components, pca.components_[:n_components])
+
+
+
+.. image:: decomposition_files/decomposition_12_0.png
+
+
+Exercises
+---------
+
+Write a basic PCA class
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Write a class ``BasicPCA`` with two methods:
+
+-  ``fit(X)`` that estimates the data mean, principal components
+   directions :math:`\textbf{V}` and the explained variance of each
+   component.
+
+-  ``transform(X)`` that projects the data onto the principal
+   components.
+
+Check that your ``BasicPCA`` gave similar results, compared to the
+results from ``sklearn``.
+
+Apply your Basic PCA on the ``iris`` dataset
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The data set is available at:
+https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv
+
+-  Describe the data set. Should the dataset been standardized?
+
+-  Describe the structure of correlations among variables.
+
+-  Compute a PCA with the maximum number of components.
+
+-  Compute the cumulative explained variance ratio. Determine the number
+   of components :math:`K` by your computed values.
+
+-  Print the :math:`K` principal components directions and correlations
+   of the :math:`K` principal components with the original variables.
+   Interpret the contribution of the original variables into the PC.
+
+-  Plot the samples projected into the :math:`K` first PCs.
+
+-  Color samples by their species.
+
+Run scikit-learn examples
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Load the notebook or python file at the end of each examples
+
+-  `Faces dataset
+   decompositions <https://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html>`__
+-  `Faces recognition example using eigenfaces and
+   SVMs <https://scikit-learn.org/stable/auto_examples/applications/plot_face_recognition.html>`__
+

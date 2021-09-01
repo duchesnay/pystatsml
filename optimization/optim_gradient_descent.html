@@ -1,0 +1,573 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Gradient descent &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Lab: Faces recognition using various learning models" href="../auto_gallery/ml_lab_face_recognition.html" />
+    <link rel="prev" title="Ensemble learning: bagging, boosting and stacking" href="../machine_learning/ensemble_learning.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="gradient-descent">
+<h1>Gradient descent<a class="headerlink" href="#gradient-descent" title="Permalink to this headline">¶</a></h1>
+<p>Gradient descent is an <strong>optimization algorithm</strong> used to <strong>minimize
+some function</strong> by <strong>iteratively moving in the direction of steepest
+descent</strong> as defined by the <strong>negative of the gradient</strong>. In machine
+learning, we use gradient descent to <strong>update the parameters of our
+model</strong>. <strong>Parameters</strong> refer to <strong>coefficients</strong> in <strong>Linear
+Regression</strong> and <strong>weights</strong> in <strong>neural networks</strong>.</p>
+<p>This section aims to provide you an explanation of gradient descent and
+<strong>intuitions</strong> towards the <strong>behaviour of different algorithms for
+optimizing it</strong>. These explanations will help you put them to use.</p>
+<p>We are first going to introduce the gradient descent, solve it for a
+regression problem and look at its different variants. Then, we will
+then briefly summarize challenges during training. Finally, we will
+introduce the <strong>most common optimization algorithms</strong> by showing their
+motivation to resolve these challenges and list some advices for
+facilitate the algorithm choice.</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Consider the 3-dimensional graph below in <strong>the context of a cost
+function</strong>. Our <strong>goal</strong> is to <strong>move from the mountain in the top right
+corner (high cost) to the dark blue sea in the bottom left (low cost)</strong>.
+The <strong>arrows</strong> represent the <strong>direction</strong> of steepest descent (negative
+gradient) from any given point–the direction that <strong>decreases the cost
+function</strong> as quickly as possible</p>
+<center><figure class="align-default" id="id1">
+<img alt="adalta.it" src="../_images/gradient_descent_intuition.png" />
+<figcaption>
+<p><span class="caption-text">adalta.it</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>Gradient descent intuition.</p>
+</center><p>Starting at the top of the mountain, we take our first step <strong>downhill</strong>
+in the <strong>direction specified by the negative gradient</strong>. Next we
+<strong>recalculate the negative gradient</strong> (passing in the coordinates of our
+new point) and take another step in the direction it specifies. We
+continue this <strong>process iteratively until</strong> we get to the <strong>bottom of
+our graph</strong>, or to a <strong>point where we can no longer move downhill–a
+local minimum</strong>.</p>
+<center></center><section id="learning-rate">
+<h3>Learning rate<a class="headerlink" href="#learning-rate" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>size of these steps</strong> is called the <strong>learning rate</strong>. With a
+<strong>high learning rate</strong> we can cover more ground each step, but we <strong>risk
+overshooting the lowest point</strong> since the slope of the hill is
+constantly changing. With a <strong>very low learning rate</strong>, we can
+<strong>confidently move in the direction of the negative gradient</strong> since we
+are <strong>recalculating it so frequently</strong>. A <strong>low learning rate is more
+precise</strong>, but calculating the gradient is <strong>time-consuming</strong>, so it
+will take us a very long time to get to the bottom.</p>
+<center><figure class="align-default" id="id2">
+<img alt="jeremyjordan" src="../_images/learning_rate_choice.png" />
+<figcaption>
+<p><span class="caption-text">jeremyjordan</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>impacts of learning rate choice.</p>
+</center></section>
+<section id="cost-function">
+<h3>Cost function<a class="headerlink" href="#cost-function" title="Permalink to this headline">¶</a></h3>
+<p>A <strong>Loss Function (Error function)</strong> tells us <strong>“how good”</strong> our
+<strong>model</strong> is at making predictions for a <strong>given set of parameters</strong>.
+The cost function has its own curve and its own gradients. The <strong>slope
+of this curve</strong> tells us how to <strong>update our parameters</strong> to make the
+model more <strong>accurate</strong>.</p>
+</section>
+</section>
+<section id="numerical-solution-for-gradient-descent">
+<h2>Numerical solution for gradient descent<a class="headerlink" href="#numerical-solution-for-gradient-descent" title="Permalink to this headline">¶</a></h2>
+<p>Let’s run gradient descent using a <strong>linear regression cost function</strong>.</p>
+<p>There are <strong>two parameters</strong> in our cost function we can control: - $
+.. raw:: latex</p>
+<blockquote>
+<div><p>beta`_0$ : <strong>(the bias)</strong> - $:raw-latex:<cite>beta</cite>_1 $ :
+<strong>(weight or coefficient)</strong></p>
+<p>Since we need to consider the <strong>impact each one</strong> has on the final
+prediction, we need to use <strong>partial derivatives</strong>. We calculate the
+<strong>partial derivatives of the cost function with respect to each
+parameter and store the results in a gradient</strong>.</p>
+<p><strong>Given the cost function</strong></p>
+<div class="math notranslate nohighlight">
+\[f(\beta_0,\beta_1) =  \frac{1}{2}\frac{\partial MSE}{\partial\beta} = \frac{1}{2N} \sum_{i=1}^{n} (y_i - (\beta_1 x_i + \beta_0))^2 =  \frac{1}{2N} \sum_{i=1}^{n} ((\beta_1 x_i + \beta_0) - y_i)^2\]</div>
+<p><strong>The gradient can be calculated as</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}f'(\beta_0,\beta_1) =
+   \begin{bmatrix}
+     \frac{\partial f}{\partial \beta_0}\\
+     \frac{\partial f}{\partial \beta_1}\\
+    \end{bmatrix}
+=
+   \begin{bmatrix}
+     \frac{1}{2N} \sum -2((\beta_1x_i + \beta_0) - y_i ) \\
+     \frac{1}{2N} \sum -2x_i((\beta_1x_i + \beta_0) - y_i) \\
+    \end{bmatrix}
+=
+   \begin{bmatrix}
+     \frac{-1}{N} \sum ((\beta_1x_i + \beta_0) - y_i ) \\
+     \frac{-1}{N} \sum  x_i((\beta_1x_i + \beta_0) - y_i) \\
+    \end{bmatrix}
+    \end{split}\end{split}\]</div>
+<p>To solve for the gradient, we <strong>iterate</strong> through our <strong>data points</strong>
+using our <strong>:math:beta_1 and :math:beta_0 values</strong> and compute the</p>
+</div></blockquote>
+<p><strong>partial derivatives</strong>. This <strong>new gradient</strong> tells us the <strong>slope of
+our cost function at our current position</strong> (current parameter values)
+and the <strong>direction we should move to update our parameters</strong>. The
+<strong>size of our update</strong> is <strong>controlled by the learning rate</strong>.</p>
+<p><strong>Pseudocode of this algorithm</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Function</span>  <span class="n">gradient_descent</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">number_iterations</span><span class="p">):</span>
+
+    <span class="n">m</span> <span class="p">:</span> <span class="mi">1</span>
+    <span class="n">b</span> <span class="p">:</span> <span class="mi">1</span>
+    <span class="n">m_deriv</span> <span class="p">:</span> <span class="mi">0</span>
+    <span class="n">b_deriv</span> <span class="p">:</span> <span class="mi">0</span>
+    <span class="n">data_length</span> <span class="p">:</span> <span class="n">length</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">loop</span> <span class="n">i</span> <span class="p">:</span> <span class="mi">1</span>  <span class="o">--&gt;</span> <span class="n">number_iterations</span><span class="p">:</span>
+        <span class="n">loop</span> <span class="n">i</span> <span class="p">:</span> <span class="mi">1</span>  <span class="o">-&gt;</span>  <span class="n">data_length</span>  <span class="p">:</span>
+            <span class="n">m_deriv</span> <span class="p">:</span> <span class="n">m_deriv</span> <span class="o">-</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">m</span><span class="o">*</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">b_deriv</span> <span class="p">:</span> <span class="n">b_deriv</span> <span class="o">-</span> <span class="p">((</span><span class="n">m</span><span class="o">*</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="n">Y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">m</span> <span class="p">:</span> <span class="n">m</span> <span class="o">-</span> <span class="p">(</span><span class="n">m_deriv</span> <span class="o">/</span> <span class="n">data_length</span><span class="p">)</span> <span class="o">*</span> <span class="n">learning_rate</span>
+        <span class="n">b</span> <span class="p">:</span> <span class="n">b</span> <span class="o">-</span> <span class="p">(</span><span class="n">b_deriv</span> <span class="o">/</span> <span class="n">data_length</span><span class="p">)</span> <span class="o">*</span> <span class="n">learning_rate</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="p">,</span> <span class="n">b</span>
+</pre></div>
+</div>
+</section>
+<section id="gradient-descent-variants">
+<h2>Gradient descent variants<a class="headerlink" href="#gradient-descent-variants" title="Permalink to this headline">¶</a></h2>
+<p>There are <strong>three variants of gradient descent</strong>, which <strong>differ in how
+much data we use to compute the gradient</strong> of the objective function.
+Depending on the <strong>amount of data</strong>, we make a <strong>trade-off between the
+accuracy of the parameter update and the time it takes to perform an
+update</strong>.</p>
+<section id="batch-gradient-descent">
+<h3>Batch gradient descent<a class="headerlink" href="#batch-gradient-descent" title="Permalink to this headline">¶</a></h3>
+<p>Batch gradient descent, known also as Vanilla gradient descent, computes
+the gradient of the cost function with respect to the parameters
+<span class="math notranslate nohighlight">\(\theta\)</span> for the <strong>entire training dataset</strong> :</p>
+<div class="math notranslate nohighlight">
+\[\theta = \theta - \eta \cdot \nabla_\theta J( \theta)\]</div>
+<p>As we need to calculate the gradients for the <strong>whole dataset</strong> to
+<strong>perform just one update</strong>, <strong>batch</strong> gradient descent can be <strong>very
+slow</strong> and <strong>is intractable for datasets that don’t fit in memory</strong>.
+Batch gradient descent also <strong>doesn’t allow us to update our model
+online</strong>.</p>
+</section>
+<section id="stochastic-gradient-descent">
+<h3>Stochastic gradient descent<a class="headerlink" href="#stochastic-gradient-descent" title="Permalink to this headline">¶</a></h3>
+<p>Stochastic gradient descent (SGD) in contrast performs a parameter
+update for each training example <span class="math notranslate nohighlight">\(x^{(i)}\)</span> and label
+<span class="math notranslate nohighlight">\(y^{(i)}\)</span></p>
+<ul class="simple">
+<li><p>Choose an initial vector of parameters <span class="math notranslate nohighlight">\(w\)</span> and learning rate
+<span class="math notranslate nohighlight">\(\eta\)</span>.</p></li>
+<li><p>Repeat until an approximate minimum is obtained:</p>
+<ul>
+<li><p>Randomly shuffle examples in the training set.</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(i \in 1, \dots, n\)</span></p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(\theta = \theta - \eta \cdot \nabla_\theta J( \theta; x^{(i)}; y^{(i)})\)</span></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Batch gradient descent</strong> performs <strong>redundant computations for large
+datasets</strong>, as it <strong>recomputes</strong> gradients for <strong>similar examples</strong>
+before each <strong>parameter update</strong>. SGD does away with <strong>this redundancy
+by performing one update at a time</strong>. It is therefore usually <strong>much
+faster and can also be used to learn online</strong>. <strong>SGD</strong> performs
+<strong>frequent updates with a high variance that cause the objective
+function to fluctuate heavily as in the image below</strong>.</p>
+<center><figure class="align-default" id="id3">
+<img alt="Wikipedia" src="../_images/SGD_fluctuation.PNG" />
+<figcaption>
+<p><span class="caption-text">Wikipedia</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>SGD fluctuation.</p>
+</center><p>While batch gradient descent <strong>converges to the minimum of the basin</strong>
+the parameters are placed in, SGD’s fluctuation, on the one hand,
+<strong>enables it to jump to new and potentially better local minima</strong>. On
+the other hand, <strong>this ultimately complicates convergence to the exact
+minimum</strong>, as <strong>SGD will keep overshooting</strong>. However, it <strong>has been
+shown</strong> that when we <strong>slowly decrease the learning rate</strong>, SGD shows
+the same <strong>convergence behaviour as batch gradient descent</strong>, almost
+certainly <strong>converging to a local or the global minimum for non-convex
+and convex optimization respectively</strong>.</p>
+</section>
+<section id="mini-batch-gradient-descent">
+<h3>Mini-batch gradient descent<a class="headerlink" href="#mini-batch-gradient-descent" title="Permalink to this headline">¶</a></h3>
+<p>Mini-batch gradient descent finally takes the best of both worlds and
+performs an update for every mini-batch of n training examples:</p>
+<div class="math notranslate nohighlight">
+\[\theta = \theta - \eta \cdot \nabla_\theta J( \theta; x^{(i:i+n)}; y^{(i:i+n)})\]</div>
+<p>This way, it :</p>
+<ul class="simple">
+<li><p><strong>reduces the variance of the parameter updates</strong>, which can lead to
+<strong>more stable convergence</strong>.</p></li>
+<li><p>can make use of <strong>highly optimized matrix optimizations</strong> common to
+state-of-the-art deep learning libraries that make computing the
+gradient very efficient. <strong>Common mini-batch sizes range between 50
+and 256</strong>, but can vary for different applications.</p></li>
+</ul>
+<p><strong>Mini-batch</strong> gradient descent is <strong>typically the algorithm of choice
+when training a neural network</strong>.</p>
+</section>
+</section>
+<section id="gradient-descent-challenges">
+<h2>Gradient Descent challenges<a class="headerlink" href="#gradient-descent-challenges" title="Permalink to this headline">¶</a></h2>
+<p>Vanilla mini-batch gradient descent, however, does not guarantee good
+convergence, but offers a few challenges that need to be addressed:</p>
+<ul class="simple">
+<li><p>Choosing a proper <strong>learning rate</strong> can be difficult. A learning rate
+that is <strong>too small</strong> leads to <strong>painfully slow convergence</strong>, while
+a learning rate that is <strong>too large</strong> can hinder convergence and
+cause the loss function to <strong>fluctuate</strong> around the minimum or even
+to <strong>diverge</strong>.</p></li>
+<li><p><strong>Learning rate schedules</strong> try to <strong>adjust the learning rate during
+training</strong> by e.g. annealing, i.e. reducing the learning rate
+according to a pre-defined schedule or when the change in objective
+between epochs falls below a threshold. These schedules and
+thresholds, however, have to be defined in advance and are thus
+unable to adapt to a dataset’s characteristics.</p></li>
+<li><p>Additionally, the same learning rate applies to all parameter
+updates. <strong>If our data is sparse and our features have very different
+frequencies</strong>, we might not want to update all of them to the same
+extent, but perform <strong>a larger update for rarely occurring
+features</strong>.</p></li>
+<li><p>Another key challenge of <strong>minimizing highly non-convex error</strong>
+functions common for neural networks is <strong>avoiding</strong> getting
+<strong>trapped in their numerous suboptimal local minima</strong>. These <strong>saddle
+points (local minimas)</strong> are usually surrounded by a plateau of the
+same error, which makes it <strong>notoriously hard for SGD to escape</strong>, as
+the gradient is close to zero in all dimensions.</p></li>
+</ul>
+</section>
+<section id="gradient-descent-optimization-algorithms">
+<h2>Gradient descent optimization algorithms<a class="headerlink" href="#gradient-descent-optimization-algorithms" title="Permalink to this headline">¶</a></h2>
+<p>In the following, we will outline some <strong>algorithms</strong> that are
+<strong>widely</strong> used by the <strong>deep learning community</strong> to deal with the
+aforementioned <strong>challenges</strong>.</p>
+<section id="momentum">
+<h3>Momentum<a class="headerlink" href="#momentum" title="Permalink to this headline">¶</a></h3>
+<p><strong>SGD</strong> has trouble <strong>navigating ravines (areas where the surface curves
+much more steeply in one dimension than in another)</strong>, which are common
+<strong>around local optima</strong>. In these scenarios, <strong>SGD oscillates across the
+slopes of the ravine while only making hesitant progress</strong> along the
+bottom towards the local optimum as in the image below.</p>
+<center><figure class="align-default" id="id4">
+<img alt="Wikipedia" src="../_images/sgd_momentum.png" />
+<figcaption>
+<p><span class="caption-text">Wikipedia</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>SGD and momentum.</p>
+</center><center><p><a class="reference external" href="https://distill.pub/2017/momentum/">Source</a></p>
+<figure class="align-default" id="id5">
+<img alt="No momentum: oscillations toward local largest gradient" src="../_images/grad_descent_no_momentum.png" />
+<figcaption>
+<p><span class="caption-text">No momentum: oscillations toward local largest gradient</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>No momentum: moving toward local largest gradient create oscillations.</p>
+</center><center><figure class="align-default" id="id6">
+<img alt="With momentum: accumulate velocity to avoid oscillations" src="../_images/grad_descent_momentum.png" />
+<figcaption>
+<p><span class="caption-text">With momentum: accumulate velocity to avoid oscillations</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>With momentum: accumulate velocity to avoid oscillations.</p>
+</center><p><strong>Momentum</strong> is a method that helps <strong>accelerate SGD</strong> in the <strong>relevant
+direction and dampens oscillations</strong> as can be seen in image above. It
+does this by <strong>adding a fraction :math:`gamma` of the update vector</strong>
+of the <strong>past time step to the current update vector</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\begin{split}
+v_t &amp;= \rho v_{t-1} + \nabla_\theta J( \theta) \\
+\theta &amp;= \theta - v_t
+\end{split}
+\end{align}\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vx</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">vx</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">vx</span> <span class="o">+</span> <span class="n">dx</span>
+    <span class="n">x</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">vx</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: The momentum term <strong>:math:`rho`</strong> is usually set to 0.9 or a
+similar value.</p>
+<p>Essentially, when using momentum, we push <strong>a ball down a hill</strong>. The
+<strong>ball accumulates momentum as it rolls downhill</strong>, becoming faster and
+faster on the way <strong>(until it reaches its terminal velocity if there is
+air resistance, i.e.  :math:`rho` &lt;1 )</strong>.</p>
+<p>The same thing happens to our parameter updates: <strong>The momentum term
+increases</strong> for <strong>dimensions whose gradients point in the same
+directions and reduces updates for dimensions whose gradients change
+directions</strong>. As a result, we <strong>gain faster convergence</strong> and <strong>reduced
+oscillation</strong>.</p>
+</section>
+<section id="adagrad-adaptive-learning-rates">
+<h3>AdaGrad: adaptive learning rates<a class="headerlink" href="#adagrad-adaptive-learning-rates" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Added element-wise scaling of the gradient based on the historical
+sum of squares in each dimension.</p></li>
+<li><p>“Per-parameter learning rates” or “adaptive learning rates”</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">grad_squared</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">grad_squared</span> <span class="o">+=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">x</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">grad_squared</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Progress along “steep” directions is damped.</p></li>
+<li><p>Progress along “flat” directions is accelerated.</p></li>
+<li><p>Problem: step size over long time =&gt; Decays to zero.</p></li>
+</ul>
+</section>
+<section id="rmsprop-leaky-adagrad">
+<h3>RMSProp: “Leaky AdaGrad”<a class="headerlink" href="#rmsprop-leaky-adagrad" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">grad_squared</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">grad_squared</span> <span class="o">+=</span> <span class="n">decay_rate</span> <span class="o">*</span> <span class="n">grad_squared</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">decay_rate</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">x</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">grad_squared</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">decay_rate</span> <span class="pre">=</span> <span class="pre">1</span></code>: gradient descent</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decay_rate</span> <span class="pre">=</span> <span class="pre">0</span></code>: AdaGrad</p></li>
+</ul>
+</section>
+<section id="nesterov-accelerated-gradient">
+<h3>Nesterov accelerated gradient<a class="headerlink" href="#nesterov-accelerated-gradient" title="Permalink to this headline">¶</a></h3>
+<p>However, a ball that rolls down a hill, blindly following the slope, is
+highly <strong>unsatisfactory</strong>. We’d like to have a smarter ball, a ball that
+has <strong>a notion of where it is going</strong> so that it <strong>knows to slow down
+before the hill slopes up again</strong>. Nesterov accelerated gradient (NAG)
+is a way to give <strong>our momentum term this kind of prescience</strong>. We know
+that we will use our momentum term <span class="math notranslate nohighlight">\(\gamma v_{t-1}\)</span> to move the
+parameters <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<p>Computing <span class="math notranslate nohighlight">\(\theta - \gamma v_{t-1}\)</span> thus gives us <strong>an
+approximation of the next position of the parameters</strong> (the gradient is
+missing for the full update), a rough idea where our parameters are
+going to be. We can now effectively look ahead by calculating the
+gradient not w.r.t. to our current parameters <span class="math notranslate nohighlight">\(\theta\)</span> but w.r.t.
+the approximate future position of our parameters:</p>
+<p>Again, we set the momentum term <span class="math notranslate nohighlight">\(\gamma\)</span> to a value of around 0.9.
+While <strong>Momentum first computes the current gradient and then takes a
+big jump in the direction of the updated accumulated gradient</strong> ,
+<strong>NAG</strong> first <strong>makes a big jump in the direction of the previous
+accumulated gradient, measures the gradient and then makes a correction,
+which results in the complete NAG update</strong>. This anticipatory update
+<strong>prevents</strong> us from <strong>going too fast</strong> and results in <strong>increased
+responsiveness</strong>, which has significantly <strong>increased the performance of
+RNNs</strong> on a number of tasks</p>
+</section>
+<section id="adam">
+<h3>Adam<a class="headerlink" href="#adam" title="Permalink to this headline">¶</a></h3>
+<p><strong>Adaptive Moment Estimation (Adam)</strong> is a method that computes
+<strong>adaptive learning rates</strong> for each parameter. In addition to storing
+an <strong>exponentially decaying average of past squared gradients
+:math:`v_t`</strong>, Adam also keeps an <strong>exponentially decaying average of
+past gradients :math:`m_t`, similar to momentum</strong>. Whereas momentum can
+be seen as a ball running down a slope, Adam behaves like a <strong>heavy ball
+with friction</strong>, which thus prefers <strong>flat minima in the error
+surface</strong>. We compute the decaying averages of past and past squared
+gradients <span class="math notranslate nohighlight">\(m_t\)</span> and <span class="math notranslate nohighlight">\(v_t\)</span> respectively as follows:</p>
+<p><span class="math notranslate nohighlight">\(m_{t}\)</span> and <span class="math notranslate nohighlight">\(v_{t}\)</span> are estimates of the first moment (the
+mean) and the second moment (the uncentered variance) of the gradients
+respectively, hence the name of the method. Adam (almost)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">first_moment</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">second_moment</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="c1"># Momentum:</span>
+    <span class="n">first_moment</span> <span class="o">=</span> <span class="n">beta1</span> <span class="o">*</span> <span class="n">first_moment</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="c1"># AdaGrad/RMSProp</span>
+    <span class="n">second_moment</span> <span class="o">=</span> <span class="n">beta2</span> <span class="o">*</span> <span class="n">second_moment</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">x</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">first_moment</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">second_moment</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As <span class="math notranslate nohighlight">\(m_{t}\)</span> and <span class="math notranslate nohighlight">\(v_{t}\)</span> are initialized as vectors of 0’s,
+the authors of Adam observe that they are biased towards zero,
+especially during the initial time steps, and especially when the decay
+rates are small (i.e. <span class="math notranslate nohighlight">\(\beta_{1}\)</span> and <span class="math notranslate nohighlight">\(\beta_{2}\)</span> are close
+to 1). They counteract these biases by computing bias-corrected first
+and second moment estimates:</p>
+<p>They then use these to update the parameters (Adam update rule):</p>
+<div class="math notranslate nohighlight">
+\[\theta_{t+1} = \theta_{t} - \dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\hat{m}_t\)</span> Accumulate gradient: velocity.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{v}_t\)</span> Element-wise scaling of the gradient based on the
+historical sum of squares in each dimension.</p></li>
+<li><p>Choose Adam as default optimizer</p></li>
+<li><p>Default values of 0.9 for <span class="math notranslate nohighlight">\(\beta_1\)</span>, 0.999 for <span class="math notranslate nohighlight">\(\beta_2\)</span>,
+and <span class="math notranslate nohighlight">\(10^{-7}\)</span> for <span class="math notranslate nohighlight">\(\epsilon\)</span>.</p></li>
+<li><p>learning rate in a range between <span class="math notranslate nohighlight">\(1e-3\)</span> and <span class="math notranslate nohighlight">\(5e-4\)</span></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Gradient descent</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-solution-for-gradient-descent">Numerical solution for gradient descent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gradient-descent-variants">Gradient descent variants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gradient-descent-challenges">Gradient Descent challenges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gradient-descent-optimization-algorithms">Gradient descent optimization algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../machine_learning/ensemble_learning.html" title="previous chapter">Ensemble learning: bagging, boosting and stacking</a></li>
+      <li>Next: <a href="../auto_gallery/ml_lab_face_recognition.html" title="next chapter">Lab: Faces recognition using various learning models</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/optimization/optim_gradient_descent.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

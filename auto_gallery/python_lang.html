@@ -1,0 +1,1669 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Import libraries &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Numpy: arrays and matrices" href="scipy_numpy.html" />
+    <link rel="prev" title="Introduction to Machine Learning" href="../introduction/machine_learning.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-gallery-python-lang-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<p class="sphx-glr-example-title" id="sphx-glr-auto-gallery-python-lang-py"><strong>Source</strong> Kevin Markham <a class="reference external" href="https://github.com/justmarkham/python-reference">https://github.com/justmarkham/python-reference</a></p>
+<section id="import-libraries">
+<h1>Import libraries<a class="headerlink" href="#import-libraries" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># &#39;generic import&#39; of math module</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+
+<span class="c1"># import a function</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="n">sqrt</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>    <span class="c1"># no longer have to reference the module</span>
+
+<span class="c1"># import multiple functions at once</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">cos</span><span class="p">,</span> <span class="n">floor</span>
+
+<span class="c1"># import all functions in a module (generally discouraged)</span>
+<span class="c1"># from os import *</span>
+
+<span class="c1"># define an alias</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># show all functions in math module</span>
+<span class="n">content</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="basic-operations">
+<h1>Basic operations<a class="headerlink" href="#basic-operations" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Numbers</span>
+<span class="mi">10</span> <span class="o">+</span> <span class="mi">4</span>          <span class="c1"># add (returns 14)</span>
+<span class="mi">10</span> <span class="o">-</span> <span class="mi">4</span>          <span class="c1"># subtract (returns 6)</span>
+<span class="mi">10</span> <span class="o">*</span> <span class="mi">4</span>          <span class="c1"># multiply (returns 40)</span>
+<span class="mi">10</span> <span class="o">**</span> <span class="mi">4</span>         <span class="c1"># exponent (returns 10000)</span>
+<span class="mi">10</span> <span class="o">/</span> <span class="mi">4</span>          <span class="c1"># divide (returns 2 because both types are &#39;int&#39;)</span>
+<span class="mi">10</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>   <span class="c1"># divide (returns 2.5)</span>
+<span class="mi">5</span> <span class="o">%</span> <span class="mi">4</span>           <span class="c1"># modulo (returns 1) - also known as the remainder</span>
+
+<span class="mi">10</span> <span class="o">/</span> <span class="mi">4</span>          <span class="c1"># true division (returns 2.5)</span>
+<span class="mi">10</span> <span class="o">//</span> <span class="mi">4</span>         <span class="c1"># floor division (returns 2)</span>
+
+
+<span class="c1"># Boolean operations</span>
+<span class="c1"># comparisons (these return True)</span>
+<span class="mi">5</span> <span class="o">&gt;</span> <span class="mi">3</span>
+<span class="mi">5</span> <span class="o">&gt;=</span> <span class="mi">3</span>
+<span class="mi">5</span> <span class="o">!=</span> <span class="mi">3</span>
+<span class="mi">5</span> <span class="o">==</span> <span class="mi">5</span>
+
+<span class="c1"># boolean operations (these return True)</span>
+<span class="mi">5</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="mi">6</span> <span class="o">&gt;</span> <span class="mi">3</span>
+<span class="mi">5</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">or</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="mi">3</span>
+<span class="ow">not</span> <span class="kc">False</span>
+<span class="kc">False</span> <span class="ow">or</span> <span class="ow">not</span> <span class="kc">False</span> <span class="ow">and</span> <span class="kc">True</span>     <span class="c1"># evaluation order: not, and, or</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</section>
+<section id="data-types">
+<h1>Data types<a class="headerlink" href="#data-types" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># determine the type of an object</span>
+<span class="nb">type</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>         <span class="c1"># returns &#39;int&#39;</span>
+<span class="nb">type</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>       <span class="c1"># returns &#39;float&#39;</span>
+<span class="nb">type</span><span class="p">(</span><span class="s1">&#39;two&#39;</span><span class="p">)</span>     <span class="c1"># returns &#39;str&#39;</span>
+<span class="nb">type</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>      <span class="c1"># returns &#39;bool&#39;</span>
+<span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>      <span class="c1"># returns &#39;NoneType&#39;</span>
+
+<span class="c1"># check if an object is of a given type</span>
+<span class="nb">isinstance</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>            <span class="c1"># returns False</span>
+<span class="nb">isinstance</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>   <span class="c1"># returns True</span>
+
+<span class="c1"># convert an object to a given type</span>
+<span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">int</span><span class="p">(</span><span class="mf">2.9</span><span class="p">)</span>
+<span class="nb">str</span><span class="p">(</span><span class="mf">2.9</span><span class="p">)</span>
+
+<span class="c1"># zero, None, and empty containers are converted to False</span>
+<span class="nb">bool</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">bool</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="nb">bool</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>    <span class="c1"># empty string</span>
+<span class="nb">bool</span><span class="p">([])</span>    <span class="c1"># empty list</span>
+<span class="nb">bool</span><span class="p">({})</span>    <span class="c1"># empty dictionary</span>
+
+<span class="c1"># non-empty containers and non-zeros are converted to True</span>
+<span class="nb">bool</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">bool</span><span class="p">(</span><span class="s1">&#39;two&#39;</span><span class="p">)</span>
+<span class="nb">bool</span><span class="p">([</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+<section id="lists">
+<h2>Lists<a class="headerlink" href="#lists" title="Permalink to this headline">¶</a></h2>
+<p>Different objects categorized along a certain ordered sequence, lists
+are ordered, iterable, mutable (adding or removing objects changes the
+list size), can contain multiple data types.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># create an empty list (two ways)</span>
+<span class="n">empty_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">empty_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<span class="c1"># create a list</span>
+<span class="n">simpsons</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;homer&#39;</span><span class="p">,</span> <span class="s1">&#39;marge&#39;</span><span class="p">,</span> <span class="s1">&#39;bart&#39;</span><span class="p">]</span>
+
+<span class="c1"># examine a list</span>
+<span class="n">simpsons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>     <span class="c1"># print element 0 (&#39;homer&#39;)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">simpsons</span><span class="p">)</span>   <span class="c1"># returns the length (3)</span>
+
+<span class="c1"># modify a list (does not return the list)</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;lisa&#39;</span><span class="p">)</span>                 <span class="c1"># append element to end</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;itchy&#39;</span><span class="p">,</span> <span class="s1">&#39;scratchy&#39;</span><span class="p">])</span>  <span class="c1"># append multiple elements to end</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;maggie&#39;</span><span class="p">)</span>            <span class="c1"># insert element at index 0 (shifts everything right)</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;bart&#39;</span><span class="p">)</span>                 <span class="c1"># searches for first instance and removes it</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>                         <span class="c1"># removes element 0 and returns it</span>
+<span class="k">del</span> <span class="n">simpsons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                         <span class="c1"># removes element 0 (does not return it)</span>
+<span class="n">simpsons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;krusty&#39;</span>                  <span class="c1"># replace element 0</span>
+
+<span class="c1"># concatenate lists (slower than &#39;extend&#39; method)</span>
+<span class="n">neighbors</span> <span class="o">=</span> <span class="n">simpsons</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;ned&#39;</span><span class="p">,</span><span class="s1">&#39;rod&#39;</span><span class="p">,</span><span class="s1">&#39;todd&#39;</span><span class="p">]</span>
+
+<span class="c1"># find elements in a list</span>
+<span class="s1">&#39;lisa&#39;</span> <span class="ow">in</span> <span class="n">simpsons</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;lisa&#39;</span><span class="p">)</span>      <span class="c1"># counts the number of instances</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;itchy&#39;</span><span class="p">)</span>     <span class="c1"># returns index of first instance</span>
+
+<span class="c1"># list slicing [start:end:stride]</span>
+<span class="n">weekdays</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mon&#39;</span><span class="p">,</span><span class="s1">&#39;tues&#39;</span><span class="p">,</span><span class="s1">&#39;wed&#39;</span><span class="p">,</span><span class="s1">&#39;thurs&#39;</span><span class="p">,</span><span class="s1">&#39;fri&#39;</span><span class="p">]</span>
+<span class="n">weekdays</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>         <span class="c1"># element 0</span>
+<span class="n">weekdays</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>       <span class="c1"># elements 0, 1, 2</span>
+<span class="n">weekdays</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>        <span class="c1"># elements 0, 1, 2</span>
+<span class="n">weekdays</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>        <span class="c1"># elements 3, 4</span>
+<span class="n">weekdays</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>        <span class="c1"># last element (element 4)</span>
+<span class="n">weekdays</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>       <span class="c1"># every 2nd element (0, 2, 4)</span>
+<span class="n">weekdays</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>      <span class="c1"># backwards (4, 3, 2, 1, 0)</span>
+
+<span class="c1"># alternative method for returning the list backwards</span>
+<span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">weekdays</span><span class="p">))</span>
+
+<span class="c1"># sort a list in place (modifies but does not return the list)</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>     <span class="c1"># sort in reverse</span>
+<span class="n">simpsons</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>          <span class="c1"># sort by a key</span>
+
+<span class="c1"># return a sorted list (but does not modify the original list)</span>
+<span class="nb">sorted</span><span class="p">(</span><span class="n">simpsons</span><span class="p">)</span>
+<span class="nb">sorted</span><span class="p">(</span><span class="n">simpsons</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">sorted</span><span class="p">(</span><span class="n">simpsons</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+
+<span class="c1"># create a second reference to the same list</span>
+<span class="n">num</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">same_num</span> <span class="o">=</span> <span class="n">num</span>
+<span class="n">same_num</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>         <span class="c1"># modifies both &#39;num&#39; and &#39;same_num&#39;</span>
+
+<span class="c1"># copy a list (three ways)</span>
+<span class="n">new_num</span> <span class="o">=</span> <span class="n">num</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">new_num</span> <span class="o">=</span> <span class="n">num</span><span class="p">[:]</span>
+<span class="n">new_num</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+<span class="c1"># examine objects</span>
+<span class="nb">id</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">same_num</span><span class="p">)</span> <span class="c1"># returns True</span>
+<span class="nb">id</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">new_num</span><span class="p">)</span>  <span class="c1"># returns False</span>
+<span class="n">num</span> <span class="ow">is</span> <span class="n">same_num</span>         <span class="c1"># returns True</span>
+<span class="n">num</span> <span class="ow">is</span> <span class="n">new_num</span>          <span class="c1"># returns False</span>
+<span class="n">num</span> <span class="o">==</span> <span class="n">same_num</span>         <span class="c1"># returns True</span>
+<span class="n">num</span> <span class="o">==</span> <span class="n">new_num</span>          <span class="c1"># returns True (their contents are equivalent)</span>
+
+<span class="c1"># conatenate +, replicate *</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;a&#39;, &#39;a&#39;, &#39;b&#39;, &#39;b&#39;, &#39;b&#39;]
+</pre></div>
+</div>
+</section>
+<section id="tuples">
+<h2>Tuples<a class="headerlink" href="#tuples" title="Permalink to this headline">¶</a></h2>
+<p>Like lists, but their size cannot change: ordered, iterable, immutable,
+can contain multiple data types</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a tuple</span>
+<span class="n">digits</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">)</span>          <span class="c1"># create a tuple directly</span>
+<span class="n">digits</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">])</span>   <span class="c1"># create a tuple from a list</span>
+<span class="n">zero</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>                     <span class="c1"># trailing comma is required to indicate it&#39;s a tuple</span>
+
+<span class="c1"># examine a tuple</span>
+<span class="n">digits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>           <span class="c1"># returns &#39;two&#39;</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span>         <span class="c1"># returns 3</span>
+<span class="n">digits</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>     <span class="c1"># counts the number of instances of that value (1)</span>
+<span class="n">digits</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>     <span class="c1"># returns the index of the first instance of that value (1)</span>
+
+<span class="c1"># elements of a tuple cannot be modified</span>
+<span class="c1"># digits[2] = 2       # throws an error</span>
+
+<span class="c1"># concatenate tuples</span>
+<span class="n">digits</span> <span class="o">=</span> <span class="n">digits</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># create a single tuple with elements repeated (also works with lists)</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>          <span class="c1"># returns (3, 4, 3, 4)</span>
+
+<span class="c1"># tuple unpacking</span>
+<span class="n">bart</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;male&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;simpson&#39;</span><span class="p">)</span>  <span class="c1"># create a tuple</span>
+</pre></div>
+</div>
+</section>
+<section id="strings">
+<h2>Strings<a class="headerlink" href="#strings" title="Permalink to this headline">¶</a></h2>
+<p>A sequence of characters, they are iterable, immutable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a string</span>
+<span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>         <span class="c1"># convert another data type into a string</span>
+<span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;I like you&#39;</span>
+
+<span class="c1"># examine a string</span>
+<span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                <span class="c1"># returns &#39;I&#39;</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>              <span class="c1"># returns 10</span>
+
+<span class="c1"># string slicing like lists</span>
+<span class="n">s</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span>               <span class="c1"># returns &#39;I like&#39;</span>
+<span class="n">s</span><span class="p">[</span><span class="mi">7</span><span class="p">:]</span>               <span class="c1"># returns &#39;you&#39;</span>
+<span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>               <span class="c1"># returns &#39;u&#39;</span>
+
+<span class="c1"># basic string methods (does not modify the original string)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>           <span class="c1"># returns &#39;i like you&#39;</span>
+<span class="n">s</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>           <span class="c1"># returns &#39;I LIKE YOU&#39;</span>
+<span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">)</span>   <span class="c1"># returns True</span>
+<span class="n">s</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;you&#39;</span><span class="p">)</span>   <span class="c1"># returns True</span>
+<span class="n">s</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>         <span class="c1"># returns False (returns True if every character in the string is a digit)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;like&#39;</span><span class="p">)</span>      <span class="c1"># returns index of first occurrence (2), but doesn&#39;t support regex</span>
+<span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;hate&#39;</span><span class="p">)</span>      <span class="c1"># returns -1 since not found</span>
+<span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;like&#39;</span><span class="p">,</span><span class="s1">&#39;love&#39;</span><span class="p">)</span>    <span class="c1"># replaces all instances of &#39;like&#39; with &#39;love&#39;</span>
+
+<span class="c1"># split a string into a list of substrings separated by a delimiter</span>
+<span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>        <span class="c1"># returns [&#39;I&#39;,&#39;like&#39;,&#39;you&#39;]</span>
+<span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>           <span class="c1"># same thing</span>
+<span class="n">s2</span> <span class="o">=</span> <span class="s1">&#39;a, an, the&#39;</span>
+<span class="n">s2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>       <span class="c1"># returns [&#39;a&#39;,&#39; an&#39;,&#39; the&#39;]</span>
+
+<span class="c1"># join a list of strings into one string using a delimiter</span>
+<span class="n">stooges</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;larry&#39;</span><span class="p">,</span><span class="s1">&#39;curly&#39;</span><span class="p">,</span><span class="s1">&#39;moe&#39;</span><span class="p">]</span>
+<span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stooges</span><span class="p">)</span>   <span class="c1"># returns &#39;larry curly moe&#39;</span>
+
+<span class="c1"># concatenate strings</span>
+<span class="n">s3</span> <span class="o">=</span> <span class="s1">&#39;The meaning of life is&#39;</span>
+<span class="n">s4</span> <span class="o">=</span> <span class="s1">&#39;42&#39;</span>
+<span class="n">s3</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">s4</span>       <span class="c1"># returns &#39;The meaning of life is 42&#39;</span>
+<span class="n">s3</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># same thing</span>
+
+<span class="c1"># remove whitespace from start and end of a string</span>
+<span class="n">s5</span> <span class="o">=</span> <span class="s1">&#39;  ham and cheese  &#39;</span>
+<span class="n">s5</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>          <span class="c1"># returns &#39;ham and cheese&#39;</span>
+
+<span class="c1"># string substitutions: all of these return &#39;raining cats and dogs&#39;</span>
+<span class="s1">&#39;raining </span><span class="si">%s</span><span class="s1"> and </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;cats&#39;</span><span class="p">,</span><span class="s1">&#39;dogs&#39;</span><span class="p">)</span>                       <span class="c1"># old way</span>
+<span class="s1">&#39;raining </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;cats&#39;</span><span class="p">,</span><span class="s1">&#39;dogs&#39;</span><span class="p">)</span>                   <span class="c1"># new way</span>
+<span class="s1">&#39;raining </span><span class="si">{arg1}</span><span class="s1"> and </span><span class="si">{arg2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg1</span><span class="o">=</span><span class="s1">&#39;cats&#39;</span><span class="p">,</span><span class="n">arg2</span><span class="o">=</span><span class="s1">&#39;dogs&#39;</span><span class="p">)</span> <span class="c1"># named arguments</span>
+
+<span class="c1"># string formatting</span>
+<span class="c1"># more examples: http://mkaz.com/2012/10/10/python-string-format/</span>
+<span class="s1">&#39;pi is </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">3.14159</span><span class="p">)</span>      <span class="c1"># returns &#39;pi is 3.14&#39;</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;pi is 3.14&#39;
+</pre></div>
+</div>
+</section>
+<section id="strings-2-2">
+<h2>Strings 2/2<a class="headerlink" href="#strings-2-2" title="Permalink to this headline">¶</a></h2>
+<p>Normal strings allow for escaped characters</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;first line</span><span class="se">\n</span><span class="s1">second line&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>first line
+second line
+</pre></div>
+</div>
+<p>raw strings treat backslashes as literal characters</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;first line\nfirst line&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>first line\nfirst line
+</pre></div>
+</div>
+<p>Sequence of bytes are not strings, should be decoded before some operations</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;first line</span><span class="se">\n</span><span class="s1">second line&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>b&#39;first line\nsecond line&#39;
+[&#39;first&#39;, &#39;line&#39;, &#39;second&#39;, &#39;line&#39;]
+</pre></div>
+</div>
+</section>
+<section id="dictionaries">
+<h2>Dictionaries<a class="headerlink" href="#dictionaries" title="Permalink to this headline">¶</a></h2>
+<p>Dictionaries are structures which can contain multiple data types, and
+is ordered with key-value pairs: for each (unique) key, the dictionary
+outputs one value. Keys can be strings, numbers, or tuples, while the
+corresponding values can be any Python object. Dictionaries are:
+unordered, iterable, mutable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># create an empty dictionary (two ways)</span>
+<span class="n">empty_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">empty_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="c1"># create a dictionary (two ways)</span>
+<span class="n">family</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dad&#39;</span><span class="p">:</span><span class="s1">&#39;homer&#39;</span><span class="p">,</span> <span class="s1">&#39;mom&#39;</span><span class="p">:</span><span class="s1">&#39;marge&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">}</span>
+<span class="n">family</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">dad</span><span class="o">=</span><span class="s1">&#39;homer&#39;</span><span class="p">,</span> <span class="n">mom</span><span class="o">=</span><span class="s1">&#39;marge&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+
+<span class="c1"># convert a list of tuples into a dictionary</span>
+<span class="n">list_of_tuples</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;dad&#39;</span><span class="p">,</span><span class="s1">&#39;homer&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;mom&#39;</span><span class="p">,</span><span class="s1">&#39;marge&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+<span class="n">family</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">list_of_tuples</span><span class="p">)</span>
+
+<span class="c1"># examine a dictionary</span>
+<span class="n">family</span><span class="p">[</span><span class="s1">&#39;dad&#39;</span><span class="p">]</span>       <span class="c1"># returns &#39;homer&#39;</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">family</span><span class="p">)</span>         <span class="c1"># returns 3</span>
+<span class="n">family</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>       <span class="c1"># returns list: [&#39;dad&#39;, &#39;mom&#39;, &#39;size&#39;]</span>
+<span class="n">family</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>     <span class="c1"># returns list: [&#39;homer&#39;, &#39;marge&#39;, 6]</span>
+<span class="n">family</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>      <span class="c1"># returns list of tuples:</span>
+                    <span class="c1">#   [(&#39;dad&#39;, &#39;homer&#39;), (&#39;mom&#39;, &#39;marge&#39;), (&#39;size&#39;, 6)]</span>
+<span class="s1">&#39;mom&#39;</span> <span class="ow">in</span> <span class="n">family</span>     <span class="c1"># returns True</span>
+<span class="s1">&#39;marge&#39;</span> <span class="ow">in</span> <span class="n">family</span>   <span class="c1"># returns False (only checks keys)</span>
+
+<span class="c1"># modify a dictionary (does not return the dictionary)</span>
+<span class="n">family</span><span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;snowball&#39;</span>              <span class="c1"># add a new entry</span>
+<span class="n">family</span><span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;snowball ii&#39;</span>           <span class="c1"># edit an existing entry</span>
+<span class="k">del</span> <span class="n">family</span><span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">]</span>                       <span class="c1"># delete an entry</span>
+<span class="n">family</span><span class="p">[</span><span class="s1">&#39;kids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bart&#39;</span><span class="p">,</span> <span class="s1">&#39;lisa&#39;</span><span class="p">]</span>       <span class="c1"># value can be a list</span>
+<span class="n">family</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;dad&#39;</span><span class="p">)</span>                       <span class="c1"># removes an entry and returns the value (&#39;homer&#39;)</span>
+<span class="n">family</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;baby&#39;</span><span class="p">:</span><span class="s1">&#39;maggie&#39;</span><span class="p">,</span> <span class="s1">&#39;grandpa&#39;</span><span class="p">:</span><span class="s1">&#39;abe&#39;</span><span class="p">})</span>   <span class="c1"># add multiple entries</span>
+
+<span class="c1"># accessing values more safely with &#39;get&#39;</span>
+<span class="n">family</span><span class="p">[</span><span class="s1">&#39;mom&#39;</span><span class="p">]</span>                       <span class="c1"># returns &#39;marge&#39;</span>
+<span class="n">family</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mom&#39;</span><span class="p">)</span>                   <span class="c1"># same thing</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">family</span><span class="p">[</span><span class="s1">&#39;grandma&#39;</span><span class="p">]</span>               <span class="c1"># throws an error</span>
+<span class="k">except</span>  <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+<span class="n">family</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grandma&#39;</span><span class="p">)</span>               <span class="c1"># returns None</span>
+<span class="n">family</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;grandma&#39;</span><span class="p">,</span> <span class="s1">&#39;not found&#39;</span><span class="p">)</span>  <span class="c1"># returns &#39;not found&#39; (the default)</span>
+
+<span class="c1"># accessing a list element within a dictionary</span>
+<span class="n">family</span><span class="p">[</span><span class="s1">&#39;kids&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>                   <span class="c1"># returns &#39;bart&#39;</span>
+<span class="n">family</span><span class="p">[</span><span class="s1">&#39;kids&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;lisa&#39;</span><span class="p">)</span>       <span class="c1"># removes &#39;lisa&#39;</span>
+
+<span class="c1"># string substitution using a dictionary</span>
+<span class="s1">&#39;youngest child is </span><span class="si">%(baby)s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">family</span>   <span class="c1"># returns &#39;youngest child is maggie&#39;</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Error &#39;grandma&#39;
+
+&#39;youngest child is maggie&#39;
+</pre></div>
+</div>
+</section>
+<section id="sets">
+<h2>Sets<a class="headerlink" href="#sets" title="Permalink to this headline">¶</a></h2>
+<p>Like dictionaries, but with unique keys only (no corresponding values).
+They are: unordered, iterable, mutable, can contain multiple data types
+made up of unique elements (strings, numbers, or tuples)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># create an empty set</span>
+<span class="n">empty_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+<span class="c1"># create a set</span>
+<span class="n">languages</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;java&#39;</span><span class="p">}</span>         <span class="c1"># create a set directly</span>
+<span class="n">snakes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;cobra&#39;</span><span class="p">,</span> <span class="s1">&#39;viper&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">])</span>  <span class="c1"># create a set from a list</span>
+
+<span class="c1"># examine a set</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">languages</span><span class="p">)</span>              <span class="c1"># returns 3</span>
+<span class="s1">&#39;python&#39;</span> <span class="ow">in</span> <span class="n">languages</span>       <span class="c1"># returns True</span>
+
+<span class="c1"># set operations</span>
+<span class="n">languages</span> <span class="o">&amp;</span> <span class="n">snakes</span>          <span class="c1"># returns intersection: {&#39;python&#39;}</span>
+<span class="n">languages</span> <span class="o">|</span> <span class="n">snakes</span>          <span class="c1"># returns union: {&#39;cobra&#39;, &#39;r&#39;, &#39;java&#39;, &#39;viper&#39;, &#39;python&#39;}</span>
+<span class="n">languages</span> <span class="o">-</span> <span class="n">snakes</span>          <span class="c1"># returns set difference: {&#39;r&#39;, &#39;java&#39;}</span>
+<span class="n">snakes</span> <span class="o">-</span> <span class="n">languages</span>          <span class="c1"># returns set difference: {&#39;cobra&#39;, &#39;viper&#39;}</span>
+
+<span class="c1"># modify a set (does not return the set)</span>
+<span class="n">languages</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;sql&#39;</span><span class="p">)</span>        <span class="c1"># add a new element</span>
+<span class="n">languages</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>          <span class="c1"># try to add an existing element (ignored, no error)</span>
+<span class="n">languages</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;java&#39;</span><span class="p">)</span>    <span class="c1"># remove an element</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">languages</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>       <span class="c1"># try to remove a non-existing element (throws an error)</span>
+<span class="k">except</span>  <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+<span class="n">languages</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>      <span class="c1"># removes an element if present, but ignored otherwise</span>
+<span class="n">languages</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>             <span class="c1"># removes and returns an arbitrary element</span>
+<span class="n">languages</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>           <span class="c1"># removes all elements</span>
+<span class="n">languages</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s1">&#39;go&#39;</span><span class="p">,</span> <span class="s1">&#39;spark&#39;</span><span class="p">)</span> <span class="c1"># add multiple elements (can also pass a list or set)</span>
+
+<span class="c1"># get a sorted list of unique elements from a list</span>
+<span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>    <span class="c1"># returns [0, 1, 2, 9]</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Error &#39;c&#39;
+
+[0, 1, 2, 9]
+</pre></div>
+</div>
+</section>
+<section id="iterators">
+<h2>Iterators<a class="headerlink" href="#iterators" title="Permalink to this headline">¶</a></h2>
+<p>Cartesian product</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="nb">print</span><span class="p">([[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[&#39;a&#39;, 1], [&#39;a&#39;, 2], [&#39;b&#39;, 1], [&#39;b&#39;, 2], [&#39;c&#39;, 1], [&#39;c&#39;, 2]]
+</pre></div>
+</div>
+</section>
+</section>
+<section id="execution-control-statements">
+<h1>Execution control statements<a class="headerlink" href="#execution-control-statements" title="Permalink to this headline">¶</a></h1>
+<section id="conditional-statements">
+<h2>Conditional statements<a class="headerlink" href="#conditional-statements" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="c1"># if statement</span>
+<span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;positive&#39;</span><span class="p">)</span>
+
+<span class="c1"># if/else statement</span>
+<span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;positive&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;zero or negative&#39;</span><span class="p">)</span>
+
+<span class="c1"># if/elif/else statement</span>
+<span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;positive&#39;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;zero&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;negative&#39;</span><span class="p">)</span>
+
+<span class="c1"># single-line if statement (sometimes discouraged)</span>
+<span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;positive&#39;</span><span class="p">)</span>
+
+<span class="c1"># single-line if/else statement (sometimes discouraged)</span>
+<span class="c1"># known as a &#39;ternary operator&#39;</span>
+<span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;positive&#39;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;zero or negative&#39;</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>positive
+positive
+positive
+positive
+</pre></div>
+</div>
+</section>
+<section id="loops">
+<h2>Loops<a class="headerlink" href="#loops" title="Permalink to this headline">¶</a></h2>
+<p>Loops are a set of instructions which repeat until termination
+conditions are met. This can include iterating through all values in an
+object, go through a range of values, etc</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># range returns a list of integers</span>
+<span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>     <span class="c1"># returns [0, 1, 2]: includes first value but excludes second value</span>
+<span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>        <span class="c1"># same thing: starting at zero is the default</span>
+<span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># returns [0, 2, 4]: third argument specifies the &#39;stride&#39;</span>
+
+<span class="c1"># for loop</span>
+<span class="n">fruits</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;banana&#39;</span><span class="p">,</span> <span class="s1">&#39;cherry&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fruits</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fruits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+
+<span class="c1"># alternative for loop (recommended style)</span>
+<span class="k">for</span> <span class="n">fruit</span> <span class="ow">in</span> <span class="n">fruits</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fruit</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+
+<span class="c1"># use range when iterating over a large sequence to avoid actually creating the integer list in memory</span>
+<span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>APPLE
+BANANA
+CHERRY
+APPLE
+BANANA
+CHERRY
+</pre></div>
+</div>
+</section>
+</section>
+<section id="list-comprehensions-iterators-etc">
+<h1>List comprehensions, iterators, etc.<a class="headerlink" href="#list-comprehensions-iterators-etc" title="Permalink to this headline">¶</a></h1>
+<section id="list-comprehensions">
+<h2>List comprehensions<a class="headerlink" href="#list-comprehensions" title="Permalink to this headline">¶</a></h2>
+<p>Process which affects whole lists without iterating through loops. For
+more:
+<a class="reference external" href="http://python-3-patterns-idioms-test.readthedocs.io/en/latest/Comprehensions.html">http://python-3-patterns-idioms-test.readthedocs.io/en/latest/Comprehensions.html</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># for loop to create a list of cubes</span>
+<span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">cubes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+    <span class="n">cubes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># equivalent list comprehension</span>
+<span class="n">cubes</span> <span class="o">=</span> <span class="p">[</span><span class="n">num</span><span class="o">**</span><span class="mi">3</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">]</span>    <span class="c1"># [1, 8, 27, 64, 125]</span>
+
+<span class="c1"># for loop to create a list of cubes of even numbers</span>
+<span class="n">cubes_of_even</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cubes_of_even</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># equivalent list comprehension</span>
+<span class="c1"># syntax: [expression for variable in iterable if condition]</span>
+<span class="n">cubes_of_even</span> <span class="o">=</span> <span class="p">[</span><span class="n">num</span><span class="o">**</span><span class="mi">3</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span> <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>    <span class="c1"># [8, 64]</span>
+
+<span class="c1"># for loop to cube even numbers and square odd numbers</span>
+<span class="n">cubes_and_squares</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cubes_and_squares</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cubes_and_squares</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># equivalent list comprehension (using a ternary expression)</span>
+<span class="c1"># syntax: [true_condition if condition else false_condition for variable in iterable]</span>
+<span class="n">cubes_and_squares</span> <span class="o">=</span> <span class="p">[</span><span class="n">num</span><span class="o">**</span><span class="mi">3</span> <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">num</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">]</span>    <span class="c1"># [1, 8, 9, 64, 25]</span>
+
+<span class="c1"># for loop to flatten a 2d-matrix</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>
+<span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">matrix</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+        <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+<span class="c1"># equivalent list comprehension</span>
+<span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">matrix</span>
+              <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span> <span class="c1"># [1, 2, 3, 4]</span>
+
+<span class="c1"># set comprehension</span>
+<span class="n">fruits</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;banana&#39;</span><span class="p">,</span> <span class="s1">&#39;cherry&#39;</span><span class="p">]</span>
+<span class="n">unique_lengths</span> <span class="o">=</span> <span class="p">{</span><span class="nb">len</span><span class="p">(</span><span class="n">fruit</span><span class="p">)</span> <span class="k">for</span> <span class="n">fruit</span> <span class="ow">in</span> <span class="n">fruits</span><span class="p">}</span>   <span class="c1"># {5, 6}</span>
+
+<span class="c1"># dictionary comprehension</span>
+<span class="n">fruit_lengths</span> <span class="o">=</span> <span class="p">{</span><span class="n">fruit</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">fruit</span><span class="p">)</span> <span class="k">for</span> <span class="n">fruit</span> <span class="ow">in</span> <span class="n">fruits</span><span class="p">}</span> <span class="c1"># {&#39;apple&#39;: 5, &#39;banana&#39;: 6, &#39;cherry&#39;: 6}</span>
+</pre></div>
+</div>
+<p>Exercise: upper-case names and add 1 year to all simpsons</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">simpsons</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Homer&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;Marge&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;Bart&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+
+<span class="n">simpsons_older</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span> <span class="n">v</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">simpsons</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">simpsons_older</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;HOMER&#39;: 46, &#39;MARGE&#39;: 46, &#39;BART&#39;: 11, &#39;LISA&#39;: 11}
+</pre></div>
+</div>
+</section>
+<section id="exercice-count-words-in-a-sentence">
+<h2>Exercice: count words in a sentence<a class="headerlink" href="#exercice-count-words-in-a-sentence" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">quote</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Tick-tow</span>
+<span class="s2">our incomes are like our shoes; if too small they gall and pinch us</span>
+<span class="s2">but if too large they cause us to stumble and to trip</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">count</span> <span class="o">=</span> <span class="p">{</span><span class="n">word</span><span class="p">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">quote</span><span class="o">.</span><span class="n">split</span><span class="p">())}</span>
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">quote</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+    <span class="n">count</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="c1"># iterate through two things at once (using tuple unpacking)</span>
+<span class="n">family</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dad&#39;</span><span class="p">:</span> <span class="s1">&#39;homer&#39;</span><span class="p">,</span> <span class="s1">&#39;mom&#39;</span><span class="p">:</span> <span class="s1">&#39;marge&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">family</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+<span class="c1"># use enumerate if you need to access the index value within the loop</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">fruit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fruits</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">fruit</span><span class="p">)</span>
+
+<span class="c1"># for/else loop</span>
+<span class="k">for</span> <span class="n">fruit</span> <span class="ow">in</span> <span class="n">fruits</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">fruit</span> <span class="o">==</span> <span class="s1">&#39;banana&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found the banana!&quot;</span><span class="p">)</span>
+        <span class="k">break</span>   <span class="c1"># exit the loop and skip the &#39;else&#39; block</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># this block executes ONLY if the for loop completes without hitting</span>
+        <span class="c1"># &#39;break&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Can&#39;t find the banana&quot;</span><span class="p">)</span>
+
+<span class="c1"># while loop</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This will print 5 times&quot;</span><span class="p">)</span>
+    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>      <span class="c1"># equivalent to &#39;count = count + 1&#39;</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>dad homer
+mom marge
+size 6
+0 apple
+1 banana
+2 cherry
+Can&#39;t find the banana
+Found the banana!
+This will print 5 times
+This will print 5 times
+This will print 5 times
+This will print 5 times
+This will print 5 times
+</pre></div>
+</div>
+</section>
+<section id="exceptions-handling">
+<h2>Exceptions handling<a class="headerlink" href="#exceptions-handling" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dct</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;c&#39;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Key </span><span class="si">%s</span><span class="s2"> is missing. Add it with empty value&quot;</span> <span class="o">%</span> <span class="n">key</span><span class="p">)</span>
+    <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Key c is missing. Add it with empty value
+{&#39;a&#39;: [1, 2], &#39;b&#39;: [4, 5], &#39;c&#39;: []}
+</pre></div>
+</div>
+</section>
+</section>
+<section id="functions">
+<h1>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h1>
+<p>Functions are sets of instructions launched when called upon, they can
+have multiple input values and a return value</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># define a function with no arguments and no return values</span>
+<span class="k">def</span> <span class="nf">print_text</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;this is text&#39;</span><span class="p">)</span>
+
+<span class="c1"># call the function</span>
+<span class="n">print_text</span><span class="p">()</span>
+
+<span class="c1"># define a function with one argument and no return values</span>
+<span class="k">def</span> <span class="nf">print_this</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># call the function</span>
+<span class="n">print_this</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>       <span class="c1"># prints 3</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">print_this</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>   <span class="c1"># prints 3, but doesn&#39;t assign 3 to n</span>
+                    <span class="c1"># because the function has no return statement</span>
+
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">add</span><span class="p">(</span><span class="s2">&quot;deux&quot;</span><span class="p">,</span> <span class="s2">&quot;trois&quot;</span><span class="p">)</span>
+
+<span class="n">add</span><span class="p">([</span><span class="s2">&quot;deux&quot;</span><span class="p">,</span> <span class="s2">&quot;trois&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+<span class="c1"># define a function with one argument and one return value</span>
+<span class="k">def</span> <span class="nf">square_this</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="c1"># include an optional docstring to describe the effect of a function</span>
+<span class="k">def</span> <span class="nf">square_this</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the square of a number.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="c1"># call the function</span>
+<span class="n">square_this</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>          <span class="c1"># prints 9</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">square_this</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>    <span class="c1"># assigns 9 to var, but does not print 9</span>
+
+<span class="c1"># default arguments</span>
+<span class="k">def</span> <span class="nf">power_this</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="n">power</span>
+
+<span class="n">power_this</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>    <span class="c1"># 4</span>
+<span class="n">power_this</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># 8</span>
+
+<span class="c1"># use &#39;pass&#39; as a placeholder if you haven&#39;t written the function body</span>
+<span class="k">def</span> <span class="nf">stub</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="c1"># return two values from a single function</span>
+<span class="k">def</span> <span class="nf">min_max</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">nums</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+
+<span class="c1"># return values can be assigned to a single variable as a tuple</span>
+<span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">min_max_num</span> <span class="o">=</span> <span class="n">min_max</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>         <span class="c1"># min_max_num = (1, 3)</span>
+
+<span class="c1"># return values can be assigned into multiple variables using tuple unpacking</span>
+<span class="n">min_num</span><span class="p">,</span> <span class="n">max_num</span> <span class="o">=</span> <span class="n">min_max</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>    <span class="c1"># min_num = 1, max_num = 3</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>this is text
+3
+3
+</pre></div>
+</div>
+</section>
+<section id="regular-expression">
+<h1>Regular expression<a class="headerlink" href="#regular-expression" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="c1"># 1. Compile regular expression with a patetrn</span>
+<span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^.+(sub-.+)_(ses-.+)_(mod-.+)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Match compiled RE on string</p></li>
+</ol>
+<p>Capture the pattern <code class="docutils literal notranslate"><span class="pre">`anyprefixsub-&lt;subj</span> <span class="pre">id&gt;_ses-&lt;session</span> <span class="pre">id&gt;_&lt;modality&gt;`</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strings</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;abcsub-033_ses-01_mod-mri&quot;</span><span class="p">,</span> <span class="s2">&quot;defsub-044_ses-01_mod-mri&quot;</span><span class="p">,</span> <span class="s2">&quot;ghisub-055_ses-02_mod-ctscan&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">([</span><span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">s</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">strings</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[(&#39;sub-033&#39;, &#39;ses-01&#39;, &#39;mod-mri&#39;), (&#39;sub-044&#39;, &#39;ses-01&#39;, &#39;mod-mri&#39;), (&#39;sub-055&#39;, &#39;ses-02&#39;, &#39;mod-ctscan&#39;)]
+</pre></div>
+</div>
+<p>Match methods on compiled regular expression</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Method/Attribute</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>match(string)</p></td>
+<td><p>Determine if the RE matches at the beginning of the string.</p></td>
+</tr>
+<tr class="row-odd"><td><p>search(string)</p></td>
+<td><p>Scan through a string, looking for any location where this RE matches.</p></td>
+</tr>
+<tr class="row-even"><td><p>findall(string)</p></td>
+<td><p>Find all substrings where the RE matches, and returns them as a list.</p></td>
+</tr>
+<tr class="row-odd"><td><p>finditer(string)</p></td>
+<td><p>Find all substrings where the RE matches, and returns them as an iterator.</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="2">
+<li><p>Replace compiled RE on string</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(sub-[^_]+)&quot;</span><span class="p">)</span> <span class="c1"># match (sub-...)_</span>
+<span class="nb">print</span><span class="p">([</span><span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;SUB-&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">strings</span><span class="p">])</span>
+
+<span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;SUB-&quot;</span><span class="p">,</span> <span class="s2">&quot;toto&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;abcSUB-_ses-01_mod-mri&#39;, &#39;defSUB-_ses-01_mod-mri&#39;, &#39;ghiSUB-_ses-02_mod-ctscan&#39;]
+
+&#39;toto&#39;
+</pre></div>
+</div>
+<p>Remove all non-alphanumeric characters in a string</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[^0-9a-zA-Z]+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;h^&amp;ell`.,|o w]{+orld&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;helloworld&#39;
+</pre></div>
+</div>
+</section>
+<section id="system-programming">
+<h1>System programming<a class="headerlink" href="#system-programming" title="Permalink to this headline">¶</a></h1>
+<section id="operating-system-interfaces-os">
+<h2>Operating system interfaces (os)<a class="headerlink" href="#operating-system-interfaces-os" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+</div>
+<p>Current working directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the current working directory</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+
+<span class="c1"># Set the current working directory</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ed203246/git/pystatsml/python_lang
+</pre></div>
+</div>
+<p>Temporary directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="n">tmpdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Join paths</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mytmpdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create a directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span> <span class="s2">&quot;plop&quot;</span><span class="p">,</span> <span class="s2">&quot;toto&quot;</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># list containing the names of the entries in the directory given by path.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">mytmpdir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;plop&#39;]
+</pre></div>
+</div>
+</section>
+<section id="file-input-output">
+<h2>File input/output<a class="headerlink" href="#file-input-output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mytmpdir</span><span class="p">,</span> <span class="s2">&quot;myfile.txt&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="c1"># Write</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Dans python tout est bon&quot;</span><span class="p">,</span> <span class="s2">&quot;Enfin, presque&quot;</span><span class="p">]</span>
+
+<span class="c1">## write line by line</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1">## use a context manager to automatically close your file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Read</span>
+<span class="c1">## read one line at a time (entire file does not have to fit into memory)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>    <span class="c1"># one string per line (including newlines)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>    <span class="c1"># next line</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1">## read one line at a time (entire file does not have to fit into memory)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>    <span class="c1"># one string per line (including newlines)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>    <span class="c1"># next line</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1">## read the whole file at once, return a list of lines</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>   <span class="c1"># one list, each line is one string</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1">## use list comprehension to duplicate readlines without reading entire file at once</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1">## use a context manager to automatically close your file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/tmp/foobar/myfile.txt
+</pre></div>
+</div>
+</section>
+<section id="explore-list-directories">
+<h2>Explore, list directories<a class="headerlink" href="#explore-list-directories" title="Permalink to this headline">¶</a></h2>
+<p>Walk</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">WD</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">WD</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/tmp/foobar [&#39;plop&#39;] [&#39;myfile.txt&#39;]
+/tmp/foobar/plop [&#39;toto&#39;] []
+/tmp/foobar/plop/toto [] []
+</pre></div>
+</div>
+<p>glob, basename and file extension</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="n">tmpdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+
+<span class="n">filenames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;*.txt&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
+
+<span class="c1"># take basename then remove extension</span>
+<span class="n">basenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">basenames</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;/tmp/foobar/myfile.txt&#39;]
+[&#39;myfile&#39;]
+</pre></div>
+</div>
+<p>shutil - High-level file operations</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span>  <span class="s2">&quot;myfile.txt&quot;</span><span class="p">)</span>
+<span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span>  <span class="s2">&quot;plop&quot;</span><span class="p">,</span> <span class="s2">&quot;myfile.txt&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;copy </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span>
+
+<span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File </span><span class="si">%s</span><span class="s2"> exists ?&quot;</span> <span class="o">%</span> <span class="n">dst</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dst</span><span class="p">))</span>
+
+<span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span>  <span class="s2">&quot;plop&quot;</span><span class="p">)</span>
+<span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;plop2&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;copy tree </span><span class="si">%s</span><span class="s2"> under </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+
+    <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">FileExistsError</span><span class="p">,</span> <span class="ne">FileNotFoundError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>copy /tmp/foobar/myfile.txt to /tmp/foobar/plop/myfile.txt
+File /tmp/foobar/plop/myfile.txt exists ? True
+copy tree /tmp/foobar/plop under /tmp/plop2
+</pre></div>
+</div>
+</section>
+<section id="command-execution-with-subprocess">
+<h2>Command execution with subprocess<a class="headerlink" href="#command-execution-with-subprocess" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>For more advanced use cases, the underlying Popen interface can be used directly.</p></li>
+<li><p>Run the command described by args.</p></li>
+<li><p>Wait for command to complete</p></li>
+<li><p>return a CompletedProcess instance.</p></li>
+<li><p>Does not capture stdout or stderr by default. To do so, pass PIPE for the stdout and/or stderr arguments.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="c1"># doesn&#39;t capture output</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;ls&quot;</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">returncode</span><span class="p">)</span>
+
+<span class="c1"># Run through the shell.</span>
+<span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;ls -l&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Capture output</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;ls&quot;</span><span class="p">,</span> <span class="s2">&quot;-a&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
+<span class="c1"># out.stdout is a sequence of bytes that should be decoded into a utf-8 string</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0
+[&#39;.&#39;, &#39;..&#39;, &#39;bin&#39;, &#39;boot&#39;, &#39;cdrom&#39;]
+</pre></div>
+</div>
+</section>
+<section id="multiprocessing-and-multithreading">
+<h2>Multiprocessing and multithreading<a class="headerlink" href="#multiprocessing-and-multithreading" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><strong>Process</strong></p>
+<p>A process is a name given to a program instance that has been loaded into memory
+and managed by the operating system.</p>
+<p>Process = address space + execution context (thread of control)</p>
+<p>Process address space (segments):</p>
+<ul class="simple">
+<li><p>Code.</p></li>
+<li><p>Data (static/global).</p></li>
+<li><p>Heap (dynamic memory allocation).</p></li>
+<li><p>Stack.</p></li>
+</ul>
+<p>Execution context:</p>
+<ul class="simple">
+<li><p>Data registers.</p></li>
+<li><p>Stack pointer (SP).</p></li>
+<li><p>Program counter (PC).</p></li>
+<li><p>Working Registers.</p></li>
+</ul>
+<p>OS Scheduling of processes: context switching (ie. save/load Execution context)</p>
+<p>Pros/cons</p>
+<ul class="simple">
+<li><p>Context switching expensive.</p></li>
+<li><p>(potentially) complex data sharing (not necessary true).</p></li>
+<li><p>Cooperating processes - no need for memory protection (separate address spaces).</p></li>
+<li><p>Relevant for parrallel computation with memory allocation.</p></li>
+</ul>
+<p><strong>Threads</strong></p>
+<ul class="simple">
+<li><p>Threads share the same address space (Data registers): access to code, heap and (global) data.</p></li>
+<li><p>Separate execution stack, PC and Working Registers.</p></li>
+</ul>
+<p>Pros/cons</p>
+<ul class="simple">
+<li><p>Faster context switching only SP, PC and Working Registers.</p></li>
+<li><p>Can exploit fine-grain concurrency</p></li>
+<li><p>Simple data sharing through the shared address space.</p></li>
+<li><p>Precautions have to be taken or two threads will write to the same memory at the same time. This is what the <strong>global interpreter lock (GIL)</strong> is for.</p></li>
+<li><p>Relevant for GUI, I/O (Network, disk) concurrent operation</p></li>
+</ul>
+<p><strong>In Python</strong></p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">threading</span></code> module uses threads.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> module uses processes.</p></li>
+</ul>
+</div></blockquote>
+<p>Multithreading</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="k">def</span> <span class="nf">list_append</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">sign</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">out_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">out_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+        <span class="n">out_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sign</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
+        <span class="nb">sum</span><span class="p">(</span><span class="n">out_list</span><span class="p">)</span> <span class="c1"># do some computation</span>
+    <span class="k">return</span> <span class="n">out_list</span>
+
+<span class="n">size</span> <span class="o">=</span> <span class="mi">10000</span>   <span class="c1"># Number of numbers to add</span>
+
+<span class="n">out_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span> <span class="c1"># result is a simple list</span>
+<span class="n">thread1</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">list_append</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">out_list</span><span class="p">,</span> <span class="p">))</span>
+<span class="n">thread2</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">list_append</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_list</span><span class="p">,</span> <span class="p">))</span>
+
+<span class="n">startime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="c1"># Will execute both in parallel</span>
+<span class="n">thread1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">thread2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="c1"># Joins threads back to the parent process</span>
+<span class="n">thread1</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="n">thread2</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Threading ellapsed time &quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">startime</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">out_list</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Threading ellapsed time  0.6789593696594238
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+</pre></div>
+</div>
+<p>Multiprocessing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="c1"># Sharing requires specific mecanism</span>
+<span class="n">out_list1</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Manager</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">list_append</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">out_list2</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Manager</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">list_append</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+<span class="n">startime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">p2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">p1</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="n">p2</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Multiprocessing ellapsed time &quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">startime</span><span class="p">)</span>
+
+<span class="c1"># print(out_list[:10]) is not availlable</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Multiprocessing ellapsed time  0.19075894355773926
+</pre></div>
+</div>
+<p>Sharing object between process with Managers</p>
+<p>Managers provide a way to create data which can be shared between
+different processes, including sharing over a network between processes
+running on different machines. A manager object controls a server process
+which manages shared objects.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>   <span class="c1"># Number of numbers to add</span>
+
+<span class="c1"># Sharing requires specific mecanism</span>
+<span class="n">out_list</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Manager</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">list_append</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">out_list</span><span class="p">))</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">list_append</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_list</span><span class="p">))</span>
+
+<span class="n">startime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">p2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="n">p1</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="n">p2</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">out_list</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Multiprocessing with shared object ellapsed time &quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">startime</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0, 1, 2, 3, 4, 5, 0, 6, -1, 7]
+Multiprocessing with shared object ellapsed time  0.3832252025604248
+</pre></div>
+</div>
+</section>
+</section>
+<section id="scripts-and-argument-parsing">
+<h1>Scripts and argument parsing<a class="headerlink" href="#scripts-and-argument-parsing" title="Permalink to this headline">¶</a></h1>
+<p>Example, the word count script</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># parse command line options</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;word_count.csv&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;list of input files.&#39;</span><span class="p">,</span>
+                        <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;output csv file (default </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">output</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">input</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">&quot;Error: input files are missing&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">input</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span>
+
+    <span class="c1"># Match words</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;[a-zA-Z]+&quot;</span><span class="p">)</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+        <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fd</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">count</span><span class="p">:</span>
+                    <span class="n">count</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">count</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Pandas</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="n">k</span><span class="p">,</span> <span class="n">count</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">count</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;word&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">])</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="networking">
+<h1>Networking<a class="headerlink" href="#networking" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+<section id="ftp">
+<h2>FTP<a class="headerlink" href="#ftp" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Full FTP features with ftplib</span>
+<span class="kn">import</span> <span class="nn">ftplib</span>
+<span class="n">ftp</span> <span class="o">=</span> <span class="n">ftplib</span><span class="o">.</span><span class="n">FTP</span><span class="p">(</span><span class="s2">&quot;ftp.cea.fr&quot;</span><span class="p">)</span>
+<span class="n">ftp</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+<span class="n">ftp</span><span class="o">.</span><span class="n">cwd</span><span class="p">(</span><span class="s1">&#39;/pub/unati/people/educhesnay/pystatml&#39;</span><span class="p">)</span>
+<span class="n">ftp</span><span class="o">.</span><span class="n">retrlines</span><span class="p">(</span><span class="s1">&#39;LIST&#39;</span><span class="p">)</span>
+
+<span class="n">fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;README.md&quot;</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+<span class="n">ftp</span><span class="o">.</span><span class="n">retrbinary</span><span class="p">(</span><span class="s1">&#39;RETR README.md&#39;</span><span class="p">,</span> <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">)</span>
+<span class="n">fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">ftp</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+
+<span class="c1"># File download urllib</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+<span class="n">ftp_url</span> <span class="o">=</span> <span class="s1">&#39;ftp://ftp.cea.fr/pub/unati/people/educhesnay/pystatml/README.md&#39;</span>
+<span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">ftp_url</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;README2.md&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>-rw-r--r--    1 ftp      ftp          3019 Oct 16  2019 README.md
+-rw-r--r--    1 ftp      ftp      10672252 Dec 18 10:13 StatisticsMachineLearningPython.pdf
+-rw-r--r--    1 ftp      ftp       9676120 Nov 12  2020 StatisticsMachineLearningPythonDraft.pdf
+-rw-r--r--    1 ftp      ftp       9798485 Jul 08  2020 StatisticsMachineLearningPythonDraft_202007.pdf
+
+(&#39;/tmp/README2.md&#39;, &lt;email.message.Message object at 0x7f88eefd5580&gt;)
+</pre></div>
+</div>
+</section>
+<section id="http">
+<h2>HTTP<a class="headerlink" href="#http" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</section>
+<section id="sockets">
+<h2>Sockets<a class="headerlink" href="#sockets" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</section>
+<section id="xmlrpc">
+<h2>xmlrpc<a class="headerlink" href="#xmlrpc" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="modules-and-packages">
+<h1>Modules and packages<a class="headerlink" href="#modules-and-packages" title="Permalink to this headline">¶</a></h1>
+<p>A module is a Python file.
+A package is a directory which MUST contain a special file called <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code></p>
+<p>To import, extend variable <cite>PYTHONPATH</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export PYTHONPATH=path_to_parent_python_module:${PYTHONPATH}
+</pre></div>
+</div>
+<p>Or</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;path_to_parent_python_module&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file can be empty. But you can set which modules the
+package exports as the API, while keeping other modules internal,
+by overriding the __all__ variable, like so:</p>
+<p><code class="docutils literal notranslate"><span class="pre">parentmodule/__init__.py</span></code> file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">submodule1</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">submodule2</span>
+
+<span class="kn">from</span> <span class="nn">.submodule3</span> <span class="kn">import</span> <span class="n">function1</span>
+<span class="kn">from</span> <span class="nn">.submodule3</span> <span class="kn">import</span> <span class="n">function2</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;submodule1&quot;</span><span class="p">,</span> <span class="s2">&quot;submodule2&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;function1&quot;</span><span class="p">,</span> <span class="s2">&quot;function2&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>User can import:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">parentmodule.submodule1</span>
+<span class="kn">import</span> <span class="nn">parentmodule.function1</span>
+</pre></div>
+</div>
+<p>Python Unit Testing</p>
+<p>TODO</p>
+</section>
+<section id="object-oriented-programming-oop">
+<h1>Object Oriented Programming (OOP)<a class="headerlink" href="#object-oriented-programming-oop" title="Permalink to this headline">¶</a></h1>
+<p><strong>Sources</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://python-textbok.readthedocs.org/en/latest/Object_Oriented_Programming.html">http://python-textbok.readthedocs.org/en/latest/Object_Oriented_Programming.html</a></p></li>
+</ul>
+<p><strong>Principles</strong></p>
+<ul class="simple">
+<li><p><strong>Encapsulate</strong> data (attributes) and code (methods) into objects.</p></li>
+<li><p><strong>Class</strong> = template or blueprint that can be used to create objects.</p></li>
+<li><p>An <strong>object</strong> is a specific instance of a class.</p></li>
+<li><p><strong>Inheritance</strong>: OOP allows classes to inherit commonly used state
+and behaviour from other classes. Reduce code duplication</p></li>
+<li><p><strong>Polymorphism</strong>: (usually obtained through polymorphism) calling
+code is agnostic as to whether an object belongs to a parent class or
+one of its descendants (abstraction, modularity). The same method
+called on 2 objects of 2 different classes will behave differently.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+
+
+<span class="k">class</span> <span class="nc">Shape2D</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+<span class="c1"># __init__ is a special method called the constructor</span>
+
+
+<span class="c1"># Inheritance + Encapsulation</span>
+<span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="n">Shape2D</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+
+    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">**</span> <span class="mi">2</span>
+
+
+<span class="k">class</span> <span class="nc">Disk</span><span class="p">(</span><span class="n">Shape2D</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+
+    <span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">**</span> <span class="mi">2</span>
+
+
+<span class="n">shapes</span> <span class="o">=</span> <span class="p">[</span><span class="n">Square</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">Disk</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+
+<span class="c1"># Polymorphism</span>
+<span class="nb">print</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">area</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shapes</span><span class="p">])</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Shape2D</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">area</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">NotImplementedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NotImplementedError&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[4, 28.274333882308138]
+NotImplementedError
+</pre></div>
+</div>
+</section>
+<section id="style-guide-for-python-programming">
+<h1>Style guide for Python programming<a class="headerlink" href="#style-guide-for-python-programming" title="Permalink to this headline">¶</a></h1>
+<p>See <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP 8</a></p>
+<ul class="simple">
+<li><p>Spaces (four) are the preferred indentation method.</p></li>
+<li><p>Two blank lines for top level function or classes definition.</p></li>
+<li><p>One blank line to indicate logical sections.</p></li>
+<li><p>Never use: <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">lib</span> <span class="pre">import</span> <span class="pre">*</span></code></p></li>
+<li><p>Bad: <code class="docutils literal notranslate"><span class="pre">Capitalized_Words_With_Underscores</span></code></p></li>
+<li><p>Function and Variable Names: <code class="docutils literal notranslate"><span class="pre">lower_case_with_underscores</span></code></p></li>
+<li><p>Class Names: <code class="docutils literal notranslate"><span class="pre">CapitalizedWords</span></code> (aka: <code class="docutils literal notranslate"><span class="pre">CamelCase</span></code>)</p></li>
+</ul>
+</section>
+<section id="documenting">
+<h1>Documenting<a class="headerlink" href="#documenting" title="Permalink to this headline">¶</a></h1>
+<p>See <a class="reference external" href="https://realpython.com/documenting-python-code//">Documenting Python</a>
+Documenting = comments + docstrings (Python documentation string)</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.datacamp.com/community/tutorials/docstrings-python">Docstrings</a>
+are use as documentation for the class, module, and packages.
+See it as “living documentation”.</p></li>
+<li><p>Comments are  used to explain non-obvious portions of the code. “Dead documentation”.</p></li>
+</ul>
+<p>Docstrings for functions (same for classes and methods):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function ...</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : float</span>
+<span class="sd">        First operand.</span>
+<span class="sd">    b : float, optional</span>
+<span class="sd">        Second operand. The default is 2.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Sum of operands.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; my_function(3)</span>
+<span class="sd">    5</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Add a with b (this is a comment)</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">help</span><span class="p">(</span><span class="n">my_function</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Help on function my_function in module __main__:
+
+my_function(a, b=2)
+    This function ...
+
+    Parameters
+    ----------
+    a : float
+        First operand.
+    b : float, optional
+        Second operand. The default is 2.
+
+    Returns
+    -------
+    Sum of operands.
+
+    Example
+    -------
+    &gt;&gt;&gt; my_function(3)
+    5
+
+None
+</pre></div>
+</div>
+<p>Docstrings for scripts:</p>
+<p>At the begining of a script add a pream:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Thu Nov 14 12:08:41 CET 2019</span>
+
+<span class="sd">@author: firstname.lastname@email.com</span>
+
+<span class="sd">Some description</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="exercises">
+<h1>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h1>
+<section id="exercise-1-functions">
+<h2>Exercise 1: functions<a class="headerlink" href="#exercise-1-functions" title="Permalink to this headline">¶</a></h2>
+<p>Create a function that acts as a simple calulator If the operation is
+not specified, default to addition If the operation is misspecified,
+return an prompt message Ex: <code class="docutils literal notranslate"><span class="pre">calc(4,5,&quot;multiply&quot;)</span></code> returns 20 Ex:
+<code class="docutils literal notranslate"><span class="pre">calc(3,5)</span></code> returns 8 Ex: <code class="docutils literal notranslate"><span class="pre">calc(1,</span> <span class="pre">2,</span> <span class="pre">&quot;something&quot;)</span></code> returns error
+message</p>
+</section>
+<section id="exercise-2-functions-list-loop">
+<h2>Exercise 2: functions + list + loop<a class="headerlink" href="#exercise-2-functions-list-loop" title="Permalink to this headline">¶</a></h2>
+<p>Given a list of numbers, return a list where all adjacent duplicate
+elements have been reduced to a single element. Ex: <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">2]</span></code>
+returns <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">2]</span></code>. You may create a new list or modify the passed
+in list.</p>
+<p>Remove all duplicate values (adjacent or not) Ex: <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">2]</span></code>
+returns <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code></p>
+</section>
+<section id="exercise-3-file-i-o">
+<h2>Exercise 3: File I/O<a class="headerlink" href="#exercise-3-file-i-o" title="Permalink to this headline">¶</a></h2>
+<p>1. Copy/paste the BSD 4 clause license (<a class="reference external" href="https://en.wikipedia.org/wiki/BSD_licenses">https://en.wikipedia.org/wiki/BSD_licenses</a>)
+into a text file. Read, the file and count the occurrences of each
+word within the file. Store the words’ occurrence number in a dictionary.</p>
+<p>2. Write an executable python command <code class="docutils literal notranslate"><span class="pre">count_words.py</span></code> that parse
+a list of input files provided after <code class="docutils literal notranslate"><span class="pre">--input</span></code> parameter.
+The dictionary of occurrence is save in a csv file provides by <code class="docutils literal notranslate"><span class="pre">--output</span></code>.
+with default value word_count.csv.
+Use:
+- open
+- regular expression
+- argparse (<a class="reference external" href="https://docs.python.org/3/howto/argparse.html">https://docs.python.org/3/howto/argparse.html</a>)</p>
+</section>
+<section id="exercise-4-oop">
+<h2>Exercise 4: OOP<a class="headerlink" href="#exercise-4-oop" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Create a class <code class="docutils literal notranslate"><span class="pre">Employee</span></code> with 2 attributes provided in the
+constructor: <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">years_of_service</span></code>. With one method
+<code class="docutils literal notranslate"><span class="pre">salary</span></code> with is obtained by <code class="docutils literal notranslate"><span class="pre">1500</span> <span class="pre">+</span> <span class="pre">100</span> <span class="pre">*</span> <span class="pre">years_of_service</span></code>.</p></li>
+<li><p>Create a subclass <code class="docutils literal notranslate"><span class="pre">Manager</span></code> which redefine <code class="docutils literal notranslate"><span class="pre">salary</span></code> method
+<code class="docutils literal notranslate"><span class="pre">2500</span> <span class="pre">+</span> <span class="pre">120</span> <span class="pre">*</span> <span class="pre">years_of_service</span></code>.</p></li>
+<li><p>Create a small dictionary-nosed database where the key is the
+employee’s name. Populate the database with: samples =
+Employee(‘lucy’, 3), Employee(‘john’, 1), Manager(‘julie’, 10),
+Manager(‘paul’, 3)</p></li>
+<li><p>Return a table of made name, salary rows, i.e. a list of list [[name,
+salary]]</p></li>
+<li><p>Compute the average salary</p></li>
+</ol>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.741 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-python-lang-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/70ad7197a55ebdc2906eed784a626f1a/python_lang.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">python_lang.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/c4275fe2e0574ad0ea500e359b4cfa73/python_lang.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">python_lang.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#data-types">Data types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lists">Lists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tuples">Tuples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#strings">Strings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#strings-2-2">Strings 2/2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dictionaries">Dictionaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sets">Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iterators">Iterators</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#execution-control-statements">Execution control statements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#conditional-statements">Conditional statements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loops">Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#list-comprehensions">List comprehensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercice-count-words-in-a-sentence">Exercice: count words in a sentence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exceptions-handling">Exceptions handling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#system-programming">System programming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#operating-system-interfaces-os">Operating system interfaces (os)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-input-output">File input/output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#explore-list-directories">Explore, list directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-execution-with-subprocess">Command execution with subprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiprocessing-and-multithreading">Multiprocessing and multithreading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#networking">Networking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ftp">FTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#http">HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sockets">Sockets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#xmlrpc">xmlrpc</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#exercises">Exercises</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-1-functions">Exercise 1: functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-2-functions-list-loop">Exercise 2: functions + list + loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-3-file-i-o">Exercise 3: File I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exercise-4-oop">Exercise 4: OOP</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../introduction/machine_learning.html" title="previous chapter">Introduction to Machine Learning</a></li>
+      <li>Next: <a href="scipy_numpy.html" title="next chapter">Numpy: arrays and matrices</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/auto_gallery/python_lang.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

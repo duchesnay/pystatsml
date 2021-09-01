@@ -1,0 +1,184 @@
+Non-linear models
+=================
+
+Support Vector Machines (SVM)
+-----------------------------
+
+SVM are based kernel methods require only a user-specified kernel
+function :math:`K(x_i, x_j)`, i.e., a **similarity function** over pairs
+of data points :math:`(x_i, x_j)` into kernel (dual) space on which
+learning algorithms operate linearly, i.e. every operation on points is
+a linear combination of :math:`K(x_i, x_j)`.
+
+Outline of the SVM algorithm:
+
+1. Map points :math:`x` into kernel space using a kernel function:
+   :math:`x \rightarrow K(x, .)`.
+
+2. Learning algorithms operates linearly by dot product into high-kernel
+   space :math:`K(., x_i) \cdot K(., x_j)`.
+
+   -  Using the kernel trick (Mercer’s Theorem) replaces dot product in
+      high dimensional space by a simpler operation such that
+      :math:`K(., x_i) \cdot K(., x_j) = K(x_i, x_j)`. Thus we only need
+      to compute a similarity measure for each pairs of point and store
+      in a :math:`N \times N` Gram matrix.
+   -  Finally, The learning process consist of estimating the
+      :math:`\alpha_i` of the decision function that maximises the hinge
+      loss (of :math:`f(x)`) plus some penalty when applied on all
+      training points.
+
+      .. math::
+
+
+         f(x) = \text{sign} \left(\sum_i^N \alpha_i~y_i~K(x_i, x)\right). 
+
+3. Predict a new point :math:`x` using the decision function.
+
+.. figure:: images/svm_rbf_kernel_mapping_and_decision_function.png
+   :alt: Support Vector Machines.
+
+   Support Vector Machines.
+
+Gaussian kernel (RBF, Radial Basis Function):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One of the most commonly used kernel is the Radial Basis Function (RBF)
+Kernel. For a pair of points :math:`x_i, x_j` the RBF kernel is defined
+as:
+
+.. raw:: latex
+
+   \begin{align}
+       K(x_i, x_j) &= \exp\left(-\frac{\|x_i - x_j\|^2}{2\sigma^2}\right)\\
+       &= \exp\left(-\gamma~\|x_i - x_j\|^2\right)
+   \end{align}
+
+Where :math:`\sigma` (or :math:`\gamma`) defines the kernel width
+parameter. Basically, we consider a Gaussian function centered on each
+training sample :math:`x_i`. it has a ready interpretation as a
+similarity measure as it decreases with squared Euclidean distance
+between the two feature vectors.
+
+Non linear SVM also exists for regression problems.
+
+.. code:: ipython3
+
+    %matplotlib inline
+    #import warnings
+    #warnings.filterwarnings(action='once')
+    import matplotlib.pyplot as plt
+    
+    import numpy as np
+    from sklearn.svm import SVC
+    from sklearn import datasets
+
+.. code:: ipython3
+
+    # dataset
+    X, y = datasets.make_classification(n_samples=10, n_features=2,n_redundant=0,
+                                        n_classes=2,
+                                        random_state=1,
+                                        shuffle=False)
+    clf = SVC(kernel='rbf')#, gamma=1)
+    clf.fit(X, y)
+    print("#Errors: %i" % np.sum(y != clf.predict(X)))
+    
+    clf.decision_function(X)
+    
+    # Usefull internals:
+    # Array of support vectors
+    clf.support_vectors_
+    
+    # indices of support vectors within original X
+    np.all(X[clf.support_,:] == clf.support_vectors_)
+
+
+.. parsed-literal::
+
+    #Errors: 0
+
+
+
+
+.. parsed-literal::
+
+    True
+
+
+
+Decision tree
+-------------
+
+A tree can be “learned” by splitting the training dataset into subsets
+based on an features value test.
+
+Each internal node represents a “test” on an feature resulting on the
+split of the current sample. At each step the algorithm selects the
+feature and a cutoff value that maximises a given metric. Different
+metrics exist for regression tree (target is continuous) or
+classification tree (the target is qualitative).
+
+This process is repeated on each derived subset in a recursive manner
+called recursive partitioning. The recursion is completed when the
+subset at a node has all the same value of the target variable, or when
+splitting no longer adds value to the predictions. This general
+principle is implemented by many recursive partitioning tree algorithms.
+
+.. figure:: images/classification_tree.jpg
+   :alt: Classification tree.
+
+   Classification tree.
+
+Decision trees are simple to understand and interpret however they tend
+to overfit the data. However decision trees tend to overfit the training
+set. Leo Breiman propose random forest to deal with this issue.
+
+A single decision tree is usually overfits the data it is learning from
+because it learn from only one pathway of decisions. Predictions from a
+single decision tree usually don’t make accurate predictions on new
+data.
+
+Random forest
+-------------
+
+A random forest is a meta estimator that fits a number of **decision
+tree learners** on various sub-samples of the dataset and use averaging
+to improve the predictive accuracy and control over-fitting.
+
+Random forest models reduce the risk of overfitting by introducing
+randomness by:
+
+-  building multiple trees (n_estimators)
+-  drawing observations with replacement (i.e., a bootstrapped sample)
+-  splitting nodes on the best split among a random subset of the
+   features selected at every node
+
+.. code:: ipython3
+
+    from sklearn.ensemble import RandomForestClassifier 
+    
+    forest = RandomForestClassifier(n_estimators = 100)
+    forest.fit(X, y)
+    
+    print("#Errors: %i" % np.sum(y != forest.predict(X)))
+
+
+.. parsed-literal::
+
+    #Errors: 0
+
+
+Extra Trees (Low Variance)
+--------------------------
+
+Extra Trees is like Random Forest, in that it builds multiple trees and
+splits nodes using random subsets of features, but with two key
+differences: it does not bootstrap observations (meaning it samples
+without replacement), and nodes are split on random splits, not best
+splits. So, in summary, ExtraTrees: builds multiple trees with bootstrap
+= False by default, which means it samples without replacement nodes are
+split based on random splits among a random subset of the features
+selected at every node In Extra Trees, randomness doesn’t come from
+bootstrapping of data, but rather comes from the random splits of all
+observations. ExtraTrees is named for (Extremely Randomized Trees).

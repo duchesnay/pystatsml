@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Lab: Gradient Descent with numpy &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="lab-gradient-descent-with-numpy">
+<h1>Lab: Gradient Descent with numpy<a class="headerlink" href="#lab-gradient-descent-with-numpy" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+<section id="gradient-descent">
+<h2>Gradient Descent<a class="headerlink" href="#gradient-descent" title="Permalink to this headline">¶</a></h2>
+<p>Simple regression problem</p>
+<p><a class="reference external" href="https://towardsdatascience.com/understanding-pytorch-with-an-example-a-step-by-step-tutorial-81fc5f8c4e8e">source Daniel
+Godoy</a></p>
+<div class="math notranslate nohighlight">
+\[y = w_0 + w x + \varepsilon\]</div>
+<section id="data-generation">
+<h3>Data Generation<a class="headerlink" href="#data-generation" title="Permalink to this headline">¶</a></h3>
+<p>Let’s start generating some synthetic data: we start with a vector of
+100 points for our feature x and create our labels using a = 1, b = 2
+and some Gaussian noise. Next, let’s split our synthetic data into train
+and validation sets, shuffling the array of indices and using the first
+80 shuffled points for training.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Data Generation</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Shuffles the indices</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+
+<span class="c1"># Uses first 80 random indices for train</span>
+<span class="n">train_idx</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span>
+<span class="c1"># Uses the remaining indices for validation</span>
+<span class="n">val_idx</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="mi">80</span><span class="p">:]</span>
+
+<span class="c1"># Generates train and validation sets</span>
+<span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+<span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">val_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="gradient-descent-theory">
+<h3>Gradient Descent: Theory<a class="headerlink" href="#gradient-descent-theory" title="Permalink to this headline">¶</a></h3>
+<p>If you are comfortable with the inner workings of gradient descent, feel
+free to skip this section. It goes beyond the scope of this post to
+fully explain how gradient descent works, but I’ll cover the four basic
+steps you’d need to go through to compute it.</p>
+<section id="step-1-compute-the-loss">
+<h4>Step 1: Compute the Loss<a class="headerlink" href="#step-1-compute-the-loss" title="Permalink to this headline">¶</a></h4>
+<p>For a regression problem, the loss is given by the Mean Square Error
+(MSE), that is, the average of all squared differences between labels
+(y) and predictions (a + bx). It is worth mentioning that, if we use all
+points in the training set (N) to compute the loss, we are performing a
+batch gradient descent. If we were to use a single point at each time,
+it would be a stochastic gradient descent. Anything else (n) in-between
+1 and N characterizes a mini-batch gradient descent.</p>
+</section>
+<section id="step-2-compute-the-gradients">
+<h4>Step 2: Compute the Gradients<a class="headerlink" href="#step-2-compute-the-gradients" title="Permalink to this headline">¶</a></h4>
+<p>A gradient is a partial derivative — why partial? Because one computes
+it with respect to (w.r.t.) a single parameter. We have two parameters,
+a and b, so we must compute two partial derivatives. A derivative tells
+you how much a given quantity changes when you slightly vary some other
+quantity. In our case, how much does our MSE loss change when we vary
+each one of our two parameters? The right-most part of the equations
+below is what you usually see in implementations of gradient descent for
+a simple linear regression. In the intermediate step, I show you all
+elements that pop-up from the application of the chain rule, so you know
+how the final expression came to be.</p>
+</section>
+<section id="step-3-update-the-parameters">
+<h4>Step 3: Update the Parameters<a class="headerlink" href="#step-3-update-the-parameters" title="Permalink to this headline">¶</a></h4>
+<p>In the final step, we use the gradients to update the parameters. Since
+we are trying to minimize our losses, we reverse the sign of the
+gradient for the update.</p>
+<p>There is still another parameter to consider: the learning rate, denoted
+by the Greek letter eta (that looks like the letter n), which is the
+multiplicative factor that we need to apply to the gradient for the
+parameter update.</p>
+<p>How to choose a learning rate? That is a topic on its own and beyond the
+scope of this post as well.</p>
+<p>See: - LeCun Y.A., Bottou L., Orr G.B., Müller KR. (2012) <a class="reference external" href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf">Efficient
+BackProp</a>. In:
+Montavon G., Orr G.B., Müller KR. (eds) Neural Networks: Tricks of the
+Trade. Lecture Notes in Computer Science, vol 7700. Springer, Berlin,
+Heidelberg</p>
+<ul class="simple">
+<li><p>Introduction to <a class="reference external" href="https://www.analyticsvidhya.com/blog/2017/03/introduction-to-gradient-descent-algorithm-along-its-variants/">Gradient Descent
+Algorithm</a>
+(along with variants) in Machine Learning: Gradient Descent with
+Momentum, ADAGRAD and ADAM.</p></li>
+</ul>
+</section>
+<section id="step-4-repeat">
+<h4>Step 4: Repeat!<a class="headerlink" href="#step-4-repeat" title="Permalink to this headline">¶</a></h4>
+<p>Now we use the updated parameters to go back to Step 1 and restart the
+process.</p>
+<p>An epoch is complete whenever every point has been already used for
+computing the loss. For batch gradient descent, this is trivial, as it
+uses all points for computing the loss — one epoch is the same as one
+update. For stochastic gradient descent, one epoch means N updates,
+while for mini-batch (of size n), one epoch has N/n updates.</p>
+<p>Repeating this process over and over, for many epochs, is, in a
+nutshell, training a model.</p>
+</section>
+</section>
+<section id="gradient-descent-1d-with-numpy">
+<h3>Gradient Descent: 1D with numpy<a class="headerlink" href="#gradient-descent-1d-with-numpy" title="Permalink to this headline">¶</a></h3>
+<p>It’s time to implement our linear regression model using gradient
+descent using Numpy only.</p>
+<p>For training a model, there are two initialization steps:</p>
+<ul class="simple">
+<li><p>Random initialization of parameters/weights (we have only two, a and
+b);</p></li>
+<li><p>Initialization of hyper-parameters (in our case, only learning rate
+and number of epochs);</p></li>
+</ul>
+<p>Make sure to always initialize your random seed to ensure
+reproducibility of your results. As usual, the random seed is 42, the
+least random of all random seeds one could possibly choose :-)</p>
+<p>For each epoch, there are four training steps: - Compute model’s
+predictions — this is the forward pass; - Compute the loss, using
+predictions; - Compute the gradients for every parameter; - Update the
+parameters;</p>
+<p>Just keep in mind that, if you don’t use batch gradient descent (our
+example does), you’ll have to write an inner loop to perform the four
+training steps for either each individual point (stochastic) or n points
+(mini-batch). We’ll see a mini-batch example later down the line.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initializes parameters &quot;b&quot; and &quot;w&quot; randomly</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Sets learning rate</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">1e-1</span>
+<span class="c1"># Defines number of epochs</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+    <span class="c1"># Computes our model&#39;s predicted output</span>
+    <span class="n">yhat</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">w</span> <span class="o">*</span> <span class="n">x_train</span>
+
+    <span class="c1"># How wrong is our model? That&#39;s the error!</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_train</span> <span class="o">-</span> <span class="n">yhat</span><span class="p">)</span>
+    <span class="c1"># It is a regression, so it computes mean squared error (MSE)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">error</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+    <span class="c1"># Computes gradients for both &quot;a&quot; and &quot;b&quot; parameters</span>
+    <span class="n">b_grad</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">w_grad</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_train</span> <span class="o">*</span> <span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+    <span class="c1"># Updates parameters using gradients and the learning rate</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">b_grad</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">w_grad</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy:&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="c1"># Sanity Check: do we get the same results as our gradient descent?</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="n">linr</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">linr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sklearn:&quot;</span><span class="p">,</span><span class="n">linr</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">linr</span><span class="o">.</span><span class="n">intercept_</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Numpy</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.96896411</span><span class="p">]</span> <span class="p">[</span><span class="mf">1.02354094</span><span class="p">]</span>
+<span class="n">Sklearn</span><span class="p">:</span> <span class="p">[[</span><span class="mf">1.96896447</span><span class="p">]]</span> <span class="p">[</span><span class="mf">1.02354075</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="gradient-descent-multivariate-with-numpy">
+<h3>Gradient Descent: Multivariate with numpy<a class="headerlink" href="#gradient-descent-multivariate-with-numpy" title="Permalink to this headline">¶</a></h3>
+<p>Dataset:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span><span class="p">,</span> <span class="n">P</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5</span>
+
+<span class="c1"># Data Generation</span>
+<span class="n">w_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">P</span> <span class="o">-</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">b_</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w_</span><span class="p">)</span> <span class="o">+</span> <span class="n">b_</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+<span class="c1"># Shuffles the indices</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+
+<span class="c1"># Uses first 80 random indices for train</span>
+<span class="n">train_idx</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span>
+<span class="c1"># Uses the remaining indices for validation</span>
+<span class="n">val_idx</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="mi">80</span><span class="p">:]</span>
+
+<span class="c1"># Generates train and validation sets</span>
+<span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+<span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">val_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Solve</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initializes parameters &quot;b&quot; and &quot;w&quot; randomly</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+
+<span class="c1">#print(b, w)</span>
+
+<span class="c1"># Sets learning rate</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">1e-1</span>
+<span class="c1"># Defines number of epochs</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+    <span class="c1"># Computes our model&#39;s predicted output</span>
+    <span class="n">yhat</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+
+    <span class="c1"># How wrong is our model? That&#39;s the error!</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_train</span> <span class="o">-</span> <span class="n">yhat</span><span class="p">)</span>
+    <span class="c1"># It is a regression, so it computes mean squared error (MSE)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">error</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="c1">#print(yhat.shape, y_train.shape, error.shape, loss.shape, x_train.shape)</span>
+
+    <span class="c1"># Computes gradients for both &quot;a&quot; and &quot;b&quot; parameters</span>
+    <span class="n">b_grad</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="c1"># w_grad = -2 * (x_train * error).mean()</span>
+    <span class="n">w_grad</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_train</span> <span class="o">*</span> <span class="n">error</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Updates parameters using gradients and the learning rate</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">b_grad</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">w_grad</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy:&quot;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="c1"># Sanity Check: do we get the same results as our gradient descent?</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="n">linr</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">linr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sklearn:&quot;</span><span class="p">,</span><span class="n">linr</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> <span class="n">linr</span><span class="o">.</span><span class="n">intercept_</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Numpy</span><span class="p">:</span> <span class="p">[</span> <span class="mf">1.11102401</span>  <span class="mf">0.59753905</span>  <span class="mf">0.07637166</span>  <span class="mf">0.21517518</span> <span class="o">-</span><span class="mf">0.10522686</span><span class="p">]</span> <span class="p">[</span><span class="mf">0.87878807</span><span class="p">]</span>
+<span class="n">Sklearn</span><span class="p">:</span> <span class="p">[</span> <span class="mf">1.11102401</span>  <span class="mf">0.59753905</span>  <span class="mf">0.07637166</span>  <span class="mf">0.21517518</span> <span class="o">-</span><span class="mf">0.10522686</span><span class="p">]</span> <span class="mf">0.8787880683719964</span>
+</pre></div>
+</div>
+<p>Weigths vector associated to each output class is a “template” pattern
+of the class:</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/optimization/optim_gradient_descent_lab.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

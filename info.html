@@ -1,0 +1,355 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>gh-pages &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-rendered-html.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="gh-pages">
+<h1>gh-pages<a class="headerlink" href="#gh-pages" title="Permalink to this headline">¶</a></h1>
+<p>TODO: do it with: circleci</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/">https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/jklukas/docs-on-gh-pages">https://github.com/jklukas/docs-on-gh-pages</a></p></li>
+</ul>
+<p>Publishing sphinx-generated docs on github:</p>
+<p><a class="reference external" href="https://daler.github.io/sphinxdoc-test/includeme.html">https://daler.github.io/sphinxdoc-test/includeme.html</a></p>
+</section>
+<section id="upload-to-github">
+<h1>Upload to github<a class="headerlink" href="#upload-to-github" title="Permalink to this headline">¶</a></h1>
+<p>“$WD/build/html” contains the pystsamsl website. Now we start to upload to github server. Clone from github to a temporary directory, and checkout gh-pages branch</p>
+<p>First time
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">WD=~/git/pystatsml</span>
+<span class="pre">cd</span> <span class="pre">~/git</span>
+<span class="pre">mv</span> <span class="pre">pystatsml_gh-pages</span> <span class="pre">pystatsml_gh-pages.bak</span>
+<span class="pre">git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:duchesnay/pystatsml.git</span> <span class="pre">pystatsml_gh-pages</span>
+<span class="pre">git</span> <span class="pre">symbolic-ref</span> <span class="pre">HEAD</span> <span class="pre">refs/heads/gh-pages</span>
+<span class="pre">rm</span> <span class="pre">.git/index</span>
+<span class="pre">git</span> <span class="pre">clean</span> <span class="pre">-fdx</span>
+<span class="pre">cp</span> <span class="pre">-r</span> <span class="pre">$WD/build/html/*</span> <span class="pre">./</span>
+<span class="pre">cp</span> <span class="pre">-r</span> <span class="pre">$WD/auto_gallery</span> <span class="pre">./</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">.</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">auto_gallery</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_sources</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_static</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_images</span>
+<span class="pre">touch</span> <span class="pre">.nojekyll</span>
+<span class="pre">gedit</span> <span class="pre">index.html</span> <span class="pre">#</span> <span class="pre">see</span> <span class="pre">blow</span>
+<span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-am</span> <span class="pre">&quot;gh-pages</span> <span class="pre">First</span> <span class="pre">commit&quot;</span>
+<span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">gh-pages</span>
+<span class="pre">firefox</span>&#160; <span class="pre">index.html</span>
+<span class="pre">`</span></code></p>
+<p>Update
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">WD=~/git/pystatsml</span>
+<span class="pre">cd</span> <span class="pre">$WD</span>
+<span class="pre">make</span> <span class="pre">pdf</span> <span class="pre">html</span> <span class="pre">singlehtml</span>
+<span class="pre">cd</span> <span class="pre">~/git/pystatsml_gh-pages</span>
+<span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">gh-pages</span>
+<span class="pre">rsync</span> <span class="pre">-avu</span> <span class="pre">$WD/build/html/*</span> <span class="pre">./</span>
+<span class="pre">rsync</span> <span class="pre">-avu</span> <span class="pre">$WD/auto_gallery</span> <span class="pre">./</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">.</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">auto_gallery</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_sources</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_static</span>
+<span class="pre">git</span> <span class="pre">add</span> <span class="pre">-f</span> <span class="pre">_images</span>
+<span class="pre">meld</span> <span class="pre">index.html</span> <span class="pre">index.html.save</span>
+<span class="pre">#gedit</span>&#160;&#160; <span class="pre">#</span> <span class="pre">see</span> <span class="pre">blow</span>
+<span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-am</span> <span class="pre">&quot;gh-pages</span> <span class="pre">update</span> <span class="pre">commit&quot;</span>
+<span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">gh-pages</span>
+<span class="pre">firefox</span>&#160; <span class="pre">index.html</span>
+<span class="pre">`</span></code></p>
+<p>Then
+<a href="#id1"><span class="problematic" id="id2">``</span></a>`
+gedit index.html</p>
+<p>Replace:
+<a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<blockquote>
+<div><p>&lt;section id=”phantom”&gt;</p>
+</div></blockquote>
+<p>&lt;h1&gt;Phantom&lt;a class=”headerlink” href=”#phantom” title=”Permalink to this headline”&gt;¶&lt;/a&gt;&lt;/h1&gt;
+&lt;/section&gt;
+<a href="#id7"><span class="problematic" id="id8">``</span></a>`
+by</p>
+<dl class="simple">
+<dt><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></dt><dd><p>&lt;section id=”phantom”&gt;</p>
+</dd>
+</dl>
+<p>&lt;h1 style=”font-weight:bold;”&gt;Statistics and Machine Learning in
+Python&lt;a class=”headerlink” href=”#phantom” title=”Permalink to this headline”&gt;¶&lt;/a&gt;&lt;/h1&gt;
+&lt;/section&gt;</p>
+<p>&lt;hr&gt;</p>
+<p>&lt;p&gt;&lt;a href=”<a class="reference external" href="https://duchesnay.github.io/">https://duchesnay.github.io/</a>”&gt;Edouard Duchesnay&lt;/a&gt;, &lt;a href=”<a class="reference external" href="https://www.umu.se/en/staff/toklot02/">https://www.umu.se/en/staff/toklot02/</a>”&gt;Tommy Löfstedt&lt;/a&gt;, Feki Younes&lt;/p&gt;</p>
+<p>old:
+&lt;div class=”section” id=”phantom”&gt;
+&lt;h1 style=”font-weight:bold;”&gt;Statistics and Machine Learning in
+Python&lt;a class=”headerlink” href=”#phantom” title=”Permalink to this headline”&gt;¶&lt;/a&gt;&lt;/h1&gt;
+&lt;/div&gt;</p>
+<p>&lt;hr&gt;</p>
+<p>&lt;p&gt;&lt;a href=”<a class="reference external" href="https://duchesnay.github.io/">https://duchesnay.github.io/</a>”&gt;Edouard Duchesnay&lt;/a&gt;, &lt;a href=”<a class="reference external" href="https://www.umu.se/en/staff/toklot02/">https://www.umu.se/en/staff/toklot02/</a>”&gt;Tommy Löfstedt&lt;/a&gt;, Feki Younes&lt;/p&gt;
+<a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+<p>Then</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-am</span> <span class="pre">&quot;Title</span> <span class="pre">and</span> <span class="pre">authors&quot;</span>
+<span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">gh-pages</span>
+<span class="pre">firefox</span>&#160; <span class="pre">$WD/build/html/index.html</span>
+<span class="pre">`</span></code></p>
+<p>Now, you can visit your updated website at <a class="reference external" href="https://duchesnay.github.io/pystatsml">https://duchesnay.github.io/pystatsml</a>.</p>
+</section>
+<section id="ml-resources">
+<h1>ML Resources<a class="headerlink" href="#ml-resources" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><dl class="simple">
+<dt><strong>my_tech_resources</strong></dt><dd><p><a class="reference external" href="https://github.com/JamesLavin/my_tech_resources">https://github.com/JamesLavin/my_tech_resources</a></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Practical Machine Learning Course Notes (in R)</strong></dt><dd><p><a class="reference external" href="https://sux13.github.io/DataScienceSpCourseNotes/8_PREDMACHLEARN/Practical_Machine_Learning_Course_Notes.html">https://sux13.github.io/DataScienceSpCourseNotes/8_PREDMACHLEARN/Practical_Machine_Learning_Course_Notes.html</a></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Computational Statistics in Python</strong></dt><dd><p><a class="reference external" href="https://people.duke.edu/~ccc14/sta-663/index.html">https://people.duke.edu/~ccc14/sta-663/index.html</a></p>
+</dd>
+</dl>
+</li>
+<li><p><strong>scipy-lectures</strong></p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/scipy-lectures/scipy-lecture-notes">https://github.com/scipy-lectures/scipy-lecture-notes</a></p>
+</div></blockquote>
+</li>
+<li><dl class="simple">
+<dt><strong>Scientific Python &amp; Software engineering best practices</strong></dt><dd><p><a class="reference external" href="https://github.com/paris-saclay-cds/python-workshop">https://github.com/paris-saclay-cds/python-workshop</a></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Deep Learning course in python</strong></dt><dd><p><a class="reference external" href="https://github.com/m2dsupsdlclass/lectures-labs">https://github.com/m2dsupsdlclass/lectures-labs</a></p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><strong>Others</strong></dt><dd><p><a class="reference external" href="https://github.com/justmarkham/DAT4">https://github.com/justmarkham/DAT4</a></p>
+<p><a class="reference external" href="http://statweb.stanford.edu/~jtaylo/courses/stats202/index.html">http://statweb.stanford.edu/~jtaylo/courses/stats202/index.html</a></p>
+<p><a class="reference external" href="http://www.dataschool.io/">http://www.dataschool.io/</a></p>
+<p><a class="reference external" href="https://onlinecourses.science.psu.edu/stat857/node/141">https://onlinecourses.science.psu.edu/stat857/node/141</a></p>
+<p><a class="reference external" href="https://github.com/rasbt/python-machine-learning-book">https://github.com/rasbt/python-machine-learning-book</a></p>
+<p><a class="reference external" href="https://onlinecourses.science.psu.edu/stat505/">https://onlinecourses.science.psu.edu/stat505/</a></p>
+<p><a class="reference external" href="http://www.kdnuggets.com/2016/04/top-10-ipython-nb-tutorials.html">http://www.kdnuggets.com/2016/04/top-10-ipython-nb-tutorials.html</a></p>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="jupyter-notebooks">
+<h1>Jupyter Notebooks<a class="headerlink" href="#jupyter-notebooks" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://jupyterbook.org/advanced/advanced.html#jupyter-cell-tags">https://jupyterbook.org/advanced/advanced.html#jupyter-cell-tags</a></p>
+</section>
+<section id="markdown">
+<h1>Markdown<a class="headerlink" href="#markdown" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="http://daringfireball.net/projects/markdown/basics">http://daringfireball.net/projects/markdown/basics</a></p>
+<section id="r-with-jupyther">
+<h2>R with Jupyther<a class="headerlink" href="#r-with-jupyther" title="Permalink to this headline">¶</a></h2>
+<p>conda install -c r r-essentials</p>
+</section>
+</section>
+<section id="sphinx">
+<h1>Sphinx<a class="headerlink" href="#sphinx" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="http://sphinx-doc.org/">http://sphinx-doc.org/</a></p>
+</section>
+<section id="ipython-notebooks-sphinx">
+<h1>IPython notebooks + Sphinx<a class="headerlink" href="#ipython-notebooks-sphinx" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="http://sphinx-ipynb.readthedocs.org/en/latest/howto.html">http://sphinx-ipynb.readthedocs.org/en/latest/howto.html</a></p>
+<p>nbsphinx: Jupyter Notebook Tools for Sphinx</p>
+<p><a class="reference external" href="https://nbsphinx.readthedocs.io/en/0.3.3/">https://nbsphinx.readthedocs.io/en/0.3.3/</a></p>
+<p>nbsphinx is a Sphinx extension that provides a source parser for <a href="#id17"><span class="problematic" id="id18">*</span></a>.ipynb files. Custom Sphinx directives are used to show Jupyter Notebook code cells (and of course their results) in both HTML and LaTeX output. Un-evaluated notebooks – i.e. notebooks without stored output cells – will be automatically executed during the Sphinx build process.</p>
+<p>conda install -c conda-forge nbsphinx</p>
+</section>
+<section id="sphinx-gallery">
+<h1>sphinx-gallery<a class="headerlink" href="#sphinx-gallery" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://sphinx-gallery.readthedocs.io/en/latest/">https://sphinx-gallery.readthedocs.io/en/latest/</a></p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">sphinx-gallery</span></code></p>
+<p><a class="reference external" href="http://www.scipy-lectures.org">http://www.scipy-lectures.org</a></p>
+<p><a class="reference external" href="https://github.com/scipy-lectures/scipy-lecture-notes">https://github.com/scipy-lectures/scipy-lecture-notes</a></p>
+</section>
+<section id="strip-jupyter-output-before-submission">
+<h1>strip jupyter output before submission<a class="headerlink" href="#strip-jupyter-output-before-submission" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/kynan/nbstripout">https://github.com/kynan/nbstripout</a></p>
+<p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">conda-forge</span> <span class="pre">nbstripout</span></code></p>
+<p>Set up the git filter and attributes as described in the manual installation instructions below:</p>
+<p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">pystatsml</span></code>
+<code class="docutils literal notranslate"><span class="pre">nbstripout</span> <span class="pre">--install</span></code></p>
+</section>
+<section id="rst">
+<h1>rst<a class="headerlink" href="#rst" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="http://docutils.sourceforge.net/rst.html">http://docutils.sourceforge.net/rst.html</a>
+<a class="reference external" href="http://docutils.sourceforge.net/docs/ref/rst/">http://docutils.sourceforge.net/docs/ref/rst/</a></p>
+</section>
+<section id="r-vs-python">
+<h1>R vs Python<a class="headerlink" href="#r-vs-python" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://www.datacamp.com/community/tutorials/r-or-python-for-data-analysis">https://www.datacamp.com/community/tutorials/r-or-python-for-data-analysis</a>
+<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/comparison_with_r.html">http://pandas.pydata.org/pandas-docs/stable/comparison_with_r.html</a></p>
+</section>
+<section id="mail-to-share-the-course">
+<h1>Mail to share the course<a class="headerlink" href="#mail-to-share-the-course" title="Permalink to this headline">¶</a></h1>
+<p>Please find the link to my Machine Learning course in Python, it is a draft version:
+<a class="reference external" href="ftp://ftp.cea.fr//pub/unati/people/educhesnay/pystatml/StatisticsMachineLearningPython.pdf">ftp://ftp.cea.fr//pub/unati/people/educhesnay/pystatml/StatisticsMachineLearningPython.pdf</a></p>
+<p>Below the link to github:
+<a class="reference external" href="https://github.com/duchesnay/pystatsml">https://github.com/duchesnay/pystatsml</a></p>
+<p>git clone <a class="reference external" href="https://github.com/duchesnay/pystatsml.git">https://github.com/duchesnay/pystatsml.git</a></p>
+<p>Basically, it uses Jupyter notebook and pure python, everything is converted to rst and assembled to html or pdf using sphynx.</p>
+<p>It is a draft version, not finished yet with many spelling mistakes.</p>
+<p>Please fork and perform some pull request. If you are willing to contribute.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics/lmm/lmm.html">Linear Mixed Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/info.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

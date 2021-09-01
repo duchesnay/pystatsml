@@ -1,0 +1,1737 @@
+
+.. raw:: html
+
+   <center>
+
+.. raw:: html
+
+   <h1>
+
+Travaux dirigés   Module : Data Science
+
+.. raw:: html
+
+   </h3>
+
+.. raw:: html
+
+   </h1>
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   <div align="right">
+
+.. raw:: html
+
+   <h5>
+
+Année universitaire : 19-20 Enseignant : Feki Younès          Durée : 5H
+               
+
+.. raw:: html
+
+   </h5>
+
+.. raw:: html
+
+   </div>
+
+.. raw:: html
+
+   <hr>
+
+Objectifs
+~~~~~~~~~
+
+   Dans le cadre de ce TD/TP, vous serez amener à résoudre des
+problématiques courantes de data science.
+
+**les objectifs de ce TP**
+
+1. Maîtriser quelques notions de mathématiques qui sont derrière vos
+   modélisations
+2. Analyser les jeux de données que vous avez à disposition et en tirer
+   des conclusions pertinentes
+3. Implémentation d’un moldèle de regréssion
+4. Implémentation d’un moldèle de classification
+
+Pour l’ensemble le TP, vous auriez accès à des squeulettes de codes
+(fonctions) que vous devez compléter où a des celles blanches pour y
+écrire les réponses.
+
+Partie I - la déscente de gradient
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+####
+
+.. raw:: html
+
+   <p style="color:red;">
+
+Solution Numérique :
+
+.. raw:: html
+
+   </p>
+
+#####
+
+.. raw:: html
+
+   <p style="color:red;">
+
+Preuve mathématiques :
+
+.. raw:: html
+
+   </p>
+
+Prouvez numériquement la descente de gradient Vous rendez cet exercice
+sur un papier.
+
+#####
+
+.. raw:: html
+
+   <p style="color:red;">
+
+Implémentation :
+
+.. raw:: html
+
+   </p>
+
+Codez les fonctions suivantes pour contruire un algorithme de descente
+de gradient
+
+.. code:: ipython3
+
+    import numpy as np
+    import random
+    
+    
+    def gradient_descent(x,y,alpha,numIterations):
+        
+        '''
+            Cette fonction devrait retourner la liste 
+            des estimateurs qui sont arrondis au 1000ème 
+        '''
+        
+        
+        lengthData, nbColumns = x.shape
+        weights = np.ones(nbColumns) # [0...0] with a len == Nb Columns
+        
+        for i in range(0, numIterations):
+            
+            # Forward pass: compute predicted y
+            y_pred = np.dot(x, weights)
+            
+            # Compute and print loss
+            loss = y_pred - y
+            cost = np.sum(loss ** 2)
+            if(i % 40000 == 0):
+                print("After {} itérations, loss = {}".format(i, cost))
+    
+            # Backprop to compute gradients    
+            gradient = np.dot(x.T, loss) / lengthData
+            
+            # Update weights
+            weights = weights - alpha * gradient
+        
+        return np.around(weights,4)
+    
+    
+    
+    # gen numPoints points with a bias of 25 and 10 variance as a bit of noise
+    def gen_data(nb_points,bias,var):
+        
+        x = np.zeros(shape=(nb_points, 2)) # [numPoints, 2] = Shape of data
+        y = np.zeros(shape=nb_points) 
+        # basically a straight line
+        for i in range(0, nb_points):
+            # bias feature
+            x[i][0] = 1
+            x[i][1] = i
+            # our target variable
+            y[i] = (i + bias) + random.uniform(1, 2) * var
+        return x, y
+
+.. code:: ipython3
+
+    # gen 100 points with a bias of 25 and 10 variance as a bit of noise
+    x, y = gen_data(100, 25, 10)
+    m, n = np.shape(x)
+    num_iterations= 180000
+    alpha = 0.0004
+    sol1 = gradient_descent(x, y, alpha, num_iterations)
+    print(sol1)
+
+
+.. parsed-literal::
+
+    After 0 itérations, loss = 151061.51615880022
+    After 40000 itérations, loss = 732.0244826499469
+    After 80000 itérations, loss = 720.5871742912071
+    After 120000 itérations, loss = 720.5837685376808
+    After 160000 itérations, loss = 720.5837675235299
+    [39.9189  0.9971]
+
+
+######
+
+.. raw:: html
+
+   <p style="color:red;">
+
+Visualisation :
+
+.. raw:: html
+
+   </p>
+
+Mettez sur un graphe les données initiales et la droite ajuster !
+
+.. code:: ipython3
+
+    import matplotlib.pyplot as plt 
+    
+    def plot_model(x, y, w):
+        '''
+            X : X Data
+            Y : Y Data
+            W : Weights
+            code à écrire ici
+        '''
+        plt.show()
+    
+    plot_model(x, y, sol1)
+
+.. code:: ipython3
+
+    #Réponse
+    import matplotlib.pyplot as plt 
+    def plot_model(x, y, w):
+        
+        plt.plot(x[:,1], y, "x",label=" données initiales ")
+        plt.plot(x[:,1], np.dot(np.array(x),np.array(w)), "r-",label="Droite Ajustée")
+        plt.legend()
+        plt.title("Visualisation des des données et de la ligne ajustée ")
+        plt.show()
+        
+    plot_model(x, y, sol1)
+
+
+
+.. image:: TP_IMSD_files/TP_IMSD_9_0.png
+
+
+####
+
+.. raw:: html
+
+   <p style="color:red;">
+
+Solution Analytique :
+
+.. raw:: html
+
+   </p>
+
+#####
+
+.. raw:: html
+
+   <p style="color:red;">
+
+Preuve mathématiques :
+
+.. raw:: html
+
+   </p>
+
+Prouvez analytiquement la descente de gradient (En utilisant l’algèbre
+linéaire ) Vous rendez cet exercice sur un papier.
+
+#####
+
+.. raw:: html
+
+   <p style="color:red;">
+
+Implémentation :
+
+.. raw:: html
+
+   </p>
+
+Codez une fonction qui, en prenant en entrée X & Y, renvoie les
+estimateurs.
+
+.. code:: ipython3
+
+    def _analytical_resolution(X,Y):
+        
+        '''
+            cette fonction utilsiera de l'algébre linéaire pour 
+            résoudre en une deux ou trois ligne, la descente de gradient. 
+        '''
+        
+        return np.around(np.dot(np.dot(np.linalg.inv(np.dot(x.T,x)),x.T),y),4)
+
+.. code:: ipython3
+
+    sol2 = _analytical_resolution(x, y)
+    sol2
+
+
+
+
+.. parsed-literal::
+
+    array([39.9189,  0.9971])
+
+
+
+####
+
+.. raw:: html
+
+   <p style="color:red;">
+
+Comparaison :
+
+.. raw:: html
+
+   </p>
+
+Comparer les deux solutions en utilisant numpy, c’est dire comparer les
+tableaux de coéfficients de la régressions !
+
+.. code:: ipython3
+
+    #Réponse
+    if(np.array_equal(sol1,sol2)):
+        print("les deux solutions sont égales")
+    else:
+        print("les deux solutions sont différentes")
+
+
+.. parsed-literal::
+
+    les deux solutions sont égales
+
+
+.. code:: ipython3
+
+    ####
+    # Ecrire la réponse ici
+    # Replace ''' .... ''' par la bonne fonction numpy
+    ####
+    
+    if( ''' .... '''):
+        print("les deux solutions sont égales")
+    else:
+        print("les deux solutions sont différentes")
+
+
+.. parsed-literal::
+
+    les deux solutions sont égales
+
+
+#####
+
+.. raw:: html
+
+   <p style="color:red;">
+
+Question
+
+.. raw:: html
+
+   </p>
+
+Dans le cas d’ **une regréssion linéaire** pensez vous que les
+estimateurs sont uniques ? Expliquez la raison ? :
+
+**Réponse** écrire ici la réponse
+
+**Réponse** L’unicité des estimateurs dans le cadre d’une regréssion
+lineaire est garantie à cause de la convexité de la fonction du coût de
+la regréssion linéaire. La déscente de gradient converge toujours vers
+une solution absolu, un minimum global.
+
+La fonction est une somme de fonctions carré, et donc une somme de
+fonction convexe, alors elle est convexe.
+
+Partie II - Analyse de données
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sur le lien ci-contre, vous pouvez récupérer le **premier jeu de
+données** : link to dataset
+
+.. raw:: html
+
+   <p style="color:red">
+
+Importez directement le dataset
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    import pandas as pd
+    us_china = pd.read_excel("https://github.com/F3kih/Course_DS/blob/master/us_china_trade.xls?raw=true")
+
+.. raw:: html
+
+   <p style="color:red">
+
+En utilisant la fonction head, affichez les 15 premiers lignes du
+dataset
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    us_china.head(15)
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>Month</th>
+          <th>Exports</th>
+          <th>Imports</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>January 2012</td>
+          <td>8359.5</td>
+          <td>34417.5</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>February 2012</td>
+          <td>8785.7</td>
+          <td>28105.2</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>March 2012</td>
+          <td>9811.6</td>
+          <td>31431.3</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>April 2012</td>
+          <td>8468.1</td>
+          <td>33016.3</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>May 2012</td>
+          <td>8960.2</td>
+          <td>34937.8</td>
+        </tr>
+        <tr>
+          <th>5</th>
+          <td>June 2012</td>
+          <td>8478.1</td>
+          <td>35949.4</td>
+        </tr>
+        <tr>
+          <th>6</th>
+          <td>July 2012</td>
+          <td>8515.1</td>
+          <td>37930.8</td>
+        </tr>
+        <tr>
+          <th>7</th>
+          <td>August 2012</td>
+          <td>8613.3</td>
+          <td>37280.6</td>
+        </tr>
+        <tr>
+          <th>8</th>
+          <td>September 2012</td>
+          <td>8804.2</td>
+          <td>37891.8</td>
+        </tr>
+        <tr>
+          <th>9</th>
+          <td>October 2012</td>
+          <td>10824.4</td>
+          <td>40257.1</td>
+        </tr>
+        <tr>
+          <th>10</th>
+          <td>November 2012</td>
+          <td>10587.8</td>
+          <td>39543.7</td>
+        </tr>
+        <tr>
+          <th>11</th>
+          <td>December 2012</td>
+          <td>10308.6</td>
+          <td>34857.6</td>
+        </tr>
+        <tr>
+          <th>12</th>
+          <td>January 2013</td>
+          <td>9382.9</td>
+          <td>37193.7</td>
+        </tr>
+        <tr>
+          <th>13</th>
+          <td>February 2013</td>
+          <td>9133.3</td>
+          <td>32742.7</td>
+        </tr>
+        <tr>
+          <th>14</th>
+          <td>March 2013</td>
+          <td>9539.0</td>
+          <td>27294.1</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+En utilisant la fonction apply, créez une colonne Balance qui est le
+résultat de la soustraction des colonnes Exports & Imports:
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    us_china["Balance"] = us_china[["Exports","Imports"]].apply(lambda x : x[0]-x[1], axis=1)
+
+.. raw:: html
+
+   <p style="color:red">
+
+Faite un filtrage dataset pour enlever la ligne correponsant au July
+2019 et gardez le nouveau dataset et affichez les 2 dernières ligne du
+dataset :
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    us_china = us_china[us_china["Month"]!="July 2019"]
+    us_china.tail(2)
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>Month</th>
+          <th>Exports</th>
+          <th>Imports</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>88</th>
+          <td>May 2019</td>
+          <td>9074.5</td>
+          <td>39269.1</td>
+          <td>-30194.6</td>
+        </tr>
+        <tr>
+          <th>89</th>
+          <td>June 2019</td>
+          <td>9034.7</td>
+          <td>39002.3</td>
+          <td>-29967.6</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+En utilisant la fonction apply, créez une colonne Trim qui indiquera le
+trimestre et l’année de chaque ligne :
+
+.. raw:: html
+
+   </p>
+
+la colonne sera de la forme 2013-Q1 pour les trois lignes suivantes
+ayant les dates January 2013, February 2013 et March 2013
+
+.. code:: ipython3
+
+    def affect_to_Trim(month_year):
+        months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        trim = "..."    
+        return trim
+    
+    us_china["Trim"] = "..." 
+
+.. code:: ipython3
+
+    #Réponse
+    def affect_to_Trim(month_year):
+        
+        months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        [month,year]  = month_year.split()
+        index_month = months.index(month[:3])
+        trim = year+"-"+"Q"+str(1+index_month//3)
+        return trim
+    
+    us_china["Trim"] = us_china["Month"].apply(lambda x : affect_to_Trim(x))
+
+.. raw:: html
+
+   <p style="color:red">
+
+Utilisez la fonction groupBy et arrangez le présent dataset sous format
+trimestriel, en sommant les colonnes Imports,Exports et Balance :
+
+.. raw:: html
+
+   </p>
+
+Conserez le résultat dans un dataframe us_china_trim
+
+.. code:: ipython3
+
+    us_china_trim = us_china.groupby(["Trim"], as_index=False).sum()
+
+.. raw:: html
+
+   <p style="color:red">
+
+En utilisant la fonction apply, créez une colonne Year qui indiquera
+l’année de chaque ligne :
+
+.. raw:: html
+
+   </p>
+
+ Il faut que l’année soit un entier
+
+.. code:: ipython3
+
+    us_china_trim["Year"] = "..."
+
+.. code:: ipython3
+
+    #Reponse
+    us_china_trim["Year"] = us_china_trim["Trim"].apply(lambda x : int(x.split("-")[0]))
+
+.. raw:: html
+
+   <p style="color:red">
+
+Sur 3 graphes, montrez l’évolution d’activité comerciale trimestrielle
+de entre les US et la Chine:
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    import matplotlib.pyplot as plt
+
+.. code:: ipython3
+
+    x = np.arange(len(us_china_trim))
+    plt.plot(x,us_china_trim["Imports"],c="r",label="Imports")
+    plt.xticks(x,us_china_trim["Trim"],rotation=90)
+    plt.title("Variation of Imports amount between US & CHINA")
+    plt.legend()
+    plt.show()
+
+
+
+.. image:: TP_IMSD_files/TP_IMSD_41_0.png
+
+
+.. code:: ipython3
+
+    x = np.arange(len(us_china_trim))
+    plt.plot(x,us_china_trim["Exports"],c="b",label="Exports")
+    plt.xticks(x,us_china_trim["Trim"],rotation=90)
+    plt.title("Variation of Exports amount between US & CHINA")
+    plt.legend()
+    plt.show()
+
+
+
+.. image:: TP_IMSD_files/TP_IMSD_42_0.png
+
+
+.. code:: ipython3
+
+    x = np.arange(len(us_china_trim))
+    plt.plot(x,us_china_trim["Balance"],c="g",label="Balance")
+    plt.xticks(x,us_china_trim["Trim"],rotation=90)
+    plt.title("Variation of trade's Balance between US & CHINA")
+    plt.legend()
+    plt.show()
+
+
+
+.. image:: TP_IMSD_files/TP_IMSD_43_0.png
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+Sachant que les taxes d’exporation de certains produits agricoles sont
+passées de 1.5% à 26% pendant le deuxième semestre de 2018 et que ces
+produits représentent 40% de la valeur des exportations américaine, avez
+vous remarqué un impacte ?
+
+Ecrivez votre réponse ici
+
+Chute des transactions entre les US et la chine entre les Q3 et Q4 de
+l’année 2018. Suite à l’application de ces nouvelles taxes. C’est du à
+la crise entre les deux pays et les taxes que Trump a imposées.
+
+.. raw:: html
+
+   <p style="color:red">
+
+En regardant la courbes de Balance, que pensez vous des mesures prises
+par le président américain ? C’était quoi son but ?
+
+.. raw:: html
+
+   </p>
+
+Réponse à écrire ici
+
+Les mesures prises ont ammené une négociation du commerce entre les deux
+pays, ce qui fait que les US maintenant achète moins et vend plus à la
+chine. L’objéctif était de re-équilibrer les échanges commerciaux pour
+que les deux pays en tirer profits.
+
+Partie III - Data Analysis & Linear Regression
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sur le lien ci-contre, vous pouvez récupérer le **deuxième jeu de
+données** : link to dataset Il s’agit des données de location
+d’appartement à paris. Ces données datent de Fin 2017 début 2018. Elles
+ont été scrappées du site : boncoin.
+
+.. raw:: html
+
+   <p style="color:red">
+
+Importez the excel des données (ce sont les données Train après)
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt 
+    
+    
+    df_housing = pd.read_excel("https://github.com/F3kih/Course_DS/blob/master/train_Regression_Housing_Paris.xlsx?raw=true")
+
+.. raw:: html
+
+   <p style="color:red">
+
+Utilisez une fonction de l’objet pandas vous permettant d’avoir des
+informations sur le nombre de ligne, le nombre de colonne, leurs types
+et le nombre des éléments nuls par colonne
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    #Ecrivez la réponse ici
+    #df_housing.(...)
+
+.. code:: ipython3
+
+    df_housing.info()
+
+
+.. parsed-literal::
+
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 1500 entries, 0 to 1499
+    Data columns (total 5 columns):
+    Rooms Number        1500 non-null int64
+    is furnished        1500 non-null int64
+    Area                1500 non-null int64
+    Rent from Agency    1500 non-null int64
+    Rent(€)             1500 non-null int64
+    dtypes: int64(5)
+    memory usage: 58.7 KB
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+Sachant que la colonne “is furnished” est un booleén, est ce que le
+calcul de corrélation entre cette variable et le loyer à du sens
+
+.. raw:: html
+
+   </p>
+
+########Ecrire la réponse ici########
+
+Non car il s’agit d’une variable catégorielle et donc cela n’a pas de
+sens de calculer la corrélation. Pour le calcul de corrélation, il
+necéssite deux variables continues
+
+.. raw:: html
+
+   <p style="color:red">
+
+Si on souhaite de voir l’impact de la variable catégorielle is Furnished
+sur le loyer, quel type de test peut-on utiliser ? Utilisez de test pour
+voir s’ilya une relation significative entre les deux variables
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    #Ecrivez le reste de la réponse ici en mentionant le nom du test
+    import scipy.stats as stats
+    
+    #lenom du test est : ....
+    # Ecrire Code et interprétation :
+    
+    #code
+    '''
+    ....
+    
+    '''
+    # Inteprétation : Il ya une relation ou pas ? et pouquoi ?  ... 
+
+
+
+
+.. parsed-literal::
+
+    '\n....\n\n'
+
+
+
+.. code:: ipython3
+
+    #Ecrivez le reste de la réponse ici en mentionant le nom du test
+    import scipy.stats as stats
+    
+    #lenom du test est : Anova one-way
+    # Ecrire Code et interprétation :
+    
+    stats.f_oneway(df_housing[df_housing["is furnished"]==1]["Rent(€)"],df_housing[df_housing["is furnished"]==0]["Rent(€)"])
+    
+    # Inteprétation : Il ya une relation ou pas ? et pouquoi ?  l'hypothèse nulle dit que les deux populations ont 
+    # la même moyenne et donc les variables sont indépendantes. En comparant, la p-value <<< 005 on peut rejeter l'hypothèse
+    # nulle et donc les deux variables sont dépendantes.
+
+
+
+
+.. parsed-literal::
+
+    F_onewayResult(statistic=49.733746512862645, pvalue=2.680205545156138e-12)
+
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+Utilisez les boîtes à moustaches (Searborn.boxplot) pour montrer les
+statistiques du loyer en fonction de l’ammeublement ou pas de l’appart
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    import seaborn as sns
+    
+    # Code ici
+
+
+.. code:: ipython3
+
+    #Corréction
+    import seaborn as sns
+    # Code ici
+    ax = sns.boxplot(x="is furnished", y="Rent(€)",data=df_housing, palette="Set1")
+
+
+
+.. image:: TP_IMSD_files/TP_IMSD_65_0.png
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+En utilisant un dataframe intermédiaire pour compter les instances et 3
+graphes camemberts :
+
+.. raw:: html
+
+   </p>
+
+.. raw:: html
+
+   <ol style="color:red">
+
+calculer le pourcentage des appartements meublés et non meublés
+
+.. raw:: html
+
+   </ol>
+
+.. raw:: html
+
+   <ol style="color:red">
+
+calculer le pourcentage des appartements meublés et non meublés loués
+par des agences
+
+.. raw:: html
+
+   </ol>
+
+.. raw:: html
+
+   <ol style="color:red">
+
+calculer le pourcentage des appartements meublés et non meublés loués
+par des particuliers
+
+.. raw:: html
+
+   </ol>
+
+.. code:: ipython3
+
+    df_repartition = df_housing.groupby(["Rent from Agency",'is furnished']).size().reset_index(name='counts')
+    df_repartition.head()
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>Rent from Agency</th>
+          <th>is furnished</th>
+          <th>counts</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>0</td>
+          <td>0</td>
+          <td>163</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>0</td>
+          <td>1</td>
+          <td>590</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>1</td>
+          <td>0</td>
+          <td>439</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>1</td>
+          <td>1</td>
+          <td>308</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+.. code:: ipython3
+
+    import matplotlib.gridspec as gridspec
+    
+    # Create 1x3 sub plots
+    gs = gridspec.GridSpec(1, 3)
+    
+    plt.figure(figsize=(12,12))
+    
+    ax = plt.subplot(gs[0, 0]) # row 0, col 0
+    ax.pie([df_repartition[df_repartition["is furnished"]==0]["counts"].sum(),df_repartition[df_repartition["is furnished"]==1]["counts"].sum()]
+    ,labels=["unfurnished","furnished"],colors=["r","b"],autopct='%1.1f%%')
+    plt.title("All appartments")
+    
+    ax = plt.subplot(gs[0, 1]) # row 0, col 1
+    ax.pie([df_repartition[((df_repartition["is furnished"]==0) & (df_repartition["Rent from Agency"]==1))]["counts"].sum(),df_repartition[((df_repartition["is furnished"]==1 ) & (df_repartition["Rent from Agency"]==1))]["counts"].sum()]
+    ,labels=["unfurnished","furnished"],colors=["r","b"],autopct='%1.1f%%')
+    plt.title("Agencies appartments")
+    
+    ax = plt.subplot(gs[0, 2]) # row 1, span all columns
+    ax.pie([df_repartition[((df_repartition["is furnished"]==0) & (df_repartition["Rent from Agency"]==0))]["counts"].sum(),df_repartition[((df_repartition["is furnished"]==1 ) & (df_repartition["Rent from Agency"]==0))]["counts"].sum()]
+    ,labels=["unfurnished","furnished"],colors=["r","b"],autopct='%1.1f%%')
+    
+    plt.title("Individuals appartments")
+    
+    
+    plt.plot()
+
+
+
+
+
+.. parsed-literal::
+
+    []
+
+
+
+
+.. image:: TP_IMSD_files/TP_IMSD_68_1.png
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+Retrouvez le tableau de contingences des deux variables “is furnished”
+et “Rent from Agency”, en utilisant la fonction crosstab de pandas
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    #Ecrivez le code ici
+    table_contingence = "..."
+
+.. code:: ipython3
+
+    table_contingence = pd.crosstab(index=df_housing['is furnished'],columns=df_housing['Rent from Agency'])
+
+.. raw:: html
+
+   <p style="color:red">
+
+On souhaite faire un test statistique pour avoir un idée sur la
+dépendance ou pas des variables “is furnished” & “Rent from agency”.
+Quel type de test doit-on utiliser ? Ecrivez le code corrépondant et
+interprétez les résultats
+
+.. code:: ipython3
+
+    # quel test ?
+    # Ecriver le Code 
+    #
+    #
+    #
+    
+    # Interpretez les résultats
+
+.. code:: ipython3
+
+    #Réponse
+    # Khi2 : H0 indépendence entre les variables catégorielles
+    
+    stats.chi2_contingency(table_contingence)
+    
+    # Comme p <<< 0.05 on rejete H0, les deux variables sont liées... (Les agences suivent plutôt une politique pour 
+    # maximiser leurs gains)
+
+
+
+
+.. parsed-literal::
+
+    (213.5321842009827, 2.3295560096749608e-48, 1, array([[302.204, 299.796],
+            [450.796, 447.204]]))
+
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+On souhaite dans cette partie comprendre si on est capable de résoudre
+notre problème avec un regréssion linéaire ? Il parait intuitif que le
+loyer dépend directement de la surface, Mentionnez le nom du test
+statistique qui nous permet de vérifier s’il ya une relation de
+corréaltion entre ces deux variables et implémentez le code
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    # Nom du test : Test ...
+    # Code et intéprétation
+    #...
+
+.. code:: ipython3
+
+    # Réponse
+    
+    # Nom du test : Test de Student (Test t) : H0 les deux variables continues sont indépendantes
+    print(np.corrcoef(df_housing["Area"],df_housing["Rent(€)"])[0,1])
+    # 0.96, corrélation très grande, ce qui confirme la linéarité de notre problème
+    plt.figure(figsize=(12,12))
+    sns.regplot(x='Area',y='Rent(€)',data=df_housing,truncate =True)
+    ax.legend(loc="best")
+    plt.title('Varation of the Rent Amount', bbox={'facecolor':'0.8', 'pad':5},fontsize=8)
+    plt.plot()
+
+
+.. parsed-literal::
+
+    0.9660359715618149
+
+
+.. parsed-literal::
+
+    /home/younes/anaconda3/envs/py36/lib/python3.6/site-packages/scipy/stats/stats.py:1713: FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+      return np.add.reduce(sorted[indexer] * weights, axis=axis) / sumval
+
+
+
+
+.. parsed-literal::
+
+    []
+
+
+
+
+.. image:: TP_IMSD_files/TP_IMSD_77_3.png
+
+
+La regréssion linéaire
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. raw:: html
+
+   <p style="color:red">
+
+Que va faire la variable booléenne “is furnished” dans le cadre de cette
+regréssion
+
+.. raw:: html
+
+   </p>
+
+Ecrivez la réponse ici
+                      
+
+Réponse :
+
+La variable booléenne va décaler la droite ajutée pour mieux illustrer
+son impacte sur le prix
+
+.. raw:: html
+
+   <p style="color:red">
+
+Implémentez un modèle de forêt aléatoire et un modèle de regréssion
+linéaire qui permettent d’estimer le loyer
+
+.. raw:: html
+
+   </p>
+
+Voilà les caratéristiques de chacun des modèles : Forêt aléatoire :
+profondeur_maximale = 2, random_state=2020, nombre d’estimateur = 100
+Regression linéaire : Rien
+
+.. raw:: html
+
+   <p style="color:red">
+
+Utilisez l’ensemble des données pour faire votre train
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    # Réponse
+    import sklearn
+    
+    # .... X,y, fit ...
+
+.. code:: ipython3
+
+    from sklearn.ensemble import RandomForestRegressor
+    from sklearn.linear_model import LinearRegression
+    
+    x_train = df_housing[df_housing.columns[:-1]].values
+    y_train = df_housing[df_housing.columns[-1]].values
+    
+    reg_random_forest = RandomForestRegressor(max_depth=2, random_state=0,n_estimators=50)
+    reg_linear_regression = LinearRegression()
+    
+    reg_random_forest.fit(x_train, y_train)
+    reg_linear_regression.fit(x_train, y_train)
+
+
+
+
+.. parsed-literal::
+
+    LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None,
+             normalize=False)
+
+
+
+Sur le lien ci-contre, vous pouvez récupérer le **troisième jeu de
+données** : link to dataset
+
+.. raw:: html
+
+   <p style="color:red">
+
+Importez l’excel du jeu de données de test
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    df_housing_test = "...."
+
+.. code:: ipython3
+
+    df_housing_test = pd.read_excel('https://github.com/F3kih/Course_DS/blob/master/test_Regression_Housing_Paris.xlsx?raw=true')
+
+.. raw:: html
+
+   <p style="color:red">
+
+Faire les prédictions de chacun des modèles sur les jeu de données de
+test (xtest, ytest, predict …)
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    #Ecrivez le Code ici
+    #
+    #
+    #
+
+.. code:: ipython3
+
+    x_test = df_housing_test[df_housing_test.columns[:-1]].values
+    y_test =df_housing_test[df_housing_test.columns[-1]].values
+    y_pred_rf = reg_random_forest.predict(x_test)
+    y_pred_lin = reg_linear_regression.predict(x_test)
+
+.. raw:: html
+
+   <p style="color:red">
+
+Choisissez une metric pour comparer les deux modèles (import and test
+..)
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    #Ecrivez le Code ici
+    
+    if(" ..... ") :
+        print("Linear regression is the better Model")
+    else :
+        print("Random Forest is the better Model")
+
+
+
+.. parsed-literal::
+
+    Linear regression is the better Model
+
+
+.. code:: ipython3
+
+    #Réponse
+    from sklearn.metrics import r2_score
+    
+    if(r2_score(y_test,y_pred_lin) > r2_score(y_test,y_pred_rf)) :
+        print("Linear regression is the better Model")
+    else :
+        print("Random Forest is the better Model")
+
+
+
+.. parsed-literal::
+
+    Linear regression is the better Model
+
+
+Partie IV - Analyse de données & Classfication
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sur le lien ci-contre, vous pouvez récupérer le **Troisème jeu de
+données** : link to dataset Il s’agit des données de Banque . Ces
+données datent permettent de savoir automatiquement si une entreprise
+est solvable ou pas. Voilà les différentes explications des colonnes,
+elles resultent d’un scoring interne à la banque suivi d’un attribution
+d’un label :
+
+.. raw:: html
+
+   <p style="color:red">
+
+Importez the excel des données
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    #Réponse
+    data_Banking_Ruptcy = "...."
+
+.. code:: ipython3
+
+    data_Banking_Ruptcy = pd.read_excel("https://github.com/F3kih/Course_DS/blob/master/umbalancedRuptcy.xls?raw=true")
+
+.. raw:: html
+
+   <p style="color:red">
+
+Montrez sur un bar plot la variation de nombres d’instances pour la
+variable cible ? Qu’est ce que vous remarquez ?
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    # Code bar plot
+    
+    # Remarque : .....
+
+.. code:: ipython3
+
+    # Code histogramme
+    
+    data_Banking_Ruptcy['Class'].value_counts().plot(kind='bar',
+                                        figsize=(5,5),
+                                        title="Number for each Owner Name")
+    
+    
+    # Remarque : jeu de données non équilibré car il'ya une classe minoritaire < 0.05 % du dataset
+
+
+
+
+.. parsed-literal::
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x7fb96c1ee208>
+
+
+
+
+.. image:: TP_IMSD_files/TP_IMSD_102_1.png
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+Si on applique sur le présent jeu de données, un algorithme de
+classification sans faire de modifications de ses paramètres, qu’est ce
+qu’il va se passer ?
+
+.. raw:: html
+
+   </p>
+
+Ecrire la réponse ici :
+
+Réponse : Comme l’objectif, lors du training du modèle, est de minimiser
+le Log de la Vraie Semblance, afin d’améliorer l’accuracy du modèle, le
+modèle donnera le label de la classe majoritaire à toutes les instances.
+Cette solution maximiserait l’accuracy.
+
+.. raw:: html
+
+   <p style="color:red">
+
+Proposez au moins 2 techniques, pour résoudre ce problème ? Une sur
+l’agorithme et l’autre agissant sur la base de données ?
+
+.. raw:: html
+
+   </p>
+
+Ecrire la réponse ici :
+
+**Algorithmes** : Technique de boosting, Appliquer des poids sur les
+classes afin de pénaliser plus l’erreur sur la classe minoritaire
+**Données** : faire du boostraping (Echantillonage), faire un opération
+d’oversampling ( ne fonctionne par car si on est capable de générer des
+individus appartenant à une classe c’est qu’on sait à l’avance la
+distribution de cette dernière et donc on est surement capable de
+clasifier … ce qui n’est pas le cas )
+
+.. raw:: html
+
+   <p style="color:red">
+
+On souhaite implémenté un algorithme de classification linéaire SVM sur
+ce jeu de données. Avant de faire le training, on va diviser notre jeu
+de données en Train et Test. On compte utiliser la fonction de sklearn
+train_test_split. Qu’est ce qui va se passer si on ne fait pas attention
+à la stratification ?
+
+.. raw:: html
+
+   </p>
+
+Ecrire la réponse ici : ….
+
+Réponse: On peut très bien avoir une accuracy de 100% car sur le test
+dataset on aura aucune instance de la classe minoritaire. Ou bien on
+peut avoir toutes les instances dans la partie test et donc notre modèle
+ne va rien apprendre sur cette classe.
+
+.. raw:: html
+
+   <p style="color:red">
+
+Afin d’implemeter un SVM lineaire, on aura besoin de coder les features
+en numérique, pour cela on souahite utiliser la fonction labelEncoder de
+Sklearn
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    #Import 
+    #Fit & Transform
+    
+    data_Banking_Ruptcy_Label_encoded = "....."
+
+.. code:: ipython3
+
+    from sklearn.preprocessing import LabelEncoder
+    
+    #Réponse:
+    data_Banking_Ruptcy_Label_encoded = data_Banking_Ruptcy.apply(LabelEncoder().fit_transform)
+    data_Banking_Ruptcy_Label_encoded.head()
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>IR</th>
+          <th>MR</th>
+          <th>FF</th>
+          <th>CR</th>
+          <th>CO</th>
+          <th>OP</th>
+          <th>Class</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>0</th>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+          <td>0</td>
+          <td>0</td>
+          <td>2</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>2</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>2</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>0</td>
+          <td>0</td>
+          <td>2</td>
+          <td>0</td>
+          <td>2</td>
+          <td>0</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>0</td>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+          <td>1</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+Creez un set de training avec une taille de 70% et un test de 30% ?
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    # Import ..
+    # Split .. random_state=2020
+    x_train, x_test, y_train, y_test = ",",",",",",","
+
+
+.. code:: ipython3
+
+    from sklearn.model_selection import train_test_split
+    x_data = data_Banking_Ruptcy_Label_encoded[data_Banking_Ruptcy.columns[:-1]]
+    y_data = data_Banking_Ruptcy_Label_encoded[data_Banking_Ruptcy.columns[-1]].values
+    x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.3, stratify=y_data, random_state=2020)
+
+.. raw:: html
+
+   <p style="color:red">
+
+Implemetez un SVM lineaire, entrainez le, testez et affichez son
+accuracy, sa précision et son rappel. Commentez ces résultats
+
+.. raw:: html
+
+   </p>
+
+.. code:: ipython3
+
+    #Imports
+    # create (random_state=2020) , fit, predict , measure
+    
+    clf = "...."
+    
+    # Commentaire sur les metrics :
+
+.. code:: ipython3
+
+    from sklearn.svm import LinearSVC
+    from sklearn.metrics import *
+    
+    clf = LinearSVC(random_state=2020)
+    clf.fit(x_train,y_train)
+    
+    y_pred = clf.predict(x_test)
+    
+    acc = accuracy_score(y_test,y_pred).round(5)
+    rec = recall_score(y_test,y_pred).round(5)
+    pre = precision_score(y_test,y_pred).round(5)
+    
+    # Commentaire sur les metrics : Recall 1.0, c'est à dire la capacité de distinguer la classe majoritaire parfaitement 
+    # Précision très haute car on prédit tout comme étant classe majoritaire 
+    print("Accuracy = {}, Precision = {}, Recall = {}".format(acc,pre,rec))
+
+
+
+.. parsed-literal::
+
+    Accuracy = 0.95556, Precision = 0.95556, Recall = 1.0
+
+
+.. raw:: html
+
+   <p style="color:red">
+
+Expliquez c’est quoi le compromis biais variance briènement ? Qu’est
+qu’un modèle à haute variance et à haut biais
+
+.. raw:: html
+
+   </p>
+
+Ecrire la réponse ici : … **Le compromis biais variance** **modèle à
+haute variance :**\  **modèle à haut biais :**\ 
+
+Réponse : **Le compromis biais variance** consiste à retrouver un modèle
+qui est au juste milieu c’est à dire qui reste capable d’apprendre
+correctement sur le jeu de données d’apprentissage et généraliser sur le
+jeu de données de test corréctement, c’est à dire avec des performances
+comparables. **modèle à haute variance :** Overfitting où le modèle ne
+peut pas généraliser ce qu’il a appris, car il apprend même le bruit
+**modèle à haut biais :** Underfitting où le modèle n’est pas capable
+d’apprendre des caractéristiques du jeu de données c’et à dire les
+relations entre les différentes variables
+
+.. raw:: html
+
+   <p style="color:red">
+
+Dans cette dernière section, on va implementez un modèle de stacking et
+un modèle non linéaire. On va les étalonner (tunning) à en utilisant un
+gridSearch , on va les comparer avec les courbes de roc et les matrices
+de confusions
+
+.. raw:: html
+
+   </p>
+
+Pour le reste du TP, un dataset re-équilibré est fourni sur ce lien .
+Vous devez l’utiliser pour le reste du TP.
+
+

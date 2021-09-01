@@ -1,0 +1,709 @@
+Univariate statistics solutions
+-------------------------------
+
+Estimator of main statistical measures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  Generate 2 random samples :math:`x \sim N(1.78, 0.1)`,
+   :math:`y \sim N(1.66, 0.1)` both of size 10.
+
+-  Compute xbar :math:`\bar{x}, \sigma_x, \sigma_{xy}` using only
+   ``np.sum()`` operation. Explore ``np.`` module to find out the numpy
+   functions that does the same computations and compare them (using
+   ``assert``) with your previous results.
+
+
+One sample t-test
+~~~~~~~~~~~~~~~~~
+
+-  Given the following samples, test whether its true mean is 1.75.
+   Warning, when computing the std or the variance set ddof=1. The
+   default value 0, leads to the biased estimator of the variance.
+
+.. code:: ipython3
+
+    import numpy as np
+    import scipy.stats as stats
+    np.random.seed(seed=42)  # make the example reproducible
+    
+    n = 10
+    x = np.random.normal(loc=1.76, scale=.1, size=n)
+    print(x)
+
+
+.. parsed-literal::
+
+    [1.80967142 1.74617357 1.82476885 1.91230299 1.73658466 1.7365863
+     1.91792128 1.83674347 1.71305256 1.814256  ]
+
+
+-  Compute the t-value (tval)
+
+-  Plot the T(n-1) distribution for 100 tvalues values within [0, 10].
+   Draw P(T(n-1)>tval) ie. color the surface defined by x values larger
+   than tval below the T(n-1). Using the code.
+
+-  Compute the p-value: P(T(n-1)>tval).
+
+-  The p-value is one-sided: a two-sided test would test P(T(n-1) >
+   tval) and P(T(n-1) < -tval). What would be the two sided p-value ?
+
+-  Compare the two-sided p-value with the one obtained by
+   stats.ttest_1samp using ``assert np.allclose(arr1, arr2)``
+
+.. code:: ipython3
+
+    import matplotlib.pyplot as plt
+    %matplotlib inline
+    
+    xbar, s, xmu, = np.mean(x), np.std(x, ddof=1), 1.75
+    
+    tval = (xbar - xmu) / (s / np.sqrt(n))
+    
+    # Survival function (1 - `cdf`)
+    pval = stats.t.sf(tval, n - 1)
+    
+    pval2sided = pval * 2
+    # do it with sicpy
+    assert np.allclose((tval, pval2sided), stats.ttest_1samp(x, xmu))
+    
+    print(tval, pval)
+    
+    tvalues = np.linspace(-10, 10, 100)
+    plt.plot(tvalues, stats.t.pdf(tvalues, n-1), 'b-', label="T(n-1)")
+    upper_tval_tvalues = tvalues[tvalues > tval]
+    plt.fill_between(upper_tval_tvalues, 0, stats.t.pdf(upper_tval_tvalues, n-1), alpha=.8)
+    plt.legend()
+
+
+.. parsed-literal::
+
+    2.3970974188695773 0.020044104794361296
+
+
+
+
+.. parsed-literal::
+
+    <matplotlib.legend.Legend at 0x7f85d5f97790>
+
+
+
+
+.. image:: stat_univ_solutions_files/stat_univ_solutions_6_2.png
+
+
+Simple linear regression and correlation (application)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Load the dataset: birthwt Risk Factors Associated with Low Infant Birth
+Weight at
+https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv
+
+1. Test the association of mother’s (``bwt``) age and birth weight using
+   the correlation test and linear regeression.
+
+2. Test the association of mother’s weight (``lwt``) and birth weight
+   using the correlation test and linear regeression.
+
+3. Produce two scatter plot of: (i) age by birth weight; (ii) mother’s
+   weight by birth weight.
+
+Conclusion ?
+
+.. code:: ipython3
+
+    import pandas as pd
+    import scipy.stats as stats
+    import matplotlib.pyplot as plt
+    %matplotlib inline
+    
+    url = 'https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv'
+    df = pd.read_csv(url)
+    
+    print(df.head())
+
+
+.. parsed-literal::
+
+       low  age  lwt  race  smoke  ptl  ht  ui  ftv   bwt
+    0    0   19  182     2      0    0   0   1    0  2523
+    1    0   33  155     3      0    0   0   0    3  2551
+    2    0   20  105     1      1    0   0   0    1  2557
+    3    0   21  108     1      1    0   0   1    2  2594
+    4    0   18  107     1      1    0   0   1    0  2600
+
+
+.. code:: ipython3
+
+    print(stats.pearsonr(df.age, df.bwt))
+    print(stats.pearsonr(df.bwt, df.lwt))
+    
+    plt.plot(df.bwt, df.lwt, 'o')
+
+
+.. parsed-literal::
+
+    (0.09031781366853263, 0.21647524185521977)
+    (0.18573328444909917, 0.010504176115208836)
+
+
+
+
+.. parsed-literal::
+
+    [<matplotlib.lines.Line2D at 0x7f85d42e74d0>]
+
+
+
+
+.. image:: stat_univ_solutions_files/stat_univ_solutions_9_2.png
+
+
+Simple linear regression (maths)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Considering the salary and the experience of the salary table.
+``https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv``
+
+Compute:
+
+-  Estimate the model paramters :math:`\beta, \beta_0` using scipy
+   ``stats.linregress(x,y)``
+
+-  Compute the predicted values :math:`\hat{y}`
+
+Compute:
+
+-  :math:`\bar{y}`: ``y_mu``
+
+-  :math:`SS_\text{tot}`: ``ss_tot``
+
+-  :math:`SS_\text{reg}`: ``ss_reg``
+
+-  :math:`SS_\text{res}`: ``ss_res``
+
+-  Check partition of variance formula based on sum of squares by using
+   ``assert np.allclose(val1, val2, atol=1e-05)``
+
+-  Compute :math:`R^2` and compare it with the ``r_value`` above
+
+-  Compute the :math:`F` score
+
+-  Compute the :math:`p`-value:
+
+-  Plot the :math:`F(1, n)` distribution for 100 :math:`f` values within
+   :math:`[10, 25]`. Draw :math:`P(F(1, n) > F)`, i.e. color the surface
+   defined by the :math:`x` values larger than :math:`F` below the
+   :math:`F(1, n)`.
+
+-  :math:`P(F(1, n) > F)` is the :math:`p`-value, compute it.
+
+.. code:: ipython3
+
+    import scipy.stats as stats
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    %matplotlib inline
+    
+    url = 'https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv'
+    salary = pd.read_csv(url)
+    
+    y, x = salary.salary, salary.experience
+    
+    # Model parameters
+    beta, beta0, r_value, p_value, std_err = stats.linregress(x,y)
+    
+    print("y=%f x + %f  r:%f, r-squared:%f, p-value:%f, std_err:%f" % (beta, beta0, r_value, r_value**2, p_value, std_err))
+    
+    # plotting the line
+    yhat = beta * x  +  beta0 # regression line
+    plt.plot(x, yhat, 'r-', x, y,'o')
+    plt.xlabel('Experience (years)')
+    plt.ylabel('Salary')
+    plt.show()
+    
+    ## $\bar{y}$ `y_mu`
+    
+    y_mu = np.mean(y)
+    
+    ## $SS_\text{tot}$: `ss_tot`
+    
+    ss_tot = np.sum((y - y_mu) ** 2)
+    
+    ## $SS_\text{reg}$: `ss_reg`
+    ss_reg = np.sum((yhat - y_mu) ** 2)
+    
+    ## $SS_\text{res}$: `ss_res`
+    ss_res = np.sum((y - yhat) ** 2)
+    
+    ## Check partition of variance formula based on SS using `assert np.allclose(val1, val2, atol=1e-05)`
+    assert np.allclose(ss_tot - (ss_reg + ss_res), 0, atol=1e-05)
+    
+    ## What np.allclose does ?
+    
+    ## What assert does
+    
+    ## What is it worth for ?
+    
+    ## Compute $R^2$ and compare with `r_value` above
+    r2 = ss_reg / ss_tot
+    
+    assert np.sqrt(r2) == r_value
+    
+    ## Compute F score
+    n = y.size
+    fval = ss_reg / (ss_res / (n - 2))
+    
+    
+    # Compute the p-value:
+    #  * Plot the F(1,n) distribution for 100 f values within [10, 25]. Draw P(F(1,n)>F) ie. color the surface defined by x values larger than F below the F(1,n).
+    #  * P(F(1,n)>F) is the p-value, compute it.
+    
+    fvalues = np.linspace(10, 25, 100)
+    
+    plt.plot(fvalues, stats.f.pdf(fvalues, 1, 30), 'b-', label="F(1, 30)")
+    
+    upper_fval_fvalues = fvalues[fvalues > fval]
+    plt.fill_between(upper_fval_fvalues, 0, stats.f.pdf(upper_fval_fvalues, 1, 30), alpha=.8)
+    
+    # pdf(x, df1, df2): Probability density function at x of the given RV.
+    plt.legend()
+    
+    # Survival function (1 - `cdf`)
+    pval = stats.f.sf(fval, 1, n - 2)
+    
+    
+    ## With statmodels
+    
+    from statsmodels.formula.api import ols
+    model = ols('salary ~ experience', salary)
+    results = model.fit()
+    print(results.summary())
+    
+    ## With sklearn
+    
+    import sklearn.feature_selection
+    #sklearn.feature_selection.f_regression??
+    sklearn.feature_selection.f_regression(x.reshape((n, 1)), y)
+
+
+.. parsed-literal::
+
+    y=491.486913 x + 13584.043803  r:0.538886, r-squared:0.290398, p-value:0.000112, std_err:115.823381
+
+
+
+.. image:: stat_univ_solutions_files/stat_univ_solutions_11_1.png
+
+
+.. parsed-literal::
+
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                 salary   R-squared:                       0.290
+    Model:                            OLS   Adj. R-squared:                  0.274
+    Method:                 Least Squares   F-statistic:                     18.01
+    Date:                Fri, 08 Jan 2021   Prob (F-statistic):           0.000112
+    Time:                        14:12:45   Log-Likelihood:                -445.98
+    No. Observations:                  46   AIC:                             896.0
+    Df Residuals:                      44   BIC:                             899.6
+    Df Model:                           1                                         
+    Covariance Type:            nonrobust                                         
+    ==============================================================================
+                     coef    std err          t      P>|t|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    Intercept   1.358e+04   1051.464     12.919      0.000    1.15e+04    1.57e+04
+    experience   491.4869    115.823      4.243      0.000     258.060     724.914
+    ==============================================================================
+    Omnibus:                       24.503   Durbin-Watson:                   2.180
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):                6.259
+    Skew:                           0.581   Prob(JB):                       0.0437
+    Kurtosis:                       1.616   Cond. No.                         16.2
+    ==============================================================================
+    
+    Notes:
+    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    AttributeError                            Traceback (most recent call last)
+
+    <ipython-input-5-508b55ecf4f4> in <module>
+         84 import sklearn.feature_selection
+         85 #sklearn.feature_selection.f_regression??
+    ---> 86 sklearn.feature_selection.f_regression(x.reshape((n, 1)), y)
+    
+
+    ~/anaconda3/lib/python3.7/site-packages/pandas/core/generic.py in __getattr__(self, name)
+       5137             if self._info_axis._can_hold_identifiers_and_holds_name(name):
+       5138                 return self[name]
+    -> 5139             return object.__getattribute__(self, name)
+       5140 
+       5141     def __setattr__(self, name: str, value) -> None:
+
+
+    AttributeError: 'Series' object has no attribute 'reshape'
+
+
+
+.. image:: stat_univ_solutions_files/stat_univ_solutions_11_4.png
+
+
+Multiple regression
+~~~~~~~~~~~~~~~~~~~
+
+Considering the simulated data used below:
+
+1. What are the dimensions of :math:`\mathrm{pinv}(X)`?
+
+2. Compute the MSE between the predicted values and the true values.
+
+.. code:: ipython3
+
+    import numpy as np
+    import scipy
+    np.random.seed(seed=42)  # make the example reproducible
+    
+    # Dataset
+    N, P = 50, 4
+    X = np.random.normal(size= N * P).reshape((N, P))
+    ## Our model needs an intercept so we add a column of 1s:
+    X[:, 0] = 1
+    print(X[:5, :])
+    
+    betastar = np.array([10, 1., .5, 0.1])
+    e = np.random.normal(size=N)
+    y = np.dot(X, betastar) + e
+    
+    # Estimate the parameters
+    Xpinv = scipy.linalg.pinv2(X)
+    betahat = np.dot(Xpinv, y)
+    print("Estimated beta:\n", betahat)
+
+.. code:: ipython3
+
+    # 1. What are the dimensions of pinv$(X)$ ?
+    
+    # ((P x N) (N x P))^1 (P x N)
+    # P x N
+    
+    print(Xpinv.shape)
+    
+    #2. Compute the MSE between the predicted values and the true values.
+    
+    
+    yhat = np.dot(X, betahat)
+    
+    mse = np.sum((y - yhat) ** 2) / N
+    print("MSE =", mse)
+
+Two sample t-test (maths)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Given the following two sample, test whether their means are equals.
+
+::
+
+   height = np.array([ 1.83,  1.83,  1.73,  1.82,  1.83,
+                       1.73,1.99,  1.85,  1.68,  1.87,
+                       1.66,  1.71,  1.73,  1.64,  1.70,
+                       1.60,  1.79,  1.73,  1.62,  1.77])
+   grp = np.array(["M"] * 10 + ["F"] * 10)
+
+-  Compute the means/std-dev per groups.
+
+-  Compute the :math:`t`-value (standard two sample t-test with equal
+   variances).
+
+-  Compute the :math:`p`-value.
+
+-  The :math:`p`-value is one-sided: a two-sided test would test
+   ``P(T > tval)`` and ``P(T < -tval)``. What would the two sided
+   :math:`p`-value be?
+
+-  Compare the two-sided :math:`p`-value with the one obtained by
+   ``stats.ttest_ind`` using ``assert np.allclose(arr1, arr2)``.
+
+.. code:: ipython3
+
+    height = np.array([ 1.83,  1.83,  1.73,  1.82,  1.83,  1.73,  1.99,  1.85,  1.68,  1.87,
+                        1.66,  1.71,  1.73,  1.64,  1.70,  1.60,  1.79,  1.73,  1.62,  1.77])
+    grp = np.array(["M"] * 10 + ["F"] * 10)
+    
+    x = height[grp=="M"]
+    y = height[grp=="F"]
+    
+    nx, ny = len(x), len(y)
+    
+    # mean/std
+    xbar, ybar = np.mean(x), np.mean(y)
+    xvar, yvar = np.var(x, ddof=1), np.var(y, ddof=1)
+
+
+Equal variances t-test
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    # se
+    sigma = np.sqrt((xvar * (nx - 1) + yvar * (ny - 1)) / (nx + ny - 2))
+    se = sigma * np.sqrt(1 / nx + 1 / ny)
+    
+    # tval
+    tval = (xbar - ybar) / se
+    
+    print("tval=%.2f, pval=%.4f" % (tval, pval))
+    
+    # df
+    df = nx + ny - 2
+    pval = stats.t.sf(tval, df)
+    pval2sided = pval * 2
+    
+    # With scipy
+    import scipy.stats as stats
+    
+    assert np.allclose((tval, pval2sided),
+                       stats.ttest_ind(x, y, equal_var=True))
+
+Unequal variance (Welch) t-test
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    se = np.sqrt(xvar / nx + yvar / ny)
+    
+    tval = (xbar - ybar) / se
+    
+    # Use the following function to approximate the df needed for the p-value
+    
+    def unequal_var_ttest_df(v1, n1, v2, n2):
+        vn1 = v1 / n1
+        vn2 = v2 / n2
+        df = (vn1 + vn2)**2 / (vn1**2 / (n1 - 1) + vn2**2 / (n2 - 1))
+        return df
+    
+    df = unequal_var_ttest_df(xvar, nx, yvar, ny)
+    
+    # Compute the p-value.
+    #
+    # The p-value is one-sided: a two-sided test would test P(T > tval)
+    # and P(T < -tval). What would be the two sided p-value ?
+    
+    pval = stats.t.sf(tval, df)
+    pval2sided = pval * 2
+    
+    # Compare the two-sided p-value with the one obtained by `stats.ttest_ind` using `assert np.allclose(arr1, arr2)`
+    
+    # do it with scipy
+    assert np.allclose((tval, pval2sided), stats.ttest_ind(x, y, equal_var=False))
+    
+    
+    # Plot of the two sample t-test
+    
+    xjitter = np.random.normal(loc=-1, size=len(x), scale=.01)
+    yjitter = np.random.normal(loc=+1, size=len(y), scale=.01)
+    plt.plot(xjitter, x, "ob", alpha=.5)
+    plt.plot(yjitter, y, "ob", alpha=.5)
+    plt.plot([-1, +1], [xbar, ybar], "or", markersize=15)
+    
+    #left, left + width, bottom, bottom + height
+    #plt.bar(left=0, height=se, width=0.1, bottom=ybar-se/2)
+    ## effect size error bar
+    plt.errorbar(-.1, ybar + (xbar - ybar) / 2, yerr=(xbar - ybar) / 2,
+                 elinewidth=3, capsize=5, markeredgewidth=3,
+                 color='r')
+    
+    plt.errorbar([-.8, .8], [xbar, ybar], yerr=np.sqrt([xvar, yvar]) / 2,
+                 elinewidth=3, capsize=5, markeredgewidth=3,
+                 color='b')
+    
+    plt.errorbar(.1, ybar, yerr=se / 2,
+                 elinewidth=3, capsize=5, markeredgewidth=3,
+                 color='b')
+
+
+Two sample t-test and random permutation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Generate 100 samples following the model:
+
+.. math::
+
+
+   y = g + \varepsilon
+
+Where the noise :math:`\varepsilon \sim N(1, 1)` and
+:math:`g \in \{0, 1\}` is a group indicator variable with 50 ones and 50
+zeros.
+
+-  Write a function ``tstat(y, g)`` that compute the two samples t-test
+   of y splited in two groups defined by g.
+
+-  Sample the t-statistic distribution under the null hypothesis using
+   random permutations.
+
+-  Assess the p-value.
+
+.. code:: ipython3
+
+    import numpy as np
+    np.random.seed(42)
+    
+    # Model data
+    eps = np.random.normal(loc=0, scale=1, size=100)
+    g = np.concatenate([np.zeros(50), np.ones(50)])
+    
+    y = g + eps
+    
+    def tstat(y, g):
+        ys = [y[g == l] for l in np.unique(g)]
+        means = [np.mean(vals) for vals in ys]
+        sse = [np.sum((vals - means[i]) ** 2) for i, vals in enumerate(ys)]
+        counts = [len(vals) for vals in ys]
+        s = np.sqrt(np.sum(sse) / (len(y) - 2))
+        tval = (means[1] - means[0]) / (s * np.sqrt(1 / counts[0] + 1 / counts[0]))
+        return(tval)
+    
+    # Permutation: simulate the null hypothesis
+    nperm = 10000
+    perms = np.zeros(nperm + 1)
+    perms[0] = tstat(y, g)
+    
+    for i in range(1, nperm):
+        perms[i] = tstat(y, np.random.permutation(g))
+    
+    pval = np.sum(perms >= perms[0]) / len(perms)
+    print(pval)
+
+Two sample t-test (application)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Risk Factors Associated with Low Infant Birth Weight:
+
+``https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv``
+
+1. Explore the data
+
+2. Recode smoke factor
+
+3. Compute the means/std-dev per groups.
+
+4. Plot birth weight by smoking (box plot, violin plot or histogram)
+
+5. Test the effect of smoking on birth weight
+
+.. code:: ipython3
+
+    url = 'https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv'
+    df = pd.read_csv(url)
+    
+    df.describe()
+    
+    df.smoke.describe()
+    
+    df.smoke = df.smoke.map({1:"y", 0:"n"})
+    
+    df.smoke.describe()
+    
+    print(df[['smoke' , 'bwt']] .groupby("smoke").mean())
+    print(df[['smoke' , 'bwt']] .groupby("smoke").std())
+    
+    
+    import seaborn as sns
+    
+    ax = sns.violinplot(x="smoke", y="bwt", data=df, inner=None)
+    ax = sns.swarmplot(x="smoke", y="bwt", data=df,
+                        color="white", edgecolor="gray")
+    
+    import scipy.stats as stats
+    print(stats.ttest_ind(df.bwt[df.smoke == "y"],
+                          df.bwt[df.smoke == "n"]))
+
+
+Univariate associations (developpement)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Write a function ``univar_stat(df, target, variables)`` that computes
+the parametric statistics and :math:`p`-values between the ``target``
+variable (provided as as string) and all ``variables`` (provided as a
+list of string) of the pandas DataFrame ``df``. The target is a
+quantitative variable but variables may be quantitative or qualitative.
+The function returns a DataFrame with four columns: ``variable``,
+``test``, ``value``, ``p_value``.
+
+Apply it to the salary dataset available at
+https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv,
+with target being ``S``: salaries for IT staff in a corporation.
+
+Multiple comparisons
+~~~~~~~~~~~~~~~~~~~~
+
+This exercise has 2 goals: apply you knowledge of statistics using
+vectorized numpy operations. Given the dataset provided for multiple
+comparisons, compute the two-sample :math:`t`-test (assuming equal
+variance) for each (column) feature of the ``Y`` array given the two
+groups defined by ``grp`` variable. You should return two vectors of
+size ``n_features``: one for the :math:`t`-values and one for the
+:math:`p`-values.
+
+ANOVA
+^^^^^
+
+Perform an ANOVA dataset described bellow
+
+-  Compute between and within variances
+-  Compute :math:`F`-value: ``fval``
+-  Compare the :math:`p`-value with the one obtained by
+   ``stats.f_oneway`` using ``assert np.allclose(arr1, arr2)``
+
+.. code:: ipython3
+
+    import numpy as np
+    
+    # dataset
+    mu_k = np.array([1, 2, 3])    # means of 3 samples
+    sd_k = np.array([1, 1, 1])    # sd of 3 samples
+    n_k = np.array([10, 20, 30])  # sizes of 3 samples
+    grp = [0, 1, 2]               # group labels
+    n = np.sum(n_k)
+    label = np.hstack([[k] * n_k[k] for k in [0, 1, 2]])
+    
+    y = np.zeros(n)
+    for k in grp:
+        y[label == k] = np.random.normal(mu_k[k], sd_k[k], n_k[k])
+
+.. code:: ipython3
+
+    import scipy.stats as stats
+    
+    # estimate parameters
+    ybar_k = np.zeros(3)
+    
+    ybar = y.mean()
+    for k in grp:
+        ybar_k[k] = np.mean(y[label == k])
+    
+    
+    betweenvar = np.sum([n_k[k] * (ybar_k[k] - ybar) ** 2 for k in grp]) / (len(grp) - 1)
+    withinvar = np.sum([np.sum((y[label==k] - ybar_k[k]) ** 2) for k in grp]) / (n - len(grp))
+    
+    fval = betweenvar / withinvar
+    # Survival function (1 - `cdf`)
+    pval = stats.f.sf(fval, (len(grp) - 1), n - len(grp))
+    
+    # Compute with scipy
+    fval, pval = stats.f_oneway(y[label == 0], y[label == 1], y[label == 2])
+    
+    
+    assert np.allclose((fval, pval),
+                       stats.f_oneway(y[label == 0], y[label == 1], y[label == 2]))
+
+
+
+

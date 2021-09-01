@@ -1,0 +1,758 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Backpropagation &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Multilayer Perceptron (MLP)" href="dl_mlp_mnist_pytorch.html" />
+    <link rel="prev" title="Lab: Faces recognition using various learning models" href="../auto_gallery/ml_lab_face_recognition.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="backpropagation">
+<h1>Backpropagation<a class="headerlink" href="#backpropagation" title="Permalink to this headline">¶</a></h1>
+<section id="course-outline">
+<h2>Course outline:<a class="headerlink" href="#course-outline" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Backpropagation and chaine rule</p></li>
+<li><p>Lab: with numpy and pytorch</p></li>
+</ol>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</section>
+<section id="backpropagation-and-chaine-rule">
+<h2>Backpropagation and chaine rule<a class="headerlink" href="#backpropagation-and-chaine-rule" title="Permalink to this headline">¶</a></h2>
+<p>We will set up a two layer network <a class="reference external" href="https://pytorch.org/tutorials/beginner/pytorch_with_examples.html">source pytorch
+tuto</a>
+:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{Y} = \text{max}(\mathbf{X} \mathbf{W}^{(1)}, 0) \mathbf{W}^{(2)}\]</div>
+<p>A fully-connected ReLU network with one hidden layer and no biases,
+trained to predict y from x using Euclidean error.</p>
+<section id="chaine-rule">
+<h3>Chaine rule<a class="headerlink" href="#chaine-rule" title="Permalink to this headline">¶</a></h3>
+<p>Forward pass with <strong>local</strong> partial derivatives of ouput given inputs:</p>
+<p>Backward: compute gradient of the loss given each parameters vectors
+applying chaine rule from the loss downstream to the parameters:</p>
+<p>For <span class="math notranslate nohighlight">\(w^{(2)}\)</span>:</p>
+<p>For <span class="math notranslate nohighlight">\(w^{(1)}\)</span>:</p>
+</section>
+<section id="recap-vector-derivatives">
+<h3>Recap: Vector derivatives<a class="headerlink" href="#recap-vector-derivatives" title="Permalink to this headline">¶</a></h3>
+<p>Given a function <span class="math notranslate nohighlight">\(z = x\)</span> with <span class="math notranslate nohighlight">\(z\)</span> the output, <span class="math notranslate nohighlight">\(x\)</span>
+the input and <span class="math notranslate nohighlight">\(w\)</span> the coeficients.</p>
+<ul class="simple">
+<li><p>Scalar to Scalar: <span class="math notranslate nohighlight">\(x \in \mathbb{R}, z \in \mathbb{R}\)</span>,
+<span class="math notranslate nohighlight">\(w \in \mathbb{R}\)</span></p></li>
+</ul>
+<p>Regular derivative:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial z}{\partial w} = x \in \mathbb{R}\]</div>
+<p>If <span class="math notranslate nohighlight">\(w\)</span> changes by a small amount, how much will <span class="math notranslate nohighlight">\(z\)</span> change?</p>
+<ul class="simple">
+<li><p>Vector to Scalar: <span class="math notranslate nohighlight">\(x \in \mathbb{R}^N, z \in \mathbb{R}\)</span>,
+<span class="math notranslate nohighlight">\(w \in \mathbb{R}^N\)</span></p></li>
+</ul>
+<p>Derivative is <strong>Gradient</strong> of partial derivative:
+<span class="math notranslate nohighlight">\(\frac{\partial z}{\partial w} \in \mathbb{R}^N\)</span></p>
+<p>For each element <span class="math notranslate nohighlight">\(w_i\)</span> of <span class="math notranslate nohighlight">\(w\)</span>, if it changes by a small
+amount then how much will y change?</p>
+<ul class="simple">
+<li><p>Vector to Vector: <span class="math notranslate nohighlight">\(w \in \mathbb{R}^N, z \in \mathbb{R}^M\)</span></p></li>
+</ul>
+<p>Derivative is <strong>Jacobian</strong> of partial derivative:</p>
+<p>TO COMPLETE</p>
+<p><span class="math notranslate nohighlight">\(\frac{\partial z}{\partial w} \in \mathbb{R}^{N \times M}\)</span></p>
+</section>
+<section id="backpropagation-summary">
+<h3>Backpropagation summary<a class="headerlink" href="#backpropagation-summary" title="Permalink to this headline">¶</a></h3>
+<p>Backpropagation algorithm in a graph: 1. Forward pass, for each node
+compute local partial derivatives of ouput given inputs 2. Backward
+pass: apply chain rule from the end to each parameters - Update
+parameter with gradient descent using the current upstream gradient and
+the current local gradient - Compute upstream gradient for the backward
+nodes</p>
+<p>Think locally and remember that at each node: - For the loss the
+gradient is the error - At each step, the upstream gradient is obtained
+by multiplying the upstream gradient (an error) with the current
+parameters (vector of matrix). - At each step, the current local
+gradient equal the input, therfore the current update is the current
+upstream gradient time the input.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">sklearn.model_selection</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="lab-with-numpy-and-pytorch">
+<h2>Lab: with numpy and pytorch<a class="headerlink" href="#lab-with-numpy-and-pytorch" title="Permalink to this headline">¶</a></h2>
+<section id="load-iris-data-set">
+<h3>Load iris data set<a class="headerlink" href="#load-iris-data-set" title="Permalink to this headline">¶</a></h3>
+<p>Goal: Predict Y = [petal_length, petal_width] = f(X = [sepal_length,
+sepal_width])</p>
+<ul class="simple">
+<li><p>Plot data with seaborn</p></li>
+<li><p>Remove setosa samples</p></li>
+<li><p>Recode ‘versicolor’:1, ‘virginica’:2</p></li>
+<li><p>Scale X and Y</p></li>
+<li><p>Split data in train/test 50%/50%</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;iris&quot;</span><span class="p">)</span>
+<span class="c1">#g = sns.pairplot(iris, hue=&quot;species&quot;)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">iris</span><span class="p">[</span><span class="n">iris</span><span class="o">.</span><span class="n">species</span> <span class="o">!=</span> <span class="s2">&quot;setosa&quot;</span><span class="p">]</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;species&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;species_n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">species</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;versicolor&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;virginica&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+
+<span class="c1"># Y = &#39;petal_length&#39;, &#39;petal_width&#39;; X = &#39;sepal_length&#39;, &#39;sepal_width&#39;)</span>
+<span class="n">X_iris</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">,</span> <span class="s1">&#39;sepal_width&#39;</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y_iris</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;petal_length&#39;</span><span class="p">,</span> <span class="s1">&#39;petal_width&#39;</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">label_iris</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">species_n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># Scale</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="n">scalerx</span><span class="p">,</span> <span class="n">scalery</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_iris</span> <span class="o">=</span> <span class="n">scalerx</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_iris</span><span class="p">)</span>
+<span class="n">Y_iris</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">Y_iris</span><span class="p">)</span>
+
+<span class="c1"># Split train test</span>
+<span class="n">X_iris_tr</span><span class="p">,</span> <span class="n">X_iris_val</span><span class="p">,</span> <span class="n">Y_iris_tr</span><span class="p">,</span> <span class="n">Y_iris_val</span><span class="p">,</span> <span class="n">label_iris_tr</span><span class="p">,</span> <span class="n">label_iris_val</span> <span class="o">=</span> \
+    <span class="n">sklearn</span><span class="o">.</span><span class="n">model_selection</span><span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">X_iris</span><span class="p">,</span> <span class="n">Y_iris</span><span class="p">,</span> <span class="n">label_iris</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">label_iris</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">edouard</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.7</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">ipykernel_launcher</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">5</span><span class="p">:</span> <span class="n">SettingWithCopyWarning</span><span class="p">:</span>
+<span class="n">A</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">on</span> <span class="n">a</span> <span class="n">copy</span> <span class="n">of</span> <span class="n">a</span> <span class="nb">slice</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">DataFrame</span><span class="o">.</span>
+<span class="n">Try</span> <span class="n">using</span> <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row_indexer</span><span class="p">,</span><span class="n">col_indexer</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span> <span class="n">instead</span>
+
+<span class="n">See</span> <span class="n">the</span> <span class="n">caveats</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">documentation</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">pandas</span><span class="o">.</span><span class="n">pydata</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">pandas</span><span class="o">-</span><span class="n">docs</span><span class="o">/</span><span class="n">stable</span><span class="o">/</span><span class="n">indexing</span><span class="o">.</span><span class="n">html</span><span class="c1">#indexing-view-versus-copy</span>
+  <span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_7_1.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_7_1.png" />
+</section>
+<section id="backpropagation-with-numpy">
+<h3>Backpropagation with numpy<a class="headerlink" href="#backpropagation-with-numpy" title="Permalink to this headline">¶</a></h3>
+<p>This implementation uses numpy to manually compute the forward pass,
+loss, and backward pass.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># X=X_iris_tr; Y=Y_iris_tr; X_val=X_iris_val; Y_val=Y_iris_val</span>
+
+<span class="k">def</span> <span class="nf">two_layer_regression_numpy_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">nite</span><span class="p">):</span>
+    <span class="c1"># N is batch size; D_in is input dimension;</span>
+    <span class="c1"># H is hidden dimension; D_out is output dimension.</span>
+    <span class="c1"># N, D_in, H, D_out = 64, 1000, 100, 10</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">D_out</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">W1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">)</span>
+    <span class="n">W2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">D_out</span><span class="p">)</span>
+
+    <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">()</span>
+
+    <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">lr</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nite</span><span class="p">):</span>
+        <span class="c1"># Forward pass: compute predicted y</span>
+        <span class="n">z1</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">W1</span><span class="p">)</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">Y_pred</span> <span class="o">=</span> <span class="n">h1</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">W2</span><span class="p">)</span>
+
+        <span class="c1"># Compute and print loss</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">Y_pred</span> <span class="o">-</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="c1"># Backprop to compute gradients of w1 and w2 with respect to loss</span>
+        <span class="n">grad_y_pred</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">Y_pred</span> <span class="o">-</span> <span class="n">Y</span><span class="p">)</span>
+        <span class="n">grad_w2</span> <span class="o">=</span> <span class="n">h1</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad_y_pred</span><span class="p">)</span>
+        <span class="n">grad_h1</span> <span class="o">=</span> <span class="n">grad_y_pred</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">W2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">grad_z1</span> <span class="o">=</span> <span class="n">grad_h1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">grad_z1</span><span class="p">[</span><span class="n">z1</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">grad_w1</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad_z1</span><span class="p">)</span>
+
+        <span class="c1"># Update weights</span>
+        <span class="n">W1</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">grad_w1</span>
+        <span class="n">W2</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">grad_w2</span>
+
+        <span class="c1"># Forward pass for validation set: compute predicted y</span>
+        <span class="n">z1</span> <span class="o">=</span> <span class="n">X_val</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">W1</span><span class="p">)</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">y_pred_val</span> <span class="o">=</span> <span class="n">h1</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">W2</span><span class="p">)</span>
+        <span class="n">loss_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y_pred_val</span> <span class="o">-</span> <span class="n">Y_val</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="n">losses_tr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+        <span class="n">losses_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">loss_val</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">W1</span><span class="p">,</span> <span class="n">W2</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span>
+
+<span class="n">W1</span><span class="p">,</span> <span class="n">W2</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="n">two_layer_regression_numpy_train</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_iris_tr</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y_iris_tr</span><span class="p">,</span> <span class="n">X_val</span><span class="o">=</span><span class="n">X_iris_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_iris_val</span><span class="p">,</span>
+                                                                 <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">nite</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_tr</span><span class="p">)),</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">15126.224825529907</span> <span class="mf">2910.260853330454</span>
+<span class="mi">10</span> <span class="mf">71.5381374591153</span> <span class="mf">104.97056197642135</span>
+<span class="mi">20</span> <span class="mf">50.756938353833334</span> <span class="mf">80.02800827986354</span>
+<span class="mi">30</span> <span class="mf">46.546510744624236</span> <span class="mf">72.85211241738614</span>
+<span class="mi">40</span> <span class="mf">44.41413064447564</span> <span class="mf">69.31127324764276</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f960cf5e9b0</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f960cf5eb00</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_9_2.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_9_2.png" />
+</section>
+<section id="backpropagation-with-pytorch-tensors">
+<h3>Backpropagation with PyTorch Tensors<a class="headerlink" href="#backpropagation-with-pytorch-tensors" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://pytorch.org/tutorials/beginner/pytorch_with_examples.html">source</a></p>
+<p>Numpy is a great framework, but it cannot utilize GPUs to accelerate its
+numerical computations. For modern deep neural networks, GPUs often
+provide speedups of 50x or greater, so unfortunately numpy won’t be
+enough for modern deep learning. Here we introduce the most fundamental
+PyTorch concept: the Tensor. A PyTorch Tensor is conceptually identical
+to a numpy array: a Tensor is an n-dimensional array, and PyTorch
+provides many functions for operating on these Tensors. Behind the
+scenes, Tensors can keep track of a computational graph and gradients,
+but they’re also useful as a generic tool for scientific computing. Also
+unlike numpy, PyTorch Tensors can utilize GPUs to accelerate their
+numeric computations. To run a PyTorch Tensor on GPU, you simply need to
+cast it to a new datatype. Here we use PyTorch Tensors to fit a
+two-layer network to random data. Like the numpy example above we need
+to manually implement the forward and backward passes through the
+network:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="c1"># X=X_iris_tr; Y=Y_iris_tr; X_val=X_iris_val; Y_val=Y_iris_val</span>
+
+<span class="k">def</span> <span class="nf">two_layer_regression_tensor_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">nite</span><span class="p">):</span>
+
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+    <span class="c1"># device = torch.device(&quot;cuda:0&quot;) # Uncomment this to run on GPU</span>
+
+    <span class="c1"># N is batch size; D_in is input dimension;</span>
+    <span class="c1"># H is hidden dimension; D_out is output dimension.</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">D_out</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Create random input and output data</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+    <span class="n">X_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+    <span class="n">Y_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">Y_val</span><span class="p">)</span>
+
+    <span class="c1"># Randomly initialize weights</span>
+    <span class="n">W1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">W2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">D_out</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">()</span>
+
+    <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">lr</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nite</span><span class="p">):</span>
+        <span class="c1"># Forward pass: compute predicted y</span>
+        <span class="n">z1</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">W1</span><span class="p">)</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="n">z1</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">h1</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">W2</span><span class="p">)</span>
+
+        <span class="c1"># Compute and print loss</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">-</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="c1"># Backprop to compute gradients of w1 and w2 with respect to loss</span>
+        <span class="n">grad_y_pred</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">-</span> <span class="n">Y</span><span class="p">)</span>
+        <span class="n">grad_w2</span> <span class="o">=</span> <span class="n">h1</span><span class="o">.</span><span class="n">t</span><span class="p">()</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">grad_y_pred</span><span class="p">)</span>
+        <span class="n">grad_h1</span> <span class="o">=</span> <span class="n">grad_y_pred</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">W2</span><span class="o">.</span><span class="n">t</span><span class="p">())</span>
+        <span class="n">grad_z1</span> <span class="o">=</span> <span class="n">grad_h1</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">grad_z1</span><span class="p">[</span><span class="n">z1</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">grad_w1</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">t</span><span class="p">()</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">grad_z1</span><span class="p">)</span>
+
+        <span class="c1"># Update weights using gradient descent</span>
+        <span class="n">W1</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">grad_w1</span>
+        <span class="n">W2</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">grad_w2</span>
+
+        <span class="c1"># Forward pass for validation set: compute predicted y</span>
+        <span class="n">z1</span> <span class="o">=</span> <span class="n">X_val</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">W1</span><span class="p">)</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="n">z1</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">y_pred_val</span> <span class="o">=</span> <span class="n">h1</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">W2</span><span class="p">)</span>
+        <span class="n">loss_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred_val</span> <span class="o">-</span> <span class="n">Y_val</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="n">losses_tr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+        <span class="n">losses_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">loss_val</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">W1</span><span class="p">,</span> <span class="n">W2</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span>
+
+<span class="n">W1</span><span class="p">,</span> <span class="n">W2</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="n">two_layer_regression_tensor_train</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_iris_tr</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y_iris_tr</span><span class="p">,</span> <span class="n">X_val</span><span class="o">=</span><span class="n">X_iris_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_iris_val</span><span class="p">,</span>
+                                                                 <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">nite</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_tr</span><span class="p">)),</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">8086.1591796875</span> <span class="mf">5429.57275390625</span>
+<span class="mi">10</span> <span class="mf">225.77589416503906</span> <span class="mf">331.83734130859375</span>
+<span class="mi">20</span> <span class="mf">86.46501159667969</span> <span class="mf">117.72447204589844</span>
+<span class="mi">30</span> <span class="mf">52.375606536865234</span> <span class="mf">73.84156036376953</span>
+<span class="mi">40</span> <span class="mf">43.16458511352539</span> <span class="mf">64.0667495727539</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f960033c470</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f960033c5c0</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_11_2.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_11_2.png" />
+</section>
+<section id="backpropagation-with-pytorch-tensors-and-autograd">
+<h3>Backpropagation with PyTorch: Tensors and autograd<a class="headerlink" href="#backpropagation-with-pytorch-tensors-and-autograd" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://pytorch.org/tutorials/beginner/pytorch_with_examples.html">source</a></p>
+<p>A fully-connected ReLU network with one hidden layer and no biases,
+trained to predict y from x by minimizing squared Euclidean distance.
+This implementation computes the forward pass using operations on
+PyTorch Tensors, and uses PyTorch autograd to compute gradients. A
+PyTorch Tensor represents a node in a computational graph. If <code class="docutils literal notranslate"><span class="pre">x</span></code> is a
+Tensor that has <code class="docutils literal notranslate"><span class="pre">x.requires_grad=True</span></code> then <code class="docutils literal notranslate"><span class="pre">x.grad</span></code> is another
+Tensor holding the gradient of <code class="docutils literal notranslate"><span class="pre">x</span></code> with respect to some scalar value.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="c1"># X=X_iris_tr; Y=Y_iris_tr; X_val=X_iris_val; Y_val=Y_iris_val</span>
+<span class="c1"># del X, Y, X_val, Y_val</span>
+
+<span class="k">def</span> <span class="nf">two_layer_regression_autograd_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">nite</span><span class="p">):</span>
+
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+    <span class="c1"># device = torch.device(&quot;cuda:0&quot;) # Uncomment this to run on GPU</span>
+
+    <span class="c1"># N is batch size; D_in is input dimension;</span>
+    <span class="c1"># H is hidden dimension; D_out is output dimension.</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">D_out</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Setting requires_grad=False indicates that we do not need to compute gradients</span>
+    <span class="c1"># with respect to these Tensors during the backward pass.</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+    <span class="n">X_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+    <span class="n">Y_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">Y_val</span><span class="p">)</span>
+
+    <span class="c1"># Create random Tensors for weights.</span>
+    <span class="c1"># Setting requires_grad=True indicates that we want to compute gradients with</span>
+    <span class="c1"># respect to these Tensors during the backward pass.</span>
+    <span class="n">W1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">W2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">D_out</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">()</span>
+
+    <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">lr</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nite</span><span class="p">):</span>
+        <span class="c1"># Forward pass: compute predicted y using operations on Tensors; these</span>
+        <span class="c1"># are exactly the same operations we used to compute the forward pass using</span>
+        <span class="c1"># Tensors, but we do not need to keep references to intermediate values since</span>
+        <span class="c1"># we are not implementing the backward pass by hand.</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">W1</span><span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">W2</span><span class="p">)</span>
+
+        <span class="c1"># Compute and print loss using operations on Tensors.</span>
+        <span class="c1"># Now loss is a Tensor of shape (1,)</span>
+        <span class="c1"># loss.item() gets the scalar value held in the loss.</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">-</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="c1"># Use autograd to compute the backward pass. This call will compute the</span>
+        <span class="c1"># gradient of loss with respect to all Tensors with requires_grad=True.</span>
+        <span class="c1"># After this call w1.grad and w2.grad will be Tensors holding the gradient</span>
+        <span class="c1"># of the loss with respect to w1 and w2 respectively.</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+        <span class="c1"># Manually update weights using gradient descent. Wrap in torch.no_grad()</span>
+        <span class="c1"># because weights have requires_grad=True, but we don&#39;t need to track this</span>
+        <span class="c1"># in autograd.</span>
+        <span class="c1"># An alternative way is to operate on weight.data and weight.grad.data.</span>
+        <span class="c1"># Recall that tensor.data gives a tensor that shares the storage with</span>
+        <span class="c1"># tensor, but doesn&#39;t track history.</span>
+        <span class="c1"># You can also use torch.optim.SGD to achieve this.</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">W1</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">W1</span><span class="o">.</span><span class="n">grad</span>
+            <span class="n">W2</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">W2</span><span class="o">.</span><span class="n">grad</span>
+
+            <span class="c1"># Manually zero the gradients after updating weights</span>
+            <span class="n">W1</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+            <span class="n">W2</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="n">X_val</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">W1</span><span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">W2</span><span class="p">)</span>
+
+            <span class="c1"># Compute and print loss using operations on Tensors.</span>
+            <span class="c1"># Now loss is a Tensor of shape (1,)</span>
+            <span class="c1"># loss.item() gets the scalar value held in the loss.</span>
+            <span class="n">loss_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">-</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">loss_val</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="n">losses_tr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">losses_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_val</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">W1</span><span class="p">,</span> <span class="n">W2</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span>
+
+<span class="n">W1</span><span class="p">,</span> <span class="n">W2</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="n">two_layer_regression_autograd_train</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_iris_tr</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y_iris_tr</span><span class="p">,</span> <span class="n">X_val</span><span class="o">=</span><span class="n">X_iris_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_iris_val</span><span class="p">,</span>
+                                                                 <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">nite</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_tr</span><span class="p">)),</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">8307.1806640625</span> <span class="mf">2357.994873046875</span>
+<span class="mi">10</span> <span class="mf">111.97289276123047</span> <span class="mf">250.04209899902344</span>
+<span class="mi">20</span> <span class="mf">65.83244323730469</span> <span class="mf">201.63694763183594</span>
+<span class="mi">30</span> <span class="mf">53.70908737182617</span> <span class="mf">183.17051696777344</span>
+<span class="mi">40</span> <span class="mf">48.719329833984375</span> <span class="mf">173.3616943359375</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f95ff2ad978</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f95ff2adac8</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_13_2.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_13_2.png" />
+</section>
+<section id="backpropagation-with-pytorch-nn">
+<h3>Backpropagation with PyTorch: nn<a class="headerlink" href="#backpropagation-with-pytorch-nn" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://pytorch.org/tutorials/beginner/pytorch_with_examples.html">source</a></p>
+<p>This implementation uses the nn package from PyTorch to build the
+network. PyTorch autograd makes it easy to define computational graphs
+and take gradients, but raw autograd can be a bit too low-level for
+defining complex neural networks; this is where the nn package can help.
+The nn package defines a set of Modules, which you can think of as a
+neural network layer that has produces output from input and may have
+some trainable weights.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="c1"># X=X_iris_tr; Y=Y_iris_tr; X_val=X_iris_val; Y_val=Y_iris_val</span>
+<span class="c1"># del X, Y, X_val, Y_val</span>
+
+<span class="k">def</span> <span class="nf">two_layer_regression_nn_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">nite</span><span class="p">):</span>
+
+    <span class="c1"># N is batch size; D_in is input dimension;</span>
+    <span class="c1"># H is hidden dimension; D_out is output dimension.</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">D_out</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+    <span class="n">X_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+    <span class="n">Y_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">Y_val</span><span class="p">)</span>
+
+    <span class="c1"># Use the nn package to define our model as a sequence of layers. nn.Sequential</span>
+    <span class="c1"># is a Module which contains other Modules, and applies them in sequence to</span>
+    <span class="c1"># produce its output. Each Linear Module computes output from input using a</span>
+    <span class="c1"># linear function, and holds internal Tensors for its weight and bias.</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">),</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">D_out</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># The nn package also contains definitions of popular loss functions; in this</span>
+    <span class="c1"># case we will use Mean Squared Error (MSE) as our loss function.</span>
+    <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+
+    <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">()</span>
+
+    <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">lr</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nite</span><span class="p">):</span>
+        <span class="c1"># Forward pass: compute predicted y by passing x to the model. Module objects</span>
+        <span class="c1"># override the __call__ operator so you can call them like functions. When</span>
+        <span class="c1"># doing so you pass a Tensor of input data to the Module and it produces</span>
+        <span class="c1"># a Tensor of output data.</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># Compute and print loss. We pass Tensors containing the predicted and true</span>
+        <span class="c1"># values of y, and the loss function returns a Tensor containing the</span>
+        <span class="c1"># loss.</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+        <span class="c1"># Zero the gradients before running the backward pass.</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+        <span class="c1"># Backward pass: compute gradient of the loss with respect to all the learnable</span>
+        <span class="c1"># parameters of the model. Internally, the parameters of each Module are stored</span>
+        <span class="c1"># in Tensors with requires_grad=True, so this call will compute gradients for</span>
+        <span class="c1"># all learnable parameters in the model.</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+        <span class="c1"># Update the weights using gradient descent. Each parameter is a Tensor, so</span>
+        <span class="c1"># we can access its gradients like we did before.</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                <span class="n">param</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span>
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+            <span class="n">loss_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred</span> <span class="o">-</span> <span class="n">Y_val</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">loss_val</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="n">losses_tr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">losses_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_val</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span>
+
+<span class="n">model</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="n">two_layer_regression_nn_train</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_iris_tr</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y_iris_tr</span><span class="p">,</span> <span class="n">X_val</span><span class="o">=</span><span class="n">X_iris_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_iris_val</span><span class="p">,</span>
+                                                                 <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">nite</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_tr</span><span class="p">)),</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">82.32025146484375</span> <span class="mf">91.3389892578125</span>
+<span class="mi">10</span> <span class="mf">50.322200775146484</span> <span class="mf">63.563087463378906</span>
+<span class="mi">20</span> <span class="mf">40.825225830078125</span> <span class="mf">57.13555145263672</span>
+<span class="mi">30</span> <span class="mf">37.53572082519531</span> <span class="mf">55.74506378173828</span>
+<span class="mi">40</span> <span class="mf">36.191200256347656</span> <span class="mf">55.499732971191406</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f95ff296668</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f95ff2967b8</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_15_2.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_15_2.png" />
+</section>
+<section id="backpropagation-with-pytorch-optim">
+<h3>Backpropagation with PyTorch optim<a class="headerlink" href="#backpropagation-with-pytorch-optim" title="Permalink to this headline">¶</a></h3>
+<p>This implementation uses the nn package from PyTorch to build the
+network. Rather than manually updating the weights of the model as we
+have been doing, we use the optim package to define an Optimizer that
+will update the weights for us. The optim package defines many
+optimization algorithms that are commonly used for deep learning,
+including SGD+momentum, RMSProp, Adam, etc.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="c1"># X=X_iris_tr; Y=Y_iris_tr; X_val=X_iris_val; Y_val=Y_iris_val</span>
+
+<span class="k">def</span> <span class="nf">two_layer_regression_nn_optim_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">nite</span><span class="p">):</span>
+
+    <span class="c1"># N is batch size; D_in is input dimension;</span>
+    <span class="c1"># H is hidden dimension; D_out is output dimension.</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">D_out</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+    <span class="n">X_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+    <span class="n">Y_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">Y_val</span><span class="p">)</span>
+
+    <span class="c1"># Use the nn package to define our model and loss function.</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">D_in</span><span class="p">,</span> <span class="n">H</span><span class="p">),</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">D_out</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+
+    <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">()</span>
+
+    <span class="c1"># Use the optim package to define an Optimizer that will update the weights of</span>
+    <span class="c1"># the model for us. Here we will use Adam; the optim package contains many other</span>
+    <span class="c1"># optimization algoriths. The first argument to the Adam constructor tells the</span>
+    <span class="c1"># optimizer which Tensors it should update.</span>
+    <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">lr</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nite</span><span class="p">):</span>
+        <span class="c1"># Forward pass: compute predicted y by passing x to the model.</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># Compute and print loss.</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+        <span class="c1"># Before the backward pass, use the optimizer object to zero all of the</span>
+        <span class="c1"># gradients for the variables it will update (which are the learnable</span>
+        <span class="c1"># weights of the model). This is because by default, gradients are</span>
+        <span class="c1"># accumulated in buffers( i.e, not overwritten) whenever .backward()</span>
+        <span class="c1"># is called. Checkout docs of torch.autograd.backward for more details.</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+        <span class="c1"># Backward pass: compute gradient of the loss with respect to model</span>
+        <span class="c1"># parameters</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+        <span class="c1"># Calling the step function on an Optimizer makes an update to its</span>
+        <span class="c1"># parameters</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+            <span class="n">loss_val</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">loss_val</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="n">losses_tr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">losses_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_val</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span>
+
+<span class="n">model</span><span class="p">,</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="n">losses_val</span> <span class="o">=</span> <span class="n">two_layer_regression_nn_optim_train</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_iris_tr</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y_iris_tr</span><span class="p">,</span> <span class="n">X_val</span><span class="o">=</span><span class="n">X_iris_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_iris_val</span><span class="p">,</span>
+                                                                 <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">nite</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_tr</span><span class="p">)),</span> <span class="n">losses_tr</span><span class="p">,</span> <span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">92.271240234375</span> <span class="mf">83.96189880371094</span>
+<span class="mi">10</span> <span class="mf">64.25907135009766</span> <span class="mf">59.872535705566406</span>
+<span class="mi">20</span> <span class="mf">47.6252555847168</span> <span class="mf">50.228126525878906</span>
+<span class="mi">30</span> <span class="mf">40.33802032470703</span> <span class="mf">50.60377502441406</span>
+<span class="mi">40</span> <span class="mf">38.19448471069336</span> <span class="mf">54.03163528442383</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f95ff200080</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f95ff2001d0</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_17_2.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_17_2.png" />
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Backpropagation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#course-outline">Course outline:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backpropagation-and-chaine-rule">Backpropagation and chaine rule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-with-numpy-and-pytorch">Lab: with numpy and pytorch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../auto_gallery/ml_lab_face_recognition.html" title="previous chapter">Lab: Faces recognition using various learning models</a></li>
+      <li>Next: <a href="dl_mlp_mnist_pytorch.html" title="next chapter">Multilayer Perceptron (MLP)</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/deep_learning/dl_backprop_numpy-pytorch-sklearn.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

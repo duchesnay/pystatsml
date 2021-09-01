@@ -1,0 +1,613 @@
+Scikit-learn processing pipelines
+=================================
+
+## Data preprocessing
+
+Sources:
+http://www.faqs.org/faqs/ai-faq/neural-nets/part2/section-16.html
+
+### Encoding categorical features
+
+.. code:: ipython3
+
+    %matplotlib inline
+    import warnings
+    warnings.filterwarnings('once')
+
+.. code:: ipython3
+
+    import pandas as pd
+    
+    print(pd.get_dummies(['A', 'B', 'C', 'A', 'B', 'D']))
+
+
+.. parsed-literal::
+
+       A  B  C  D
+    0  1  0  0  0
+    1  0  1  0  0
+    2  0  0  1  0
+    3  1  0  0  0
+    4  0  1  0  0
+    5  0  0  0  1
+
+
+.. parsed-literal::
+
+    /home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: `should_run_async` will not call `transform_cell` automatically in the future. Please pass the result to `transformed_cell` argument and any exception that happen during thetransform in `preprocessing_exc_tuple` in IPython 7.17 and above.
+      and should_run_async(code)
+    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
+      return f(*args, **kwds)
+
+
+Standardization of input features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sources:
+
+-  http://scikit-learn.org/stable/modules/preprocessing.html
+
+-  http://stats.stackexchange.com/questions/111017/question-about-standardizing-in-ridge-regression
+
+“Standardizing” or mean removal and variance scaling, is not systematic.
+For example multiple linear regression does not require it. However it
+is a good practice in many cases:
+
+-  The **variable combination method is sensitive scales**. If the input
+   variables are combined via a distance function (such as Euclidean
+   distance) in an RBF network, standardizing inputs can be crucial. The
+   contribution of an input will depend heavily on its variability
+   relative to other inputs. If one input has a range of 0 to 1, while
+   another input has a range of 0 to 1,000,000, then the contribution of
+   the first input to the distance will be swamped by the second input.
+
+-  **Regularized learning algorithm**. Lasso or Ridge regression
+   regularize the linear regression by imposing a penalty on the size of
+   coefficients. Thus the coefficients are shrunk toward zero and toward
+   each other. But when this happens and if the independent variables
+   does not have the same scale, the shrinking is not fair. Two
+   independent variables with different scales will have different
+   contributions to the penalized terms, because the penalized term is
+   norm (a sum of squares, or absolute values) of all the coefficients.
+   To avoid such kind of problems, very often, the independent variables
+   are centered and scaled in order to have variance 1.
+
+.. code:: ipython3
+
+    import numpy as np
+    from sklearn import linear_model as lm
+    from sklearn import preprocessing
+    from sklearn.model_selection import cross_val_score
+    
+    # dataset
+    np.random.seed(42)
+    n_samples, n_features, n_features_info = 100, 5, 3
+    X = np.random.randn(n_samples, n_features)
+    beta = np.zeros(n_features)
+    beta[:n_features_info] = 1
+    Xbeta = np.dot(X, beta)
+    eps = np.random.randn(n_samples)
+    y = Xbeta + eps
+    
+    X[:, 0] *= 1e6  # inflate the first feature
+    X[:, 1] += 1e6  # bias the second feature
+    y = 100 * y + 1000  # bias and scale the output
+    
+    print("== Linear regression: scaling is not required ==")
+    model = lm.LinearRegression()
+    model.fit(X, y)
+    print("Coefficients:", model.coef_, model.intercept_)
+    print("Test R2:%.2f" % cross_val_score(estimator=model, X=X, y=y, cv=5).mean())
+    
+    print("== Lasso without scaling ==")
+    model = lm.LassoCV(cv=3)
+    model.fit(X, y)
+    print("Coefficients:", model.coef_, model.intercept_)
+    print("Test R2:%.2f" % cross_val_score(estimator=model, X=X, y=y, cv=5).mean())
+    
+    print("== Lasso with scaling ==")
+    model = lm.LassoCV(cv=3)
+    scaler = preprocessing.StandardScaler()
+    Xc = scaler.fit(X).transform(X)
+    model.fit(Xc, y)
+    print("Coefficients:", model.coef_, model.intercept_)
+    print("Test R2:%.2f" % cross_val_score(estimator=model, X=Xc, y=y, cv=5).mean())
+
+
+
+.. parsed-literal::
+
+    /home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: `should_run_async` will not call `transform_cell` automatically in the future. Please pass the result to `transformed_cell` argument and any exception that happen during thetransform in `preprocessing_exc_tuple` in IPython 7.17 and above.
+      and should_run_async(code)
+    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
+      return f(*args, **kwds)
+    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
+      return f(*args, **kwds)
+    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
+      return f(*args, **kwds)
+    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
+      return f(*args, **kwds)
+
+
+.. parsed-literal::
+
+    == Linear regression: scaling is not required ==
+    Coefficients: [ 1.05421281e-04  1.13551103e+02  9.78705905e+01  1.60747221e+01
+     -7.23145329e-01] -113550117.82706565
+    Test R2:0.77
+    == Lasso without scaling ==
+    Coefficients: [8.61125764e-05 0.00000000e+00 0.00000000e+00 0.00000000e+00
+     0.00000000e+00] 986.1560890695405
+    Test R2:0.09
+    == Lasso with scaling ==
+    Coefficients: [ 87.46834069 105.13635448  91.22718731   9.22953206  -0.        ] 982.3027936466902
+    Test R2:0.77
+
+
+Scikit-learn pipelines
+----------------------
+
+Sources: http://scikit-learn.org/stable/modules/pipeline.html
+
+Note that statistics such as the mean and standard deviation are
+computed from the training data, not from the validation or test data.
+The validation and test data must be standardized using the statistics
+computed from the training data. Thus Standardization should be merged
+together with the learner using a ``Pipeline``.
+
+Pipeline chain multiple estimators into one. All estimators in a
+pipeline, except the last one, must have the ``fit()`` and
+``transform()`` methods. The last must implement the ``fit()`` and
+``predict()`` methods.
+
+Standardization of input features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython3
+
+    from sklearn import preprocessing
+    import sklearn.linear_model as lm
+    
+    from sklearn.pipeline import make_pipeline
+    model = make_pipeline(preprocessing.StandardScaler(), lm.LassoCV(cv=3))
+    
+    # or
+    from sklearn.pipeline import Pipeline
+    model = Pipeline([('standardscaler', preprocessing.StandardScaler()), 
+                      ('lassocv', lm.LassoCV(cv=3))])
+    
+    scores = cross_val_score(estimator=model, X=X, y=y, cv=5)
+    print("Test  r2:%.2f" % scores.mean())
+
+
+.. parsed-literal::
+
+    Test  r2:0.77
+
+
+.. parsed-literal::
+
+    /home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: `should_run_async` will not call `transform_cell` automatically in the future. Please pass the result to `transformed_cell` argument and any exception that happen during thetransform in `preprocessing_exc_tuple` in IPython 7.17 and above.
+      and should_run_async(code)
+
+
+Features selection
+~~~~~~~~~~~~~~~~~~
+
+An alternative to features selection based on :math:`\ell_1` penalty is
+to use a preprocessing stp of univariate feature selection.
+
+Such methods, called **filters**, are a simple, widely used method for
+supervised dimension reduction [26]. Filters are univariate methods that
+rank features according to their ability to predict the target,
+independently of other features. This ranking may be based on parametric
+(e.g., t-tests) or nonparametric (e.g., Wilcoxon tests) statistical
+methods. Filters are computationally efficient and more robust to
+overfitting than multivariate methods. However, they are blind to
+feature interrelations, a problem that can be addressed only with
+multivariate selection such as learning with :math:`\ell_1` penalty.
+
+.. code:: ipython3
+
+    import numpy as np
+    import sklearn.linear_model as lm
+    from sklearn import preprocessing
+    from sklearn.model_selection import cross_val_score
+    from sklearn.feature_selection import SelectKBest
+    from sklearn.feature_selection import f_regression
+    from sklearn.pipeline import Pipeline
+    
+    np.random.seed(42)
+    n_samples, n_features, n_features_info = 100, 100, 3
+    X = np.random.randn(n_samples, n_features)
+    beta = np.zeros(n_features)
+    beta[:n_features_info] = 1
+    Xbeta = np.dot(X, beta)
+    eps = np.random.randn(n_samples)
+    y = Xbeta + eps
+    
+    X[:, 0] *= 1e6  # inflate the first feature
+    X[:, 1] += 1e6  # bias the second feature
+    y = 100 * y + 1000  # bias and scale the output
+    
+    model = Pipeline([('anova', SelectKBest(f_regression, k=3)),
+                      ('lm', lm.LinearRegression())])
+    scores = cross_val_score(estimator=model, X=X, y=y, cv=5)
+    print("Anova filter + linear regression, test  r2:%.2f" % scores.mean())
+    
+    from sklearn.pipeline import Pipeline
+    model = Pipeline([('standardscaler', preprocessing.StandardScaler()),
+                      ('lassocv', lm.LassoCV(cv=3))])
+    scores = cross_val_score(estimator=model, X=X, y=y, cv=5)
+    print("Standardize + Lasso, test  r2:%.2f" % scores.mean())
+
+
+.. parsed-literal::
+
+    Anova filter + linear regression, test  r2:0.72
+
+
+.. parsed-literal::
+
+    /home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: `should_run_async` will not call `transform_cell` automatically in the future. Please pass the result to `transformed_cell` argument and any exception that happen during thetransform in `preprocessing_exc_tuple` in IPython 7.17 and above.
+      and should_run_async(code)
+    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
+      return f(*args, **kwds)
+    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
+      return f(*args, **kwds)
+
+
+.. parsed-literal::
+
+    Standardize + Lasso, test  r2:0.66
+
+
+Regression pipelines with CV for parameters selection
+-----------------------------------------------------
+
+Now we combine standardization of input features, feature selection and
+learner with hyper-parameter within a pipeline which is warped in a grid
+search procedure to select the best hyperparameters based on a
+(inner)CV. The overall is plugged in an outer CV.
+
+.. code:: ipython3
+
+    import numpy as np
+    from sklearn import datasets
+    import sklearn.linear_model as lm
+    from sklearn import preprocessing
+    from sklearn.model_selection import cross_val_score
+    from sklearn.feature_selection import SelectKBest
+    from sklearn.feature_selection import f_regression
+    from sklearn.pipeline import Pipeline
+    from sklearn.model_selection import GridSearchCV
+    import sklearn.metrics as metrics
+    
+    # Datasets
+    n_samples, n_features, noise_sd = 100, 100, 20
+    X, y, coef = datasets.make_regression(n_samples=n_samples, n_features=n_features, 
+                                          noise=noise_sd, n_informative=5,
+                                          random_state=42, coef=True)
+     
+    # Use this to tune the noise parameter such that snr < 5
+    print("SNR:", np.std(np.dot(X, coef)) / noise_sd)
+    
+    print("=============================")
+    print("== Basic linear regression ==")
+    print("=============================")
+    
+    scores = cross_val_score(estimator=lm.LinearRegression(), X=X, y=y, cv=5)
+    print("Test  r2:%.2f" % scores.mean())
+    
+    print("==============================================")
+    print("== Scaler + anova filter + ridge regression ==")
+    print("==============================================")
+    
+    anova_ridge = Pipeline([
+        ('standardscaler', preprocessing.StandardScaler()),
+        ('selectkbest', SelectKBest(f_regression)),
+        ('ridge', lm.Ridge())
+    ])
+    param_grid = {'selectkbest__k':np.arange(10, 110, 10), 
+                  'ridge__alpha':[.001, .01, .1, 1, 10, 100] }
+    
+    # Expect execution in ipython, for python remove the %time
+    print("----------------------------")
+    print("-- Parallelize inner loop --")
+    print("----------------------------")
+    
+    anova_ridge_cv = GridSearchCV(anova_ridge, cv=5,  param_grid=param_grid, n_jobs=-1)
+    %time scores = cross_val_score(estimator=anova_ridge_cv, X=X, y=y, cv=5)
+    print("Test r2:%.2f" % scores.mean())
+    
+    print("----------------------------")
+    print("-- Parallelize outer loop --")
+    print("----------------------------")
+    
+    anova_ridge_cv = GridSearchCV(anova_ridge, cv=5,  param_grid=param_grid)
+    %time scores = cross_val_score(estimator=anova_ridge_cv, X=X, y=y, cv=5, n_jobs=-1)
+    print("Test r2:%.2f" % scores.mean())
+    
+    
+    print("=====================================")
+    print("== Scaler + Elastic-net regression ==")
+    print("=====================================")
+    
+    alphas = [.0001, .001, .01, .1, 1, 10, 100, 1000] 
+    l1_ratio = [.1, .5, .9]
+    
+    print("----------------------------")
+    print("-- Parallelize outer loop --")
+    print("----------------------------")
+    
+    enet = Pipeline([
+        ('standardscaler', preprocessing.StandardScaler()),
+        ('enet', lm.ElasticNet(max_iter=10000)),
+    ])
+    param_grid = {'enet__alpha':alphas ,
+                  'enet__l1_ratio':l1_ratio}
+    enet_cv = GridSearchCV(enet, cv=5,  param_grid=param_grid)
+    %time scores = cross_val_score(estimator=enet_cv, X=X, y=y, cv=5, n_jobs=-1)
+    print("Test r2:%.2f" % scores.mean())
+    
+    print("-----------------------------------------------")
+    print("-- Parallelize outer loop + built-in CV      --")
+    print("-- Remark: scaler is only done on outer loop --")
+    print("-----------------------------------------------")
+    
+    enet_cv = Pipeline([
+        ('standardscaler', preprocessing.StandardScaler()),
+        ('enet', lm.ElasticNetCV(max_iter=10000, l1_ratio=l1_ratio, alphas=alphas, cv=3)),
+    ])
+    
+    %time scores = cross_val_score(estimator=enet_cv, X=X, y=y, cv=5)
+    print("Test r2:%.2f" % scores.mean())
+
+
+.. parsed-literal::
+
+    SNR: 3.2866820167645514
+    =============================
+    == Basic linear regression ==
+    =============================
+    Test  r2:0.30
+    ==============================================
+    == Scaler + anova filter + ridge regression ==
+    ==============================================
+    ----------------------------
+    -- Parallelize inner loop --
+    ----------------------------
+
+
+.. parsed-literal::
+
+    /home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: `should_run_async` will not call `transform_cell` automatically in the future. Please pass the result to `transformed_cell` argument and any exception that happen during thetransform in `preprocessing_exc_tuple` in IPython 7.17 and above.
+      and should_run_async(code)
+    /home/ed203246/anaconda3/lib/python3.7/importlib/_bootstrap.py:219: RuntimeWarning: numpy.ufunc size changed, may indicate binary incompatibility. Expected 192 from C header, got 216 from PyObject
+      return f(*args, **kwds)
+
+
+.. parsed-literal::
+
+    CPU times: user 1.98 s, sys: 113 ms, total: 2.1 s
+    Wall time: 2.89 s
+    Test r2:0.86
+    ----------------------------
+    -- Parallelize outer loop --
+    ----------------------------
+    CPU times: user 14.1 ms, sys: 92 µs, total: 14.2 ms
+    Wall time: 1.03 s
+    Test r2:0.86
+    =====================================
+    == Scaler + Elastic-net regression ==
+    =====================================
+    ----------------------------
+    -- Parallelize outer loop --
+    ----------------------------
+    CPU times: user 10.2 ms, sys: 103 µs, total: 10.3 ms
+    Wall time: 770 ms
+    Test r2:0.82
+    -----------------------------------------------
+    -- Parallelize outer loop + built-in CV      --
+    -- Remark: scaler is only done on outer loop --
+    -----------------------------------------------
+    CPU times: user 192 ms, sys: 0 ns, total: 192 ms
+    Wall time: 192 ms
+    Test r2:0.82
+
+
+Classification pipelines with CV for parameters selection
+---------------------------------------------------------
+
+Now we combine standardization of input features, feature selection and
+learner with hyper-parameter within a pipeline which is warped in a grid
+search procedure to select the best hyperparameters based on a
+(inner)CV. The overall is plugged in an outer CV.
+
+.. code:: ipython3
+
+    import numpy as np
+    from sklearn import datasets
+    import sklearn.linear_model as lm
+    from sklearn import preprocessing
+    from sklearn.model_selection import cross_val_score
+    from sklearn.feature_selection import SelectKBest
+    from sklearn.feature_selection import f_classif
+    from sklearn.pipeline import Pipeline
+    from sklearn.model_selection import GridSearchCV
+    import sklearn.metrics as metrics
+        
+    # Datasets
+    n_samples, n_features, noise_sd = 100, 100, 20
+    X, y = datasets.make_classification(n_samples=n_samples, n_features=n_features,
+                             n_informative=5, random_state=42)
+    
+    
+    def balanced_acc(estimator, X, y, **kwargs):
+        '''
+        Balanced acuracy scorer
+        '''
+        return metrics.recall_score(y, estimator.predict(X), average=None).mean()
+    
+    print("=============================")
+    print("== Basic logistic regression ==")
+    print("=============================")
+    
+    scores = cross_val_score(estimator=lm.LogisticRegression(C=1e8, 
+                                       class_weight='balanced',
+                                       solver='lbfgs'),
+                             X=X, y=y, cv=5, scoring=balanced_acc)
+    print("Test  bACC:%.2f" % scores.mean())
+    
+    print("=======================================================")
+    print("== Scaler + anova filter + ridge logistic regression ==")
+    print("=======================================================")
+    
+    anova_ridge = Pipeline([
+        ('standardscaler', preprocessing.StandardScaler()),
+        ('selectkbest', SelectKBest(f_classif)),
+        ('ridge', lm.LogisticRegression(penalty='l2', 
+                                        class_weight='balanced',
+                                       solver='lbfgs'))
+    ])
+    param_grid = {'selectkbest__k':np.arange(10, 110, 10), 
+                  'ridge__C':[.0001, .001, .01, .1, 1, 10, 100, 1000, 10000]}
+    
+    
+    # Expect execution in ipython, for python remove the %time
+    print("----------------------------")
+    print("-- Parallelize inner loop --")
+    print("----------------------------")
+    
+    anova_ridge_cv = GridSearchCV(anova_ridge, cv=5,  param_grid=param_grid, 
+                                  scoring=balanced_acc, n_jobs=-1)
+    %time scores = cross_val_score(estimator=anova_ridge_cv, X=X, y=y, cv=5,\
+                                   scoring=balanced_acc)
+    print("Test bACC:%.2f" % scores.mean())
+    
+    print("----------------------------")
+    print("-- Parallelize outer loop --")
+    print("----------------------------")
+    
+    anova_ridge_cv = GridSearchCV(anova_ridge, cv=5,  param_grid=param_grid,
+                                  scoring=balanced_acc)
+    %time scores = cross_val_score(estimator=anova_ridge_cv, X=X, y=y, cv=5,\
+                                   scoring=balanced_acc, n_jobs=-1)
+    print("Test bACC:%.2f" % scores.mean())
+    
+    
+    print("========================================")
+    print("== Scaler + lasso logistic regression ==")
+    print("========================================")
+    
+    Cs = np.array([.0001, .001, .01, .1, 1, 10, 100, 1000, 10000])
+    alphas = 1 / Cs
+    l1_ratio = [.1, .5, .9]
+    
+    print("----------------------------")
+    print("-- Parallelize outer loop --")
+    print("----------------------------")
+    
+    lasso = Pipeline([
+        ('standardscaler', preprocessing.StandardScaler()),
+        ('lasso', lm.LogisticRegression(penalty='l1', 
+                                        class_weight='balanced')),
+    ])
+    param_grid = {'lasso__C':Cs}
+    enet_cv = GridSearchCV(lasso, cv=5,  param_grid=param_grid, scoring=balanced_acc)
+    %time scores = cross_val_score(estimator=enet_cv, X=X, y=y, cv=5,\
+                                   scoring=balanced_acc, n_jobs=-1)
+    print("Test bACC:%.2f" % scores.mean())
+    
+    
+    print("-----------------------------------------------")
+    print("-- Parallelize outer loop + built-in CV      --")
+    print("-- Remark: scaler is only done on outer loop --")
+    print("-----------------------------------------------")
+    
+    lasso_cv = Pipeline([
+        ('standardscaler', preprocessing.StandardScaler()),
+        ('lasso', lm.LogisticRegressionCV(Cs=Cs, scoring=balanced_acc)),
+    ])
+    
+    %time scores = cross_val_score(estimator=lasso_cv, X=X, y=y, cv=5)
+    print("Test bACC:%.2f" % scores.mean())
+    
+    
+    print("=============================================")
+    print("== Scaler + Elasticnet logistic regression ==")
+    print("=============================================")
+    
+    print("----------------------------")
+    print("-- Parallelize outer loop --")
+    print("----------------------------")
+    
+    enet = Pipeline([
+        ('standardscaler', preprocessing.StandardScaler()),
+        ('enet', lm.SGDClassifier(loss="log", penalty="elasticnet",
+                                alpha=0.0001, l1_ratio=0.15, class_weight='balanced')),
+    ])
+    
+    param_grid = {'enet__alpha':alphas,
+                  'enet__l1_ratio':l1_ratio}
+    
+    enet_cv = GridSearchCV(enet, cv=5,  param_grid=param_grid, scoring=balanced_acc)
+    %time scores = cross_val_score(estimator=enet_cv, X=X, y=y, cv=5,\
+        scoring=balanced_acc, n_jobs=-1)
+    print("Test bACC:%.2f" % scores.mean())
+
+
+.. parsed-literal::
+
+    /home/ed203246/anaconda3/lib/python3.7/site-packages/ipykernel/ipkernel.py:287: DeprecationWarning: `should_run_async` will not call `transform_cell` automatically in the future. Please pass the result to `transformed_cell` argument and any exception that happen during thetransform in `preprocessing_exc_tuple` in IPython 7.17 and above.
+      and should_run_async(code)
+
+
+.. parsed-literal::
+
+    =============================
+    == Basic logistic regression ==
+    =============================
+    Test  bACC:0.76
+    =======================================================
+    == Scaler + anova filter + ridge logistic regression ==
+    =======================================================
+    ----------------------------
+    -- Parallelize inner loop --
+    ----------------------------
+    CPU times: user 4.05 s, sys: 91.7 ms, total: 4.14 s
+    Wall time: 4.02 s
+    Test bACC:0.78
+    ----------------------------
+    -- Parallelize outer loop --
+    ----------------------------
+    CPU times: user 16.5 ms, sys: 0 ns, total: 16.5 ms
+    Wall time: 3.44 s
+    Test bACC:0.78
+    ========================================
+    == Scaler + lasso logistic regression ==
+    ========================================
+    ----------------------------
+    -- Parallelize outer loop --
+    ----------------------------
+    CPU times: user 11.3 ms, sys: 0 ns, total: 11.3 ms
+    Wall time: 92.4 ms
+    Test bACC:nan
+    -----------------------------------------------
+    -- Parallelize outer loop + built-in CV      --
+    -- Remark: scaler is only done on outer loop --
+    -----------------------------------------------
+    CPU times: user 668 ms, sys: 0 ns, total: 668 ms
+    Wall time: 666 ms
+    Test bACC:0.80
+    =============================================
+    == Scaler + Elasticnet logistic regression ==
+    =============================================
+    ----------------------------
+    -- Parallelize outer loop --
+    ----------------------------
+    CPU times: user 10.5 ms, sys: 3.5 ms, total: 14 ms
+    Wall time: 528 ms
+    Test bACC:0.74
+
+

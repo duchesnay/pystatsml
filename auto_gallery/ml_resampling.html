@@ -1,0 +1,873 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Resampling methods &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Ensemble learning: bagging, boosting and stacking" href="../machine_learning/ensemble_learning.html" />
+    <link rel="prev" title="Non-linear models" href="ml_supervized_nonlinear.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-gallery-ml-resampling-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="resampling-methods">
+<span id="sphx-glr-auto-gallery-ml-resampling-py"></span><h1>Resampling methods<a class="headerlink" href="#resampling-methods" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">import</span> <span class="nn">sklearn.linear_model</span> <span class="k">as</span> <span class="nn">lm</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">PredefinedSplit</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">GridSearchCV</span>
+
+<span class="kn">import</span> <span class="nn">sklearn.metrics</span> <span class="k">as</span> <span class="nn">metrics</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                <span class="n">n_informative</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="train-validation-and-test-sets">
+<h2>Train, validation and test sets<a class="headerlink" href="#train-validation-and-test-sets" title="Permalink to this headline">¶</a></h2>
+<p>Machine learning algorithms overfit taining data. Predictive performances <strong>MUST</strong> be evaluated on independant hold-out dataset.</p>
+<figure class="align-default">
+<img alt="Train, validation and test sets." src="../_images/train_val_test_cv.png" />
+</figure>
+<ol class="arabic simple">
+<li><p><strong>Training dataset</strong>: Dataset used to fit the model
+(set the model parameters like weights). The <em>training error</em> can be
+easily calculated by applying the statistical learning method to the
+observations used in its training. But because of overfitting, the
+<strong>training error rate can dramatically underestimate the error</strong> that
+would be obtained on new samples.</p></li>
+<li><p><strong>Validation dataset</strong>: Dataset used to provide an unbiased evaluation
+of a model fit on the training dataset while
+<strong>tuning model hyperparameters</strong>, ie. <strong>model selection</strong>.
+The validation error is the average error that results from a learning
+method to predict the response on a new (validation) samples that is,
+on samples that were not used in training the method.</p></li>
+<li><p><strong>Test dataset</strong>: Dataset used to provide an unbiased
+<strong>evaluation of a final model</strong> fitted on the training dataset.
+It is only used once a model is completely trained (using the train and
+validation sets).</p></li>
+</ol>
+<p>What is the Difference Between Test and Validation Datasets? by
+[Jason Brownlee](<a class="reference external" href="https://machinelearningmastery.com/difference-test-validation-datasets/">https://machinelearningmastery.com/difference-test-validation-datasets/</a>)</p>
+<p>Thus the original dataset is generally split in a training, validation and a
+test data sets. Large training+validation set (80%) small test set (20%) might
+provide a poor estimation of the predictive performances (same argument
+stands for train vs validation samples). On the contrary, large test set and
+small training set might produce a poorly estimated learner.
+This is why, on situation where we cannot afford such split, cross-validation
+scheme can be use for model selection or/and for model evaluation.</p>
+<p>If sample size is limited, train/validation/test split may not be possible.
+<strong>Cross Validation (CV)</strong> (see below) can be used to replace:</p>
+<ul class="simple">
+<li><p>Outer (train/test) split of model evaluation.</p></li>
+<li><p>Inner train/validation split of model selection (more frequent situation).</p></li>
+<li><p>Inner and outer splits, leading to two nested CV.</p></li>
+</ul>
+</section>
+<section id="split-dataset-in-train-test-sets-for-model-evaluation">
+<h2>Split dataset in train/test sets for model evaluation<a class="headerlink" href="#split-dataset-in-train-test-sets-for-model-evaluation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span>\
+    <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">mod</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test R2: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_test</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test R2: 0.74
+</pre></div>
+</div>
+</section>
+<section id="train-validation-test-splits-model-selection-and-model-evaluation">
+<h2>Train/validation/test splits: model selection and model evaluation<a class="headerlink" href="#train-validation-test-splits-model-selection-and-model-evaluation" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>Grid search procedure</strong> (<cite>GridSearchCV</cite>) performs a
+model selection of the best <strong>hyper-parameters</strong> <span class="math notranslate nohighlight">\(\alpha\)</span> over a grid of possible values.
+Train set is  “splitted (inner split) into train/validation sets.</p>
+<p><strong>Model selection with grid search procedure:</strong></p>
+<ol class="arabic simple">
+<li><p>Fit the learner (ie. estimate <strong>parameters</strong> <span class="math notranslate nohighlight">\(\mathbf{\Omega}_k\)</span>)
+on training set: <span class="math notranslate nohighlight">\(\mathbf{X}_{train}, \mathbf{y}_{train} \rightarrow f_{\alpha_k, \mathbf{\Omega}_k}(.)\)</span></p></li>
+<li><p>Evaluate the model on the validation set and keep the hyper-parameter(s) that
+minimises the error measure <span class="math notranslate nohighlight">\(\alpha_* = \arg \min L(f_{\alpha_k, \mathbf{\Omega}_k}(\mathbf{X}_{val}), \mathbf{y}_{val})\)</span></p></li>
+<li><p>Refit the learner on all training + validation data,
+<span class="math notranslate nohighlight">\(\mathbf{X}_{train \cup val}, \mathbf{y}_{train \cup val}\)</span>,
+using the best hyper parameters (<span class="math notranslate nohighlight">\(\alpha_*\)</span>): <span class="math notranslate nohighlight">\(\rightarrow f_{\alpha_*, \mathbf{\Omega}_*}(.)\)</span></p></li>
+</ol>
+<p><strong>Model evaluation:</strong> on the test set:
+<span class="math notranslate nohighlight">\(L(f_{\alpha_*, \mathbf{\Omega}_*}(\mathbf{X}_{test}), \mathbf{y}_{test})\)</span></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_idx</span><span class="p">,</span> <span class="n">validation_idx</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                                             <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                             <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">split_inner</span> <span class="o">=</span> <span class="n">PredefinedSplit</span><span class="p">(</span><span class="n">test_fold</span><span class="o">=</span><span class="n">validation_idx</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train set size: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">X_train</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation set size: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">X_train</span><span class="p">[</span><span class="n">validation_idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test set size: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">lm_cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">lm</span><span class="o">.</span><span class="n">Ridge</span><span class="p">(),</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">10.</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)},</span>
+                     <span class="n">cv</span><span class="o">=</span><span class="n">split_inner</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Fit, indluding model selection with internal Train/validation split</span>
+<span class="n">lm_cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Predict</span>
+<span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">lm_cv</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test R2: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_test</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Train set size: 56
+Validation set size: 19
+Test set size: 25
+Test R2: 0.80
+</pre></div>
+</div>
+</section>
+<section id="cross-validation-cv">
+<h2>Cross-Validation (CV)<a class="headerlink" href="#cross-validation-cv" title="Permalink to this headline">¶</a></h2>
+<p>If sample size is limited, train/validation/test split may not be possible.
+<strong>Cross Validation (CV)</strong> can be used to replace train/validation split
+and/or train+validation / test split.</p>
+<p>Cross-Validation scheme randomly divides the set of observations into
+<em>K</em> groups, or <strong>folds</strong>, of approximately equal size.
+The first fold is treated as a validation set, and the method
+<span class="math notranslate nohighlight">\(f()\)</span> is fitted on the remaining union of <em>K - 1</em> folds:
+(<span class="math notranslate nohighlight">\(f(\boldsymbol{X}_{-K}, \boldsymbol{y}_{-K})\)</span>).
+The measure of performance (the score function <span class="math notranslate nohighlight">\(\mathcal{S}\)</span>),
+either a error measure or an correct prediction measure is an average
+of a loss error or correct prediction measure, noted <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>,
+between a true target value and the predicted target value.
+The score function is evaluated of the on the observations in the held-out
+fold. For each sample <em>i</em> we consider the model estimated
+<span class="math notranslate nohighlight">\(f(\boldsymbol{X}_{-k(i)}, \boldsymbol{y}_{-k(i)}\)</span> on the data set
+without the group <em>k</em> that contains <em>i</em> noted <em>-k(i)</em>.
+This procedure is repeated <em>K</em> times; each time, a different group of
+observations is treated as a test set.
+Then we compare the predicted value
+(<span class="math notranslate nohighlight">\(f_{-k(i)}(\boldsymbol{x}_i) = \hat{y_i})\)</span>
+with true value <span class="math notranslate nohighlight">\(y_i\)</span> using a Error or Loss function
+<span class="math notranslate nohighlight">\(\mathcal{L}(y, \hat{y})\)</span>.</p>
+<p>For 10-fold we can either average over 10 values (Macro measure) or
+concatenate the 10 experiments and compute the micro measures.</p>
+<p>Two strategies [micro vs macro estimates](<a class="reference external" href="https://stats.stackexchange.com/questions/34611/meanscores-vs-scoreconcatenation-in-cross-validation">https://stats.stackexchange.com/questions/34611/meanscores-vs-scoreconcatenation-in-cross-validation</a>):</p>
+<ul class="simple">
+<li><p><strong>Micro measure: average(individual scores)</strong>: compute a score
+<span class="math notranslate nohighlight">\(\mathcal{S}\)</span> for each sample and average over all samples.
+It is simillar to <strong>average score(concatenation)</strong>: an averaged score
+computed over all concatenated samples.</p></li>
+</ul>
+<ul class="simple">
+<li><p><strong>Macro measure mean(CV scores)</strong> (the most commonly used method):
+compute a score <span class="math notranslate nohighlight">\(\mathcal{S}\)</span> on each each fold <em>k</em> and average
+accross folds:</p></li>
+</ul>
+<p>These two measures (an average of average vs. a global average) are generaly
+similar. They may differ slightly is folds are of different sizes.
+This validation scheme is known as the <strong>K-Fold CV</strong>.
+Typical choices of <em>K</em> are 5 or 10, [Kohavi 1995].
+The extreme case where <em>K = N</em> is known as <strong>leave-one-out cross-validation,
+LOO-CV</strong>.</p>
+<section id="cv-for-regression">
+<h3>CV for regression<a class="headerlink" href="#cv-for-regression" title="Permalink to this headline">¶</a></h3>
+<p>Usually the error function <span class="math notranslate nohighlight">\(\mathcal{L}()\)</span> is the r-squared score.
+However other function (MAE, MSE) can be used.</p>
+<p><strong>CV with explicit loop:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">cv</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">r2_train</span><span class="p">,</span> <span class="n">r2_test</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">train</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
+    <span class="n">r2_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">train</span><span class="p">],</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">train</span><span class="p">,</span> <span class="p">:])))</span>
+    <span class="n">r2_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">test</span><span class="p">,</span> <span class="p">:])))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train r2:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">r2_train</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test  r2:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">r2_test</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Train r2:0.99
+Test  r2:0.67
+</pre></div>
+</div>
+<p>Scikit-learn provides user-friendly function to perform CV:</p>
+<p><cite>cross_val_score()</cite>: single metric</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test  r2:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="n">cv</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test  r2:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test  r2:0.73
+Test  r2:0.67
+</pre></div>
+</div>
+<p><cite>cross_validate()</cite>: multi metric, + time, etc.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_validate</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">mod</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+                        <span class="n">scoring</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r2&#39;</span><span class="p">,</span> <span class="s1">&#39;neg_mean_absolute_error&#39;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test R2:</span><span class="si">%.2f</span><span class="s2">; MAE:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;test_r2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                                  <span class="o">-</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;test_neg_mean_absolute_error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test R2:0.67; MAE:55.27
+</pre></div>
+</div>
+</section>
+<section id="cv-for-classification-stratifiy-for-the-target-label">
+<h3>CV for classification: stratifiy for the target label<a class="headerlink" href="#cv-for-classification-stratifiy-for-the-target-label" title="Permalink to this headline">¶</a></h3>
+<p>With classification problems it is essential to sample folds where each
+set contains approximately the same percentage of samples of each target
+class as the complete set. This is called <strong>stratification</strong>.
+In this case, we will use <code class="docutils literal notranslate"><span class="pre">StratifiedKFold</span></code> with is a variation of
+k-fold which returns stratified folds.
+Usually the error function <span class="math notranslate nohighlight">\(L()\)</span> are, at least, the sensitivity
+and the specificity. However other function could be used.</p>
+<p><strong>CV with explicit loop</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">n_informative</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">mod</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">)</span>
+
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Lists to store scores by folds (for macro measure only)</span>
+<span class="n">bacc</span><span class="p">,</span> <span class="n">auc</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">train</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">train</span><span class="p">])</span>
+    <span class="n">bacc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">mod</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">test</span><span class="p">,</span> <span class="p">:])))</span>
+    <span class="n">auc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">mod</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">test</span><span class="p">,</span> <span class="p">:])))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test AUC:</span><span class="si">%.2f</span><span class="s2">; bACC:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">bacc</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">auc</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test AUC:0.86; bACC:0.80
+</pre></div>
+</div>
+<p><cite>cross_val_score()</cite>: single metric</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">mod</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test  ACC:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test  ACC:0.80
+</pre></div>
+</div>
+<p>Provide your own CV and score</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">balanced_acc</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Balanced acuracy scorer.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">metrics</span><span class="o">.</span><span class="n">recall_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">average</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">mod</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+                         <span class="n">scoring</span><span class="o">=</span><span class="n">balanced_acc</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test  bACC:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test  bACC:0.80
+</pre></div>
+</div>
+<p><cite>cross_validate()</cite>: multi metric, + time, etc.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_validate</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">mod</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+                        <span class="n">scoring</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;balanced_accuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;roc_auc&#39;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test AUC:</span><span class="si">%.2f</span><span class="s2">; bACC:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;test_roc_auc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                                    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;test_balanced_accuracy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test AUC:0.86; bACC:0.80
+</pre></div>
+</div>
+</section>
+</section>
+<section id="cross-validation-for-model-selection">
+<h2>Cross-validation for model selection<a class="headerlink" href="#cross-validation-for-model-selection" title="Permalink to this headline">¶</a></h2>
+<p>Combine CV and grid search:
+Re-split (inner split) train set into CV folds train/validation folds and
+build a <cite>GridSearchCV</cite> out of it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Outer split:</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span>\
+    <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">cv_inner</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Cross-validation for model selection</span>
+<span class="n">lm_cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">lm</span><span class="o">.</span><span class="n">LogisticRegression</span><span class="p">(),</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="mf">10.</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)},</span>
+                     <span class="n">cv</span><span class="o">=</span><span class="n">cv_inner</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Fit, indluding model selection with internal CV</span>
+<span class="n">lm_cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Predict</span>
+<span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">lm_cv</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test bACC: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">metrics</span><span class="o">.</span><span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_test</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test bACC: 0.63
+</pre></div>
+</div>
+</section>
+<section id="cross-validation-for-both-model-outer-evaluation-and-model-inner-selection">
+<h2>Cross-validation for both model (outer) evaluation and model (inner) selection<a class="headerlink" href="#cross-validation-for-both-model-outer-evaluation-and-model-inner-selection" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cv_outer</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">cv_inner</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Cross-validation for model (inner) selection</span>
+<span class="n">lm_cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">lm</span><span class="o">.</span><span class="n">Ridge</span><span class="p">(),</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">10.</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)},</span>
+                     <span class="n">cv</span><span class="o">=</span><span class="n">cv_inner</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Cross-validation for model (outer) evaluation</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">mod</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv_outer</span><span class="p">,</span>
+                        <span class="n">scoring</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;balanced_accuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;roc_auc&#39;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test AUC:</span><span class="si">%.2f</span><span class="s2">; bACC:</span><span class="si">%.2f</span><span class="s2">, Time: </span><span class="si">%.2f</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">&#39;test_roc_auc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                                        <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;test_balanced_accuracy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+                                        <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;fit_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Test AUC:0.85; bACC:0.74, Time: 0.03s
+</pre></div>
+</div>
+</section>
+<section id="models-with-built-in-cross-validation">
+<h2>Models with built-in cross-validation<a class="headerlink" href="#models-with-built-in-cross-validation" title="Permalink to this headline">¶</a></h2>
+<p>Let sklearn select the best parameters over a default grid.</p>
+<p><strong>Classification</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;== Logistic Ridge (L2 penalty) ==&quot;</span><span class="p">)</span>
+<span class="n">mod_cv</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LogisticRegressionCV</span><span class="p">(</span><span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;balanced_accuracy&#39;</span><span class="p">,</span>
+                                 <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">mod_cv</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test  ACC:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>== Logistic Ridge (L2 penalty) ==
+Test  ACC:0.78
+</pre></div>
+</div>
+<p><strong>Regression</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">coef</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                         <span class="n">n_informative</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">coef</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;== Ridge (L2 penalty) ==&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">RidgeCV</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test  r2:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;== Lasso (L1 penalty) ==&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LassoCV</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test  r2:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;== ElasticNet (L1 penalty) ==&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">ElasticNetCV</span><span class="p">(</span><span class="n">l1_ratio</span><span class="o">=</span><span class="p">[</span><span class="mf">.1</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.9</span><span class="p">],</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test  r2:</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>== Ridge (L2 penalty) ==
+Test  r2:0.16
+== Lasso (L1 penalty) ==
+Test  r2:0.74
+== ElasticNet (L1 penalty) ==
+Test  r2:0.58
+</pre></div>
+</div>
+</section>
+<section id="random-permutations-sample-the-null-distribution">
+<h2>Random Permutations: sample the null distribution<a class="headerlink" href="#random-permutations-sample-the-null-distribution" title="Permalink to this headline">¶</a></h2>
+<p>A permutation test is a type of non-parametric randomization test in which the null distribution of a test statistic is estimated by randomly permuting the observations.</p>
+<p>Permutation tests are highly attractive because they make no assumptions other than that the observations are independent and identically distributed under the null hypothesis.</p>
+<ol class="arabic simple">
+<li><p>Compute a observed statistic <span class="math notranslate nohighlight">\(t_{obs}\)</span> on the data.</p></li>
+<li><p>Use randomization to compute the distribution of <span class="math notranslate nohighlight">\(t\)</span> under the null hypothesis: Perform <span class="math notranslate nohighlight">\(N\)</span> random permutation of the data. For each sample of permuted data, <span class="math notranslate nohighlight">\(i\)</span> the data compute the statistic <span class="math notranslate nohighlight">\(t_i\)</span>. This procedure provides the distribution of <em>t</em> under the null hypothesis <span class="math notranslate nohighlight">\(H_0\)</span>: <span class="math notranslate nohighlight">\(P(t \vert H_0)\)</span></p></li>
+<li><p>Compute the p-value = <span class="math notranslate nohighlight">\(P(t&gt;t_{obs} | H_0) \left\vert\{t_i &gt; t_{obs}\}\right\vert\)</span>, where <span class="math notranslate nohighlight">\(t_i's include :math:\)</span>.</p></li>
+</ol>
+<p>Example Ridge regression</p>
+<p>Sample the distributions of r-squared and coefficients of ridge regression under the null hypothesis. Simulated dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Regression dataset where first 2 features are predictives</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">n_features_info</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_features</span><span class="p">)</span>
+<span class="n">beta</span><span class="p">[:</span><span class="n">n_features_info</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">Xbeta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">Xbeta</span> <span class="o">+</span> <span class="n">eps</span>
+</pre></div>
+</div>
+</section>
+<section id="random-permutations">
+<h2>Random permutations<a class="headerlink" href="#random-permutations" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit model on all data (!! risk of overfit)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">RidgeCV</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coefficients on all data:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
+
+<span class="c1"># Random permutation loop</span>
+<span class="n">nperm</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># !! Should be at least 1000 (to assess a p-value at 1%)</span>
+<span class="n">scores_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;r2&quot;</span><span class="p">]</span>
+<span class="n">scores_perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nperm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores_names</span><span class="p">)))</span>
+<span class="n">coefs_perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nperm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">scores_perm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="n">coefs_perm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+
+<span class="n">orig_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">perm_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nperm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">scores_perm</span><span class="p">[</span><span class="n">perm_i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">coefs_perm</span><span class="p">[</span><span class="n">perm_i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+
+<span class="c1"># One-tailed empirical p-value</span>
+<span class="n">pval_pred_perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scores_perm</span> <span class="o">&gt;=</span> <span class="n">scores_perm</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">scores_perm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">pval_coef_perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">coefs_perm</span> <span class="o">&gt;=</span> <span class="n">coefs_perm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">coefs_perm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R2 p-value: </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pval_pred_perm</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coeficients p-values:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">pval_coef_perm</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Coefficients on all data:
+[ 1.02  1.06  0.21 -0.02 -0.05]
+R2 p-value: 0.001
+Coeficients p-values: [0.   0.   0.1  0.57 0.63]
+</pre></div>
+</div>
+<p>Compute p-values corrected for multiple comparisons using FWER max-T
+(Westfall and Young, 1993) procedure.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pval_coef_perm_tmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">coefs_perm</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">coefs_perm</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+                                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">coefs_perm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span> <span class="o">/</span> <span class="n">coefs_perm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;P-values with FWER (Westfall and Young) correction&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pval_coef_perm_tmax</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>P-values with FWER (Westfall and Young) correction
+[0.   0.   0.41 0.98 0.99]
+</pre></div>
+</div>
+<p>Plot distribution of third coefficient under null-hypothesis
+Coeffitients 0 and 1 are significantly different from 0.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hist_pvalue</span><span class="p">(</span><span class="n">perms</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot statistic distribution as histogram.</span>
+
+<span class="sd">    Paramters</span>
+<span class="sd">    ---------</span>
+<span class="sd">    perms: 1d array, statistics under the null hypothesis.</span>
+<span class="sd">           perms[0] is the true statistic .</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Re-weight to obtain distribution</span>
+    <span class="n">pval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">perms</span> <span class="o">&gt;=</span> <span class="n">perms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">perms</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">perms</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">perms</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">perms</span><span class="p">[</span><span class="n">perms</span> <span class="o">&gt;=</span> <span class="n">perms</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">perms</span><span class="p">],</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;stepfilled&#39;</span><span class="p">,</span>
+             <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;p-val&lt;</span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pval</span><span class="p">,</span>
+             <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="n">weights</span><span class="p">[</span><span class="n">perms</span> <span class="o">&gt;=</span> <span class="n">perms</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">weights</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">perms</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="c1">#, label=&quot;observed statistic&quot;)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ax</span>
+
+<span class="n">n_coef</span> <span class="o">=</span> <span class="n">coefs_perm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_coef</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_coef</span><span class="p">):</span>
+    <span class="n">hist_pvalue</span><span class="p">(</span> <span class="n">coefs_perm</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Coefficient distribution under null hypothesis&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="ml resampling" class="sphx-glr-single-img" src="../_images/sphx_glr_ml_resampling_001.png" />
+<p>Exercise</p>
+<p>Given the logistic regression presented above and its validation given a 5 folds CV.</p>
+<ol class="arabic simple">
+<li><p>Compute the p-value associated with the prediction accuracy measured with 5CV using a permutation test.</p></li>
+<li><p>Compute the p-value associated with the prediction accuracy using a parametric test.</p></li>
+</ol>
+</section>
+<section id="bootstrapping">
+<h2>Bootstrapping<a class="headerlink" href="#bootstrapping" title="Permalink to this headline">¶</a></h2>
+<p>Bootstrapping is a statistical technique which consists in generating sample (called bootstrap samples) from an initial dataset of size <em>N</em> by randomly drawing with replacement <em>N</em> observations. It provides sub-samples with the same distribution than the original dataset. It aims to:</p>
+<ol class="arabic simple">
+<li><p>Assess the variability (standard error, [confidence intervals.](<a class="reference external" href="https://sebastianraschka.com/blog/2016/model-evaluation-selection-part2.html#the-bootstrap-method-and-empirical-confidence-intervals">https://sebastianraschka.com/blog/2016/model-evaluation-selection-part2.html#the-bootstrap-method-and-empirical-confidence-intervals</a>)) of performances scores or estimated parameters (see Efron et al. 1986).</p></li>
+<li><p>Regularize model by fitting several models on bootstrap samples and averaging their predictions (see Baging and random-forest).</p></li>
+</ol>
+<p>A great advantage of bootstrap is its simplicity. It is a straightforward way to derive estimates of standard errors and confidence intervals for complex estimators of complex parameters of the distribution, such as percentile points, proportions, odds ratio, and correlation coefficients.</p>
+<ol class="arabic simple">
+<li><p>Perform <span class="math notranslate nohighlight">\(B\)</span> sampling, with replacement, of the dataset.</p></li>
+<li><p>For each sample <span class="math notranslate nohighlight">\(i\)</span> fit the model and compute the scores.</p></li>
+<li><p>Assess standard errors and confidence intervals of scores using the scores obtained on the <span class="math notranslate nohighlight">\(B\)</span> resampled dataset. Or, average models predictions.</p></li>
+</ol>
+<p>References:</p>
+<p>[Efron B, Tibshirani R. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Stat Sci 1986;1:54–75](<a class="reference external" href="https://projecteuclid.org/download/pdf_1/euclid.ss/1177013815">https://projecteuclid.org/download/pdf_1/euclid.ss/1177013815</a>)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bootstrap loop</span>
+<span class="n">nboot</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># !! Should be at least 1000</span>
+<span class="n">scores_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;r2&quot;</span><span class="p">]</span>
+<span class="n">scores_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nboot</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores_names</span><span class="p">)))</span>
+<span class="n">coefs_boot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nboot</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">orig_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">boot_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nboot</span><span class="p">):</span>
+    <span class="n">boot_tr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">orig_all</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">orig_all</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">boot_te</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">orig_all</span><span class="p">,</span> <span class="n">boot_tr</span><span class="p">,</span> <span class="n">assume_unique</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">Xtr</span><span class="p">,</span> <span class="n">ytr</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">boot_tr</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">boot_tr</span><span class="p">]</span>
+    <span class="n">Xte</span><span class="p">,</span> <span class="n">yte</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">boot_te</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">boot_te</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtr</span><span class="p">,</span> <span class="n">ytr</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xte</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">scores_boot</span><span class="p">[</span><span class="n">boot_i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">r2_score</span><span class="p">(</span><span class="n">yte</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">coefs_boot</span><span class="p">[</span><span class="n">boot_i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+</pre></div>
+</div>
+<p>Compute Mean, SE, CI
+Coeffitients 0 and 1 are significantly different from 0.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scores_boot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores_boot</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">scores_names</span><span class="p">)</span>
+<span class="n">scores_stat</span> <span class="o">=</span> <span class="n">scores_boot</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">.975</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.025</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;r-squared: Mean=</span><span class="si">%.2f</span><span class="s2">, SE=</span><span class="si">%.2f</span><span class="s2">, CI=(</span><span class="si">%.2f</span><span class="s2"> </span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span>      <span class="nb">tuple</span><span class="p">(</span><span class="n">scores_stat</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="s2">&quot;2.5%&quot;</span><span class="p">,</span> <span class="s2">&quot;97.5%&quot;</span><span class="p">],</span> <span class="s2">&quot;r2&quot;</span><span class="p">]))</span>
+
+<span class="n">coefs_boot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">coefs_boot</span><span class="p">)</span>
+<span class="n">coefs_stat</span> <span class="o">=</span> <span class="n">coefs_boot</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">.975</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.025</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coefficients distribution&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">coefs_stat</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>r-squared: Mean=0.59, SE=0.09, CI=(0.40 0.73)
+Coefficients distribution
+            0       1         2       3       4
+count  100.00  100.00  1.00e+02  100.00  100.00
+mean     1.02    1.05  2.12e-01   -0.02   -0.05
+std      0.09    0.11  9.75e-02    0.10    0.11
+min      0.63    0.82 -2.69e-03   -0.23   -0.27
+2.5%     0.86    0.88  3.27e-02   -0.20   -0.23
+50%      1.03    1.04  2.17e-01   -0.01   -0.06
+97.5%    1.17    1.29  3.93e-01    0.15    0.14
+max      1.20    1.45  4.33e-01    0.22    0.29
+</pre></div>
+</div>
+<p>Plot coefficient distribution</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">coefs_boot</span><span class="p">)</span>
+<span class="n">staked</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;Variable&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;Coef. distribution&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;Variable&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Coef. distribution&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">staked</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="ml resampling" class="sphx-glr-single-img" src="../_images/sphx_glr_ml_resampling_002.png" />
+</section>
+<section id="parallel-computation-with-joblib">
+<h2>Parallel computation with joblib<a class="headerlink" href="#parallel-computation-with-joblib" title="Permalink to this headline">¶</a></h2>
+<p>Dataset</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">import</span> <span class="nn">sklearn.linear_model</span> <span class="k">as</span> <span class="nn">lm</span>
+<span class="kn">import</span> <span class="nn">sklearn.metrics</span> <span class="k">as</span> <span class="nn">metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use <cite>cross_validate</cite> function</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_validate</span>
+
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">)</span>
+<span class="n">cv_results</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cv_results</span><span class="p">[</span><span class="s1">&#39;test_score&#39;</span><span class="p">]),</span> <span class="n">cv_results</span><span class="p">[</span><span class="s1">&#39;test_score&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.8 [0.5 0.5 1.  1.  1. ]
+</pre></div>
+</div>
+<p>Sequential computation</p>
+<p>If we want have full control of the operations performed within each fold (retrieve the models parameters, etc.). We would like to parallelize the folowing sequetial code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># In[22]:</span>
+
+
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">)</span>
+<span class="n">y_test_pred_seq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="c1"># Store predictions in the original order</span>
+<span class="n">coefs_seq</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train</span><span class="p">,</span> <span class="p">:],</span> <span class="n">X</span><span class="p">[</span><span class="n">test</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">train</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">test</span><span class="p">]</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">y_test_pred_seq</span><span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">coefs_seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">coef_</span><span class="p">)</span>
+
+<span class="n">test_accs</span> <span class="o">=</span> <span class="p">[</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">y_test_pred_seq</span><span class="p">[</span><span class="n">test</span><span class="p">])</span> <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_accs</span><span class="p">),</span> <span class="n">test_accs</span><span class="p">)</span>
+<span class="n">coefs_cv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coefs_seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">coefs_cv</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">coefs_cv</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Std Err of the coef&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">coefs_cv</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">coefs_cv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.8 [0.5, 0.5, 1.0, 1.0, 1.0]
+[[[-0.88  0.63  1.19 -0.31 -0.38]]
+
+ [[-0.75  0.62  1.1   0.2  -0.4 ]]
+
+ [[-0.96  0.51  1.12  0.08 -0.26]]
+
+ [[-0.86  0.52  1.07 -0.11 -0.29]]
+
+ [[-0.9   0.51  1.09 -0.25 -0.28]]]
+[[-0.87  0.56  1.11 -0.08 -0.32]]
+Std Err of the coef
+[[0.03 0.02 0.02 0.09 0.03]]
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2>Parallel computation with joblib<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">is_classifier</span><span class="p">,</span> <span class="n">clone</span>
+
+<span class="k">def</span> <span class="nf">_split_fit_predict</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train</span><span class="p">,</span> <span class="p">:],</span> <span class="n">X</span><span class="p">[</span><span class="n">test</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">train</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">test</span><span class="p">]</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">estimator</span><span class="o">.</span><span class="n">coef_</span><span class="p">]</span>
+
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">)</span>
+
+<span class="n">parallel</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">cv_ret</span> <span class="o">=</span> <span class="n">parallel</span><span class="p">(</span>
+    <span class="n">delayed</span><span class="p">(</span><span class="n">_split_fit_predict</span><span class="p">)(</span>
+        <span class="n">clone</span><span class="p">(</span><span class="n">estimator</span><span class="p">),</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="n">y_test_pred_cv</span><span class="p">,</span> <span class="n">coefs_cv</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">cv_ret</span><span class="p">)</span>
+
+<span class="c1"># Retrieve predictions in the original order</span>
+<span class="n">y_test_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
+    <span class="n">y_test_pred</span><span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_test_pred_cv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="n">test_accs</span> <span class="o">=</span> <span class="p">[</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test</span><span class="p">],</span> <span class="n">y_test_pred</span><span class="p">[</span><span class="n">test</span><span class="p">])</span> <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_accs</span><span class="p">),</span> <span class="n">test_accs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.8 [0.5, 0.5, 1.0, 1.0, 1.0]
+</pre></div>
+</div>
+<p>Test same predictions and same coeficients</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">y_test_pred</span> <span class="o">==</span> <span class="n">y_test_pred_seq</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coefs_cv</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coefs_seq</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.727 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-ml-resampling-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/2f2f73a3d4f37474b746f626fb6521d2/ml_resampling.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ml_resampling.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/ff50d8b3e4b249d1bd013e293e090e37/ml_resampling.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ml_resampling.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Resampling methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#train-validation-and-test-sets">Train, validation and test sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#split-dataset-in-train-test-sets-for-model-evaluation">Split dataset in train/test sets for model evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#train-validation-test-splits-model-selection-and-model-evaluation">Train/validation/test splits: model selection and model evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cross-validation-cv">Cross-Validation (CV)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cross-validation-for-model-selection">Cross-validation for model selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cross-validation-for-both-model-outer-evaluation-and-model-inner-selection">Cross-validation for both model (outer) evaluation and model (inner) selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#models-with-built-in-cross-validation">Models with built-in cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#random-permutations-sample-the-null-distribution">Random Permutations: sample the null distribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#random-permutations">Random permutations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bootstrapping">Bootstrapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parallel-computation-with-joblib">Parallel computation with joblib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Parallel computation with joblib</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ml_supervized_nonlinear.html" title="previous chapter">Non-linear models</a></li>
+      <li>Next: <a href="../machine_learning/ensemble_learning.html" title="next chapter">Ensemble learning: bagging, boosting and stacking</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/auto_gallery/ml_resampling.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

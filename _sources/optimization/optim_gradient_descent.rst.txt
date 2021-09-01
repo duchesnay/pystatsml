@@ -1,0 +1,592 @@
+Gradient descent
+================
+
+Gradient descent is an **optimization algorithm** used to **minimize
+some function** by **iteratively moving in the direction of steepest
+descent** as defined by the **negative of the gradient**. In machine
+learning, we use gradient descent to **update the parameters of our
+model**. **Parameters** refer to **coefficients** in **Linear
+Regression** and **weights** in **neural networks**.
+
+This section aims to provide you an explanation of gradient descent and
+**intuitions** towards the **behaviour of different algorithms for
+optimizing it**. These explanations will help you put them to use.
+
+We are first going to introduce the gradient descent, solve it for a
+regression problem and look at its different variants. Then, we will
+then briefly summarize challenges during training. Finally, we will
+introduce the **most common optimization algorithms** by showing their
+motivation to resolve these challenges and list some advices for
+facilitate the algorithm choice.
+
+Introduction
+------------
+
+Consider the 3-dimensional graph below in **the context of a cost
+function**. Our **goal** is to **move from the mountain in the top right
+corner (high cost) to the dark blue sea in the bottom left (low cost)**.
+The **arrows** represent the **direction** of steepest descent (negative
+gradient) from any given point–the direction that **decreases the cost
+function** as quickly as possible
+
+.. raw:: html
+
+   <center>
+
+.. figure:: ./images/gradient_descent_intuition.png
+   :alt: adalta.it
+
+   adalta.it
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   <center>
+
+Gradient descent intuition.
+
+.. raw:: html
+
+   </center>
+
+Starting at the top of the mountain, we take our first step **downhill**
+in the **direction specified by the negative gradient**. Next we
+**recalculate the negative gradient** (passing in the coordinates of our
+new point) and take another step in the direction it specifies. We
+continue this **process iteratively until** we get to the **bottom of
+our graph**, or to a **point where we can no longer move downhill–a
+local minimum**.
+
+.. raw:: html
+
+   <center>
+
+.. raw:: html
+
+   </center>
+
+Learning rate
+~~~~~~~~~~~~~
+
+The **size of these steps** is called the **learning rate**. With a
+**high learning rate** we can cover more ground each step, but we **risk
+overshooting the lowest point** since the slope of the hill is
+constantly changing. With a **very low learning rate**, we can
+**confidently move in the direction of the negative gradient** since we
+are **recalculating it so frequently**. A **low learning rate is more
+precise**, but calculating the gradient is **time-consuming**, so it
+will take us a very long time to get to the bottom.
+
+.. raw:: html
+
+   <center>
+
+.. figure:: ./images/learning_rate_choice.png
+   :alt: jeremyjordan
+
+   jeremyjordan
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   <center>
+
+impacts of learning rate choice.
+
+.. raw:: html
+
+   </center>
+
+Cost function
+~~~~~~~~~~~~~
+
+A **Loss Function (Error function)** tells us **“how good”** our
+**model** is at making predictions for a **given set of parameters**.
+The cost function has its own curve and its own gradients. The **slope
+of this curve** tells us how to **update our parameters** to make the
+model more **accurate**.
+
+Numerical solution for gradient descent
+---------------------------------------
+
+Let’s run gradient descent using a **linear regression cost function**.
+
+There are **two parameters** in our cost function we can control: - $
+.. raw:: latex
+
+   \beta`\_0$ : **(the bias)** - $:raw-latex:`\beta`\_1 $ :
+   **(weight or coefficient)**
+   
+   Since we need to consider the **impact each one** has on the final
+   prediction, we need to use **partial derivatives**. We calculate the
+   **partial derivatives of the cost function with respect to each
+   parameter and store the results in a gradient**.
+   
+   Solution
+   ~~~~~~~~
+   
+   **Given the cost function**
+   
+   .. math:: f(\beta_0,\beta_1) =  \frac{1}{2}\frac{\partial MSE}{\partial\beta} = \frac{1}{2N} \sum_{i=1}^{n} (y_i - (\beta_1 x_i + \beta_0))^2 =  \frac{1}{2N} \sum_{i=1}^{n} ((\beta_1 x_i + \beta_0) - y_i)^2
+   
+   **The gradient can be calculated as**
+   
+   .. math::
+   
+       
+      \begin{split}f'(\beta_0,\beta_1) =
+         \begin{bmatrix}
+           \frac{\partial f}{\partial \beta_0}\\
+           \frac{\partial f}{\partial \beta_1}\\
+          \end{bmatrix}
+      =
+         \begin{bmatrix}
+           \frac{1}{2N} \sum -2((\beta_1x_i + \beta_0) - y_i ) \\
+           \frac{1}{2N} \sum -2x_i((\beta_1x_i + \beta_0) - y_i) \\
+          \end{bmatrix}
+      =
+         \begin{bmatrix}
+           \frac{-1}{N} \sum ((\beta_1x_i + \beta_0) - y_i ) \\
+           \frac{-1}{N} \sum  x_i((\beta_1x_i + \beta_0) - y_i) \\
+          \end{bmatrix}
+          \end{split}
+   
+   To solve for the gradient, we **iterate** through our **data points**
+   using our **:math:\beta_1 and :math:\beta_0 values** and compute the
+**partial derivatives**. This **new gradient** tells us the **slope of
+our cost function at our current position** (current parameter values)
+and the **direction we should move to update our parameters**. The
+**size of our update** is **controlled by the learning rate**.
+
+**Pseudocode of this algorithm**
+
+.. code:: python
+
+
+   Function  gradient_descent(X, Y, learning_rate, number_iterations):
+       
+       m : 1
+       b : 1
+       m_deriv : 0
+       b_deriv : 0  
+       data_length : length(X)  
+       loop i : 1  --> number_iterations:  
+           loop i : 1  ->  data_length  : 
+               m_deriv : m_deriv -X[i] * ((m*X[i] + b) - Y[i]) 
+               b_deriv : b_deriv - ((m*X[i] + b) - Y[i])  
+           m : m - (m_deriv / data_length) * learning_rate  
+           b : b - (b_deriv / data_length) * learning_rate  
+               
+       return m, b
+
+Gradient descent variants
+-------------------------
+
+There are **three variants of gradient descent**, which **differ in how
+much data we use to compute the gradient** of the objective function.
+Depending on the **amount of data**, we make a **trade-off between the
+accuracy of the parameter update and the time it takes to perform an
+update**.
+
+Batch gradient descent
+~~~~~~~~~~~~~~~~~~~~~~
+
+Batch gradient descent, known also as Vanilla gradient descent, computes
+the gradient of the cost function with respect to the parameters
+:math:`\theta` for the **entire training dataset** :
+
+.. math::
+
+
+   \theta = \theta - \eta \cdot \nabla_\theta J( \theta)
+
+As we need to calculate the gradients for the **whole dataset** to
+**perform just one update**, **batch** gradient descent can be **very
+slow** and **is intractable for datasets that don’t fit in memory**.
+Batch gradient descent also **doesn’t allow us to update our model
+online**.
+
+Stochastic gradient descent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Stochastic gradient descent (SGD) in contrast performs a parameter
+update for each training example :math:`x^{(i)}` and label
+:math:`y^{(i)}`
+
+-  Choose an initial vector of parameters :math:`w` and learning rate
+   :math:`\eta`.
+-  Repeat until an approximate minimum is obtained:
+
+   -  Randomly shuffle examples in the training set.
+   -  For :math:`i \in 1, \dots, n`
+
+      -  :math:`\theta = \theta - \eta \cdot \nabla_\theta J( \theta; x^{(i)}; y^{(i)})`
+
+**Batch gradient descent** performs **redundant computations for large
+datasets**, as it **recomputes** gradients for **similar examples**
+before each **parameter update**. SGD does away with **this redundancy
+by performing one update at a time**. It is therefore usually **much
+faster and can also be used to learn online**. **SGD** performs
+**frequent updates with a high variance that cause the objective
+function to fluctuate heavily as in the image below**.
+
+.. raw:: html
+
+   <center>
+
+.. figure:: ./images/SGD_fluctuation.PNG
+   :alt: Wikipedia
+
+   Wikipedia
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   <center>
+
+SGD fluctuation.
+
+.. raw:: html
+
+   </center>
+
+While batch gradient descent **converges to the minimum of the basin**
+the parameters are placed in, SGD’s fluctuation, on the one hand,
+**enables it to jump to new and potentially better local minima**. On
+the other hand, **this ultimately complicates convergence to the exact
+minimum**, as **SGD will keep overshooting**. However, it **has been
+shown** that when we **slowly decrease the learning rate**, SGD shows
+the same **convergence behaviour as batch gradient descent**, almost
+certainly **converging to a local or the global minimum for non-convex
+and convex optimization respectively**.
+
+Mini-batch gradient descent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Mini-batch gradient descent finally takes the best of both worlds and
+performs an update for every mini-batch of n training examples:
+
+.. math::
+
+
+   \theta = \theta - \eta \cdot \nabla_\theta J( \theta; x^{(i:i+n)}; y^{(i:i+n)})
+
+This way, it :
+
+-  **reduces the variance of the parameter updates**, which can lead to
+   **more stable convergence**.
+-  can make use of **highly optimized matrix optimizations** common to
+   state-of-the-art deep learning libraries that make computing the
+   gradient very efficient. **Common mini-batch sizes range between 50
+   and 256**, but can vary for different applications.
+
+**Mini-batch** gradient descent is **typically the algorithm of choice
+when training a neural network**.
+
+Gradient Descent challenges
+---------------------------
+
+Vanilla mini-batch gradient descent, however, does not guarantee good
+convergence, but offers a few challenges that need to be addressed:
+
+-  Choosing a proper **learning rate** can be difficult. A learning rate
+   that is **too small** leads to **painfully slow convergence**, while
+   a learning rate that is **too large** can hinder convergence and
+   cause the loss function to **fluctuate** around the minimum or even
+   to **diverge**.
+
+-  **Learning rate schedules** try to **adjust the learning rate during
+   training** by e.g. annealing, i.e. reducing the learning rate
+   according to a pre-defined schedule or when the change in objective
+   between epochs falls below a threshold. These schedules and
+   thresholds, however, have to be defined in advance and are thus
+   unable to adapt to a dataset’s characteristics.
+
+-  Additionally, the same learning rate applies to all parameter
+   updates. **If our data is sparse and our features have very different
+   frequencies**, we might not want to update all of them to the same
+   extent, but perform **a larger update for rarely occurring
+   features**.
+
+-  Another key challenge of **minimizing highly non-convex error**
+   functions common for neural networks is **avoiding** getting
+   **trapped in their numerous suboptimal local minima**. These **saddle
+   points (local minimas)** are usually surrounded by a plateau of the
+   same error, which makes it **notoriously hard for SGD to escape**, as
+   the gradient is close to zero in all dimensions.
+
+Gradient descent optimization algorithms
+----------------------------------------
+
+In the following, we will outline some **algorithms** that are
+**widely** used by the **deep learning community** to deal with the
+aforementioned **challenges**.
+
+Momentum
+~~~~~~~~
+
+**SGD** has trouble **navigating ravines (areas where the surface curves
+much more steeply in one dimension than in another)**, which are common
+**around local optima**. In these scenarios, **SGD oscillates across the
+slopes of the ravine while only making hesitant progress** along the
+bottom towards the local optimum as in the image below.
+
+.. raw:: html
+
+   <center>
+
+.. figure:: ./images/sgd_momentum.png
+   :alt: Wikipedia
+
+   Wikipedia
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   <center>
+
+SGD and momentum.
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   <center>
+
+`Source <https://distill.pub/2017/momentum/>`__
+
+.. figure:: ./images/grad_descent_no_momentum.png
+   :alt: No momentum: oscillations toward local largest gradient
+
+   No momentum: oscillations toward local largest gradient
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   <center>
+
+No momentum: moving toward local largest gradient create oscillations.
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   <center>
+
+.. figure:: ./images/grad_descent_momentum.png
+   :alt: With momentum: accumulate velocity to avoid oscillations
+
+   With momentum: accumulate velocity to avoid oscillations
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   <center>
+
+With momentum: accumulate velocity to avoid oscillations.
+
+.. raw:: html
+
+   </center>
+
+**Momentum** is a method that helps **accelerate SGD** in the **relevant
+direction and dampens oscillations** as can be seen in image above. It
+does this by **adding a fraction :math:`\gamma` of the update vector**
+of the **past time step to the current update vector**
+
+.. math::
+
+
+   \begin{align} 
+   \begin{split} 
+   v_t &= \rho v_{t-1} + \nabla_\theta J( \theta) \\ 
+   \theta &= \theta - v_t 
+   \end{split} 
+   \end{align}
+
+.. code:: python
+
+   vx = 0
+   while True:
+       dx = gradient(J, x)
+       vx = rho * vx + dx
+       x -= learning_rate * vx
+
+**Note**: The momentum term **:math:`\rho`** is usually set to 0.9 or a
+similar value.
+
+Essentially, when using momentum, we push **a ball down a hill**. The
+**ball accumulates momentum as it rolls downhill**, becoming faster and
+faster on the way **(until it reaches its terminal velocity if there is
+air resistance, i.e.  :math:`\rho` <1 )**.
+
+The same thing happens to our parameter updates: **The momentum term
+increases** for **dimensions whose gradients point in the same
+directions and reduces updates for dimensions whose gradients change
+directions**. As a result, we **gain faster convergence** and **reduced
+oscillation**.
+
+AdaGrad: adaptive learning rates
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  Added element-wise scaling of the gradient based on the historical
+   sum of squares in each dimension.
+
+-  “Per-parameter learning rates” or “adaptive learning rates”
+
+.. code:: python
+
+   grad_squared = 0
+   while True:
+       dx = gradient(J, x)
+       grad_squared += dx * dx
+       x -= learning_rate * dx / (np.sqrt(grad_squared) + 1e-7)
+
+-  Progress along “steep” directions is damped.
+-  Progress along “flat” directions is accelerated.
+-  Problem: step size over long time => Decays to zero.
+
+RMSProp: “Leaky AdaGrad”
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+   grad_squared = 0
+   while True:
+       dx = gradient(J, x)
+       grad_squared += decay_rate * grad_squared + (1 - decay_rate) * dx * dx
+       x -= learning_rate * dx / (np.sqrt(grad_squared) + 1e-7)
+
+-  ``decay_rate = 1``: gradient descent
+-  ``decay_rate = 0``: AdaGrad
+
+Nesterov accelerated gradient
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+However, a ball that rolls down a hill, blindly following the slope, is
+highly **unsatisfactory**. We’d like to have a smarter ball, a ball that
+has **a notion of where it is going** so that it **knows to slow down
+before the hill slopes up again**. Nesterov accelerated gradient (NAG)
+is a way to give **our momentum term this kind of prescience**. We know
+that we will use our momentum term :math:`\gamma v_{t-1}` to move the
+parameters :math:`\theta`.
+
+Computing :math:`\theta - \gamma v_{t-1}` thus gives us **an
+approximation of the next position of the parameters** (the gradient is
+missing for the full update), a rough idea where our parameters are
+going to be. We can now effectively look ahead by calculating the
+gradient not w.r.t. to our current parameters :math:`\theta` but w.r.t.
+the approximate future position of our parameters:
+
+.. raw:: latex
+
+   \begin{align} 
+   \begin{split} 
+   v_t &= \gamma v_{t-1} + \eta \nabla_\theta J( \theta - \gamma v_{t-1} ) \\ 
+   \theta &= \theta - v_t 
+   \end{split} 
+   \end{align}
+
+Again, we set the momentum term :math:`\gamma` to a value of around 0.9.
+While **Momentum first computes the current gradient and then takes a
+big jump in the direction of the updated accumulated gradient** ,
+**NAG** first **makes a big jump in the direction of the previous
+accumulated gradient, measures the gradient and then makes a correction,
+which results in the complete NAG update**. This anticipatory update
+**prevents** us from **going too fast** and results in **increased
+responsiveness**, which has significantly **increased the performance of
+RNNs** on a number of tasks
+
+Adam
+~~~~
+
+**Adaptive Moment Estimation (Adam)** is a method that computes
+**adaptive learning rates** for each parameter. In addition to storing
+an **exponentially decaying average of past squared gradients
+:math:`v_t`**, Adam also keeps an **exponentially decaying average of
+past gradients :math:`m_t`, similar to momentum**. Whereas momentum can
+be seen as a ball running down a slope, Adam behaves like a **heavy ball
+with friction**, which thus prefers **flat minima in the error
+surface**. We compute the decaying averages of past and past squared
+gradients :math:`m_t` and :math:`v_t` respectively as follows:
+
+.. raw:: latex
+
+   \begin{align} 
+   \begin{split} 
+   m_t &= \beta_1 m_{t-1} + (1 - \beta_1) \nabla_\theta J( \theta) \\ 
+   v_t &= \beta_2 v_{t-1} + (1 - \beta_2) \nabla_\theta J( \theta)^2 
+   \end{split} 
+   \end{align}
+
+:math:`m_{t}` and :math:`v_{t}` are estimates of the first moment (the
+mean) and the second moment (the uncentered variance) of the gradients
+respectively, hence the name of the method. Adam (almost)
+
+.. code:: python
+
+   first_moment = 0
+   second_moment = 0
+   while True:
+       dx = gradient(J, x)
+       # Momentum:
+       first_moment = beta1 * first_moment + (1 - beta1) * dx
+       # AdaGrad/RMSProp
+       second_moment = beta2 * second_moment + (1 - beta2) * dx * dx
+       x -= learning_rate * first_moment / (np.sqrt(second_moment) + 1e-7)
+
+As :math:`m_{t}` and :math:`v_{t}` are initialized as vectors of 0’s,
+the authors of Adam observe that they are biased towards zero,
+especially during the initial time steps, and especially when the decay
+rates are small (i.e. :math:`\beta_{1}` and :math:`\beta_{2}` are close
+to 1). They counteract these biases by computing bias-corrected first
+and second moment estimates:
+
+.. raw:: latex
+
+   \begin{align} 
+   \hat{m}_t &= \dfrac{m_t}{1 - \beta^t_1} \\ 
+   \hat{v}_t &= \dfrac{v_t}{1 - \beta^t_2}
+   \end{align}
+
+They then use these to update the parameters (Adam update rule):
+
+.. math::
+
+
+   \theta_{t+1} = \theta_{t} - \dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t
+
+-  :math:`\hat{m}_t` Accumulate gradient: velocity.
+
+-  :math:`\hat{v}_t` Element-wise scaling of the gradient based on the
+   historical sum of squares in each dimension.
+
+-  Choose Adam as default optimizer
+
+-  Default values of 0.9 for :math:`\beta_1`, 0.999 for :math:`\beta_2`,
+   and :math:`10^{-7}` for :math:`\epsilon`.
+
+-  learning rate in a range between :math:`1e-3` and :math:`5e-4`
+

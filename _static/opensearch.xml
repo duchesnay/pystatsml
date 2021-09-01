@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>Statistics and Machine Learning in Python</ShortName>
+  <Description>Search Statistics and Machine Learning in Python 0.5 documentation</Description>
+  <InputEncoding>utf-8</InputEncoding>
+  <Url type="text/html" method="get"
+       template="https://duchesnay.github.io/pystatsml//search.html?q={searchTerms}"/>
+  <LongName>Statistics and Machine Learning in Python 0.5 documentation</LongName>
+  
+</OpenSearchDescription>

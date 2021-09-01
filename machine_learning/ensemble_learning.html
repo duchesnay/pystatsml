@@ -1,0 +1,863 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Ensemble learning: bagging, boosting and stacking &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gradient descent" href="../optimization/optim_gradient_descent.html" />
+    <link rel="prev" title="Resampling methods" href="../auto_gallery/ml_resampling.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="ensemble-learning-bagging-boosting-and-stacking">
+<h1>Ensemble learning: bagging, boosting and stacking<a class="headerlink" href="#ensemble-learning-bagging-boosting-and-stacking" title="Permalink to this headline">¶</a></h1>
+<p>These methods are <strong>Ensemble learning</strong> techniques. These models are
+machine learning paradigms where multiple models (often called “weak
+learners”) are trained to <strong>solve the same problem</strong> and <strong>combined</strong> to
+get <strong>better</strong> results. The main hypothesis is that when <strong>weak models</strong>
+are <strong>correctly combined</strong> we can obtain <strong>more accurate and/or robust
+models</strong>.</p>
+<section id="single-weak-learner">
+<h2>Single weak learner<a class="headerlink" href="#single-weak-learner" title="Permalink to this headline">¶</a></h2>
+<p>In machine learning, no matter if we are facing a classification or a
+regression problem, the choice of the model is extremely important to
+have any chance to obtain good results. This choice can depend on many
+variables of the problem: quantity of data, dimensionality of the space,
+distribution hypothesis…</p>
+<p>A <strong>low bias and a low variance</strong>, although they most often vary in
+opposite directions, are the <strong>two most fundamental features</strong> expected
+for a model. Indeed, to be able to “solve” a problem, we want our model
+to have <strong>enough degrees of freedom</strong> to resolve the underlying
+complexity of the data we are working with, but we also want it to have
+<strong>not too much degrees of freedom</strong> to avoid <strong>high variance</strong> and be
+<strong>more robust</strong>. This is the well known <strong>bias-variance tradeoff</strong>.</p>
+<center><figure class="align-default" id="id1">
+<img alt="towardsdatascience blog" src="../_images/bias_variance.png" />
+<figcaption>
+<p><span class="caption-text">towardsdatascience blog</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>Illustration of the bias-variance tradeoff.</p>
+</center><p>In ensemble learning theory, we call <strong>weak learners</strong> (or <strong>base
+models</strong>) models that can be used as building blocks for designing more
+complex models by <strong>combining several of them</strong>. Most of the time, these
+basics models <strong>perform not so well</strong> by themselves either because they
+have a <strong>high bias</strong> (low degree of freedom models, for example) <strong>or</strong>
+because they have <strong>too much variance</strong> to be robust (high degree of
+freedom models, for example). Then, the idea of ensemble methods is to
+combining several of them together in order to create a <strong>strong
+learner</strong> (or <strong>ensemble model</strong>) that achieves better performances.</p>
+<p>Usually, ensemble models are used in order to :</p>
+<ul class="simple">
+<li><p><strong>decrease the variance</strong> for <strong>bagging</strong> (Bootstrap Aggregating)
+technique</p></li>
+<li><p><strong>reduce bias</strong> for the boosting technique</p></li>
+<li><p><strong>improving the predictive force</strong> for stacking technique.</p></li>
+</ul>
+<p>To understand these techniques, first, we will explore what is
+boostrapping and its different <strong>hypothesis</strong>.</p>
+</section>
+<section id="bagging">
+<h2>Bagging<a class="headerlink" href="#bagging" title="Permalink to this headline">¶</a></h2>
+<p>In <strong>parallel methods</strong> we fit the different considered learners
+independently from each others and, so, it is possible to train them
+concurrently. The most famous such approach is “bagging” (standing for
+“<strong>b</strong>ootstrap <strong>agg</strong>regat<strong>ing</strong>”) that aims at producing an
+ensemble model that is <strong>more robust</strong> than the individual models
+composing it.</p>
+<p>When training a model, no matter if we are dealing with a classification
+or a regression problem, we obtain a function that takes an input,
+returns an output and that is defined with respect to the training
+dataset.</p>
+<p>The idea of bagging is then simple: we want to fit several independent
+models and “average” their predictions in order to obtain a model with a
+lower variance. However, we can’t, in practice, fit fully independent
+models because it would require too much data. So, we rely on the good
+“approximate properties” of bootstrap samples (representativity and
+independence) to fit models that are almost independent.</p>
+<p>First, we create <strong>multiple bootstrap samples</strong> so that each new
+bootstrap sample will act as another (almost) independent dataset drawn
+from true distribution. Then, we can <strong>fit a weak learner for each of
+these samples and finally aggregate them such that we kind of “average”
+their outputs</strong> and, so, obtain an ensemble model with <strong>less variance</strong>
+that its components. Roughly speaking, as the bootstrap samples are
+approximatively <strong>independent and identically distributed (i.i.d.)</strong>, so
+are the learned base models. Then, <strong>“averaging” weak learners outputs</strong>
+do not change the expected answer but reduce its variance.</p>
+<p>So, assuming that we have L bootstrap samples (approximations of L
+independent datasets) of size B denoted</p>
+<center><figure class="align-default" id="id2">
+<img alt="Medium Science Blog" src="../_images/bagging_overview.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>Each {….} is a bootstrap sample of B observation</p>
+</center><p>we can fit L almost independent weak learners (one on each dataset)</p>
+<center><figure class="align-default" id="id3">
+<img alt="Medium Science Blog" src="https://miro.medium.com/max/354/1*Dn6v09t5_L5cvADxJHJzHQ&#64;2x.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><p>and then aggregate them into some kind of averaging process in order to
+get an ensemble model with a lower variance. For example, we can define
+our strong model such that</p>
+<center><figure class="align-default" id="id4">
+<img alt="Medium Science Blog" src="../_images/bagging_model_aggregation.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><p>There are several possible ways to aggregate the multiple models fitted
+in parallel. - For a <strong>regression problem</strong>, the outputs of individual
+models can literally be <strong>averaged</strong> to obtain the output of the
+ensemble model. - For <strong>classification problem</strong> the class outputted by
+each model can be seen as a <strong>vote</strong> and the class that receives the
+<strong>majority of the votes</strong> is returned by the ensemble model (this is
+called <strong>hard-voting</strong>). Still for a classification problem, we can
+<strong>also</strong> consider the <strong>probabilities of each classes</strong> returned by all
+the models, <strong>average these probabilities</strong> and keep the class with the
+<strong>highest average probability</strong> (this is called <strong>soft-voting</strong>). –&gt;
+Averages or votes can either be simple or weighted if any relevant
+weights can be used.</p>
+<p>Finally, we can mention that one of the big advantages of bagging is
+that <strong>it can be parallelised</strong>. As the different models are fitted
+independently from each others, intensive parallelisation techniques can
+be used if required.</p>
+<center><figure class="align-default" id="id5">
+<img alt="Medium Science Blog" src="../_images/bagging_architecture.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>Bagging consists in fitting several base models on different bootstrap
+samples and build an ensemble model that “average” the results of these
+weak learners.</p>
+</center><p>Question : - Can you name an algorithms based on Bagging technique ,
+Hint : <strong>leaf</strong></p>
+<p>###### Examples</p>
+<p>Here, we are trying some example of <strong>stacking</strong></p>
+<ul class="simple">
+<li><p>Bagged Decision Trees for Classification</p></li>
+</ul>
+<div class="docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">model_selection</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">BaggingClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+
+
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;preg&#39;</span><span class="p">,</span> <span class="s1">&#39;plas&#39;</span><span class="p">,</span> <span class="s1">&#39;pres&#39;</span><span class="p">,</span> <span class="s1">&#39;skin&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="s1">&#39;pedi&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">]</span>
+<span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv&quot;</span><span class="p">,</span><span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+
+<span class="n">array</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">values</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">max_features</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">kfold</span> <span class="o">=</span> <span class="n">model_selection</span><span class="o">.</span><span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">)</span>
+<span class="n">num_trees</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">BaggingClassifier</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="n">num_trees</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">model_selection</span><span class="o">.</span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">kfold</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy: </span><span class="si">%0.2f</span><span class="s2"> (+/- </span><span class="si">%0.2f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">results</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Random Forest Classification</p></li>
+</ul>
+<div class="docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">model_selection</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;preg&#39;</span><span class="p">,</span> <span class="s1">&#39;plas&#39;</span><span class="p">,</span> <span class="s1">&#39;pres&#39;</span><span class="p">,</span> <span class="s1">&#39;skin&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="s1">&#39;pedi&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">]</span>
+<span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv&quot;</span><span class="p">,</span><span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+
+<span class="n">array</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">values</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span><span class="mi">8</span><span class="p">]</span>
+
+<span class="n">kfold</span> <span class="o">=</span> <span class="n">model_selection</span><span class="o">.</span><span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
+<span class="n">num_trees</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">max_features</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">kfold</span> <span class="o">=</span> <span class="n">model_selection</span><span class="o">.</span><span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">num_trees</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">max_features</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">model_selection</span><span class="o">.</span><span class="n">cross_val_score</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">kfold</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy: </span><span class="si">%0.2f</span><span class="s2"> (+/- </span><span class="si">%0.2f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">results</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<p><strong>Both</strong> of these algorithms will print, <strong>Accuracy: 0.77 (+/- 0.07)</strong>.
+They are <strong>equivalent</strong>.</p>
+</section>
+<section id="boosting">
+<h2>Boosting<a class="headerlink" href="#boosting" title="Permalink to this headline">¶</a></h2>
+<p>In <strong>sequential methods</strong> the different combined weak models are <strong>no
+longer</strong> fitted <strong>independently</strong> from each others. The idea is to fit
+models <strong>iteratively</strong> such that the training of model at a given step
+depends on the models fitted at the previous steps. “Boosting” is the
+most famous of these approaches and it produces an ensemble model that
+is in general <strong>less biased</strong> than the weak learners that compose it.</p>
+<p><strong>Boosting</strong> methods work in the same <strong>spirit</strong> as <strong>bagging</strong> methods:
+we build a <strong>family of models</strong> that are <strong>aggregated</strong> to obtain a
+strong learner that performs better.</p>
+<p><strong>However</strong>, <strong>unlike bagging that mainly aims at reducing variance,
+boosting is a technique that consists in fitting sequentially multiple
+weak learners in a very adaptative</strong> way: <strong>each model in the sequence
+is fitted giving more importance to observations in the dataset that
+were badly handled by the previous models</strong> in the sequence.
+Intuitively, each new model <strong>focus its efforts on the most difficult
+observations</strong> to fit up to now, so that we obtain, <strong>at the end of the
+process</strong>, a strong learner with <strong>lower bias</strong> (even if we can notice
+that boosting can also have the effect of reducing variance).</p>
+<p>–&gt; Boosting, like bagging, can be used for regression as well as for
+classification problems.</p>
+<p>Being <strong>mainly focused at reducing bias</strong>, the <strong>base models</strong> that are
+often considered for boosting are* *models with low variance but high
+bias<strong>. For example, if we want to use</strong>trees<strong>as our base models,
+we will choose</strong>most of the time shallow decision trees with only a
+few depths.**</p>
+<p>Another important reason that motivates the use of low variance but high
+bias models as weak learners for boosting is that these models are in
+general less computationally expensive to fit (few degrees of freedom
+when parametrised). Indeed, as computations to fit the different models
+<strong>can’t be done in parallel</strong> (unlike bagging), it could become too
+expensive to fit sequentially several complex models.</p>
+<p>Once the weak learners have been chosen, we still need to define <strong>how</strong>
+they will be sequentially <strong>fitted</strong> and <strong>how</strong> they will be
+<strong>aggregated</strong>. We will discuss these questions in the two following
+subsections, describing more especially two important boosting
+algorithms: <strong>adaboost</strong> and <strong>gradient boosting</strong>.</p>
+<p>In a nutshell, these two meta-algorithms <strong>differ</strong> on how they <strong>create
+and aggregate</strong> the weak learners during the sequential process.
+<strong>Ada</strong>ptive <strong>boost</strong>ing <strong>updates the weights attached to each of
+the training dataset observations</strong> whereas <strong>gradient boosting updates
+the value of these observations</strong>. This main difference comes from the
+way both methods try to <strong>solve the optimisation</strong> problem of finding
+the best model that can be written as a weighted sum of weak learners.</p>
+<center><figure class="align-default" id="id6">
+<img alt="Medium Science Blog" src="../_images/boosting_architecture.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>Boosting consists in, iteratively, fitting a weak learner, aggregate it
+to the ensemble model and “update” the training dataset to better take
+into account the strengths and weakness of the current ensemble model
+when fitting the next base model.</p>
+</center><section id="adaptative-boosting">
+<h3>1/ <strong>Adaptative boosting</strong><a class="headerlink" href="#adaptative-boosting" title="Permalink to this headline">¶</a></h3>
+<p>In adaptative boosting (often called “adaboost”), we try to define our
+ensemble model as a weighted sum of L weak learners</p>
+<center><figure class="align-default" id="id7">
+<img alt="Medium Science Blog" src="../_images/boost_algo_weighted_sum.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><p>Finding the best ensemble model with this form is a difficult
+optimisation problem. Then, <strong>instead</strong> of trying to <strong>solve it in one
+single shot</strong> (finding all the coefficients and weak learners that give
+the best overall additive model), we make use of an <strong>iterative
+optimisation process</strong> that is much more tractable, even if it can lead
+to a sub-optimal solution. More especially, we <strong>add</strong> the <strong>weak
+learners one by one</strong>, looking at each iteration for the <strong>best possible
+pair</strong> (<strong>coefficient, weak learner</strong>) to add to the current ensemble
+model. In other words, we define recurrently the (s_l)’s such that</p>
+<center><figure class="align-default" id="id8">
+<img alt="towardsdatascience Blog" src="../_images/architecture_adaptative_boosting.png" />
+<figcaption>
+<p><span class="caption-text">towardsdatascience Blog</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><p>where c_l and w_l are chosen such that s_l is the model that fit the
+best the training data and, so, that is the <strong>best possible improvement
+over s_(l-1)</strong>. We can then denote</p>
+<center><figure class="align-default" id="id9">
+<img alt="towardsdatascience Blog" src="../_images/loss_l_step_adaptative_boosting.png" />
+<figcaption>
+<p><span class="caption-text">towardsdatascience Blog</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><p>where E(.) is the fitting error of the given model and e(.,.) is the
+loss/error function. Thus, instead of optimising “globally” over all the
+L models in the sum, we <strong>approximate the optimum by optimising
+“locally”</strong> building and adding the weak learners to the strong model
+one by one.</p>
+<p>More especially, when considering a <strong>binary classification</strong>, we can
+show that the adaboost algorithm can be re-written into a process that
+proceeds as follow. First, it updates the <strong>observations weights</strong> in
+the dataset and train a new weak learner with a <strong>special focus</strong> given
+to the <strong>observations misclassified</strong> by the current ensemble model.
+Second, it adds the weak learner to the weighted sum according to an
+update coefficient that expresse the performances of this weak model:
+<strong>the better a weak learner performs, the more it contributes to the
+strong learner</strong>.</p>
+<p>So, assume that we are facing a <strong>binary classification</strong> problem, with
+<strong>N</strong> observations in our dataset and we want to use <strong>adaboost</strong>
+algorithm with a given family of weak models. At the <strong>very beginning</strong>
+of the algorithm (first model of the sequence), <strong>all the observations
+have the same weights 1/N</strong>. Then, we <strong>repeat L times (for the L
+learners in the sequence)</strong> the following steps:</p>
+<ul><li><p>fit the best possible weak model with the current observations weights</p>
+</li><li><p>compute the value of the update coefficient that is some kind of scalar
+evaluation metric of the weak learner that indicates how much this weak
+learner should be taken into account into the ensemble model</p>
+</li><li><p>update the strong learner by adding the new weak learner multiplied by
+its update coefficient</p>
+</li><li><p>compute new observations weights that expresse which observations we
+would like to focus on at the next iteration (weights of observations
+wrongly predicted by the aggregated model increase and weights of the
+correctly predicted observations decrease)</p>
+</li></ul><p>Repeating these steps, we have then build <strong>sequentially</strong> our <strong>L
+models</strong> and <strong>aggregate</strong> them into a <strong>simple linear combination
+weighted by coefficients expressing the performance of each learner</strong>.</p>
+<p><strong>Notice</strong> that there exists variants of the initial adaboost algorithm
+such that LogitBoost (classification) or L2Boost (regression) that
+mainly differ by their choice of loss function.</p>
+<center><figure class="align-default" id="id10">
+<img alt="Medium Science Blog" src="../_images/ada_boost_steps.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>Adaboost updates weights of the observations at each iteration. Weights
+of well classified observations decrease relatively to weights of
+misclassified observations. Models that perform better have higher
+weights in the final ensemble model.</p>
+</center></section>
+<section id="gradient-boosting">
+<h3>2/ <strong>Gradient boosting</strong><a class="headerlink" href="#gradient-boosting" title="Permalink to this headline">¶</a></h3>
+<p>In <strong>gradient boosting</strong>, the ensemble model we try to build is <strong>also a
+weighted sum of weak learners</strong></p>
+<center><figure class="align-default" id="id11">
+<img alt="Medium Science Blog" src="../_images/boost_algo_weighted_sum.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><p>Just <strong>as</strong> we mentioned for <strong>adaboost</strong>, finding the <strong>optimal model
+under this form is too difficult and an iterative approach is
+required</strong>. The <strong>main difference</strong> with <strong>adaptative boosting</strong> is in
+the <strong>definition of the sequential optimisation process.</strong> Indeed,
+<strong>gradient boosting</strong> casts the problem into a <strong>gradient descent one</strong>:
+at <strong>each iteration</strong> we fit a <strong>weak learner</strong> to the <strong>opposite</strong> of
+the <strong>gradient of the current fitting error with respect to the current
+ensemble model</strong>. Let’s try to clarify this last point. First,
+theoretical gradient descent process over the ensemble model can be
+written</p>
+<center><figure class="align-default" id="id12">
+<img alt="Medium Science Blog" src="../_images/gradient_desceent_boosting.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><p>where E(.) is the fitting error of the given model, c_l is a coefficient
+corresponding to the step size and</p>
+<center><figure class="align-default" id="id13">
+<img alt="Medium Science Blog" src="../_images/step_size_gradient_boosting.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><p>This entity is the <strong>opposite of the gradient of the fitting error with
+respect to the ensemble model at step l-1</strong>. This opposite of the
+gradient is a function that can, in practice, only be evaluated for
+observations in the training dataset (for which we know inputs and
+outputs): these evaluations are called pseudo-residuals attached to each
+observations. Moreover, even if we know for the observations the values
+of these pseudo-residuals, we don’t want to add to our ensemble model
+any kind of function: we only want to add a new instance of weak model.
+So, the natural thing to do is to fit a weak learner to the
+pseudo-residuals computed for each observation. Finally, the coefficient
+c_l is computed following a one dimensional optimisation process
+(line-search to obtain the best step size c_l).</p>
+<p>So, assume that we want to use gradient boosting technique with a given
+family of weak models. At the very beginning of the algorithm (first
+model of the sequence), the pseudo-residuals are set equal to the
+observation values. Then, we repeat L times (for the L models of the
+sequence) the following steps:</p>
+<ul><li><p>fit the best possible weak model to pseudo-residuals (approximate the
+opposite of the gradient with respect to the current strong learner)</p>
+</li><li><p>compute the value of the optimal step size that defines by how much we
+update the ensemble model in the direction of the new weak learner</p>
+</li><li><p>update the ensemble model by adding the new weak learner multiplied by
+the step size (make a step of gradient descent)</p>
+</li><li><p>compute new pseudo-residuals that indicate, for each observation, in
+which direction we would like to update next the ensemble model
+predictions</p>
+</li></ul><p>Repeating these steps, we have then build sequentially our L models and
+aggregate them <strong>following a gradient descent approach</strong>. Notice that,
+<strong>while adaptative boosting tries to solve at each iteration exactly the
+“local” optimisation problem (find the best weak learner and its
+coefficient to add to the strong model), gradient boosting uses instead
+a gradient descent approach and can more easily be adapted to large
+number of loss functions</strong>. Thus, <strong>gradient boosting</strong> can be
+considered as a <strong>generalization of adaboost to arbitrary differentiable
+loss functions</strong>.</p>
+<p><strong>Note</strong> There is an algorithm which gained huge popularity after a
+<strong>Kaggle’s competitions</strong>. It is <strong>XGBoost (Extreme Gradient
+Boosting)</strong>. This is a gradient boosting algorithm which has more
+<strong>flexibility (varying number of terminal nodes and left weights)
+parameters to avoid sub-learners correlations</strong>. Having these important
+qualities, <strong>XGBOOST</strong> is one of the most used algorithm in data
+science. <strong>LIGHTGBM is a recent implementation</strong> of this algorithm. It
+was published by <strong>Microsoft</strong> and it gives us the same scores (if
+parameters are equivalents) but it runs <strong>quicker</strong> than a classic
+<strong>XGBOOST</strong>.</p>
+<center><figure class="align-default" id="id14">
+<img alt="Medium Science Blog" src="../_images/gradient_boosting_steps.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>Gradient boosting updates values of the observations at each iteration.
+Weak learners are trained to fit the pseudo-residuals that indicate in
+which direction to correct the current ensemble model predictions to
+lower the error.</p>
+</center><p><strong>Examples</strong></p>
+<p>Here, we are trying an example of <strong>Boosting</strong> and compare it to a
+<strong>Bagging</strong>. Both of algorithms take the same weak learners to build the
+macro-model</p>
+<ul class="simple">
+<li><p>Adaboost Classifier</p></li>
+</ul>
+<div class="docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">AdaBoostClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+
+<span class="n">breast_cancer</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="o">.</span><span class="n">from_codes</span><span class="p">(</span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">breast_cancer</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span>
+<span class="c1"># Transforming string Target to an int</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="n">binary_encoded_y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+<span class="c1">#Train Test Split</span>
+<span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">binary_encoded_y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf_boosting</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span>
+    <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">200</span>
+<span class="p">)</span>
+<span class="n">clf_boosting</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf_boosting</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For Boosting : F1 Score </span><span class="si">{}</span><span class="s2">, Accuracy </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">f1_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span><span class="nb">round</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions</span><span class="p">),</span><span class="mi">2</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Random Forest as a <strong>bagging classifier</strong></p></li>
+</ul>
+<div class="docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">AdaBoostClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="n">breast_cancer</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="o">.</span><span class="n">from_codes</span><span class="p">(</span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">breast_cancer</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span>
+<span class="c1"># Transforming string Target to an int</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="n">binary_encoded_y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+<span class="c1">#Train Test Split</span>
+<span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">binary_encoded_y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf_bagging</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">clf_bagging</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">clf_bagging</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For Bagging : F1 Score </span><span class="si">{}</span><span class="s2">, Accuracy </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">f1_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span><span class="nb">round</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions</span><span class="p">),</span><span class="mi">2</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<p>Comparaison</p>
+<center><table class="docutils align-default">
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 31%" />
+<col style="width: 34%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Metric</strong></p></th>
+<th class="head"><p><strong>Bagging</strong></p></th>
+<th class="head"><p><strong>Boosting</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Accuracy</strong></p></td>
+<td><p>0.91</p></td>
+<td><p>0.97</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>F1-Score</strong></p></td>
+<td><p>0.88</p></td>
+<td><p>0.95</p></td>
+</tr>
+</tbody>
+</table>
+</center></section>
+</section>
+<section id="overview-of-stacking">
+<h2>Overview of stacking<a class="headerlink" href="#overview-of-stacking" title="Permalink to this headline">¶</a></h2>
+<p><strong>Stacking</strong> mainly <strong>differ</strong> from <strong>bagging and boosting</strong> on two
+points : - First stacking often considers <strong>heterogeneous weak
+learners</strong> (different learning algorithms are combined) whereas bagging
+and boosting consider mainly homogeneous weak learners. - Second,
+stacking learns to combine the base models using a <strong>meta-model</strong>
+whereas bagging and boosting combine weak learners following
+deterministic algorithms.</p>
+<p>As we already mentioned, the idea of stacking is to learn several
+different weak learners and <strong>combine them by training a meta-model</strong> to
+output predictions based on the multiple predictions returned by these
+weak models. So, we need to define two things in order to build our
+stacking model: the L learners we want to fit and the meta-model that
+combines them.</p>
+<p>For example, for a classification problem, we can choose as weak
+learners a KNN classifier, a logistic regression and a SVM, and decide
+to learn a neural network as meta-model. Then, the neural network will
+take as inputs the outputs of our three weak learners and will learn to
+return final predictions based on it.</p>
+<p>So, assume that we want to fit a stacking ensemble composed of L weak
+learners. Then we have to follow the steps thereafter:</p>
+<ul class="simple">
+<li><p>split the <strong>training data in two folds</strong></p></li>
+<li><p>choose <strong>L weak learners</strong> and <strong>fit</strong> them to data of the <strong>first
+fold</strong></p></li>
+<li><p>for each of the L weak learners, <strong>make predictions</strong> for
+observations in the <strong>second fold</strong></p></li>
+<li><p>fit the <strong>meta-model</strong> on the <strong>second fold</strong>, using <strong>predictions
+made by the weak learners as inputs</strong></p></li>
+</ul>
+<p>In the previous steps, we split the dataset in two folds because
+predictions on data that have been used for the training of the weak
+learners are <strong>not relevant for the training of the meta-model</strong>.</p>
+<center><figure class="align-default" id="id15">
+<img alt="Medium Science Blog" src="../_images/stacking_architecture.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>Stacking consists in training a meta-model to produce outputs based on
+the outputs returned by some lower layer weak learners.</p>
+</center><p>A possible extension of stacking is multi-level stacking. It consists in
+doing <strong>stacking with multiple layers</strong>. As an example,</p>
+<center><figure class="align-default" id="id16">
+<img alt="Medium Science Blog" src="../_images/multi_stacking_architecture.png" />
+<figcaption>
+<p><span class="caption-text">Medium Science Blog</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>Multi-level stacking considers several layers of stacking: some
+meta-models are trained on outputs returned by lower layer meta-models
+and so on. Here we have represented a 3-layers stacking model.</p>
+</center><p><strong>Examples</strong></p>
+<p>Here, we are trying an example of <strong>Stacking</strong> and compare it to a
+<strong>Bagging</strong> &amp; a <strong>Boosting</strong>. We note that, many other applications
+(datasets) would show more difference between these techniques.</p>
+<div class="docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">AdaBoostClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_breast_cancer</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+
+<span class="n">breast_cancer</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="o">.</span><span class="n">from_codes</span><span class="p">(</span><span class="n">breast_cancer</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">breast_cancer</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span>
+
+<span class="c1"># Transforming string Target to an int</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="n">binary_encoded_y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+<span class="c1">#Train Test Split</span>
+<span class="n">train_x</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">test_y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">binary_encoded_y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+
+<span class="n">boosting_clf_ada_boost</span><span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span>
+    <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+<span class="n">bagging_clf_rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+
+
+<span class="n">clf_rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+<span class="n">clf_ada_boost</span> <span class="o">=</span> <span class="n">AdaBoostClassifier</span><span class="p">(</span>
+    <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">),</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+
+<span class="n">clf_logistic_reg</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;liblinear&#39;</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+
+<span class="c1">#Customizing and Exception message</span>
+<span class="k">class</span> <span class="nc">NumberOfClassifierException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c1">#Creating a stacking class</span>
+<span class="k">class</span> <span class="nc">Stacking</span><span class="p">():</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This is a test class for stacking !</span>
+<span class="sd">        Please fill Free to change it to fit your needs</span>
+<span class="sd">        We suppose that at least the First N-1 Classifiers have</span>
+<span class="sd">        a predict_proba function.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">classifiers</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">classifiers</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">numberOfClassifierException</span><span class="p">(</span><span class="s2">&quot;You must fit your classifier with 2 classifiers at least&quot;</span><span class="p">);</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_classifiers</span> <span class="o">=</span> <span class="n">classifiers</span>
+
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data_x</span><span class="p">,</span><span class="n">data_y</span><span class="p">):</span>
+
+        <span class="n">stacked_data_x</span> <span class="o">=</span> <span class="n">data_x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">classfier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classifiers</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">classfier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_x</span><span class="p">,</span><span class="n">data_y</span><span class="p">)</span>
+            <span class="n">stacked_data_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">stacked_data_x</span><span class="p">,</span><span class="n">classfier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">data_x</span><span class="p">)))</span>
+
+
+        <span class="n">last_classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classifiers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">last_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">stacked_data_x</span><span class="p">,</span><span class="n">data_y</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data_x</span><span class="p">):</span>
+
+        <span class="n">stacked_data_x</span> <span class="o">=</span> <span class="n">data_x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">classfier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classifiers</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">prob_predictions</span> <span class="o">=</span> <span class="n">classfier</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">data_x</span><span class="p">)</span>
+            <span class="n">stacked_data_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">stacked_data_x</span><span class="p">,</span><span class="n">prob_predictions</span><span class="p">))</span>
+
+        <span class="n">last_classifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classifiers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">last_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">stacked_data_x</span><span class="p">)</span>
+
+
+
+<span class="n">bagging_clf_rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+<span class="n">boosting_clf_ada_boost</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+
+<span class="n">classifers_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">clf_rf</span><span class="p">,</span><span class="n">clf_ada_boost</span><span class="p">,</span><span class="n">clf_logistic_reg</span><span class="p">]</span>
+<span class="n">clf_stacking</span> <span class="o">=</span> <span class="n">Stacking</span><span class="p">(</span><span class="n">classifers_list</span><span class="p">)</span>
+<span class="n">clf_stacking</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span><span class="n">train_y</span><span class="p">)</span>
+
+<span class="n">predictions_bagging</span> <span class="o">=</span> <span class="n">bagging_clf_rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+<span class="n">predictions_boosting</span> <span class="o">=</span> <span class="n">boosting_clf_ada_boost</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+<span class="n">predictions_stacking</span> <span class="o">=</span> <span class="n">clf_stacking</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For Bagging : F1 Score </span><span class="si">{}</span><span class="s2">, Accuracy </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">f1_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions_bagging</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span><span class="nb">round</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions_bagging</span><span class="p">),</span><span class="mi">2</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For Boosting : F1 Score </span><span class="si">{}</span><span class="s2">, Accuracy </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">f1_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions_boosting</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span><span class="nb">round</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions_boosting</span><span class="p">),</span><span class="mi">2</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;For Stacking : F1 Score </span><span class="si">{}</span><span class="s2">, Accuracy </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">f1_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions_stacking</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span><span class="nb">round</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">predictions_stacking</span><span class="p">),</span><span class="mi">2</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<p>Comparaison</p>
+<center><table class="docutils align-default">
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 23%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Metric</strong></p></th>
+<th class="head"><p><strong>Bagging</strong></p></th>
+<th class="head"><p><strong>Boosting</strong></p></th>
+<th class="head"><p><strong>Stacking</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Accuracy</strong></p></td>
+<td><p>0.90</p></td>
+<td><p>0.94</p></td>
+<td><p>0.98</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>F1-Score</strong></p></td>
+<td><p>0.88</p></td>
+<td><p>0.93</p></td>
+<td><p>0.98</p></td>
+</tr>
+</tbody>
+</table>
+</center></section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ensemble learning: bagging, boosting and stacking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#single-weak-learner">Single weak learner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bagging">Bagging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#boosting">Boosting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-stacking">Overview of stacking</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../auto_gallery/ml_resampling.html" title="previous chapter">Resampling methods</a></li>
+      <li>Next: <a href="../optimization/optim_gradient_descent.html" title="next chapter">Gradient descent</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/machine_learning/ensemble_learning.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Introduction to Machine Learning &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Import libraries" href="../auto_gallery/python_lang.html" />
+    <link rel="prev" title="Python ecosystem for data-science" href="python_ecosystem.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="introduction-to-machine-learning">
+<h1>Introduction to Machine Learning<a class="headerlink" href="#introduction-to-machine-learning" title="Permalink to this headline">¶</a></h1>
+<section id="machine-learning-within-data-science">
+<h2>Machine learning within data science<a class="headerlink" href="#machine-learning-within-data-science" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/data_science.png"><img alt="../_images/data_science.png" class="align-center" src="../_images/data_science.png" style="width: 202.75px; height: 197.75px;" /></a>
+<p>Machine learning covers two main types of data analysis:</p>
+<ol class="arabic simple">
+<li><p>Exploratory analysis: <strong>Unsupervised learning</strong>. Discover the structure within the data. E.g.: Experience (in years in a company) and salary are correlated.</p></li>
+<li><p>Predictive analysis: <strong>Supervised learning</strong>. This is sometimes described as <strong>“learn from the past to predict the future”</strong>. Scenario: a company wants to detect potential future clients among a base of prospects. Retrospective data analysis: we go through the data constituted of previous prospected companies, with their characteristics (size, domain, localization, etc…). Some of these companies became clients, others did not. The question is, can we possibly predict which of the new companies are more likely to become clients, based on their characteristics based on previous observations? In this example, the training data consists of a set of <em>n</em> training samples. Each sample, <span class="math notranslate nohighlight">\(x_i\)</span>, is a vector of <em>p</em> input features (company characteristics) and a target feature (<span class="math notranslate nohighlight">\(y_i \in \{Yes, No\}\)</span> (whether they became a client or not).</p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/machine_learning.png"><img alt="../_images/machine_learning.png" class="align-center" src="../_images/machine_learning.png" style="width: 529.0px; height: 163.5px;" /></a>
+</section>
+<section id="it-computing-science-tools">
+<h2>IT/computing science tools<a class="headerlink" href="#it-computing-science-tools" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>High Performance Computing (HPC)</p></li>
+<li><p>Data flow, data base, file I/O, etc.</p></li>
+<li><p>Python:  the programming language.</p></li>
+<li><p>Numpy: python library particularly useful for handling of raw numerical data (matrices, mathematical operations).</p></li>
+<li><p>Pandas: input/output, manipulation structured data (tables).</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="statistics-and-applied-mathematics">
+<h2>Statistics and applied mathematics<a class="headerlink" href="#statistics-and-applied-mathematics" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>Linear model.</p></li>
+<li><p>Non parametric statistics.</p></li>
+<li><p>Linear algebra: matrix operations, inversion, eigenvalues.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="data-analysis-methodology">
+<h1>Data analysis methodology<a class="headerlink" href="#data-analysis-methodology" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>Formalize customer’s needs into a learning problem:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>A target variable: supervised problem.</dt><dd><ul>
+<li><p>Target is qualitative: classification.</p></li>
+<li><p>Target is quantitative: regression.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>No target variable: unsupervised problem</dt><dd><ul>
+<li><p>Vizualisation of high-dimensional samples: PCA, manifolds learning, etc.</p></li>
+<li><p>Finding groups of samples (hidden structure): clustering.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Ask question about the datasets</dt><dd><ul class="simple">
+<li><p>Number of samples</p></li>
+<li><p>Number of variables, types of each variable.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Define the sample</dt><dd><ul class="simple">
+<li><p>For prospective study formalize the experimental design: inclusion/exlusion criteria. The conditions that define the acquisition of the dataset.</p></li>
+<li><p>For retrospective study formalize the experimental design: inclusion/exlusion criteria. The conditions that define the selection of the dataset.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>In a document formalize (i) the project objectives; (ii) the required learning dataset (more specifically the input data and the target variables); (iii) The conditions that define the acquisition of the dataset. In this document, warn the customer that the learned algorithms may not work on new data acquired under different condition.</p></li>
+<li><p>Read the learning dataset.</p></li>
+<li><ol class="lowerroman simple">
+<li><p>Sanity check (basic descriptive statistics); (ii) data cleaning (impute missing data, recoding); Final Quality Control (QC) perform descriptive statistics and think ! (remove possible confounding variable, etc.).</p></li>
+</ol>
+</li>
+<li><p>Explore data (visualization, PCA) and perform basic univariate statistics for association between the target an input variables.</p></li>
+<li><p>Perform more complex multivariate-machine learning.</p></li>
+<li><p>Model validation using a left-out-sample strategy (cross-validation, etc.).</p></li>
+<li><p>Apply on new data.</p></li>
+</ol>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction to Machine Learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#machine-learning-within-data-science">Machine learning within data science</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#it-computing-science-tools">IT/computing science tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#statistics-and-applied-mathematics">Statistics and applied mathematics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="python_ecosystem.html" title="previous chapter">Python ecosystem for data-science</a></li>
+      <li>Next: <a href="../auto_gallery/python_lang.html" title="next chapter">Import libraries</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/introduction/machine_learning.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

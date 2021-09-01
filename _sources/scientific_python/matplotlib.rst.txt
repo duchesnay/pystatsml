@@ -1,0 +1,278 @@
+data visualization: Matplotlib & Seaborn
+========================================
+
+Basic plots
+-----------
+
+.. code:: ipython3
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    
+    # inline plot (for jupyter)
+    %matplotlib inline
+    
+    plt.figure(figsize=(9, 3))
+    x = np.linspace(0, 10, 50)
+    sinus = np.sin(x)
+    
+    plt.plot(x, sinus)
+    plt.show()
+
+
+
+.. image:: matplotlib_files/matplotlib_1_0.png
+
+
+.. code:: ipython3
+
+    plt.figure(figsize=(9, 3))
+    
+    plt.plot(x, sinus, "o")
+    plt.show()
+    # use plt.plot to get color / marker abbreviations
+
+
+
+.. image:: matplotlib_files/matplotlib_2_0.png
+
+
+.. code:: ipython3
+
+    # Rapid multiplot
+    
+    plt.figure(figsize=(9, 3))
+    cosinus = np.cos(x)
+    plt.plot(x, sinus, "-b", x, sinus, "ob", x, cosinus, "-r", x, cosinus, "or")
+    plt.xlabel('this is x!')
+    plt.ylabel('this is y!')
+    plt.title('My First Plot')
+    plt.show()
+
+
+
+.. image:: matplotlib_files/matplotlib_3_0.png
+
+
+.. code:: ipython3
+
+    # Step by step
+    
+    plt.figure(figsize=(9, 3))
+    plt.plot(x, sinus, label='sinus', color='blue', linestyle='--', linewidth=2)
+    plt.plot(x, cosinus, label='cosinus', color='red', linestyle='-', linewidth=2)
+    plt.legend()
+    plt.show()
+
+
+
+.. image:: matplotlib_files/matplotlib_4_0.png
+
+
+Scatter (2D) plots
+------------------
+
+Load dataset
+
+.. code:: ipython3
+
+    import pandas as pd
+    try:
+        salary = pd.read_csv("../datasets/salary_table.csv")
+    except:
+        url = 'https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv'
+        salary = pd.read_csv(url)
+    
+    df = salary
+
+Simple scatter with colors
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython3
+
+    plt.figure(figsize=(3, 3), dpi=100)
+    _ = sns.scatterplot(x="experience", y="salary", hue="education", data=salary)
+
+
+
+.. image:: matplotlib_files/matplotlib_8_0.png
+
+
+Legend outside
+
+.. code:: ipython3
+
+    ax = sns.relplot(x="experience", y="salary", hue="education", data=salary)
+
+
+
+.. image:: matplotlib_files/matplotlib_10_0.png
+
+
+Linear model
+~~~~~~~~~~~~
+
+.. code:: ipython3
+
+    ax = sns.lmplot(x="experience", y="salary", hue="education", data=salary)
+
+
+
+.. image:: matplotlib_files/matplotlib_12_0.png
+
+
+Scatter plot with colors and symbols
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython3
+
+    ax = sns.relplot(x="experience", y="salary", hue="education", style='management', data=salary)
+
+
+
+.. image:: matplotlib_files/matplotlib_14_0.png
+
+
+Saving Figures
+--------------
+
+.. code:: ipython3
+
+    ### bitmap format
+    plt.plot(x, sinus)
+    plt.savefig("sinus.png")
+    plt.close()
+    
+    # Prefer vectorial format (SVG: Scalable Vector Graphics) can be edited with 
+    # Inkscape, Adobe Illustrator, Blender, etc.
+    plt.plot(x, sinus)
+    plt.savefig("sinus.svg")
+    plt.close()
+    
+    # Or pdf
+    plt.plot(x, sinus)
+    plt.savefig("sinus.pdf")
+    plt.close()
+
+Boxplot and violin plot: one factor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Box plots are non-parametric: they display variation in samples of a
+statistical population without making any assumptions of the underlying
+statistical distribution.
+
+.. figure:: images/boxplot.png
+   :alt: title
+   :width: 7cm
+
+   title
+
+.. code:: ipython3
+
+    ax = sns.boxplot(x="management", y="salary", data=salary)
+    ax = sns.stripplot(x="management", y="salary", data=salary, jitter=True, color="black")
+
+
+
+.. image:: matplotlib_files/matplotlib_18_0.png
+
+
+.. code:: ipython3
+
+    ax = sns.violinplot(x="management", y="salary", data=salary)
+    ax = sns.stripplot(x="management", y="salary", data=salary, jitter=True, color="white")
+
+
+
+.. image:: matplotlib_files/matplotlib_19_0.png
+
+
+Boxplot and violin plot: two factors
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython3
+
+    ax = sns.boxplot(x="management", y="salary", hue="education", data=salary)
+    ax = sns.stripplot(x="management", y="salary", hue="education", data=salary, jitter=True, dodge=True, linewidth=1)
+
+
+
+.. image:: matplotlib_files/matplotlib_21_0.png
+
+
+.. code:: ipython3
+
+    ax = sns.violinplot(x="management", y="salary", hue="education", data=salary)
+    ax = sns.stripplot(x="management", y="salary", hue="education", data=salary, jitter=True, dodge=True, linewidth=1)
+
+
+
+.. image:: matplotlib_files/matplotlib_22_0.png
+
+
+Distributions and density plot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`Distributions with
+seaborn <https://seaborn.pydata.org/tutorial/distributions.html>`__
+
+.. code:: ipython3
+
+    ax = sns.displot(x="salary", hue="management", kind="kde", data=salary, fill=True)
+
+
+
+.. image:: matplotlib_files/matplotlib_24_0.png
+
+
+Multiple axis
+-------------
+
+.. code:: ipython3
+
+    fig, axes = plt.subplots(3, 1, figsize=(9, 9), sharex=True)
+    
+    i = 0
+    for edu, d in salary.groupby(['education']):
+        sns.kdeplot(x="salary", hue="management", data=d, fill=True, ax=axes[i], palette="muted")
+        axes[i].set_title(edu)
+        i += 1
+
+
+
+.. image:: matplotlib_files/matplotlib_26_0.png
+
+
+Pairwise scatter plots
+----------------------
+
+.. code:: ipython3
+
+    ax = sns.pairplot(salary, hue="management")
+
+
+
+.. image:: matplotlib_files/matplotlib_28_0.png
+
+
+Time series
+-----------
+
+.. code:: ipython3
+
+    import seaborn as sns
+    sns.set(style="darkgrid")
+    
+    # Load an example dataset with long-form data
+    fmri = sns.load_dataset("fmri")
+    
+    # Plot the responses for different events and regions
+    ax = sns.pointplot(x="timepoint", y="signal",
+                 hue="region", style="event",
+                 data=fmri)
+
+
+
+.. image:: matplotlib_files/matplotlib_30_0.png
+

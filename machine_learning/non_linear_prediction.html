@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Non-linear models &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="non-linear-models">
+<h1>Non-linear models<a class="headerlink" href="#non-linear-models" title="Permalink to this headline">¶</a></h1>
+<section id="support-vector-machines-svm">
+<h2>Support Vector Machines (SVM)<a class="headerlink" href="#support-vector-machines-svm" title="Permalink to this headline">¶</a></h2>
+<p>SVM are based kernel methods require only a user-specified kernel
+function <span class="math notranslate nohighlight">\(K(x_i, x_j)\)</span>, i.e., a <strong>similarity function</strong> over pairs
+of data points <span class="math notranslate nohighlight">\((x_i, x_j)\)</span> into kernel (dual) space on which
+learning algorithms operate linearly, i.e. every operation on points is
+a linear combination of <span class="math notranslate nohighlight">\(K(x_i, x_j)\)</span>.</p>
+<p>Outline of the SVM algorithm:</p>
+<ol class="arabic">
+<li><p>Map points <span class="math notranslate nohighlight">\(x\)</span> into kernel space using a kernel function:
+<span class="math notranslate nohighlight">\(x \rightarrow K(x, .)\)</span>.</p></li>
+<li><p>Learning algorithms operates linearly by dot product into high-kernel
+space <span class="math notranslate nohighlight">\(K(., x_i) \cdot K(., x_j)\)</span>.</p>
+<ul>
+<li><p>Using the kernel trick (Mercer’s Theorem) replaces dot product in
+high dimensional space by a simpler operation such that
+<span class="math notranslate nohighlight">\(K(., x_i) \cdot K(., x_j) = K(x_i, x_j)\)</span>. Thus we only need
+to compute a similarity measure for each pairs of point and store
+in a <span class="math notranslate nohighlight">\(N \times N\)</span> Gram matrix.</p></li>
+<li><p>Finally, The learning process consist of estimating the
+<span class="math notranslate nohighlight">\(\alpha_i\)</span> of the decision function that maximises the hinge
+loss (of <span class="math notranslate nohighlight">\(f(x)\)</span>) plus some penalty when applied on all
+training points.</p>
+<div class="math notranslate nohighlight">
+\[f(x) = \text{sign} \left(\sum_i^N \alpha_i~y_i~K(x_i, x)\right).\]</div>
+</li>
+</ul>
+</li>
+<li><p>Predict a new point <span class="math notranslate nohighlight">\(x\)</span> using the decision function.</p></li>
+</ol>
+<figure class="align-default" id="id1">
+<img alt="Support Vector Machines." src="../_images/svm_rbf_kernel_mapping_and_decision_function1.png" />
+<figcaption>
+<p><span class="caption-text">Support Vector Machines.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<section id="gaussian-kernel-rbf-radial-basis-function">
+<h3>Gaussian kernel (RBF, Radial Basis Function):<a class="headerlink" href="#gaussian-kernel-rbf-radial-basis-function" title="Permalink to this headline">¶</a></h3>
+<p>One of the most commonly used kernel is the Radial Basis Function (RBF)
+Kernel. For a pair of points <span class="math notranslate nohighlight">\(x_i, x_j\)</span> the RBF kernel is defined
+as:</p>
+<p>Where <span class="math notranslate nohighlight">\(\sigma\)</span> (or <span class="math notranslate nohighlight">\(\gamma\)</span>) defines the kernel width
+parameter. Basically, we consider a Gaussian function centered on each
+training sample <span class="math notranslate nohighlight">\(x_i\)</span>. it has a ready interpretation as a
+similarity measure as it decreases with squared Euclidean distance
+between the two feature vectors.</p>
+<p>Non linear SVM also exists for regression problems.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="c1">#import warnings</span>
+<span class="c1">#warnings.filterwarnings(action=&#39;once&#39;)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dataset</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">n_redundant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                    <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                    <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                    <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">)</span><span class="c1">#, gamma=1)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#Errors: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+
+<span class="n">clf</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Usefull internals:</span>
+<span class="c1"># Array of support vectors</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">support_vectors_</span>
+
+<span class="c1"># indices of support vectors within original X</span>
+<span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">clf</span><span class="o">.</span><span class="n">support_</span><span class="p">,:]</span> <span class="o">==</span> <span class="n">clf</span><span class="o">.</span><span class="n">support_vectors_</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Errors: 0</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="decision-tree">
+<h2>Decision tree<a class="headerlink" href="#decision-tree" title="Permalink to this headline">¶</a></h2>
+<p>A tree can be “learned” by splitting the training dataset into subsets
+based on an features value test.</p>
+<p>Each internal node represents a “test” on an feature resulting on the
+split of the current sample. At each step the algorithm selects the
+feature and a cutoff value that maximises a given metric. Different
+metrics exist for regression tree (target is continuous) or
+classification tree (the target is qualitative).</p>
+<p>This process is repeated on each derived subset in a recursive manner
+called recursive partitioning. The recursion is completed when the
+subset at a node has all the same value of the target variable, or when
+splitting no longer adds value to the predictions. This general
+principle is implemented by many recursive partitioning tree algorithms.</p>
+<figure class="align-default" id="id2">
+<img alt="Classification tree." src="machine_learning/images/classification_tree.jpg" />
+<figcaption>
+<p><span class="caption-text">Classification tree.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Decision trees are simple to understand and interpret however they tend
+to overfit the data. However decision trees tend to overfit the training
+set. Leo Breiman propose random forest to deal with this issue.</p>
+<p>A single decision tree is usually overfits the data it is learning from
+because it learn from only one pathway of decisions. Predictions from a
+single decision tree usually don’t make accurate predictions on new
+data.</p>
+</section>
+<section id="random-forest">
+<h2>Random forest<a class="headerlink" href="#random-forest" title="Permalink to this headline">¶</a></h2>
+<p>A random forest is a meta estimator that fits a number of <strong>decision
+tree learners</strong> on various sub-samples of the dataset and use averaging
+to improve the predictive accuracy and control over-fitting.</p>
+<p>Random forest models reduce the risk of overfitting by introducing
+randomness by:</p>
+<ul class="simple">
+<li><p>building multiple trees (n_estimators)</p></li>
+<li><p>drawing observations with replacement (i.e., a bootstrapped sample)</p></li>
+<li><p>splitting nodes on the best split among a random subset of the
+features selected at every node</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="n">forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#Errors: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="n">forest</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Errors: 0</span>
+</pre></div>
+</div>
+</section>
+<section id="extra-trees-low-variance">
+<h2>Extra Trees (Low Variance)<a class="headerlink" href="#extra-trees-low-variance" title="Permalink to this headline">¶</a></h2>
+<p>Extra Trees is like Random Forest, in that it builds multiple trees and
+splits nodes using random subsets of features, but with two key
+differences: it does not bootstrap observations (meaning it samples
+without replacement), and nodes are split on random splits, not best
+splits. So, in summary, ExtraTrees: builds multiple trees with bootstrap
+= False by default, which means it samples without replacement nodes are
+split based on random splits among a random subset of the features
+selected at every node In Extra Trees, randomness doesn’t come from
+bootstrapping of data, but rather comes from the random splits of all
+observations. ExtraTrees is named for (Extremely Randomized Trees).</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/lmm/lmm.html">Linear Mixed Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/machine_learning/non_linear_prediction.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

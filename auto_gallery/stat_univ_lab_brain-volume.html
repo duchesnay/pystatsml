@@ -1,0 +1,693 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Lab: Brain volumes study &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Multivariate statistics" href="../statistics/stat_multiv.html" />
+    <link rel="prev" title="Univariate statistics" href="../statistics/stat_univ.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-gallery-stat-univ-lab-brain-volume-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="lab-brain-volumes-study">
+<span id="sphx-glr-auto-gallery-stat-univ-lab-brain-volume-py"></span><h1>Lab: Brain volumes study<a class="headerlink" href="#lab-brain-volumes-study" title="Permalink to this headline">¶</a></h1>
+<p>The study provides the brain volumes of grey matter (gm), white matter (wm)
+and cerebrospinal fluid) (csf) of 808 anatomical MRI scans.</p>
+<section id="manipulate-data">
+<h2>Manipulate data<a class="headerlink" href="#manipulate-data" title="Permalink to this headline">¶</a></h2>
+<p>Set the working directory within a directory called “brainvol”</p>
+<p>Create 2 subdirectories: <cite>data</cite> that will contain downloaded data and
+<cite>reports</cite> for results of the analysis.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+
+<span class="n">WD</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="s2">&quot;brainvol&quot;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#os.chdir(WD)</span>
+
+<span class="c1"># use cookiecutter file organization</span>
+<span class="c1"># https://drivendata.github.io/cookiecutter-data-science/</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#os.makedirs(&quot;reports&quot;, exist_ok=True)</span>
+</pre></div>
+</div>
+<p><strong>Fetch data</strong></p>
+<ul class="simple">
+<li><p>Demographic data <cite>demo.csv</cite> (columns: <cite>participant_id</cite>, <cite>site</cite>, <cite>group</cite>,
+<cite>age</cite>, <cite>sex</cite>) and tissue volume data: <cite>group</cite> is Control or Patient.
+<cite>site</cite> is the recruiting site.</p></li>
+<li><p>Gray matter volume <cite>gm.csv</cite> (columns: <cite>participant_id</cite>, <cite>session</cite>, <cite>gm_vol</cite>)</p></li>
+<li><p>White matter volume <cite>wm.csv</cite> (columns: <cite>participant_id</cite>, <cite>session</cite>, <cite>wm_vol</cite>)</p></li>
+<li><p>Cerebrospinal Fluid <cite>csf.csv</cite> (columns: <cite>participant_id</cite>, <cite>session</cite>, <cite>csf_vol</cite>)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/duchesnay/pystatsml/raw/master/datasets/brain_volumes/</span><span class="si">%s</span><span class="s1">&#39;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;demo.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;gm.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;wm.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;csf.csv&quot;</span><span class="p">]:</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">base_url</span> <span class="o">%</span> <span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+
+<span class="c1"># Read all CSV in one line</span>
+<span class="c1"># dicts = {k: pd.read_csv(os.path.join(WD, &quot;data&quot;, &quot;%s.csv&quot; % k))</span>
+<span class="c1">#          for k in [&quot;demo&quot;, &quot;gm&quot;, &quot;wm&quot;, &quot;csf&quot;]}</span>
+
+<span class="n">demo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;demo.csv&quot;</span><span class="p">))</span>
+<span class="n">gm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;gm.csv&quot;</span><span class="p">))</span>
+<span class="n">wm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;wm.csv&quot;</span><span class="p">))</span>
+<span class="n">csf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;csf.csv&quot;</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tables can be merge using shared columns&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gm</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tables can be merge using shared columns
+  participant_id session  gm_vol
+0    sub-S1-0002  ses-01    0.67
+1    sub-S1-0002  ses-02    0.68
+2    sub-S1-0002  ses-03    0.67
+3    sub-S1-0004  ses-01    0.89
+4    sub-S1-0004  ses-02    0.88
+</pre></div>
+</div>
+<p><strong>Merge tables</strong> according to <cite>participant_id</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brain_vol</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span> <span class="n">gm</span><span class="p">),</span> <span class="n">wm</span><span class="p">),</span> <span class="n">csf</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">brain_vol</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">808</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Drop rows with missing values</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brain_vol</span> <span class="o">=</span> <span class="n">brain_vol</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">brain_vol</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">766</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Compute Total Intra-cranial volume</strong>
+<cite>tiv_vol</cite> = <cite>gm_vol</cite> + <cite>csf_vol</cite> + <cite>wm_vol</cite>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;tiv_vol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;gm_vol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;wm_vol&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;csf_vol&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>Compute tissue fractions</strong>
+<cite>gm_f = gm_vol / tiv_vol</cite>, <cite>wm_f  = wm_vol / tiv_vol</cite>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;gm_f&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;gm_vol&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;tiv_vol&quot;</span><span class="p">]</span>
+<span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;wm_f&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;wm_vol&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">brain_vol</span><span class="p">[</span><span class="s2">&quot;tiv_vol&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>Save in a excel file</strong> <cite>brain_vol.xlsx</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brain_vol</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;brain_vol.xlsx&quot;</span><span class="p">),</span>
+                   <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="descriptive-statistics">
+<h2>Descriptive Statistics<a class="headerlink" href="#descriptive-statistics" title="Permalink to this headline">¶</a></h2>
+<p>Load excel file <cite>brain_vol.xlsx</cite></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smfrmla</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="n">brain_vol</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WD</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;brain_vol.xlsx&quot;</span><span class="p">),</span>
+                          <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="c1"># Round float at 2 decimals when printing</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">float_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:,.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span>
+</pre></div>
+</div>
+<p><strong>Descriptive statistics</strong>
+Most of participants have several MRI sessions (column <cite>session</cite>)
+Select on rows from session one “ses-01”</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brain_vol1</span> <span class="o">=</span> <span class="n">brain_vol</span><span class="p">[</span><span class="n">brain_vol</span><span class="o">.</span><span class="n">session</span> <span class="o">==</span> <span class="s2">&quot;ses-01&quot;</span><span class="p">]</span>
+<span class="c1"># Check that there are no duplicates</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">brain_vol1</span><span class="o">.</span><span class="n">participant_id</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">brain_vol1</span><span class="o">.</span><span class="n">participant_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Global descriptives statistics of numerical variables</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">desc_glob_num</span> <span class="o">=</span> <span class="n">brain_vol1</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">desc_glob_num</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         age  gm_vol  wm_vol  csf_vol  tiv_vol   gm_f   wm_f
+count 244.00  244.00  244.00   244.00   244.00 244.00 244.00
+mean   34.54    0.71    0.44     0.31     1.46   0.49   0.30
+std    12.09    0.08    0.07     0.08     0.17   0.04   0.03
+min    18.00    0.48    0.05     0.12     0.83   0.37   0.06
+25%    25.00    0.66    0.40     0.25     1.34   0.46   0.28
+50%    31.00    0.70    0.43     0.30     1.45   0.49   0.30
+75%    44.00    0.77    0.48     0.37     1.57   0.52   0.31
+max    61.00    1.03    0.62     0.63     2.06   0.60   0.36
+</pre></div>
+</div>
+<p>Global Descriptive statistics of categorical variable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">desc_glob_cat</span> <span class="o">=</span> <span class="n">brain_vol1</span><span class="p">[[</span><span class="s2">&quot;site&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">desc_glob_cat</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get count by level&quot;</span><span class="p">)</span>
+<span class="n">desc_glob_cat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">col</span><span class="p">:</span> <span class="n">brain_vol1</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+                             <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;site&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">desc_glob_cat</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>       site    group  sex
+count   244      244  244
+unique    7        2    2
+top      S7  Patient    M
+freq     65      157  155
+Get count by level
+         site  group    sex
+S7      65.00    nan    nan
+S5      62.00    nan    nan
+S8      59.00    nan    nan
+S3      29.00    nan    nan
+S4      15.00    nan    nan
+S1      13.00    nan    nan
+S6       1.00    nan    nan
+Patient   nan 157.00    nan
+Control   nan  87.00    nan
+M         nan    nan 155.00
+F         nan    nan  89.00
+</pre></div>
+</div>
+<p>Remove the single participant from site 6</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brain_vol</span> <span class="o">=</span> <span class="n">brain_vol</span><span class="p">[</span><span class="n">brain_vol</span><span class="o">.</span><span class="n">site</span> <span class="o">!=</span> <span class="s2">&quot;S6&quot;</span><span class="p">]</span>
+<span class="n">brain_vol1</span> <span class="o">=</span> <span class="n">brain_vol</span><span class="p">[</span><span class="n">brain_vol</span><span class="o">.</span><span class="n">session</span> <span class="o">==</span> <span class="s2">&quot;ses-01&quot;</span><span class="p">]</span>
+<span class="n">desc_glob_cat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">col</span><span class="p">:</span> <span class="n">brain_vol1</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+                             <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;site&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">desc_glob_cat</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>         site  group    sex
+S7      65.00    nan    nan
+S5      62.00    nan    nan
+S8      59.00    nan    nan
+S3      29.00    nan    nan
+S4      15.00    nan    nan
+S1      13.00    nan    nan
+Patient   nan 157.00    nan
+Control   nan  86.00    nan
+M         nan    nan 155.00
+F         nan    nan  88.00
+</pre></div>
+</div>
+<p>Descriptives statistics of numerical variables per clinical status</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">desc_group_num</span> <span class="o">=</span> <span class="n">brain_vol1</span><span class="p">[[</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s1">&#39;gm_vol&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">desc_group_num</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>        gm_vol
+         count mean  std  min  25%  50%  75%  max
+group
+Control  86.00 0.72 0.09 0.48 0.66 0.71 0.78 1.03
+Patient 157.00 0.70 0.08 0.53 0.65 0.70 0.76 0.90
+</pre></div>
+</div>
+</section>
+<section id="statistics">
+<h2>Statistics<a class="headerlink" href="#statistics" title="Permalink to this headline">¶</a></h2>
+<p>Objectives:</p>
+<ol class="arabic simple">
+<li><p>Site effect of gray matter atrophy</p></li>
+<li><p>Test the association between the age and gray matter atrophy in the control
+and patient population independently.</p></li>
+<li><p>Test for differences of atrophy between the patients and the controls</p></li>
+<li><p>Test for interaction between age and clinical status, ie: is the brain
+atrophy process in patient population faster than in the control population.</p></li>
+<li><p>The effect of the medication in the patient population.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smfrmla</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+<p><strong>1 Site effect on Grey Matter atrophy</strong></p>
+<p>The model  is Oneway Anova gm_f ~ site
+The ANOVA test has important assumptions that must be satisfied in order
+for the associated p-value to be valid.</p>
+<ul class="simple">
+<li><p>The samples are independent.</p></li>
+<li><p>Each sample is from a normally distributed population.</p></li>
+<li><p>The population standard deviations of the groups are all equal.
+This property is known as homoscedasticity.</p></li>
+</ul>
+<p>Plot</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;site&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;gm_f&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span>
+<span class="c1"># sns.violinplot(x=&quot;site&quot;, y=&quot;wm_f&quot;, data=brain_vol1)</span>
+</pre></div>
+</div>
+<img alt="stat univ lab brain volume" class="sphx-glr-single-img" src="../_images/sphx_glr_stat_univ_lab_brain-volume_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:xlabel=&#39;site&#39;, ylabel=&#39;gm_f&#39;&gt;
+</pre></div>
+</div>
+<p>Stats with scipy</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fstat</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">f_oneway</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">brain_vol1</span><span class="o">.</span><span class="n">gm_f</span><span class="p">[</span><span class="n">brain_vol1</span><span class="o">.</span><span class="n">site</span> <span class="o">==</span> <span class="n">s</span><span class="p">]</span>
+                                   <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">brain_vol1</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">unique</span><span class="p">()])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Oneway Anova gm_f ~ site F=</span><span class="si">%.2f</span><span class="s2">, p-value=</span><span class="si">%E</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fstat</span><span class="p">,</span> <span class="n">pval</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Oneway Anova gm_f ~ site F=14.82, p-value=1.188136E-12
+</pre></div>
+</div>
+<p>Stats with statsmodels</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anova</span> <span class="o">=</span> <span class="n">smfrmla</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;gm_f ~ site&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="c1"># print(anova.summary())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Site explains </span><span class="si">%.2f%%</span><span class="s2"> of the grey matter fraction variance&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><span class="n">anova</span><span class="o">.</span><span class="n">rsquared</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">anova_lm</span><span class="p">(</span><span class="n">anova</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Site explains 23.82% of the grey matter fraction variance
+          sum_sq     df     F  PR(&gt;F)
+site        0.11   5.00 14.82    0.00
+Residual    0.35 237.00   nan     nan
+</pre></div>
+</div>
+<p><strong>2. Test the association between the age and gray matter atrophy</strong> in the
+control and patient population independently.</p>
+<p>Plot</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;gm_f&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span>
+
+<span class="n">brain_vol1_ctl</span> <span class="o">=</span> <span class="n">brain_vol1</span><span class="p">[</span><span class="n">brain_vol1</span><span class="o">.</span><span class="n">group</span> <span class="o">==</span> <span class="s2">&quot;Control&quot;</span><span class="p">]</span>
+<span class="n">brain_vol1_pat</span> <span class="o">=</span> <span class="n">brain_vol1</span><span class="p">[</span><span class="n">brain_vol1</span><span class="o">.</span><span class="n">group</span> <span class="o">==</span> <span class="s2">&quot;Patient&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="stat univ lab brain volume" class="sphx-glr-single-img" src="../_images/sphx_glr_stat_univ_lab_brain-volume_002.png" />
+<p>Stats with scipy</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- In control population ---&quot;</span><span class="p">)</span>
+<span class="n">beta</span><span class="p">,</span> <span class="n">beta0</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> \
+    <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">brain_vol1_ctl</span><span class="o">.</span><span class="n">age</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">brain_vol1_ctl</span><span class="o">.</span><span class="n">gm_f</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;gm_f = </span><span class="si">%f</span><span class="s2"> * age + </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">beta0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Corr: </span><span class="si">%f</span><span class="s2">, r-squared: </span><span class="si">%f</span><span class="s2">, p-value: </span><span class="si">%f</span><span class="s2">, std_err: </span><span class="si">%f</span><span class="s2">&quot;</span>\
+      <span class="o">%</span> <span class="p">(</span><span class="n">r_value</span><span class="p">,</span> <span class="n">r_value</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- In patient population ---&quot;</span><span class="p">)</span>
+<span class="n">beta</span><span class="p">,</span> <span class="n">beta0</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> \
+    <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">brain_vol1_pat</span><span class="o">.</span><span class="n">age</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">brain_vol1_pat</span><span class="o">.</span><span class="n">gm_f</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;gm_f = </span><span class="si">%f</span><span class="s2"> * age + </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">beta0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Corr: </span><span class="si">%f</span><span class="s2">, r-squared: </span><span class="si">%f</span><span class="s2">, p-value: </span><span class="si">%f</span><span class="s2">, std_err: </span><span class="si">%f</span><span class="s2">&quot;</span>\
+      <span class="o">%</span> <span class="p">(</span><span class="n">r_value</span><span class="p">,</span> <span class="n">r_value</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Decrease seems faster in patient than in control population&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>--- In control population ---
+gm_f = -0.001181 * age + 0.529829
+Corr: -0.325122, r-squared: 0.105704, p-value: 0.002255, std_err: 0.000375
+--- In patient population ---
+gm_f = -0.001899 * age + 0.556886
+Corr: -0.528765, r-squared: 0.279592, p-value: 0.000000, std_err: 0.000245
+Decrease seems faster in patient than in control population
+</pre></div>
+</div>
+<p>Stats with statsmodels</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- In control population ---&quot;</span><span class="p">)</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="n">smfrmla</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;gm_f ~ age&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1_ctl</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lr</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Age explains </span><span class="si">%.2f%%</span><span class="s2"> of the grey matter fraction variance&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><span class="n">lr</span><span class="o">.</span><span class="n">rsquared</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- In patient population ---&quot;</span><span class="p">)</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="n">smfrmla</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;gm_f ~ age&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1_pat</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lr</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Age explains </span><span class="si">%.2f%%</span><span class="s2"> of the grey matter fraction variance&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><span class="n">lr</span><span class="o">.</span><span class="n">rsquared</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>--- In control population ---
+                             OLS Regression Results
+===============================================================================
+Dep. Variable:                    gm_f   R-squared:                       0.106
+Model:                             OLS   Adj. R-squared:                  0.095
+Method:                  Least Squares   F-statistic:                     9.929
+Date:              ven., 08 janv. 2021   Prob (F-statistic):            0.00226
+Time:                         16:12:34   Log-Likelihood:                 159.34
+No. Observations:                   86   AIC:                            -314.7
+Df Residuals:                       84   BIC:                            -309.8
+Df Model:                            1
+Covariance Type:             nonrobust
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.5298      0.013     40.350      0.000       0.504       0.556
+age           -0.0012      0.000     -3.151      0.002      -0.002      -0.000
+==============================================================================
+Omnibus:                        0.946   Durbin-Watson:                   1.628
+Prob(Omnibus):                  0.623   Jarque-Bera (JB):                0.782
+Skew:                           0.233   Prob(JB):                        0.676
+Kurtosis:                       2.962   Cond. No.                         111.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+Age explains 10.57% of the grey matter fraction variance
+--- In patient population ---
+                             OLS Regression Results
+===============================================================================
+Dep. Variable:                    gm_f   R-squared:                       0.280
+Model:                             OLS   Adj. R-squared:                  0.275
+Method:                  Least Squares   F-statistic:                     60.16
+Date:              ven., 08 janv. 2021   Prob (F-statistic):           1.09e-12
+Time:                         16:12:34   Log-Likelihood:                 289.38
+No. Observations:                  157   AIC:                            -574.8
+Df Residuals:                      155   BIC:                            -568.7
+Df Model:                            1
+Covariance Type:             nonrobust
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.5569      0.009     60.817      0.000       0.539       0.575
+age           -0.0019      0.000     -7.756      0.000      -0.002      -0.001
+==============================================================================
+Omnibus:                        2.310   Durbin-Watson:                   1.325
+Prob(Omnibus):                  0.315   Jarque-Bera (JB):                1.854
+Skew:                           0.230   Prob(JB):                        0.396
+Kurtosis:                       3.268   Cond. No.                         111.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+Age explains 27.96% of the grey matter fraction variance
+</pre></div>
+</div>
+<p>Before testing for differences of atrophy between the patients ans the controls
+<strong>Preliminary tests for age x group effect</strong> (patients would be older or
+younger than Controls)</p>
+<p>Plot</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="stat univ lab brain volume" class="sphx-glr-single-img" src="../_images/sphx_glr_stat_univ_lab_brain-volume_003.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot:xlabel=&#39;group&#39;, ylabel=&#39;age&#39;&gt;
+</pre></div>
+</div>
+<p>Stats with scipy</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">brain_vol1_ctl</span><span class="o">.</span><span class="n">age</span><span class="p">,</span> <span class="n">brain_vol1_pat</span><span class="o">.</span><span class="n">age</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Ttest_indResult(statistic=-1.2155557697674162, pvalue=0.225343592508479)
+</pre></div>
+</div>
+<p>Stats with statsmodels</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">smfrmla</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;age ~ group&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No significant difference in age between patients and controls&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>                             OLS Regression Results
+===============================================================================
+Dep. Variable:                     age   R-squared:                       0.006
+Model:                             OLS   Adj. R-squared:                  0.002
+Method:                  Least Squares   F-statistic:                     1.478
+Date:              ven., 08 janv. 2021   Prob (F-statistic):              0.225
+Time:                         16:12:34   Log-Likelihood:                -949.69
+No. Observations:                  243   AIC:                             1903.
+Df Residuals:                      241   BIC:                             1910.
+Df Model:                            1
+Covariance Type:             nonrobust
+====================================================================================
+                       coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------------
+Intercept           33.2558      1.305     25.484      0.000      30.685      35.826
+group[T.Patient]     1.9735      1.624      1.216      0.225      -1.225       5.172
+==============================================================================
+Omnibus:                       35.711   Durbin-Watson:                   2.096
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               20.726
+Skew:                           0.569   Prob(JB):                     3.16e-05
+Kurtosis:                       2.133   Cond. No.                         3.12
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+No significant difference in age between patients and controls
+</pre></div>
+</div>
+<p><strong>Preliminary tests for sex x group</strong> (more/less males in patients than
+in Controls)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">crosstab</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">brain_vol1</span><span class="o">.</span><span class="n">sex</span><span class="p">,</span> <span class="n">brain_vol1</span><span class="o">.</span><span class="n">group</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Obeserved contingency table&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">crosstab</span><span class="p">)</span>
+
+<span class="n">chi2</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">dof</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2_contingency</span><span class="p">(</span><span class="n">crosstab</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Chi2 = </span><span class="si">%f</span><span class="s2">, pval = </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">chi2</span><span class="p">,</span> <span class="n">pval</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No significant difference in sex between patients and controls&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Obeserved contingency table
+group  Control  Patient
+sex
+F           33       55
+M           53      102
+Chi2 = 0.143253, pval = 0.705068
+No significant difference in sex between patients and controls
+</pre></div>
+</div>
+<p><strong>3. Test for differences of atrophy between the patients and the controls</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">anova_lm</span><span class="p">(</span><span class="n">smfrmla</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;gm_f ~ group&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(),</span>
+                        <span class="n">typ</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No significant difference in atrophy between patients and controls&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>          sum_sq     df    F  PR(&gt;F)
+group       0.00   1.00 0.01    0.92
+Residual    0.46 241.00  nan     nan
+No significant difference in atrophy between patients and controls
+</pre></div>
+</div>
+<p>This model is simplistic we should adjust for age and site</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">anova_lm</span><span class="p">(</span><span class="n">smfrmla</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span>
+        <span class="s2">&quot;gm_f ~ group + age + site&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(),</span> <span class="n">typ</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No significant difference in GM between patients and controls&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>          sum_sq     df     F  PR(&gt;F)
+group       0.00   1.00  1.82    0.18
+site        0.11   5.00 19.79    0.00
+age         0.09   1.00 86.86    0.00
+Residual    0.25 235.00   nan     nan
+No significant difference in GM between patients and controls
+</pre></div>
+</div>
+<p>Observe age effect</p>
+<p><strong>4. Test for interaction between age and clinical status</strong>, ie: is the brain
+atrophy process in patient population faster than in the control population.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ancova</span> <span class="o">=</span> <span class="n">smfrmla</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;gm_f ~ group:age + age + site&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">brain_vol1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">anova_lm</span><span class="p">(</span><span class="n">ancova</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;= Parameters =&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ancova</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%.3f%%</span><span class="s2"> of grey matter loss per year (almost </span><span class="si">%.1f%%</span><span class="s2"> per decade)&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><span class="n">ancova</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="n">ancova</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">age</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;grey matter loss in patients is accelerated by </span><span class="si">%.3f%%</span><span class="s2"> per decade&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><span class="n">ancova</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;group[T.Patient]:age&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>           sum_sq     df     F  PR(&gt;F)
+site         0.11   5.00 20.28    0.00
+age          0.10   1.00 89.37    0.00
+group:age    0.00   1.00  3.28    0.07
+Residual     0.25 235.00   nan     nan
+= Parameters =
+Intercept               0.52
+site[T.S3]              0.01
+site[T.S4]              0.03
+site[T.S5]              0.01
+site[T.S7]              0.06
+site[T.S8]              0.02
+age                    -0.00
+group[T.Patient]:age   -0.00
+dtype: float64
+-0.148% of grey matter loss per year (almost -1.5% per decade)
+grey matter loss in patients is accelerated by -0.232% per decade
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.007 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-stat-univ-lab-brain-volume-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/324d6552e8a5bd8c9e22bb46437a1390/stat_univ_lab_brain-volume.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">stat_univ_lab_brain-volume.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/55698afa469a4e6cd39e770208c7c4ae/stat_univ_lab_brain-volume.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">stat_univ_lab_brain-volume.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Lab: Brain volumes study</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#manipulate-data">Manipulate data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#descriptive-statistics">Descriptive Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#statistics">Statistics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../statistics/stat_univ.html" title="previous chapter">Univariate statistics</a></li>
+      <li>Next: <a href="../statistics/stat_multiv.html" title="next chapter">Multivariate statistics</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/auto_gallery/stat_univ_lab_brain-volume.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,767 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Univariate statistics solutions &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="univariate-statistics-solutions">
+<h1>Univariate statistics solutions<a class="headerlink" href="#univariate-statistics-solutions" title="Permalink to this headline">¶</a></h1>
+<section id="estimator-of-main-statistical-measures">
+<h2>Estimator of main statistical measures<a class="headerlink" href="#estimator-of-main-statistical-measures" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Generate 2 random samples <span class="math notranslate nohighlight">\(x \sim N(1.78, 0.1)\)</span>,
+<span class="math notranslate nohighlight">\(y \sim N(1.66, 0.1)\)</span> both of size 10.</p></li>
+<li><p>Compute xbar <span class="math notranslate nohighlight">\(\bar{x}, \sigma_x, \sigma_{xy}\)</span> using only
+<code class="docutils literal notranslate"><span class="pre">np.sum()</span></code> operation. Explore <code class="docutils literal notranslate"><span class="pre">np.</span></code> module to find out the numpy
+functions that does the same computations and compare them (using
+<code class="docutils literal notranslate"><span class="pre">assert</span></code>) with your previous results.</p></li>
+</ul>
+</section>
+<section id="one-sample-t-test">
+<h2>One sample t-test<a class="headerlink" href="#one-sample-t-test" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Given the following samples, test whether its true mean is 1.75.
+Warning, when computing the std or the variance set ddof=1. The
+default value 0, leads to the biased estimator of the variance.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># make the example reproducible</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">1.76</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">1.80967142</span> <span class="mf">1.74617357</span> <span class="mf">1.82476885</span> <span class="mf">1.91230299</span> <span class="mf">1.73658466</span> <span class="mf">1.7365863</span>
+ <span class="mf">1.91792128</span> <span class="mf">1.83674347</span> <span class="mf">1.71305256</span> <span class="mf">1.814256</span>  <span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Compute the t-value (tval)</p></li>
+<li><p>Plot the T(n-1) distribution for 100 tvalues values within [0, 10].
+Draw P(T(n-1)&gt;tval) ie. color the surface defined by x values larger
+than tval below the T(n-1). Using the code.</p></li>
+<li><p>Compute the p-value: P(T(n-1)&gt;tval).</p></li>
+<li><p>The p-value is one-sided: a two-sided test would test P(T(n-1) &gt;
+tval) and P(T(n-1) &lt; -tval). What would be the two sided p-value ?</p></li>
+<li><p>Compare the two-sided p-value with the one obtained by
+stats.ttest_1samp using <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">np.allclose(arr1,</span> <span class="pre">arr2)</span></code></p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">xbar</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">xmu</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1.75</span>
+
+<span class="n">tval</span> <span class="o">=</span> <span class="p">(</span><span class="n">xbar</span> <span class="o">-</span> <span class="n">xmu</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">s</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+<span class="c1"># Survival function (1 - `cdf`)</span>
+<span class="n">pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">tval</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">pval2sided</span> <span class="o">=</span> <span class="n">pval</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="c1"># do it with sicpy</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">((</span><span class="n">tval</span><span class="p">,</span> <span class="n">pval2sided</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_1samp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xmu</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">tval</span><span class="p">,</span> <span class="n">pval</span><span class="p">)</span>
+
+<span class="n">tvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tvalues</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">tvalues</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;T(n-1)&quot;</span><span class="p">)</span>
+<span class="n">upper_tval_tvalues</span> <span class="o">=</span> <span class="n">tvalues</span><span class="p">[</span><span class="n">tvalues</span> <span class="o">&gt;</span> <span class="n">tval</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">upper_tval_tvalues</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">upper_tval_tvalues</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">2.3970974188695773</span> <span class="mf">0.020044104794361296</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span> <span class="n">at</span> <span class="mh">0x7f85d5f97790</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_univ_solutions_6_2.png" src="../_images/stat_univ_solutions_6_2.png" />
+</section>
+<section id="simple-linear-regression-and-correlation-application">
+<h2>Simple linear regression and correlation (application)<a class="headerlink" href="#simple-linear-regression-and-correlation-application" title="Permalink to this headline">¶</a></h2>
+<p>Load the dataset: birthwt Risk Factors Associated with Low Infant Birth
+Weight at
+<a class="reference external" href="https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv">https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv</a></p>
+<ol class="arabic simple">
+<li><p>Test the association of mother’s (<code class="docutils literal notranslate"><span class="pre">bwt</span></code>) age and birth weight using
+the correlation test and linear regeression.</p></li>
+<li><p>Test the association of mother’s weight (<code class="docutils literal notranslate"><span class="pre">lwt</span></code>) and birth weight
+using the correlation test and linear regeression.</p></li>
+<li><p>Produce two scatter plot of: (i) age by birth weight; (ii) mother’s
+weight by birth weight.</p></li>
+</ol>
+<p>Conclusion ?</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv&#39;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">low</span>  <span class="n">age</span>  <span class="n">lwt</span>  <span class="n">race</span>  <span class="n">smoke</span>  <span class="n">ptl</span>  <span class="n">ht</span>  <span class="n">ui</span>  <span class="n">ftv</span>   <span class="n">bwt</span>
+<span class="mi">0</span>    <span class="mi">0</span>   <span class="mi">19</span>  <span class="mi">182</span>     <span class="mi">2</span>      <span class="mi">0</span>    <span class="mi">0</span>   <span class="mi">0</span>   <span class="mi">1</span>    <span class="mi">0</span>  <span class="mi">2523</span>
+<span class="mi">1</span>    <span class="mi">0</span>   <span class="mi">33</span>  <span class="mi">155</span>     <span class="mi">3</span>      <span class="mi">0</span>    <span class="mi">0</span>   <span class="mi">0</span>   <span class="mi">0</span>    <span class="mi">3</span>  <span class="mi">2551</span>
+<span class="mi">2</span>    <span class="mi">0</span>   <span class="mi">20</span>  <span class="mi">105</span>     <span class="mi">1</span>      <span class="mi">1</span>    <span class="mi">0</span>   <span class="mi">0</span>   <span class="mi">0</span>    <span class="mi">1</span>  <span class="mi">2557</span>
+<span class="mi">3</span>    <span class="mi">0</span>   <span class="mi">21</span>  <span class="mi">108</span>     <span class="mi">1</span>      <span class="mi">1</span>    <span class="mi">0</span>   <span class="mi">0</span>   <span class="mi">1</span>    <span class="mi">2</span>  <span class="mi">2594</span>
+<span class="mi">4</span>    <span class="mi">0</span>   <span class="mi">18</span>  <span class="mi">107</span>     <span class="mi">1</span>      <span class="mi">1</span>    <span class="mi">0</span>   <span class="mi">0</span>   <span class="mi">1</span>    <span class="mi">0</span>  <span class="mi">2600</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">age</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">bwt</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">bwt</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">lwt</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">bwt</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">lwt</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">0.09031781366853263</span><span class="p">,</span> <span class="mf">0.21647524185521977</span><span class="p">)</span>
+<span class="p">(</span><span class="mf">0.18573328444909917</span><span class="p">,</span> <span class="mf">0.010504176115208836</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f85d42e74d0</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_univ_solutions_9_2.png" src="../_images/stat_univ_solutions_9_2.png" />
+</section>
+<section id="simple-linear-regression-maths">
+<h2>Simple linear regression (maths)<a class="headerlink" href="#simple-linear-regression-maths" title="Permalink to this headline">¶</a></h2>
+<p>Considering the salary and the experience of the salary table.
+<code class="docutils literal notranslate"><span class="pre">https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv</span></code></p>
+<p>Compute:</p>
+<ul class="simple">
+<li><p>Estimate the model paramters <span class="math notranslate nohighlight">\(\beta, \beta_0\)</span> using scipy
+<code class="docutils literal notranslate"><span class="pre">stats.linregress(x,y)</span></code></p></li>
+<li><p>Compute the predicted values <span class="math notranslate nohighlight">\(\hat{y}\)</span></p></li>
+</ul>
+<p>Compute:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\bar{y}\)</span>: <code class="docutils literal notranslate"><span class="pre">y_mu</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(SS_\text{tot}\)</span>: <code class="docutils literal notranslate"><span class="pre">ss_tot</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(SS_\text{reg}\)</span>: <code class="docutils literal notranslate"><span class="pre">ss_reg</span></code></p></li>
+<li><p><span class="math notranslate nohighlight">\(SS_\text{res}\)</span>: <code class="docutils literal notranslate"><span class="pre">ss_res</span></code></p></li>
+<li><p>Check partition of variance formula based on sum of squares by using
+<code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">np.allclose(val1,</span> <span class="pre">val2,</span> <span class="pre">atol=1e-05)</span></code></p></li>
+<li><p>Compute <span class="math notranslate nohighlight">\(R^2\)</span> and compare it with the <code class="docutils literal notranslate"><span class="pre">r_value</span></code> above</p></li>
+<li><p>Compute the <span class="math notranslate nohighlight">\(F\)</span> score</p></li>
+<li><p>Compute the <span class="math notranslate nohighlight">\(p\)</span>-value:</p></li>
+<li><p>Plot the <span class="math notranslate nohighlight">\(F(1, n)\)</span> distribution for 100 <span class="math notranslate nohighlight">\(f\)</span> values within
+<span class="math notranslate nohighlight">\([10, 25]\)</span>. Draw <span class="math notranslate nohighlight">\(P(F(1, n) &gt; F)\)</span>, i.e. color the surface
+defined by the <span class="math notranslate nohighlight">\(x\)</span> values larger than <span class="math notranslate nohighlight">\(F\)</span> below the
+<span class="math notranslate nohighlight">\(F(1, n)\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(F(1, n) &gt; F)\)</span> is the <span class="math notranslate nohighlight">\(p\)</span>-value, compute it.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv&#39;</span>
+<span class="n">salary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">salary</span><span class="o">.</span><span class="n">salary</span><span class="p">,</span> <span class="n">salary</span><span class="o">.</span><span class="n">experience</span>
+
+<span class="c1"># Model parameters</span>
+<span class="n">beta</span><span class="p">,</span> <span class="n">beta0</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;y=</span><span class="si">%f</span><span class="s2"> x + </span><span class="si">%f</span><span class="s2">  r:</span><span class="si">%f</span><span class="s2">, r-squared:</span><span class="si">%f</span><span class="s2">, p-value:</span><span class="si">%f</span><span class="s2">, std_err:</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">beta0</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">r_value</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span><span class="p">))</span>
+
+<span class="c1"># plotting the line</span>
+<span class="n">yhat</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">x</span>  <span class="o">+</span>  <span class="n">beta0</span> <span class="c1"># regression line</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">yhat</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Experience (years)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Salary&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1">## $\bar{y}$ `y_mu`</span>
+
+<span class="n">y_mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c1">## $SS_\text{tot}$: `ss_tot`</span>
+
+<span class="n">ss_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_mu</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1">## $SS_\text{reg}$: `ss_reg`</span>
+<span class="n">ss_reg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">yhat</span> <span class="o">-</span> <span class="n">y_mu</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1">## $SS_\text{res}$: `ss_res`</span>
+<span class="n">ss_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">yhat</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1">## Check partition of variance formula based on SS using `assert np.allclose(val1, val2, atol=1e-05)`</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">ss_tot</span> <span class="o">-</span> <span class="p">(</span><span class="n">ss_reg</span> <span class="o">+</span> <span class="n">ss_res</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">)</span>
+
+<span class="c1">## What np.allclose does ?</span>
+
+<span class="c1">## What assert does</span>
+
+<span class="c1">## What is it worth for ?</span>
+
+<span class="c1">## Compute $R^2$ and compare with `r_value` above</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">ss_reg</span> <span class="o">/</span> <span class="n">ss_tot</span>
+
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span> <span class="o">==</span> <span class="n">r_value</span>
+
+<span class="c1">## Compute F score</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span>
+<span class="n">fval</span> <span class="o">=</span> <span class="n">ss_reg</span> <span class="o">/</span> <span class="p">(</span><span class="n">ss_res</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="c1"># Compute the p-value:</span>
+<span class="c1">#  * Plot the F(1,n) distribution for 100 f values within [10, 25]. Draw P(F(1,n)&gt;F) ie. color the surface defined by x values larger than F below the F(1,n).</span>
+<span class="c1">#  * P(F(1,n)&gt;F) is the p-value, compute it.</span>
+
+<span class="n">fvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fvalues</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">fvalues</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;F(1, 30)&quot;</span><span class="p">)</span>
+
+<span class="n">upper_fval_fvalues</span> <span class="o">=</span> <span class="n">fvalues</span><span class="p">[</span><span class="n">fvalues</span> <span class="o">&gt;</span> <span class="n">fval</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">upper_fval_fvalues</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">upper_fval_fvalues</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.8</span><span class="p">)</span>
+
+<span class="c1"># pdf(x, df1, df2): Probability density function at x of the given RV.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Survival function (1 - `cdf`)</span>
+<span class="n">pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">fval</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+
+
+<span class="c1">## With statmodels</span>
+
+<span class="kn">from</span> <span class="nn">statsmodels.formula.api</span> <span class="kn">import</span> <span class="n">ols</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ols</span><span class="p">(</span><span class="s1">&#39;salary ~ experience&#39;</span><span class="p">,</span> <span class="n">salary</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+
+<span class="c1">## With sklearn</span>
+
+<span class="kn">import</span> <span class="nn">sklearn.feature_selection</span>
+<span class="c1">#sklearn.feature_selection.f_regression??</span>
+<span class="n">sklearn</span><span class="o">.</span><span class="n">feature_selection</span><span class="o">.</span><span class="n">f_regression</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y</span><span class="o">=</span><span class="mf">491.486913</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">13584.043803</span>  <span class="n">r</span><span class="p">:</span><span class="mf">0.538886</span><span class="p">,</span> <span class="n">r</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span><span class="mf">0.290398</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">value</span><span class="p">:</span><span class="mf">0.000112</span><span class="p">,</span> <span class="n">std_err</span><span class="p">:</span><span class="mf">115.823381</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_univ_solutions_11_1.png" src="../_images/stat_univ_solutions_11_1.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                            <span class="n">OLS</span> <span class="n">Regression</span> <span class="n">Results</span>
+<span class="o">==============================================================================</span>
+<span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                 <span class="n">salary</span>   <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                       <span class="mf">0.290</span>
+<span class="n">Model</span><span class="p">:</span>                            <span class="n">OLS</span>   <span class="n">Adj</span><span class="o">.</span> <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                  <span class="mf">0.274</span>
+<span class="n">Method</span><span class="p">:</span>                 <span class="n">Least</span> <span class="n">Squares</span>   <span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">:</span>                     <span class="mf">18.01</span>
+<span class="n">Date</span><span class="p">:</span>                <span class="n">Fri</span><span class="p">,</span> <span class="mi">08</span> <span class="n">Jan</span> <span class="mi">2021</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000112</span>
+<span class="n">Time</span><span class="p">:</span>                        <span class="mi">14</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">45</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">445.98</span>
+<span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                  <span class="mi">46</span>   <span class="n">AIC</span><span class="p">:</span>                             <span class="mf">896.0</span>
+<span class="n">Df</span> <span class="n">Residuals</span><span class="p">:</span>                      <span class="mi">44</span>   <span class="n">BIC</span><span class="p">:</span>                             <span class="mf">899.6</span>
+<span class="n">Df</span> <span class="n">Model</span><span class="p">:</span>                           <span class="mi">1</span>
+<span class="n">Covariance</span> <span class="n">Type</span><span class="p">:</span>            <span class="n">nonrobust</span>
+<span class="o">==============================================================================</span>
+                 <span class="n">coef</span>    <span class="n">std</span> <span class="n">err</span>          <span class="n">t</span>      <span class="n">P</span><span class="o">&gt;|</span><span class="n">t</span><span class="o">|</span>      <span class="p">[</span><span class="mf">0.025</span>      <span class="mf">0.975</span><span class="p">]</span>
+<span class="o">------------------------------------------------------------------------------</span>
+<span class="n">Intercept</span>   <span class="mf">1.358e+04</span>   <span class="mf">1051.464</span>     <span class="mf">12.919</span>      <span class="mf">0.000</span>    <span class="mf">1.15e+04</span>    <span class="mf">1.57e+04</span>
+<span class="n">experience</span>   <span class="mf">491.4869</span>    <span class="mf">115.823</span>      <span class="mf">4.243</span>      <span class="mf">0.000</span>     <span class="mf">258.060</span>     <span class="mf">724.914</span>
+<span class="o">==============================================================================</span>
+<span class="n">Omnibus</span><span class="p">:</span>                       <span class="mf">24.503</span>   <span class="n">Durbin</span><span class="o">-</span><span class="n">Watson</span><span class="p">:</span>                   <span class="mf">2.180</span>
+<span class="n">Prob</span><span class="p">(</span><span class="n">Omnibus</span><span class="p">):</span>                  <span class="mf">0.000</span>   <span class="n">Jarque</span><span class="o">-</span><span class="n">Bera</span> <span class="p">(</span><span class="n">JB</span><span class="p">):</span>                <span class="mf">6.259</span>
+<span class="n">Skew</span><span class="p">:</span>                           <span class="mf">0.581</span>   <span class="n">Prob</span><span class="p">(</span><span class="n">JB</span><span class="p">):</span>                       <span class="mf">0.0437</span>
+<span class="n">Kurtosis</span><span class="p">:</span>                       <span class="mf">1.616</span>   <span class="n">Cond</span><span class="o">.</span> <span class="n">No</span><span class="o">.</span>                         <span class="mf">16.2</span>
+<span class="o">==============================================================================</span>
+
+<span class="n">Notes</span><span class="p">:</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">Standard</span> <span class="n">Errors</span> <span class="n">assume</span> <span class="n">that</span> <span class="n">the</span> <span class="n">covariance</span> <span class="n">matrix</span> <span class="n">of</span> <span class="n">the</span> <span class="n">errors</span> <span class="ow">is</span> <span class="n">correctly</span> <span class="n">specified</span><span class="o">.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---------------------------------------------------------------------------</span>
+
+<span class="ne">AttributeError</span>                            <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">5</span><span class="o">-</span><span class="mi">508</span><span class="n">b55ecf4f4</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+     <span class="mi">84</span> <span class="kn">import</span> <span class="nn">sklearn.feature_selection</span>
+     <span class="mi">85</span> <span class="c1">#sklearn.feature_selection.f_regression??</span>
+<span class="o">---&gt;</span> <span class="mi">86</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">feature_selection</span><span class="o">.</span><span class="n">f_regression</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="o">~/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.7</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">pandas</span><span class="o">/</span><span class="n">core</span><span class="o">/</span><span class="n">generic</span><span class="o">.</span><span class="n">py</span> <span class="ow">in</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+   <span class="mi">5137</span>             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info_axis</span><span class="o">.</span><span class="n">_can_hold_identifiers_and_holds_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+   <span class="mi">5138</span>                 <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+<span class="o">-&gt;</span> <span class="mi">5139</span>             <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+   <span class="mi">5140</span>
+   <span class="mi">5141</span>     <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+
+<span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">&#39;Series&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;reshape&#39;</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_univ_solutions_11_4.png" src="../_images/stat_univ_solutions_11_4.png" />
+</section>
+<section id="multiple-regression">
+<h2>Multiple regression<a class="headerlink" href="#multiple-regression" title="Permalink to this headline">¶</a></h2>
+<p>Considering the simulated data used below:</p>
+<ol class="arabic simple">
+<li><p>What are the dimensions of <span class="math notranslate nohighlight">\(\mathrm{pinv}(X)\)</span>?</p></li>
+<li><p>Compute the MSE between the predicted values and the true values.</p></li>
+</ol>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># make the example reproducible</span>
+
+<span class="c1"># Dataset</span>
+<span class="n">N</span><span class="p">,</span> <span class="n">P</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">4</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span> <span class="n">N</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">P</span><span class="p">))</span>
+<span class="c1">## Our model needs an intercept so we add a column of 1s:</span>
+<span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:])</span>
+
+<span class="n">betastar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">betastar</span><span class="p">)</span> <span class="o">+</span> <span class="n">e</span>
+
+<span class="c1"># Estimate the parameters</span>
+<span class="n">Xpinv</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv2</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">betahat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Xpinv</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimated beta:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">betahat</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. What are the dimensions of pinv$(X)$ ?</span>
+
+<span class="c1"># ((P x N) (N x P))^1 (P x N)</span>
+<span class="c1"># P x N</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">Xpinv</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1">#2. Compute the MSE between the predicted values and the true values.</span>
+
+
+<span class="n">yhat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">betahat</span><span class="p">)</span>
+
+<span class="n">mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">yhat</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MSE =&quot;</span><span class="p">,</span> <span class="n">mse</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="two-sample-t-test-maths">
+<h2>Two sample t-test (maths)<a class="headerlink" href="#two-sample-t-test-maths" title="Permalink to this headline">¶</a></h2>
+<p>Given the following two sample, test whether their means are equals.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">height</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">1.83</span><span class="p">,</span>  <span class="mf">1.83</span><span class="p">,</span>  <span class="mf">1.73</span><span class="p">,</span>  <span class="mf">1.82</span><span class="p">,</span>  <span class="mf">1.83</span><span class="p">,</span>
+                    <span class="mf">1.73</span><span class="p">,</span><span class="mf">1.99</span><span class="p">,</span>  <span class="mf">1.85</span><span class="p">,</span>  <span class="mf">1.68</span><span class="p">,</span>  <span class="mf">1.87</span><span class="p">,</span>
+                    <span class="mf">1.66</span><span class="p">,</span>  <span class="mf">1.71</span><span class="p">,</span>  <span class="mf">1.73</span><span class="p">,</span>  <span class="mf">1.64</span><span class="p">,</span>  <span class="mf">1.70</span><span class="p">,</span>
+                    <span class="mf">1.60</span><span class="p">,</span>  <span class="mf">1.79</span><span class="p">,</span>  <span class="mf">1.73</span><span class="p">,</span>  <span class="mf">1.62</span><span class="p">,</span>  <span class="mf">1.77</span><span class="p">])</span>
+<span class="n">grp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;M&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Compute the means/std-dev per groups.</p></li>
+<li><p>Compute the <span class="math notranslate nohighlight">\(t\)</span>-value (standard two sample t-test with equal
+variances).</p></li>
+<li><p>Compute the <span class="math notranslate nohighlight">\(p\)</span>-value.</p></li>
+<li><p>The <span class="math notranslate nohighlight">\(p\)</span>-value is one-sided: a two-sided test would test
+<code class="docutils literal notranslate"><span class="pre">P(T</span> <span class="pre">&gt;</span> <span class="pre">tval)</span></code> and <code class="docutils literal notranslate"><span class="pre">P(T</span> <span class="pre">&lt;</span> <span class="pre">-tval)</span></code>. What would the two sided
+<span class="math notranslate nohighlight">\(p\)</span>-value be?</p></li>
+<li><p>Compare the two-sided <span class="math notranslate nohighlight">\(p\)</span>-value with the one obtained by
+<code class="docutils literal notranslate"><span class="pre">stats.ttest_ind</span></code> using <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">np.allclose(arr1,</span> <span class="pre">arr2)</span></code>.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">height</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">1.83</span><span class="p">,</span>  <span class="mf">1.83</span><span class="p">,</span>  <span class="mf">1.73</span><span class="p">,</span>  <span class="mf">1.82</span><span class="p">,</span>  <span class="mf">1.83</span><span class="p">,</span>  <span class="mf">1.73</span><span class="p">,</span>  <span class="mf">1.99</span><span class="p">,</span>  <span class="mf">1.85</span><span class="p">,</span>  <span class="mf">1.68</span><span class="p">,</span>  <span class="mf">1.87</span><span class="p">,</span>
+                    <span class="mf">1.66</span><span class="p">,</span>  <span class="mf">1.71</span><span class="p">,</span>  <span class="mf">1.73</span><span class="p">,</span>  <span class="mf">1.64</span><span class="p">,</span>  <span class="mf">1.70</span><span class="p">,</span>  <span class="mf">1.60</span><span class="p">,</span>  <span class="mf">1.79</span><span class="p">,</span>  <span class="mf">1.73</span><span class="p">,</span>  <span class="mf">1.62</span><span class="p">,</span>  <span class="mf">1.77</span><span class="p">])</span>
+<span class="n">grp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;M&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">grp</span><span class="o">==</span><span class="s2">&quot;M&quot;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">height</span><span class="p">[</span><span class="n">grp</span><span class="o">==</span><span class="s2">&quot;F&quot;</span><span class="p">]</span>
+
+<span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># mean/std</span>
+<span class="n">xbar</span><span class="p">,</span> <span class="n">ybar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">xvar</span><span class="p">,</span> <span class="n">yvar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="equal-variances-t-test">
+<h3>Equal variances t-test<a class="headerlink" href="#equal-variances-t-test" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># se</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">xvar</span> <span class="o">*</span> <span class="p">(</span><span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">yvar</span> <span class="o">*</span> <span class="p">(</span><span class="n">ny</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">+</span> <span class="n">ny</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">se</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">nx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">ny</span><span class="p">)</span>
+
+<span class="c1"># tval</span>
+<span class="n">tval</span> <span class="o">=</span> <span class="p">(</span><span class="n">xbar</span> <span class="o">-</span> <span class="n">ybar</span><span class="p">)</span> <span class="o">/</span> <span class="n">se</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tval=</span><span class="si">%.2f</span><span class="s2">, pval=</span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tval</span><span class="p">,</span> <span class="n">pval</span><span class="p">))</span>
+
+<span class="c1"># df</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">nx</span> <span class="o">+</span> <span class="n">ny</span> <span class="o">-</span> <span class="mi">2</span>
+<span class="n">pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">tval</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="n">pval2sided</span> <span class="o">=</span> <span class="n">pval</span> <span class="o">*</span> <span class="mi">2</span>
+
+<span class="c1"># With scipy</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">((</span><span class="n">tval</span><span class="p">,</span> <span class="n">pval2sided</span><span class="p">),</span>
+                   <span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="unequal-variance-welch-t-test">
+<h3>Unequal variance (Welch) t-test<a class="headerlink" href="#unequal-variance-welch-t-test" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">xvar</span> <span class="o">/</span> <span class="n">nx</span> <span class="o">+</span> <span class="n">yvar</span> <span class="o">/</span> <span class="n">ny</span><span class="p">)</span>
+
+<span class="n">tval</span> <span class="o">=</span> <span class="p">(</span><span class="n">xbar</span> <span class="o">-</span> <span class="n">ybar</span><span class="p">)</span> <span class="o">/</span> <span class="n">se</span>
+
+<span class="c1"># Use the following function to approximate the df needed for the p-value</span>
+
+<span class="k">def</span> <span class="nf">unequal_var_ttest_df</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
+    <span class="n">vn1</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">/</span> <span class="n">n1</span>
+    <span class="n">vn2</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">/</span> <span class="n">n2</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">vn1</span> <span class="o">+</span> <span class="n">vn2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">vn1</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">n1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">vn2</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">n2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">unequal_var_ttest_df</span><span class="p">(</span><span class="n">xvar</span><span class="p">,</span> <span class="n">nx</span><span class="p">,</span> <span class="n">yvar</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+
+<span class="c1"># Compute the p-value.</span>
+<span class="c1">#</span>
+<span class="c1"># The p-value is one-sided: a two-sided test would test P(T &gt; tval)</span>
+<span class="c1"># and P(T &lt; -tval). What would be the two sided p-value ?</span>
+
+<span class="n">pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">tval</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="n">pval2sided</span> <span class="o">=</span> <span class="n">pval</span> <span class="o">*</span> <span class="mi">2</span>
+
+<span class="c1"># Compare the two-sided p-value with the one obtained by `stats.ttest_ind` using `assert np.allclose(arr1, arr2)`</span>
+
+<span class="c1"># do it with scipy</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">((</span><span class="n">tval</span><span class="p">,</span> <span class="n">pval2sided</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+
+<span class="c1"># Plot of the two sample t-test</span>
+
+<span class="n">xjitter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">.01</span><span class="p">)</span>
+<span class="n">yjitter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=+</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">.01</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xjitter</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;ob&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yjitter</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;ob&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">xbar</span><span class="p">,</span> <span class="n">ybar</span><span class="p">],</span> <span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="c1">#left, left + width, bottom, bottom + height</span>
+<span class="c1">#plt.bar(left=0, height=se, width=0.1, bottom=ybar-se/2)</span>
+<span class="c1">## effect size error bar</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="o">-</span><span class="mf">.1</span><span class="p">,</span> <span class="n">ybar</span> <span class="o">+</span> <span class="p">(</span><span class="n">xbar</span> <span class="o">-</span> <span class="n">ybar</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="p">(</span><span class="n">xbar</span> <span class="o">-</span> <span class="n">ybar</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+             <span class="n">elinewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+             <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">([</span><span class="o">-</span><span class="mf">.8</span><span class="p">,</span> <span class="mf">.8</span><span class="p">],</span> <span class="p">[</span><span class="n">xbar</span><span class="p">,</span> <span class="n">ybar</span><span class="p">],</span> <span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">([</span><span class="n">xvar</span><span class="p">,</span> <span class="n">yvar</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+             <span class="n">elinewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+             <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="mf">.1</span><span class="p">,</span> <span class="n">ybar</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">se</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+             <span class="n">elinewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+             <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="two-sample-t-test-and-random-permutation">
+<h2>Two sample t-test and random permutation<a class="headerlink" href="#two-sample-t-test-and-random-permutation" title="Permalink to this headline">¶</a></h2>
+<p>Generate 100 samples following the model:</p>
+<div class="math notranslate nohighlight">
+\[y = g + \varepsilon\]</div>
+<p>Where the noise <span class="math notranslate nohighlight">\(\varepsilon \sim N(1, 1)\)</span> and
+<span class="math notranslate nohighlight">\(g \in \{0, 1\}\)</span> is a group indicator variable with 50 ones and 50
+zeros.</p>
+<ul class="simple">
+<li><p>Write a function <code class="docutils literal notranslate"><span class="pre">tstat(y,</span> <span class="pre">g)</span></code> that compute the two samples t-test
+of y splited in two groups defined by g.</p></li>
+<li><p>Sample the t-statistic distribution under the null hypothesis using
+random permutations.</p></li>
+<li><p>Assess the p-value.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Model data</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">50</span><span class="p">)])</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">g</span> <span class="o">+</span> <span class="n">eps</span>
+
+<span class="k">def</span> <span class="nf">tstat</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">g</span> <span class="o">==</span> <span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">g</span><span class="p">)]</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="k">for</span> <span class="n">vals</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">]</span>
+    <span class="n">sse</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">vals</span> <span class="o">-</span> <span class="n">means</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">vals</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ys</span><span class="p">)]</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="k">for</span> <span class="n">vals</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">]</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sse</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">tval</span> <span class="o">=</span> <span class="p">(</span><span class="n">means</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">means</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">s</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">counts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">counts</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">tval</span><span class="p">)</span>
+
+<span class="c1"># Permutation: simulate the null hypothesis</span>
+<span class="n">nperm</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">perms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nperm</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">perms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">tstat</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nperm</span><span class="p">):</span>
+    <span class="n">perms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tstat</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
+
+<span class="n">pval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">perms</span> <span class="o">&gt;=</span> <span class="n">perms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">perms</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pval</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="two-sample-t-test-application">
+<h2>Two sample t-test (application)<a class="headerlink" href="#two-sample-t-test-application" title="Permalink to this headline">¶</a></h2>
+<p>Risk Factors Associated with Low Infant Birth Weight:</p>
+<p><code class="docutils literal notranslate"><span class="pre">https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv</span></code></p>
+<ol class="arabic simple">
+<li><p>Explore the data</p></li>
+<li><p>Recode smoke factor</p></li>
+<li><p>Compute the means/std-dev per groups.</p></li>
+<li><p>Plot birth weight by smoking (box plot, violin plot or histogram)</p></li>
+<li><p>Test the effect of smoking on birth weight</p></li>
+</ol>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv&#39;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">smoke</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">smoke</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">smoke</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="mi">1</span><span class="p">:</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="s2">&quot;n&quot;</span><span class="p">})</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">smoke</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;smoke&#39;</span> <span class="p">,</span> <span class="s1">&#39;bwt&#39;</span><span class="p">]]</span> <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;smoke&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;smoke&#39;</span> <span class="p">,</span> <span class="s1">&#39;bwt&#39;</span><span class="p">]]</span> <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;smoke&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+
+
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;smoke&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bwt&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">inner</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">swarmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;smoke&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bwt&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">bwt</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">smoke</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">],</span>
+                      <span class="n">df</span><span class="o">.</span><span class="n">bwt</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">smoke</span> <span class="o">==</span> <span class="s2">&quot;n&quot;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</section>
+<section id="univariate-associations-developpement">
+<h2>Univariate associations (developpement)<a class="headerlink" href="#univariate-associations-developpement" title="Permalink to this headline">¶</a></h2>
+<p>Write a function <code class="docutils literal notranslate"><span class="pre">univar_stat(df,</span> <span class="pre">target,</span> <span class="pre">variables)</span></code> that computes
+the parametric statistics and <span class="math notranslate nohighlight">\(p\)</span>-values between the <code class="docutils literal notranslate"><span class="pre">target</span></code>
+variable (provided as as string) and all <code class="docutils literal notranslate"><span class="pre">variables</span></code> (provided as a
+list of string) of the pandas DataFrame <code class="docutils literal notranslate"><span class="pre">df</span></code>. The target is a
+quantitative variable but variables may be quantitative or qualitative.
+The function returns a DataFrame with four columns: <code class="docutils literal notranslate"><span class="pre">variable</span></code>,
+<code class="docutils literal notranslate"><span class="pre">test</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">p_value</span></code>.</p>
+<p>Apply it to the salary dataset available at
+<a class="reference external" href="https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv">https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv</a>,
+with target being <code class="docutils literal notranslate"><span class="pre">S</span></code>: salaries for IT staff in a corporation.</p>
+</section>
+<section id="multiple-comparisons">
+<h2>Multiple comparisons<a class="headerlink" href="#multiple-comparisons" title="Permalink to this headline">¶</a></h2>
+<p>This exercise has 2 goals: apply you knowledge of statistics using
+vectorized numpy operations. Given the dataset provided for multiple
+comparisons, compute the two-sample <span class="math notranslate nohighlight">\(t\)</span>-test (assuming equal
+variance) for each (column) feature of the <code class="docutils literal notranslate"><span class="pre">Y</span></code> array given the two
+groups defined by <code class="docutils literal notranslate"><span class="pre">grp</span></code> variable. You should return two vectors of
+size <code class="docutils literal notranslate"><span class="pre">n_features</span></code>: one for the <span class="math notranslate nohighlight">\(t\)</span>-values and one for the
+<span class="math notranslate nohighlight">\(p\)</span>-values.</p>
+<section id="anova">
+<h3>ANOVA<a class="headerlink" href="#anova" title="Permalink to this headline">¶</a></h3>
+<p>Perform an ANOVA dataset described bellow</p>
+<ul class="simple">
+<li><p>Compute between and within variances</p></li>
+<li><p>Compute <span class="math notranslate nohighlight">\(F\)</span>-value: <code class="docutils literal notranslate"><span class="pre">fval</span></code></p></li>
+<li><p>Compare the <span class="math notranslate nohighlight">\(p\)</span>-value with the one obtained by
+<code class="docutils literal notranslate"><span class="pre">stats.f_oneway</span></code> using <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">np.allclose(arr1,</span> <span class="pre">arr2)</span></code></p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># dataset</span>
+<span class="n">mu_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>    <span class="c1"># means of 3 samples</span>
+<span class="n">sd_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>    <span class="c1"># sd of 3 samples</span>
+<span class="n">n_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">])</span>  <span class="c1"># sizes of 3 samples</span>
+<span class="n">grp</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>               <span class="c1"># group labels</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">n_k</span><span class="p">)</span>
+<span class="n">label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_k</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu_k</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">sd_k</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">n_k</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+
+<span class="c1"># estimate parameters</span>
+<span class="n">ybar_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">ybar</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">:</span>
+    <span class="n">ybar_k</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="n">k</span><span class="p">])</span>
+
+
+<span class="n">betweenvar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">n_k</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">ybar_k</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">ybar</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">withinvar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span><span class="p">[</span><span class="n">label</span><span class="o">==</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">ybar_k</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">grp</span><span class="p">))</span>
+
+<span class="n">fval</span> <span class="o">=</span> <span class="n">betweenvar</span> <span class="o">/</span> <span class="n">withinvar</span>
+<span class="c1"># Survival function (1 - `cdf`)</span>
+<span class="n">pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">fval</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">n</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">grp</span><span class="p">))</span>
+
+<span class="c1"># Compute with scipy</span>
+<span class="n">fval</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">f_oneway</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">2</span><span class="p">])</span>
+
+
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">((</span><span class="n">fval</span><span class="p">,</span> <span class="n">pval</span><span class="p">),</span>
+                   <span class="n">stats</span><span class="o">.</span><span class="n">f_oneway</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]))</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="stat_univ.html">Univariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stat_multiv.html">Multivariate statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time_series.html">Time series in python</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/statistics/stat_univ_solutions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

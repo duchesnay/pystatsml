@@ -1,0 +1,151 @@
+.. code:: ipython3
+
+    %matplotlib inline
+    
+    import numpy as np
+    import pandas as pd
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    from scipy.stats import norm
+    
+    
+    try:
+        df = pd.read_csv("../datasets/salary_table.csv")
+    except:
+        url = 'https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv'
+        df = pd.read_csv(url)
+    
+    print(df.columns)
+    
+    g = sns.pairplot(df, hue="management")
+
+
+.. parsed-literal::
+
+    Index(['salary', 'experience', 'education', 'management'], dtype='object')
+
+
+
+.. image:: ml_generative-vs-discriminative_models_files/ml_generative-vs-discriminative_models_0_1.png
+
+
+.. code:: ipython3
+
+    y = np.asarray(df.management.map({'Y':1, 'N':0}))
+    x = np.asarray(df.salary)
+    
+    # conditional proba p(x|y)
+    #ax = sns.distplot(x[y==0])
+    #ax = sns.distplot(x[y==1], ax=ax)
+    
+    
+    m0, m1 = x[y==0].mean(), x[y==1].mean()
+    s0, s1 = x[y==0].std(ddof=1), x[y==1].std(ddof=1)
+    
+    #print(pd.DataFrame(dict(x=x, y=y, prob=norm.pdf(x, m0, s0)))
+    
+    # prior proba
+    p0 = np.sum(y==0) / len(y)
+    p1 = np.sum(y==1) / len(y)
+    
+    # conditional distribution
+    px_0 = norm.pdf(x, m0, s0)
+    px_1 = norm.pdf(x, m1, s1)
+    
+    # marginal distribution
+    px = p0 * px_0 + p1 * px_1
+    
+    # posterior distribution
+    p0_x = px_0 * p0 / px
+    p1_x = px_1 * p1 / px
+    
+    
+    
+    ax = sns.distplot(px_0[y==0], hist=False)
+    ax = sns.distplot(px_1[y==1], ax=ax)
+    #ax = sns.distplot(p0_x[y==0])
+    #ax = sns.distplot(p1_x[y==1], ax=ax)
+
+
+
+.. image:: ml_generative-vs-discriminative_models_files/ml_generative-vs-discriminative_models_1_0.png
+
+
+.. code:: ipython3
+
+    x = np.random.normal(size=200)
+    #x[:50] += 1
+    y = np.zeros(100, dtype=int)
+    y[:50] += 1
+    
+    m0, m1 = x[y==0].mean(), x[y==1].mean()
+    s0, s1 = x[y==0].std(ddof=1), x[y==1].std(ddof=1)
+    
+    # prior proba
+    p0 = np.sum(y==0) / len(y)
+    p1 = np.sum(y==1) / len(y)
+    
+    # conditional distribution
+    px_0 = norm.pdf(x, m0, s0)
+    px_1 = norm.pdf(x, m1, s1)
+    
+    # marginal distribution
+    px = p0 * px_0 + p1 * px_1
+    
+    # posterior distribution
+    p0_x = px_0 * p0 / px
+    p1_x = px_1 * p1 / px
+    
+    from scipy.stats import gaussian_kde
+    
+    def smooth_sp(x, bandwidth=1, **kwargs):
+        kde = gaussian_kde(x, bw_method=bandwidth / x.std(ddof=1), **kwargs)
+        x_grid = np.linspace(np.min(x), np.max(x), 20)
+        return kde(x_grid)
+    
+    from statsmodels.nonparametric.kde import KDEUnivariate
+    
+    x_grid = np.linspace(np.min(x), np.max(x), 20)
+    
+    def smooth(x, x_grid, bandwidth=0.2, **kwargs):
+        kde = KDEUnivariate(x)
+        kde.fit(bw=bandwidth, **kwargs)    
+        #print(x_grid, kde.evaluate(x_grid))
+        return kde.evaluate(x_grid)
+    
+    fig = plt.figure()
+    bw = 1
+    
+    print(np.std(x))
+    print(smooth(px_0, x_grid, bw), px_0)
+    plt.plot(x, px_0, "ob", x_grid, smooth(px_0[y==0], x_grid, bw), "-r")#, x[y==0], px_0[y==0], "-r")
+    
+    #print(smooth(px_0[y==0], x_grid, bw), px_0[y==0])
+    
+    #plt.plot(x[y==0], smooth(px_0[y==0], x_grid, bw), "-b")#, x[y==0], px_0[y==0], "-r")
+    #plt.plot(x[y==0], px_0[y==0], "ob", x_grid, smooth(px_0[y==0], x_grid, bw), "-r")#, x[y==0], px_0[y==0], "-r")
+    
+    #plt.plot(x_grid, smooth(px_0[y==0], x_grid, bw), "-r")#, x[y==0], px_0[y==0], "-r")
+    
+    #plt.plot(px_0[y==0], "-b", px_1[y==1], "-r")
+
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    IndexError                                Traceback (most recent call last)
+
+    <ipython-input-85-d0b827506889> in <module>
+          4 y[:50] += 1
+          5 
+    ----> 6 m0, m1 = x[y==0].mean(), x[y==1].mean()
+          7 s0, s1 = x[y==0].std(ddof=1), x[y==1].std(ddof=1)
+          8 
+
+
+    IndexError: boolean index did not match indexed array along dimension 0; dimension is 200 but corresponding boolean dimension is 100
+
+
