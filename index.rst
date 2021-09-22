@@ -15,7 +15,7 @@ Important links:
 
 - `Web page <https://duchesnay.github.io/pystatsml/>`_
 - `Github <https://github.com/duchesnay/pystatsml>`_
-- `Latest pdf <https://github.com/duchesnay/data/raw/master/pdf/StatisticsMachineLearningPython.pdf>`_
+- `Latest pdf <https://raw.github.com/duchesnay/data/master/pdf/StatisticsMachineLearningPython.pdf>`_
 - `Official deposit for citation <https://hal.archives-ouvertes.fr/hal-03038776>`_.
 
 This document describes statistics and machine learning in Python using:

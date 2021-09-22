@@ -25,6 +25,7 @@ WD=~/git/pystatsml
 cd ~/git
 mv pystatsml_gh-pages pystatsml_gh-pages.bak
 git clone git@github.com:duchesnay/pystatsml.git pystatsml_gh-pages
+cd pystatsml_gh-pages
 git symbolic-ref HEAD refs/heads/gh-pages
 rm .git/index
 git clean -fdx
@@ -76,20 +77,9 @@ Replace:
 by
 
 ```
-  <section id="phantom">
-<h1 style="font-weight:bold;">Statistics and Machine Learning in
-Python<a class="headerlink" href="#phantom" title="Permalink to this headline">¶</a></h1>
+  <section id="pystatml">
+<h1>Statistics and Machine Learning in Python<a class="headerlink" href="#pystatml" title="Permalink to this headline">¶</a></h1>
 </section>
-
-<hr>
-
-<p><a href="https://duchesnay.github.io/">Edouard Duchesnay</a>, <a href="https://www.umu.se/en/staff/toklot02/">Tommy Löfstedt</a>, Feki Younes</p>
-
-old:
-<div class="section" id="phantom">
-<h1 style="font-weight:bold;">Statistics and Machine Learning in
-Python<a class="headerlink" href="#phantom" title="Permalink to this headline">¶</a></h1>
-</div>
 
 <hr>
 
