@@ -15,6 +15,9 @@ Statsmodels links:
 
 '''
 
+import os
+os.chdir('/home/ed203246/git/rstats/stat21_lmm')
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -128,6 +131,7 @@ for lit, df in ratpup.groupby("litter"):
     try:
         lv1.append(lm_lv1.params['sex[T.Male]'])
     except:
+        print(lit)
         pass
 
 lv1 = pd.DataFrame(lv1, columns=['Male'])
@@ -280,8 +284,8 @@ var = lmm_inter.params["Group Var"]
 
 
 ###############################################################################
-# Model the classroom intercept and slode as a fixed effect: ANCOVA with interactions
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Model the subject intercept and slope as a fixed effect: ANCOVA with interactions
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ancova_full = smf.ols('Reaction ~ Days + Subject + Days:Subject', sleepstudy).fit()
 
@@ -292,8 +296,8 @@ results.loc[len(results)] = ["ANCOVA-Full (biased)"] + \
     list(rmse_coef_tstat_pval(mod=ancova_full, var='Days'))
 
 ###############################################################################
-# Model the classroom random intercept and slope with LMM
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Model the subject random intercept and slope with LMM
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 lmm_full = smf.mixedlm("Reaction ~ Days", sleepstudy, groups=sleepstudy["Subject"], re_formula="~Days").fit()
 print(lmm_full.summary())
