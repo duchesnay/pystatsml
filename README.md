@@ -1,7 +1,7 @@
 Statistics and Machine Learning in Python
 =========================================
 
-- [pdf](ftp://ftp.cea.fr/pub/unati/people/educhesnay/pystatml/StatisticsMachineLearningPython.pdf)
+- [pdf](https://raw.github.com/duchesnay/data/master/pdf/StatisticsMachineLearningPython.pdf)
 - [www](https://duchesnay.github.io/pystatsml)
 
 

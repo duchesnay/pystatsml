@@ -93,7 +93,7 @@ _ = ax.set_xlabels("Std-dev").tight_layout()
 
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
-X_test = scaler.fit_transform(X_test)
+X_test = scaler.transform(X_test)
 
 # %%
 # Fit-predict
