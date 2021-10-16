@@ -125,7 +125,7 @@ decreases with squared Euclidean distance between the two feature vectors.</p>
 
 <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
 <span class="n">X_train</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="n">X_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </pre></div>
 </div>
 <img alt="ml supervized nonlinear" class="sphx-glr-single-img" src="../_images/sphx_glr_ml_supervized_nonlinear_001.png" />
@@ -151,7 +151,7 @@ Probalility is a logistic of the decision_function</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.97, AUC: 0.99 (AUC with proba: 0.99)
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.96, AUC: 0.99 (AUC with proba: 0.99)
 
 True
 </pre></div>
@@ -197,7 +197,7 @@ Random forest models reduce the risk of overfitting by introducing randomness by
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.93, AUC: 0.98
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.93, AUC: 0.99
 </pre></div>
 </div>
 <p>Extra Trees (Low Variance)</p>
@@ -239,10 +239,10 @@ It thus controls for over-fitting reducing variance and incresing bias.</p></li>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.98
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.99
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.769 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.377 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-ml-supervized-nonlinear-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/b52f01a0ac65cf2d2acfca70f23f792c/ml_supervized_nonlinear.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ml_supervized_nonlinear.py</span></code></a></p>
@@ -302,6 +302,7 @@ It thus controls for over-fitting reducing variance and incresing bias.</p></li>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate statistics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/lmm/lmm.html">Linear Mixed Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate statistics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../statistics/time_series.html">Time series in python</a></li>
 </ul>
@@ -342,7 +343,7 @@ It thus controls for over-fitting reducing variance and incresing bias.</p></li>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -364,7 +365,7 @@ It thus controls for over-fitting reducing variance and incresing bias.</p></li>
       &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
