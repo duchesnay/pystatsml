@@ -55,10 +55,10 @@ Data analysis methodology
 
 
 3. Define the sample
-    * For prospective study formalize the experimental design: inclusion/exlusion criteria. The conditions that define the acquisition of the dataset.
+    * For prospective study formalize the experimental design: inclusion/exclusion criteria. The conditions that define the acquisition of the dataset.
     * For retrospective study formalize the experimental design: inclusion/exlusion criteria. The conditions that define the selection of the dataset.
 
-4.  In a document formalize (i) the project objectives; (ii) the required learning dataset (more specifically the input data and the target variables); (iii) The conditions that define the acquisition of the dataset. In this document, warn the customer that the learned algorithms may not work on new data acquired under different condition.
+4.  In a document formalize (i) the project objectives; (ii) the required learning dataset (more specifically the input data and the target variables); (iii) The conditions that define the acquisition of the dataset. In this document, warn the customer that the learned algorithms may not work on new data acquired under different conditions.
 
 5. Read the learning dataset.
 
