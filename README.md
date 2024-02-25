@@ -119,22 +119,10 @@ Configure your git repository with nbstripout pre-commit hook for users who don'
 nbstripout --install
 ```
 
-3. Git [LFS](https://git-lfs.github.com/) for datasets
-
-a. Install Git LFS
+3. Pandoc
 
 ```
-git lfs install
-```
-
-b. select the file types you'd like Git LFS to manage
-
-```
-git lfs track "*.npz"
-git lfs track "*.npy"
-git lfs track "*.nii"
-git lfs track "*.nii.gz"
-git lfs track "*.csv"
+ conda install conda-forge::nbconvert-pandoc
 ```
 
 b. Now make sure .gitattributes is tracked:

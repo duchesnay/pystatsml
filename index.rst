@@ -18,18 +18,10 @@ Important links:
 - `Latest pdf <https://raw.github.com/duchesnay/data/master/pdf/StatisticsMachineLearningPython.pdf>`_
 - `Official deposit for citation <https://hal.archives-ouvertes.fr/hal-03038776>`_.
 
-This document describes statistics and machine learning in Python using:
-
-- `Scikit-learn <https://scikit-learn.org/>`_ for machine learning.
-- `Pytorch <https://pytorch.org/>`_ for deep learning.
-- `Statsmodels <https://www.statsmodels.org/>`_ for statistics.
-
-
 .. toctree::
     :maxdepth: 2
 
-    introduction/python_ecosystem.rst
-    introduction/machine_learning.rst
+    introduction/introduction_python_for_datascience.rst
 
 ===============
 Python language

@@ -4,7 +4,7 @@
 
 - [Slides:](https://m2dsupsdlclass.github.io/lectures-labs/slides/01_intro_to_deep_learning/index.html)
 
-## 1. Optimisation: Gradient descent and Backpropagation
+## 1. Optimization: Gradient descent and Backpropagation
 
 - [Slides:](https://m2dsupsdlclass.github.io/lectures-labs/slides/02_backprop/index.html)
 
@@ -17,6 +17,10 @@
 
 ## 3. Convolutional Neural Networks (CNN)
 
+### Architectures
+
+- [CNN architeures](https://www.jeremyjordan.me/convnet-architectures/)
+
 - [Slides:](https://m2dsupsdlclass.github.io/lectures-labs/slides/04_conv_nets/index.html)
 
 -  [Lab: `dl_cnn_mnist_pytorch.ipynb`](https://github.com/duchesnay/pystatsml/tree/master/deep_learning/dl_cnn_mnist_pytorch.ipynb)
@@ -25,6 +29,9 @@
 ## 4. Transfer Learning
 
 -  [Lab: `dl_transfer-learning_ants-bees_pytorch.ipynb`](https://github.com/duchesnay/pystatsml/tree/master/deep_learning/dl_transfer-learning_ants-bees_pytorch.ipynb)
+
+## 5. Deep Learning for Object Detection and Image Segmentation
+
 
 # Ressources
 
