@@ -128,21 +128,31 @@ Software development environment that provide:
 Visual Studio Code (VS Code)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Installation <https://code.visualstudio.com/>`_. Tuto for `Linux <https://linuxhint.com/install-visual-studio-code-ubuntu22-04/>`_.
+Setup:
 
-Useful settings for python:
+- `Installation <https://code.visualstudio.com/>`_.
+- Tuto for `Linux <https://linuxhint.com/install-visual-studio-code-ubuntu22-04/>`_.
+- Useful settings for python: `VS Code for python <https://code.visualstudio.com/docs/python/python-quick-start>`_
+- Extensions for data-science in python: ``Python, Jupyter, Python Extension Pack, Python Pylance, Path Intellisense``
 
-- See `VS Code for python <https://code.visualstudio.com/docs/python/python-quick-start>`_
+Execution, three possibilities:
 
-- Extensions for data-science in python: ``Python, Jupyter, IntellliCode, Python Indent, Python autoDocstring, Python Pylance, Path Intellisense``
+1. Run Python file
+2. Interactive  execution in python interpreter, type: ``Shift/Enter``
+3. Interactive execution in Jupyter:
+ 
+    * Install Jupyter Extension (cube icon / type ``jupyter`` / Install).
+    * Optional, ``Shift/Enter`` will send selected text to interactive Jupyter notebook:
+      in settings (gear wheel or ``CTL,``: press control and comma keys),
+      check box: ``Jupyter > Interactive Window Text Editor > Execute Selection``
+      
 
-- `Remote Development using SSH <https://code.visualstudio.com/docs/remote/ssh>`_
+
+`Remote Development using SSH <https://code.visualstudio.com/docs/remote/ssh>`_
 
   1. Setup ssh to hostname
   2. Select Remote-SSH: Connect to Host... from the Command Palette (``F1, Ctrl+Shift+P``) and use the same user@hostname as in step 1
   3. Remember hosts: (``F1, Ctrl+Shift+P``): Remote-SSH: Add New SSH Host or clicking on the Add New icon in the SSH Remote Explorer in the Activity Bar
-
-- Send Selection To Interactive Window : Settings / Jupyter Interactive Window Text Editor: Execute Selection.
 
 Spyder
 ^^^^^^

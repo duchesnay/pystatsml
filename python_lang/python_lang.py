@@ -1,6 +1,6 @@
 """
 
-**Source** Kevin Markham https://github.com/justmarkham/python-reference
+Source  `Kevin Markham <https://github.com/justmarkham/python-reference>`_
 
 """
 
@@ -14,17 +14,14 @@ import math
 math.sqrt(25)
 
 # import a function
-from math import sqrt
 sqrt(25)    # no longer have to reference the module
 
 # import multiple functions at once
-from math import cos, floor
 
 # import all functions in a module (generally discouraged)
 # from os import *
 
 # define an alias
-import numpy as np
 
 # show all functions in math module
 content = dir(math)
@@ -54,7 +51,7 @@ content = dir(math)
 5 != 3
 5 == 5
 
-# boolean operations (these return True)
+# Boolean operations (these return True)
 5 > 3 and 6 > 3
 5 > 3 or 5 < 3
 not False
@@ -118,14 +115,17 @@ len(simpsons)   # returns the length (3)
 # modify a list (does not return the list)
 simpsons.append('lisa')                 # append element to end
 simpsons.extend(['itchy', 'scratchy'])  # append multiple elements to end
-simpsons.insert(0, 'maggie')            # insert element at index 0 (shifts everything right)
-simpsons.remove('bart')                 # searches for first instance and removes it
+# insert element at index 0 (shifts everything right)
+simpsons.insert(0, 'maggie')
+# searches for first instance and removes it
+simpsons.remove('bart')
 simpsons.pop(0)                         # removes element 0 and returns it
-del simpsons[0]                         # removes element 0 (does not return it)
+# removes element 0 (does not return it)
+del simpsons[0]
 simpsons[0] = 'krusty'                  # replace element 0
 
 # concatenate lists (slower than 'extend' method)
-neighbors = simpsons + ['ned','rod','todd']
+neighbors = simpsons + ['ned', 'rod', 'todd']
 
 # find elements in a list
 'lisa' in simpsons
@@ -133,7 +133,7 @@ simpsons.count('lisa')      # counts the number of instances
 simpsons.index('itchy')     # returns index of first instance
 
 # list slicing [start:end:stride]
-weekdays = ['mon','tues','wed','thurs','fri']
+weekdays = ['mon', 'tues', 'wed', 'thurs', 'fri']
 weekdays[0]         # element 0
 weekdays[0:3]       # elements 0, 1, 2
 weekdays[:3]        # elements 0, 1, 2
@@ -155,10 +155,23 @@ sorted(simpsons)
 sorted(simpsons, reverse=True)
 sorted(simpsons, key=len)
 
-# create a second reference to the same list
+###############################################################################
+# Reference and copy
+# ~~~~~~~~~~~~~~~~~~
+#
+# `References <https://levelup.gitconnected.com/understanding-reference-and-copy-in-python-c681341a0cd8>`_ are used to access objects in memory, here lists.
+# A single object may have multiple references. Modifying the content of the one reference
+# will change the content of all other references.
+
+
 num = [1, 2, 3]
-same_num = num
-same_num[0] = 0         # modifies both 'num' and 'same_num'
+same_num = num   # create a second reference to the same list
+same_num[0] = 0  # modifies both 'num' and 'same_num'
+print(same_num)
+
+###############################################################################
+# Copies are references to different objects.
+# Modifying the content of the one reference, will not affect the others.
 
 # copy a list (three ways)
 new_num = num.copy()
@@ -166,7 +179,7 @@ new_num = num[:]
 new_num = list(num)
 
 # examine objects
-id(num) == id(same_num) # returns True
+id(num) == id(same_num)  # returns True
 id(num) == id(new_num)  # returns False
 num is same_num         # returns True
 num is new_num          # returns False
@@ -189,7 +202,8 @@ num == new_num          # returns True (their contents are equivalent)
 # create a tuple
 digits = (0, 1, 'two')          # create a tuple directly
 digits = tuple([0, 1, 'two'])   # create a tuple from a list
-zero = (0,)                     # trailing comma is required to indicate it's a tuple
+# trailing comma is required to indicate it's a tuple
+zero = (0,)
 
 # examine a tuple
 digits[2]           # returns 'two'
@@ -235,10 +249,10 @@ s.lower()           # returns 'i like you'
 s.upper()           # returns 'I LIKE YOU'
 s.startswith('I')   # returns True
 s.endswith('you')   # returns True
-s.isdigit()         # returns False (returns True if every character in the string is a digit)
-s.find('like')      # returns index of first occurrence (2), but doesn't support regex
+s.isdigit()         # returns False (True if every character is a digit)
+s.find('like')      # returns index of first occurrence
 s.find('hate')      # returns -1 since not found
-s.replace('like','love')    # replaces all instances of 'like' with 'love'
+s.replace('like', 'love')    # replaces all instances of 'like' with 'love'
 
 # split a string into a list of substrings separated by a delimiter
 s.split(' ')        # returns ['I','like','you']
@@ -247,7 +261,7 @@ s2 = 'a, an, the'
 s2.split(',')       # returns ['a',' an',' the']
 
 # join a list of strings into one string using a delimiter
-stooges = ['larry','curly','moe']
+stooges = ['larry', 'curly', 'moe']
 ' '.join(stooges)   # returns 'larry curly moe'
 
 # concatenate strings
@@ -260,36 +274,45 @@ s3 + ' ' + str(42)  # same thing
 s5 = '  ham and cheese  '
 s5.strip()          # returns 'ham and cheese'
 
+###############################################################################
+# Strings formatting
+
 # string substitutions: all of these return 'raining cats and dogs'
-'raining %s and %s' % ('cats','dogs')                       # old way
-'raining {} and {}'.format('cats','dogs')                   # new way
-'raining {arg1} and {arg2}'.format(arg1='cats',arg2='dogs') # named arguments
+'raining %s and %s' % ('cats', 'dogs')                       # old way
+'raining {} and {}'.format('cats', 'dogs')                   # new way
+'raining {arg1} and {arg2}'.format(arg1='cats', arg2='dogs')  # named arguments
 
-# string formatting
-# more examples: http://mkaz.com/2012/10/10/python-string-format/
-'pi is {:.2f}'.format(3.14159)      # returns 'pi is 3.14'
+# String formatting
+# See: https://realpython.com/python-formatted-output/
+# Old method
+print('6 %s' % 'bananas')
+print('%d %s cost $%.1f' % (6, 'bananas', 3.14159))
 
-
+# Format method positional arguments
+print('{0} {1} cost ${2:.1f}'.format(6, 'bananas', 3.14159))
 
 ###############################################################################
-# Strings 2/2
-# ~~~~~~~~~~~
+# `Strings encoding <https://towardsdatascience.com/byte-string-unicode-string-raw-string-a-guide-to-all-strings-in-python-684c4c4960ba>`_
 
 ###############################################################################
-# Normal strings allow for escaped characters
+# Normal strings allow for escaped characters. The default strings use unicode string (u string)
 #
 
-print('first line\nsecond line')
+print('first line\nsecond line')  # or
+print(u'first line\nsecond line')
+print('first line\nsecond line' == u'first line\nsecond line')
 
 ###############################################################################
-# raw strings treat backslashes as literal characters
+# Raw strings treat backslashes as literal characters
 #
 
 print(r'first line\nfirst line')
+print('first line\nsecond line' == r'first line\nsecond line')
 
 ###############################################################################
 # Sequence of bytes are not strings, should be decoded before some operations
 #
+
 s = b'first line\nsecond line'
 print(s)
 
@@ -300,6 +323,7 @@ print(s.decode('utf-8').split())
 # Dictionaries
 # ~~~~~~~~~~~~
 #
+# **Dictionary is the must-known data structure**.
 # Dictionaries are structures which can contain multiple data types, and
 # is ordered with key-value pairs: for each (unique) key, the dictionary
 # outputs one value. Keys can be strings, numbers, or tuples, while the
@@ -307,53 +331,76 @@ print(s.decode('utf-8').split())
 # unordered, iterable, mutable
 #
 
-# create an empty dictionary (two ways)
+###############################################################################
+# Creation
+
+# Empty dictionary (two ways)
 empty_dict = {}
 empty_dict = dict()
 
-# create a dictionary (two ways)
-family = {'dad':'homer', 'mom':'marge', 'size':6}
-family = dict(dad='homer', mom='marge', size=6)
+simpsons_roles_dict = {'Homer': 'father', 'Marge': 'mother',
+                       'Bart': 'son', 'Lisa': 'daughter', 'Maggie': 'daughter'}
 
-# convert a list of tuples into a dictionary
-list_of_tuples = [('dad','homer'), ('mom','marge'), ('size', 6)]
-family = dict(list_of_tuples)
+simpsons_roles_dict = dict(Homer='father', Marge='mother',
+                           Bart='son', Lisa='daughter', Maggie='daughter')
+
+simpsons_roles_dict = dict([('Homer', 'father'), ('Marge', 'mother'),
+                            ('Bart', 'son'), ('Lisa', 'daughter'), ('Maggie', 'daughter')])
+
+print(simpsons_roles_dict)
+
+
+###############################################################################
+# Access
 
 # examine a dictionary
-family['dad']       # returns 'homer'
-len(family)         # returns 3
-family.keys()       # returns list: ['dad', 'mom', 'size']
-family.values()     # returns list: ['homer', 'marge', 6]
-family.items()      # returns list of tuples:
-                    #   [('dad', 'homer'), ('mom', 'marge'), ('size', 6)]
-'mom' in family     # returns True
-'marge' in family   # returns False (only checks keys)
-
-# modify a dictionary (does not return the dictionary)
-family['cat'] = 'snowball'              # add a new entry
-family['cat'] = 'snowball ii'           # edit an existing entry
-del family['cat']                       # delete an entry
-family['kids'] = ['bart', 'lisa']       # value can be a list
-family.pop('dad')                       # removes an entry and returns the value ('homer')
-family.update({'baby':'maggie', 'grandpa':'abe'})   # add multiple entries
+simpsons_roles_dict['Homer']   # 'father'
+len(simpsons_roles_dict)       # 5
+simpsons_roles_dict.keys()     # list: ['Homer', 'Marge', ...]
+simpsons_roles_dict.values()   # list:['father', 'mother', ...]
+simpsons_roles_dict.items()    # list of tuples: [('Homer', 'father') ...]
+'Homer' in simpsons_roles_dict  # returns True
+'John' in simpsons_roles_dict  # returns False (only checks keys)
 
 # accessing values more safely with 'get'
-family['mom']                       # returns 'marge'
-family.get('mom')                   # same thing
+simpsons_roles_dict['Homer']                       # returns 'father'
+simpsons_roles_dict.get('Homer')                   # same thing
+
 try:
-    family['grandma']               # throws an error
-except  KeyError as e:
+    simpsons_roles_dict['John']               # throws an error
+except KeyError as e:
     print("Error", e)
 
-family.get('grandma')               # returns None
-family.get('grandma', 'not found')  # returns 'not found' (the default)
+simpsons_roles_dict.get('John')               # None
+# returns 'not found' (the default)
+simpsons_roles_dict.get('John', 'not found')
 
-# accessing a list element within a dictionary
-family['kids'][0]                   # returns 'bart'
-family['kids'].remove('lisa')       # removes 'lisa'
+###############################################################################
+# Modify a dictionary (does not return the dictionary)
 
-# string substitution using a dictionary
-'youngest child is %(baby)s' % family   # returns 'youngest child is maggie'
+simpsons_roles_dict['Snowball'] = 'dog'              # add a new entry
+simpsons_roles_dict['Snowball'] = 'cat'              # add a new entry
+simpsons_roles_dict['Snoop'] = 'dog'                 # edit an existing entry
+del simpsons_roles_dict['Snowball']                  # delete an entry
+
+simpsons_roles_dict.pop('Snoop')  # removes and returns ('dog')
+simpsons_roles_dict.update(
+    {'Mona': 'grandma', 'Abraham': 'grandpa'})  # add multiple entries
+print(simpsons_roles_dict)
+
+###############################################################################
+# Intersecting two dictionaries
+
+simpsons_ages_dict = {'Homer': 45, 'Marge': 43,
+                      'Bart': 11, 'Lisa': 10, 'Maggie': 1}
+
+print(simpsons_roles_dict.keys() & simpsons_ages_dict.keys())
+
+###############################################################################
+# String substitution using a dictionary: syntax ``%(key)format``, where ``format``
+# is the formatting character e.g. ``s`` for string.
+
+print('Homer is the %(Homer)s of the family' % simpsons_roles_dict)
 
 
 ###############################################################################
@@ -365,6 +412,9 @@ family['kids'].remove('lisa')       # removes 'lisa'
 # made up of unique elements (strings, numbers, or tuples)
 #
 
+###############################################################################
+# Creation
+
 # create an empty set
 empty_set = set()
 
@@ -372,44 +422,38 @@ empty_set = set()
 languages = {'python', 'r', 'java'}         # create a set directly
 snakes = set(['cobra', 'viper', 'python'])  # create a set from a list
 
-# examine a set
-len(languages)              # returns 3
-'python' in languages       # returns True
+###############################################################################
+# Examine a set
+len(languages)              # 3
+'python' in languages       # True
 
-# set operations
-languages & snakes          # returns intersection: {'python'}
-languages | snakes          # returns union: {'cobra', 'r', 'java', 'viper', 'python'}
-languages - snakes          # returns set difference: {'r', 'java'}
-snakes - languages          # returns set difference: {'cobra', 'viper'}
+###############################################################################
+# Set operations
+
+languages & snakes          # intersection: {'python'}
+languages | snakes          # union: {'cobra', 'r', 'java', 'viper', 'python'}
+languages - snakes          # set difference: {'r', 'java'}
+snakes - languages          # set difference: {'cobra', 'viper'}
 
 # modify a set (does not return the set)
 languages.add('sql')        # add a new element
-languages.add('r')          # try to add an existing element (ignored, no error)
+# try to add an existing element (ignored, no error)
+languages.add('r')
 languages.remove('java')    # remove an element
 
 try:
-    languages.remove('c')       # try to remove a non-existing element (throws an error)
-except  KeyError as e:
+    languages.remove('c')   # remove a non-existing element: throws an error
+except KeyError as e:
     print("Error", e)
 
-languages.discard('c')      # removes an element if present, but ignored otherwise
+# removes an element if present, but ignored otherwise
+languages.discard('c')
 languages.pop()             # removes and returns an arbitrary element
 languages.clear()           # removes all elements
-languages.update('go', 'spark') # add multiple elements (can also pass a list or set)
+languages.update('go', 'spark')  # add multiple elements (list or set)
 
 # get a sorted list of unique elements from a list
 sorted(set([9, 0, 2, 1, 0]))    # returns [0, 1, 2, 9]
-
-
-###############################################################################
-# Iterators
-# ~~~~~~~~~
-#
-# Cartesian product
-
-import itertools
-
-print([[x, y] for x, y in itertools.product(['a', 'b', 'c'], [1, 2])])
 
 ###############################################################################
 # Execution control statements
@@ -420,31 +464,36 @@ print([[x, y] for x, y in itertools.product(['a', 'b', 'c'], [1, 2])])
 # Conditional statements
 # ~~~~~~~~~~~~~~~~~~~~~~
 
-x = 3
+###############################################################################
 # if statement
+
+x = 3
 if x > 0:
     print('positive')
 
+###############################################################################
 # if/else statement
+
 if x > 0:
     print('positive')
 else:
     print('zero or negative')
 
+###############################################################################
+# Single-line if/else statement, known as a 'ternary operator'
+
+sign = 'positive' if x > 0 else 'zero or negative'
+print(sign)
+
+###############################################################################
 # if/elif/else statement
+
 if x > 0:
     print('positive')
 elif x == 0:
     print('zero')
 else:
     print('negative')
-
-# single-line if statement (sometimes discouraged)
-if x > 0: print('positive')
-
-# single-line if/else statement (sometimes discouraged)
-# known as a 'ternary operator'
-sign = 'positive' if x > 0 else 'zero or negative'
 
 
 ###############################################################################
@@ -457,25 +506,53 @@ sign = 'positive' if x > 0 else 'zero or negative'
 #
 
 # range returns a list of integers
-range(0, 3)     # returns [0, 1, 2]: includes first value but excludes second value
+# returns [0, 1, 2]: includes first value but excludes second value
+range(0, 3)
 range(3)        # same thing: starting at zero is the default
 range(0, 5, 2)  # returns [0, 2, 4]: third argument specifies the 'stride'
 
-# for loop
-fruits = ['apple', 'banana', 'cherry']
-for i in range(len(fruits)):
-    print(fruits[i].upper())
+###############################################################################
+# Iterate on list values
 
-# alternative for loop (recommended style)
+fruits = ['apple', 'banana', 'cherry']
 for fruit in fruits:
     print(fruit.upper())
 
-# use range when iterating over a large sequence to avoid actually creating the integer list in memory
+###############################################################################
+# Iterate with index
+
+for i in range(len(fruits)):
+    print(fruits[i].upper())
+
+###############################################################################
+# Iterate with index and values: ``enumerate``
+
+for i, val in enumerate(fruits):
+    print(i, val.upper())
+
+# Use range when iterating over a large sequence to avoid actually
+# creating the integer list in memory
 v = 0
 for i in range(10 ** 6):
     v += 1
 
+###############################################################################
+# Example, use loop, dictionary and set to count words in a sentence
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
 
+quote = """Tick-tow
+our incomes are like our shoes; if too small they gall and pinch us
+but if too large they cause us to stumble and to trip
+"""
+
+words = quote.split()
+
+count = {word: 0 for word in set(words)}
+for word in words:
+    count[word] += 1
+
+print(count)
 ###############################################################################
 # List comprehensions, iterators, etc.
 # ------------------------------------
@@ -483,31 +560,45 @@ for i in range(10 ** 6):
 # List comprehensions
 # ~~~~~~~~~~~~~~~~~~~
 #
-# Process which affects whole lists without iterating through loops. For
-# more:
-# http://python-3-patterns-idioms-test.readthedocs.io/en/latest/Comprehensions.html
+# `List comprehensions <http://python-3-patterns-idioms-test.readthedocs.io/en/latest/Comprehensions.html>`_
+# provides an elegant syntax for the most common processing pattern:
 #
+# 1. iterate over a list,
+# 2. apply some operation
+# 3. store the result in a new list
 
-# for loop to create a list of cubes
+###############################################################################
+# Classical iteration over a list
+
 nums = [1, 2, 3, 4, 5]
 cubes = []
 for num in nums:
     cubes.append(num**3)
 
-# equivalent list comprehension
+###############################################################################
+# Equivalent list comprehension
+
 cubes = [num**3 for num in nums]    # [1, 8, 27, 64, 125]
 
-# for loop to create a list of cubes of even numbers
+###############################################################################
+# Classical iteration over a list with **if condition**:
+# create a list of cubes of even numbers
+
 cubes_of_even = []
 for num in nums:
     if num % 2 == 0:
         cubes_of_even.append(num**3)
 
-# equivalent list comprehension
-# syntax: [expression for variable in iterable if condition]
+###############################################################################
+# Equivalent list comprehension with **if condition**
+# syntax: ``[expression for variable in iterable if condition]``
+
 cubes_of_even = [num**3 for num in nums if num % 2 == 0]    # [8, 64]
 
+###############################################################################
+# Classical iteration over a list with **if else condition**:
 # for loop to cube even numbers and square odd numbers
+
 cubes_and_squares = []
 for num in nums:
     if num % 2 == 0:
@@ -515,77 +606,71 @@ for num in nums:
     else:
         cubes_and_squares.append(num**2)
 
-# equivalent list comprehension (using a ternary expression)
-# syntax: [true_condition if condition else false_condition for variable in iterable]
-cubes_and_squares = [num**3 if num % 2 == 0 else num**2 for num in nums]    # [1, 8, 9, 64, 25]
+###############################################################################
+# Equivalent list comprehension (using a ternary expression)
+# for loop to cube even numbers and square odd numbers
+# syntax: ``[true_condition if condition else false_condition for variable in iterable]``
 
-# for loop to flatten a 2d-matrix
+cubes_and_squares = [num**3 if num % 2 == 0 else num**2 for num in nums]
+print(cubes_and_squares)
+
+###############################################################################
+# Nested loops: flatten a 2d-matrix
+
 matrix = [[1, 2], [3, 4]]
 items = []
 for row in matrix:
     for item in row:
         items.append(item)
 
-# equivalent list comprehension
+###############################################################################
+# Equivalent list comprehension with Nested loops
+
 items = [item for row in matrix
-              for item in row] # [1, 2, 3, 4]
+         for item in row]
 
-# set comprehension
+print(items)
+
+###############################################################################
+# Set comprehension
+# ~~~~~~~~~~~~~~~~~
+
 fruits = ['apple', 'banana', 'cherry']
-unique_lengths = {len(fruit) for fruit in fruits}   # {5, 6}
-
-# dictionary comprehension
-fruit_lengths = {fruit:len(fruit) for fruit in fruits} # {'apple': 5, 'banana': 6, 'cherry': 6}
-
+unique_lengths = {len(fruit) for fruit in fruits}
+print(unique_lengths)
 
 ###############################################################################
-# Exercise: upper-case names and add 1 year to all simpsons
-
-simpsons = {'Homer': 45, 'Marge': 45, 'Bart': 10, 'Lisa': 10}
-
-simpsons_older = {k.upper(): v + 1 for k, v in simpsons.items()}
-print(simpsons_older)
-
+# Dictionary comprehension
+# ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ###############################################################################
-# Exercice: count words in a sentence
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Create a dictionary from a list
+
+fruit_lengths = {fruit: len(fruit) for fruit in fruits}
+print(fruit_lengths)
+
+###############################################################################
+# Iterate over keys and values. Increase age of each subject:
+
+simpsons_ages_ = {key: val + 1 for key, val in simpsons_ages_dict.items()}
+print(simpsons_ages_)
+
+###############################################################################
+# Combine two dictionaries sharing key. Example, a function that joins two dictionaries
+# (intersecting keys) into a dictionary of lists
+
+simpsons_info_dict = {name: [simpsons_roles_dict[name], simpsons_ages_dict[name]]
+                      for name in simpsons_roles_dict.keys() &
+                      simpsons_ages_dict.keys()}
+print(simpsons_info_dict)
+
+###############################################################################
+# Iterators
+# ~~~~~~~~~
 #
+# Example: Cartesian product
 
-
-quote = """Tick-tow
-our incomes are like our shoes; if too small they gall and pinch us
-but if too large they cause us to stumble and to trip
-"""
-
-count = {word: 0 for word in set(quote.split())}
-for word in quote.split():
-    count[word] += 1
-
-# iterate through two things at once (using tuple unpacking)
-family = {'dad': 'homer', 'mom': 'marge', 'size': 6}
-for key, value in family.items():
-    print(key, value)
-
-# use enumerate if you need to access the index value within the loop
-for index, fruit in enumerate(fruits):
-    print(index, fruit)
-
-# for/else loop
-for fruit in fruits:
-    if fruit == 'banana':
-        print("Found the banana!")
-        break   # exit the loop and skip the 'else' block
-    else:
-        # this block executes ONLY if the for loop completes without hitting
-        # 'break'
-        print("Can't find the banana")
-
-# while loop
-count = 0
-while count < 5:
-    print("This will print 5 times")
-    count += 1      # equivalent to 'count = count + 1'
+print([[x, y] for x, y in itertools.product(['a', 'b', 'c'], [1, 2])])
 
 ###############################################################################
 # Exceptions handling
@@ -611,129 +696,212 @@ print(dct)
 # have multiple input values and a return value
 #
 
-# define a function with no arguments and no return values
+###############################################################################
+# Function with no arguments and no return values
+
+
 def print_text():
     print('this is text')
+
 
 # call the function
 print_text()
 
-# define a function with one argument and no return values
+###############################################################################
+# Function with one argument and no return values
+
+
 def print_this(x):
     print(x)
+
 
 # call the function
 print_this(3)       # prints 3
 n = print_this(3)   # prints 3, but doesn't assign 3 to n
-                    # because the function has no return statement
+# because the function has no return statement
+print(n)
+
+###############################################################################
+# **Dynamic typing**
+#
+# Important remarque: **Python is a dynamically typed language**, meaning
+# that the Python interpreter does type checking at runtime (as opposed to compiled
+# language that are statically typed). As a consequence, the function behavior, decided,
+# at execution time, will be different and specific to parameters type.
+# Python function are polymorphic.
+
 
 def add(a, b):
     return a + b
 
-add(2, 3)
 
-add("deux", "trois")
+print(add(2, 3), add("deux", "trois"), add(["deux", "trois"], [2, 3]))
 
-add(["deux", "trois"], [2, 3])
+###############################################################################
+# **Default arguments**
 
-# define a function with one argument and one return value
-def square_this(x):
-    return x ** 2
 
-# include an optional docstring to describe the effect of a function
-def square_this(x):
-    """Return the square of a number."""
-    return x ** 2
-
-# call the function
-square_this(3)          # prints 9
-var = square_this(3)    # assigns 9 to var, but does not print 9
-
-# default arguments
 def power_this(x, power=2):
     return x ** power
 
-power_this(2)    # 4
-power_this(2, 3) # 8
 
-# use 'pass' as a placeholder if you haven't written the function body
-def stub():
-    pass
+print(power_this(2), power_this(2, 3))
 
-# return two values from a single function
+###############################################################################
+# **Docstring** to describe the effect of a function
+# IDE, ipython (type: ?power_this) to provide function documentation.
+
+
+def power_this(x, power=2):
+    """Return the power of a number.
+
+    Args:
+        x (float): the number
+        power (int, optional): the power. Defaults to 2.
+    """
+    return x ** power
+
+
+###############################################################################
+# **Return several values** as tuple
+
+
 def min_max(nums):
     return min(nums), max(nums)
 
+
 # return values can be assigned to a single variable as a tuple
-nums = [1, 2, 3]
-min_max_num = min_max(nums)         # min_max_num = (1, 3)
+min_max_num = min_max([1, 2, 3])         # min_max_num = (1, 3)
 
 # return values can be assigned into multiple variables using tuple unpacking
-min_num, max_num = min_max(nums)    # min_num = 1, max_num = 3
+min_num, max_num = min_max([1, 2, 3])    # min_num = 1, max_num = 3
 
+###############################################################################
+# Example, function, and dictionary comprehension
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Example of a function ``join_dict_to_table(dict1, dict2)`` joining two dictionaries
+# (intersecting keys) into a table, i.e., a list of tuples, where the first column
+# is the key, the second and third columns are the values of the dictionaries.
+
+
+def join_dict_to_table(dict1, dict2):
+    table = [[key] + [dict1[key], dict2[key]]
+             for key in dict1.keys() & dict2.keys()]
+    return table
+
+
+print(join_dict_to_table(simpsons_roles_dict, simpsons_ages_dict))
 
 ###############################################################################
 # Regular expression
 # ------------------
+# Regular Expression (RE, or RegEx) allow to search and patterns in strings.
+# See `this page <https://www.programiz.com/python-programming/regex>`_ for the syntax
+# of the RE patterns.
 #
 
-import re
-
-# 1. Compile regular expression with a patetrn
-regex = re.compile("^.+(sub-.+)_(ses-.+)_(mod-.+)")
-
 ###############################################################################
-# 2. Match compiled RE on string
+# **Usual patterns**
 #
-# Capture the pattern ```anyprefixsub-<subj id>_ses-<session id>_<modality>```
+# - ``.`` period symbol matches any single character (except newline '\n').
+# - pattern``+`` plus symbol matches one or more occurrences of the pattern.
+# - ``[]`` square brackets specifies a set of characters you wish to match
+# - ``[abc]`` matches a, b or c
+# - ``[a-c]`` matches a to z
+# - ``[0-9]`` matches 0 to 9
+# - ``[a-zA-Z0-9]+`` matches words, at least one alphanumeric character (digits and alphabets)
+# - ``[\w]+`` matches words, at least one alphanumeric character including underscore.
+# - ``\s`` Matches where a string contains any whitespace character, equivalent to [ \t\n\r\f\v].
+# - ``[^\s]`` Caret ``^`` symbol (the start of a square-bracket) inverts the pattern selection .
 
-strings = ["abcsub-033_ses-01_mod-mri", "defsub-044_ses-01_mod-mri", "ghisub-055_ses-02_mod-ctscan"]
-print([regex.findall(s)[0] for s in strings])
-
-###############################################################################
-# Match methods on compiled regular expression
-#
-# +------------------+----------------------------------------------------------------------------+
-# | Method/Attribute | Purpose                                                                    |
-# +==================+============================================================================+
-# | match(string)    | Determine if the RE matches at the beginning of the string.                |
-# +------------------+----------------------------------------------------------------------------+
-# | search(string)   | Scan through a string, looking for any location where this RE matches.     |
-# +------------------+----------------------------------------------------------------------------+
-# | findall(string)  | Find all substrings where the RE matches, and returns them as a list.      |
-# +------------------+----------------------------------------------------------------------------+
-# | finditer(string) | Find all substrings where the RE matches, and returns them as an iterator. |
-# +------------------+----------------------------------------------------------------------------+
+# regex = re.compile("^.+(firstname:.+)_(lastname:.+)_(mod-.+)")
+# regex = re.compile("(firstname:.+)_(lastname:.+)_(mod-.+)")
 
 ###############################################################################
-# 2. Replace compiled RE on string
-
-regex = re.compile("(sub-[^_]+)") # match (sub-...)_
-print([regex.sub("SUB-", s) for s in strings])
-
-regex.sub("SUB-", "toto")
+# **Compile** (``re.compile(string)``) regular expression with a pattern that
+# captures the pattern ``firstname:<subject_id>_lastname:<session_id>``
+pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
 
 ###############################################################################
-# Remove all non-alphanumeric characters in a string
+# **Match** (``re.match(string)``) to be used in test, loop, etc.
+# Determine if the RE matches **at the beginning** of the string.
 
-re.sub('[^0-9a-zA-Z]+', '', 'h^&ell`.,|o w]{+orld')
+yes_ = True if pattern.match("firstname:John_lastname:Doe") else False
+no_ = True if pattern.match("blahbla_firstname:John_lastname:Doe") else False
+no2_ = True if pattern.match("OUPS-John_lastname:Doe") else False
+print(yes_, no_, no2_)
+
+
+###############################################################################
+# **Match** (``re.search(string)``) to be used in test, loop, etc.
+# Determine if the RE matches **at any location** in the string.
+
+yes_ = True if pattern.search("firstname:John_lastname:Doe") else False
+yes2_ = True if pattern.search(
+    "blahbla_firstname:John_lastname:Doe") else False
+no_ = True if pattern.search("OUPS-John_lastname:Doe") else False
+print(yes_, yes2_, no_)
+
+###############################################################################
+# **Find** (``re.findall(string)``) all substrings where the RE matches,
+# and returns them as a list.
+
+# Find the whole pattern within the string
+pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
+print(pattern.findall("firstname:John_lastname:Doe blah blah"))
+
+# Find words
+print(re.compile("[a-zA-Z0-9]+").findall("firstname:John_lastname:Doe"))
+
+# Find words with including underscore
+print(re.compile("[\w]+").findall("firstname:John_lastname:Doe"))
+
+
+###############################################################################
+# Find part of the RE: use parenthesis ``(part to be matched)``
+# Extract John and Doe, such as John is suffixed with firstname:
+# and Doe is suffixed with lastname:.
+
+pattern = re.compile("firstname:([\w]+)_lastname:([\w]+)")
+print(pattern.findall("firstname:John_lastname:Doe \
+    firstname:Bart_lastname:Simpson"))
+
+###############################################################################
+# **Split** (``re.split(string)``) splits the string where there is a match and
+# returns a list of strings where the splits have occurred. Example, match
+# any non alphanumeric character (digits and alphabets) ``[^a-zA-Z0-9]`` to split
+# the string.
+
+print(re.compile("[^a-zA-Z0-9]").split("firstname:John_lastname:Doe"))
+
+
+###############################################################################
+# **Substitute** (``re.sub(pattern, replace, string)``) returns a string where
+# matched occurrences are replaced with the content of replace variable.
+
+print(re.sub('\s', "_", "Sentence with white      space"))
+print(re.sub('\s+', "_", "Sentence with white      space"))
+
+###############################################################################
+# Remove all non-alphanumeric characters and space in a string
+
+re.sub('[^0-9a-zA-Z\s]+', '', 'H^&ell`.,|o W]{+orld')
 
 ###############################################################################
 # System programming
 # ------------------
 #
 
-
 ###############################################################################
 # Operating system interfaces (os)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 
-import os
 
 ###############################################################################
-# Current working directory
-#
+# Get/set current working directory
+
 
 # Get the current working directory
 cwd = os.getcwd()
@@ -744,18 +912,14 @@ os.chdir(cwd)
 
 ###############################################################################
 # Temporary directory
-#
-
-import tempfile
 
 tmpdir = tempfile.gettempdir()
+print(tmpdir)
 
 ###############################################################################
 # Join paths
-#
 
 mytmpdir = os.path.join(tmpdir, "foobar")
-
 
 ###############################################################################
 # Create a directory
@@ -768,49 +932,46 @@ os.listdir(mytmpdir)
 ###############################################################################
 # File input/output
 # ~~~~~~~~~~~~~~~~~
-#
 
 filename = os.path.join(mytmpdir, "myfile.txt")
 print(filename)
-
-# Write
 lines = ["Dans python tout est bon", "Enfin, presque"]
 
-## write line by line
+###############################################################################
+# Write line by line
+
 fd = open(filename, "w")
 fd.write(lines[0] + "\n")
-fd.write(lines[1]+ "\n")
+fd.write(lines[1] + "\n")
 fd.close()
 
-## use a context manager to automatically close your file
+###############################################################################
+# Context manager to automatically close your file
+
 with open(filename, 'w') as f:
     for line in lines:
         f.write(line + '\n')
 
+###############################################################################
 # Read
-## read one line at a time (entire file does not have to fit into memory)
+# read one line at a time (entire file does not have to fit into memory)
+
 f = open(filename, "r")
 f.readline()    # one string per line (including newlines)
 f.readline()    # next line
 f.close()
 
-## read one line at a time (entire file does not have to fit into memory)
-f = open(filename, 'r')
-f.readline()    # one string per line (including newlines)
-f.readline()    # next line
-f.close()
-
-## read the whole file at once, return a list of lines
+# read the whole file at once, return a list of lines
 f = open(filename, 'r')
 f.readlines()   # one list, each line is one string
 f.close()
 
-## use list comprehension to duplicate readlines without reading entire file at once
+# use list comprehension to duplicate readlines without reading entire file at once
 f = open(filename, 'r')
 [line for line in f]
 f.close()
 
-## use a context manager to automatically close your file
+# use a context manager to automatically close your file
 with open(filename, 'r') as f:
     lines = [line for line in f]
 
@@ -820,9 +981,7 @@ with open(filename, 'r') as f:
 #
 
 ###############################################################################
-# Walk
-#
-import os
+# Walk through directories and subdirectories ``os.walk(dir)``
 
 WD = os.path.join(tmpdir, "foobar")
 
@@ -831,44 +990,58 @@ for dirpath, dirnames, filenames in os.walk(WD):
 
 
 ###############################################################################
-# glob, basename and file extension
-
-import tempfile
-import glob
-
-tmpdir = tempfile.gettempdir()
+# Search for a file using a wildcard ``glob.glob(dir)``
 
 filenames = glob.glob(os.path.join(tmpdir, "*", "*.txt"))
 print(filenames)
 
-# take basename then remove extension
-basenames = [os.path.splitext(os.path.basename(f))[0] for f in filenames]
-print(basenames)
+###############################################################################
+# Manipulating file names, basename and extension
+
+def split_filename_inparts(filename):
+    dirname_ = os.path.dirname(filename)
+    filename_noext_, ext_ = os.path.splitext(filename)
+    basename_ = os.path.basename(filename_noext_)
+    return dirname_, basename_, ext_
+
+
+print(filenames[0], "=>", split_filename_inparts(filenames[0]))
 
 
 ###############################################################################
-# shutil - High-level file operations
-#
+# File operations: (recursive) copy, move, test if exists: ``shutil`` package
 
 import shutil
 
+###############################################################################
+# Copy
+
 src = os.path.join(tmpdir, "foobar",  "myfile.txt")
 dst = os.path.join(tmpdir, "foobar",  "plop", "myfile.txt")
+shutil.copy(src, dst)
 print("copy %s to %s" % (src, dst))
 
-shutil.copy(src, dst)
+###############################################################################
+# Test if file exists ?
 
 print("File %s exists ?" % dst, os.path.exists(dst))
 
+###############################################################################
+# Recursive copy,deletion and move
+
 src = os.path.join(tmpdir, "foobar",  "plop")
 dst = os.path.join(tmpdir, "plop2")
-print("copy tree %s under %s" % (src, dst))
 
 try:
-    shutil.copytree(src, dst)
-
+    print("Copy tree %s under %s" % (src, dst))
+    # Note that by default (dirs_exist_ok=True), meaning that copy will fail
+    # if destination exists.
+    shutil.copytree(src, dst, dirs_exist_ok=True)
+    
+    print("Delete tree %s" % dst)
     shutil.rmtree(dst)
 
+    print("Move tree %s under %s" % (src, dst))
     shutil.move(src, dst)
 except (FileExistsError, FileNotFoundError) as e:
     pass
@@ -877,23 +1050,31 @@ except (FileExistsError, FileNotFoundError) as e:
 # Command execution with subprocess
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# - For more advanced use cases, the underlying Popen interface can be used directly.
+# For more advanced use cases, the underlying Popen interface can be used directly.
+
+import subprocess
+
+###############################################################################
+# ``subprocess.run([command, args*])``
+#
 # - Run the command described by args.
 # - Wait for command to complete
 # - return a CompletedProcess instance.
 # - Does not capture stdout or stderr by default. To do so, pass PIPE for the stdout and/or stderr arguments.
 
-import subprocess
-
-# doesn't capture output
 p = subprocess.run(["ls", "-l"])
 print(p.returncode)
 
-# Run through the shell.
+###############################################################################
+# Run through the shell
+
 subprocess.run("ls -l", shell=True)
 
+###############################################################################
 # Capture output
-out = subprocess.run(["ls", "-a", "/"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+out = subprocess.run(
+    ["ls", "-a", "/"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 # out.stdout is a sequence of bytes that should be decoded into a utf-8 string
 print(out.stdout.decode('utf-8').split("\n")[:5])
 
@@ -902,26 +1083,20 @@ print(out.stdout.decode('utf-8').split("\n")[:5])
 # Multiprocessing and multithreading
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-#    **Process**
+# `Difference between multiprocessing and multithreading <https://techdifferences.com/difference-between-multiprocessing-and-multithreading.html>`_
+# is essential to perform efficient parallel processing on multi-cores computers.
 #
-#    A process is a name given to a program instance that has been loaded into memory
+#    **Multiprocessing**
+#
+#    A process is  a program instance that has been loaded into memory
 #    and managed by the operating system.
-#
 #    Process = address space + execution context (thread of control)
 #
-#    Process address space (segments):
-#
-#    - Code.
-#    - Data (static/global).
-#    - Heap (dynamic memory allocation).
-#    - Stack.
-#
-#    Execution context:
-#
-#    - Data registers.
-#    - Stack pointer (SP).
-#    - Program counter (PC).
-#    - Working Registers.
+#    - Process address space is made of (memory) segments for (i) code,
+#      (ii) data (static/global), (iii) heap (dynamic memory allocation),
+#      and the execution stack (functions' execution context).
+#    - Execution context consists of (i) data registers, (ii) Stack Pointer (SP),
+#      (iii) Program Counter (PC), and (iv) working Registers.
 #
 #    OS Scheduling of processes: context switching (ie. save/load Execution context)
 #
@@ -930,44 +1105,46 @@ print(out.stdout.decode('utf-8').split("\n")[:5])
 #    - Context switching expensive.
 #    - (potentially) complex data sharing (not necessary true).
 #    - Cooperating processes - no need for memory protection (separate address spaces).
-#    - Relevant for parrallel computation with memory allocation.
+#    - Relevant for parallel computation with memory allocation.
 #
-#    **Threads**
+#    **Multithreading**
 #
 #    - Threads share the same address space (Data registers): access to code, heap and (global) data.
 #    - Separate execution stack, PC and Working Registers.
 #
 #    Pros/cons
 #
-#    - Faster context switching only SP, PC and Working Registers.
+#    - **Faster context switching** only SP, PC and Working Registers.
 #    - Can exploit fine-grain concurrency
 #    - Simple data sharing through the shared address space.
-#    - Precautions have to be taken or two threads will write to the same memory at the same time. This is what the **global interpreter lock (GIL)** is for.
+#    - **But most of concurrent memory operations are serialized (blocked)
+#      by the global interpreter lock (GIL)**.
+#      The GIL prevents two threads writing to the same memory at the same time.
 #    - Relevant for GUI, I/O (Network, disk) concurrent operation
 #
 #    **In Python**
 #
-#    - The ``threading`` module uses threads.
-#    - The ``multiprocessing`` module uses processes.
+#    - **As long the GIL exists favor multiprocessing over multithreading**
+#    - Multithreading rely on ``threading`` module.
+#    - Multiprocessing rely on ``multiprocessing`` module.
 
 ###############################################################################
 # Multithreading
 #
 
-import time
-import threading
 
 def list_append(count, sign=1, out_list=None):
     if out_list is None:
         out_list = list()
     for i in range(count):
         out_list.append(sign * i)
-        sum(out_list) # do some computation
+        sum(out_list)  # do some computation
     return out_list
+
 
 size = 10000   # Number of numbers to add
 
-out_list = list() # result is a simple list
+out_list = list()  # result is a simple list
 thread1 = threading.Thread(target=list_append, args=(size, 1, out_list, ))
 thread2 = threading.Thread(target=list_append, args=(size, -1, out_list, ))
 
@@ -986,7 +1163,6 @@ print(out_list[:10])
 # Multiprocessing
 #
 
-import multiprocessing
 
 # Sharing requires specific mecanism
 out_list1 = multiprocessing.Manager().list()
@@ -1011,8 +1187,6 @@ print("Multiprocessing ellapsed time ", time.time() - startime)
 # running on different machines. A manager object controls a server process
 # which manages shared objects.
 
-import multiprocessing
-import time
 
 size = int(size / 100)   # Number of numbers to add
 
@@ -1096,7 +1270,6 @@ print("Multiprocessing with shared object ellapsed time ", time.time() - startim
 #
 
 # Full FTP features with ftplib
-import ftplib
 ftp = ftplib.FTP("ftp.cea.fr")
 ftp.login()
 ftp.cwd('/pub/unati/people/educhesnay/pystatml')
@@ -1108,7 +1281,6 @@ fd.close()
 ftp.quit()
 
 # File download urllib
-import urllib.request
 ftp_url = 'ftp://ftp.cea.fr/pub/unati/people/educhesnay/pystatml/README.md'
 urllib.request.urlretrieve(ftp_url, os.path.join(tmpdir, "README2.md"))
 
@@ -1147,7 +1319,6 @@ urllib.request.urlretrieve(ftp_url, os.path.join(tmpdir, "README2.md"))
 #
 # Or
 
-import sys
 sys.path.append("path_to_parent_python_module")
 
 
@@ -1197,15 +1368,13 @@ sys.path.append("path_to_parent_python_module")
 # -  An **object** is a specific instance of a class.
 #
 # -  **Inheritance**: OOP allows classes to inherit commonly used state
-#    and behaviour from other classes. Reduce code duplication
+#    and behavior from other classes. Reduce code duplication
 #
 # -  **Polymorphism**: (usually obtained through polymorphism) calling
 #    code is agnostic as to whether an object belongs to a parent class or
 #    one of its descendants (abstraction, modularity). The same method
 #    called on 2 objects of 2 different classes will behave differently.
 #
-
-import math
 
 
 class Shape2D:
@@ -1296,6 +1465,7 @@ def my_function(a, b=2):
     # Add a with b (this is a comment)
     return a + b
 
+
 print(help(my_function))
 
 ###############################################################################
@@ -1321,9 +1491,9 @@ print(help(my_function))
 # Exercise 1: functions
 # ~~~~~~~~~~~~~~~~~~~~~
 #
-# Create a function that acts as a simple calulator If the operation is
-# not specified, default to addition If the operation is misspecified,
-# return an prompt message Ex: ``calc(4,5,"multiply")`` returns 20 Ex:
+# Create a function that acts as a simple calculator taking three parameters:
+# the two operand and the operation in "+", "-", and "*". As default use "+".
+# If the operation is misspecified, return a error message Ex: ``calc(4,5,"*")`` returns 20 Ex:
 # ``calc(3,5)`` returns 8 Ex: ``calc(1, 2, "something")`` returns error
 # message
 #
