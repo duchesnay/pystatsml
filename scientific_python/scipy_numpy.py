@@ -169,6 +169,7 @@ print(x.ravel())
 # Stack arrays
 # ------------
 #
+# `NumPy Joining Array <https://www.w3schools.com/python/numpy/numpy_array_join.asp>`_
 
 a = np.array([0, 1])
 b = np.array([2, 3])

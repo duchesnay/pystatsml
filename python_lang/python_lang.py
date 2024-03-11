@@ -14,6 +14,7 @@ import math
 math.sqrt(25)
 
 # import a function
+from math import sqrt
 sqrt(25)    # no longer have to reference the module
 
 # import multiple functions at once
@@ -665,9 +666,12 @@ simpsons_info_dict = {name: [simpsons_roles_dict[name], simpsons_ages_dict[name]
 print(simpsons_info_dict)
 
 ###############################################################################
-# Iterators
-# ~~~~~~~~~
-#
+# Iterators ``itertools`` package
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+import itertools
+
+###############################################################################
 # Example: Cartesian product
 
 print([[x, y] for x, y in itertools.product(['a', 'b', 'c'], [1, 2])])
@@ -799,7 +803,8 @@ print(join_dict_to_table(simpsons_roles_dict, simpsons_ages_dict))
 # Regular Expression (RE, or RegEx) allow to search and patterns in strings.
 # See `this page <https://www.programiz.com/python-programming/regex>`_ for the syntax
 # of the RE patterns.
-#
+
+import re
 
 ###############################################################################
 # **Usual patterns**
@@ -896,7 +901,8 @@ re.sub('[^0-9a-zA-Z\s]+', '', 'H^&ell`.,|o W]{+orld')
 ###############################################################################
 # Operating system interfaces (os)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
+
+import os
 
 
 ###############################################################################
@@ -913,6 +919,7 @@ os.chdir(cwd)
 ###############################################################################
 # Temporary directory
 
+import tempfile
 tmpdir = tempfile.gettempdir()
 print(tmpdir)
 
@@ -992,6 +999,7 @@ for dirpath, dirnames, filenames in os.walk(WD):
 ###############################################################################
 # Search for a file using a wildcard ``glob.glob(dir)``
 
+import glob
 filenames = glob.glob(os.path.join(tmpdir, "*", "*.txt"))
 print(filenames)
 
@@ -1128,84 +1136,189 @@ print(out.stdout.decode('utf-8').split("\n")[:5])
 #    - Multithreading rely on ``threading`` module.
 #    - Multiprocessing rely on ``multiprocessing`` module.
 
+
 ###############################################################################
-# Multithreading
+# **Example: Random forest**
+# 
+# Random forest are the obtained by Majority vote of decision tree on estimated 
+# on bootstrapped samples.
 #
+# Toy dataset
+
+import time
+import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import balanced_accuracy_score
+
+# Toy dataset
+X, y = make_classification(n_features=1000, n_samples=5000, n_informative=20,
+                           random_state=1, n_clusters_per_class=3)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8,
+                                                    random_state=42)
 
 
-def list_append(count, sign=1, out_list=None):
-    if out_list is None:
-        out_list = list()
-    for i in range(count):
-        out_list.append(sign * i)
-        sum(out_list)  # do some computation
-    return out_list
+###############################################################################
+# Random forest algorithm:
+#
+# 1. In parallel, fit decision trees on bootstrapped data sample. Make predictions.
+# 2. Majority vote on prediction
+
+###############################################################################
+# 1. In parallel, fit decision trees on bootstrapped data sample. Make predictions.
+
+def boot_decision_tree(X_train, X_test, y_train, predictions_list=None):
+    N = X_train.shape[0]
+    boot_idx = np.random.choice(np.arange(N), size=N, replace=True)
+    clf = DecisionTreeClassifier(random_state=0)
+    clf.fit(X_train[boot_idx], y_train[boot_idx])
+    y_pred = clf.predict(X_test)
+    if predictions_list is not None:
+        predictions_list.append(y_pred)
+    return y_pred
+
+###############################################################################
+# Independent runs of decision tree, see variability of predictions
+
+for i in range(5):
+    y_test_boot = boot_decision_tree(X_train, X_test, y_train)
+    print("%.2f" % balanced_accuracy_score(y_test, y_test_boot))
+
+###############################################################################
+# 2. Majority vote on prediction
+
+def vote(predictions):
+    maj = np.apply_along_axis(
+        lambda x: np.argmax(np.bincount(x)),
+        axis=1,
+        arr=predictions
+    )
+    return maj
 
 
-size = 10000   # Number of numbers to add
+###############################################################################
+# **Sequential execution**
+#
+# Sequentially fit decision tree on bootstrapped samples, then apply majority vote
 
-out_list = list()  # result is a simple list
-thread1 = threading.Thread(target=list_append, args=(size, 1, out_list, ))
-thread2 = threading.Thread(target=list_append, args=(size, -1, out_list, ))
+nboot = 2
+start = time.time()
+y_test_boot = np.dstack([boot_decision_tree(X_train, X_test, y_train)
+                         for i in range(nboot)]).squeeze()
+y_test_vote = vote(y_test_boot)
+print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
+print("Sequential execution, elapsed time:", time.time() - start)
 
-startime = time.time()
+
+###############################################################################
+# **Multithreading**
+#
+# Concurrent (parallel) execution of the function with two threads.
+
+from threading import Thread
+
+predictions_list = list()
+thread1 = Thread(target=boot_decision_tree,
+                 args=(X_train, X_test, y_train, predictions_list))
+thread2 = Thread(target=boot_decision_tree,
+                 args=(X_train, X_test, y_train, predictions_list))
+
 # Will execute both in parallel
+start = time.time()
 thread1.start()
 thread2.start()
+
 # Joins threads back to the parent process
 thread1.join()
 thread2.join()
-print("Threading ellapsed time ", time.time() - startime)
 
-print(out_list[:10])
+y_test_boot = np.dstack(predictions_list).squeeze()
+y_test_vote = vote(y_test_boot)
+print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
+print("Concurrent execution with threads, elapsed time:", time.time() - start)
+
 
 ###############################################################################
-# Multiprocessing
+# **Multiprocessing**
 #
-
-
-# Sharing requires specific mecanism
-out_list1 = multiprocessing.Manager().list()
-p1 = multiprocessing.Process(target=list_append, args=(size, 1, None))
-out_list2 = multiprocessing.Manager().list()
-p2 = multiprocessing.Process(target=list_append, args=(size, -1, None))
-
-startime = time.time()
-p1.start()
-p2.start()
-p1.join()
-p2.join()
-print("Multiprocessing ellapsed time ", time.time() - startime)
-
-# print(out_list[:10]) is not availlable
-
-###############################################################################
-# Sharing object between process with Managers
+# Concurrent (parallel) execution of the function with
+# processes (jobs) executed in different address (memory) space.
+# `Process-based parallelism <https://docs.python.org/3/library/multiprocessing.html>`_
 #
+#
+# ``Process()`` for parallel execution and ``Manager()`` for data sharing
+#
+# **Sharing data between process with Managers**
+# Therefore, sharing data requires specific mechanism using  .
 # Managers provide a way to create data which can be shared between
 # different processes, including sharing over a network between processes
 # running on different machines. A manager object controls a server process
 # which manages shared objects.
 
+from multiprocessing import Process, Manager
 
-size = int(size / 100)   # Number of numbers to add
+predictions_list = Manager().list()
+p1 = Process(target=boot_decision_tree,
+             args=(X_train, X_test, y_train, predictions_list))
+p2 = Process(target=boot_decision_tree,
+             args=(X_train, X_test, y_train, predictions_list))
 
-# Sharing requires specific mecanism
-out_list = multiprocessing.Manager().list()
-p1 = multiprocessing.Process(target=list_append, args=(size, 1, out_list))
-p2 = multiprocessing.Process(target=list_append, args=(size, -1, out_list))
-
-startime = time.time()
-
+# Will execute both in parallel
+start = time.time()
 p1.start()
 p2.start()
 
+# Joins processes back to the parent process
 p1.join()
 p2.join()
 
-print(out_list[:10])
+y_test_boot = np.dstack(predictions_list).squeeze()
+y_test_vote = vote(y_test_boot)
+print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
+print("Concurrent execution with processes, elapsed time:", time.time() - start)
 
-print("Multiprocessing with shared object ellapsed time ", time.time() - startime)
+###############################################################################
+# ``Pool()`` of **workers (processes or Jobs)** for concurrent (parallel) execution of multiples
+# tasks.
+# Pool can be used when *N* independent tasks need to be executed in parallel, when there are
+# more tasks than cores on the computer.
+# Thus, a pool of *P* workers (Process, or Jobs), *P* < number of cores in the computer,
+# concurrently execute *P* tasks. When a task is completed, a new worker is allocated
+# to execute a remaining task. This, process until all *N* tasks are completed.
+# Links
+# - `Pool(), map(), apply_async(), <https://superfastpython.com/multiprocessing-pool-map-multiple-arguments/>`_`
+# - `Number of CPUs and Cores in Python <https://superfastpython.com/number-of-cpus-python/>`_
+
+from multiprocessing import Pool, cpu_count
+# Numbers of logical cores in the current system.
+# Rule of thumb: Divide by 2 to get nb of physical cores
+njobs = int(cpu_count() / 2) 
+
+predictions_list = Manager().list()
+
+start = time.time()
+
+ntasks = 12
+  
+pool = Pool(njobs)
+# issue multiple tasks each with multiple arguments
+async_results = [pool.apply_async(boot_decision_tree,
+                                  args=(X_train, X_test, y_train,
+                                        predictions_list))
+                 for i in range(ntasks)]
+
+# retrieve the return value results
+results = [ar.get() for ar in async_results]
+y_test_boot2 = np.dstack(results).squeeze()
+y_test_boot = np.dstack(list(predictions_list)).squeeze()
+
+print(y_test_boot2.shape == y_test_boot.shape)
+print(np.all(y_test_boot2.shape == y_test_boot.shape))
+
+y_test_vote = vote(y_test_boot)
+print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
+print("Concurrent execution with processes, elapsed time:", time.time() - start)
 
 
 ###############################################################################
@@ -1267,9 +1380,13 @@ print("Multiprocessing with shared object ellapsed time ", time.time() - startim
 ###############################################################################
 # FTP
 # ~~~
-#
 
-# Full FTP features with ftplib
+
+###############################################################################
+# FTP with ``ftplib``
+
+import ftplib
+
 ftp = ftplib.FTP("ftp.cea.fr")
 ftp.login()
 ftp.cwd('/pub/unati/people/educhesnay/pystatml')
@@ -1280,7 +1397,10 @@ ftp.retrbinary('RETR README.md', fd.write)
 fd.close()
 ftp.quit()
 
-# File download urllib
+###############################################################################
+# FTP file download with ``urllib``
+
+import urllib
 ftp_url = 'ftp://ftp.cea.fr/pub/unati/people/educhesnay/pystatml/README.md'
 urllib.request.urlretrieve(ftp_url, os.path.join(tmpdir, "README2.md"))
 
@@ -1319,6 +1439,7 @@ urllib.request.urlretrieve(ftp_url, os.path.join(tmpdir, "README2.md"))
 #
 # Or
 
+import sys
 sys.path.append("path_to_parent_python_module")
 
 
