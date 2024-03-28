@@ -864,9 +864,9 @@ print(re.compile("[\w]+").findall("firstname:John_lastname:Doe"))
 
 
 ###############################################################################
-# Find part of the RE: use parenthesis ``(part to be matched)``
+# Extract specific parts of the RE: use parenthesis ``(part of pattern to be matched)``
 # Extract John and Doe, such as John is suffixed with firstname:
-# and Doe is suffixed with lastname:.
+# and Doe is suffixed with lastname: 
 
 pattern = re.compile("firstname:([\w]+)_lastname:([\w]+)")
 print(pattern.findall("firstname:John_lastname:Doe \
@@ -1161,9 +1161,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8,
 
 ###############################################################################
 # Random forest algorithm:
-#
-# 1. In parallel, fit decision trees on bootstrapped data sample. Make predictions.
-# 2. Majority vote on prediction
+# (i) In parallel, fit decision trees on bootstrapped data samples. Make predictions.
+# (ii) Majority vote on predictions
 
 ###############################################################################
 # 1. In parallel, fit decision trees on bootstrapped data sample. Make predictions.
@@ -1186,7 +1185,7 @@ for i in range(5):
     print("%.2f" % balanced_accuracy_score(y_test, y_test_boot))
 
 ###############################################################################
-# 2. Majority vote on prediction
+# 2. Majority vote on predictions
 
 def vote(predictions):
     maj = np.apply_along_axis(
@@ -1233,6 +1232,7 @@ thread2.start()
 thread1.join()
 thread2.join()
 
+# Vote on concatenated predictions
 y_test_boot = np.dstack(predictions_list).squeeze()
 y_test_vote = vote(y_test_boot)
 print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
@@ -1273,6 +1273,7 @@ p2.start()
 p1.join()
 p2.join()
 
+# Vote on concatenated predictions
 y_test_boot = np.dstack(predictions_list).squeeze()
 y_test_vote = vote(y_test_boot)
 print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
@@ -1283,38 +1284,42 @@ print("Concurrent execution with processes, elapsed time:", time.time() - start)
 # tasks.
 # Pool can be used when *N* independent tasks need to be executed in parallel, when there are
 # more tasks than cores on the computer.
-# Thus, a pool of *P* workers (Process, or Jobs), *P* < number of cores in the computer,
-# concurrently execute *P* tasks. When a task is completed, a new worker is allocated
-# to execute a remaining task. This, process until all *N* tasks are completed.
-# Links
-# - `Pool(), map(), apply_async(), <https://superfastpython.com/multiprocessing-pool-map-multiple-arguments/>`_`
-# - `Number of CPUs and Cores in Python <https://superfastpython.com/number-of-cpus-python/>`_
+#
+# 1. Initialize a `Pool(), map(), apply_async(), <https://superfastpython.com/multiprocessing-pool-map-multiple-arguments/>`_
+#    of *P* workers (Process, or Jobs), where *P* < number of cores in the computer.
+#    Use `cpu_count` to get the number of logical cores in the current system, 
+#    See: `Number of CPUs and Cores in Python <https://superfastpython.com/number-of-cpus-python/>`_.
+# 2. Map *N* tasks to the *P* workers, here we use the function 
+#    `Pool.apply_async() <https://superfastpython.com/multiprocessing-pool-apply_async/>`_ that runs the
+#    jobs asynchronously. Asynchronous means that calling `pool.apply_async` does not block the execution
+#    of the caller that carry on, i.e., it returns immediately with a `AsyncResult` object for the task.
+# 
+# that the caller (than runs the sub-processes) is not blocked by the 
+# to the process pool does not block, allowing the caller that issued the task to carry on.#
+# 3. Wait for all jobs to complete `pool.join()`
+# 4. Collect the results
 
 from multiprocessing import Pool, cpu_count
 # Numbers of logical cores in the current system.
 # Rule of thumb: Divide by 2 to get nb of physical cores
 njobs = int(cpu_count() / 2) 
-
-predictions_list = Manager().list()
-
 start = time.time()
-
 ntasks = 12
   
 pool = Pool(njobs)
-# issue multiple tasks each with multiple arguments
+# Run multiple tasks each with multiple arguments
 async_results = [pool.apply_async(boot_decision_tree,
-                                  args=(X_train, X_test, y_train,
-                                        predictions_list))
+                                  args=(X_train, X_test, y_train))
                  for i in range(ntasks)]
 
-# retrieve the return value results
-results = [ar.get() for ar in async_results]
-y_test_boot2 = np.dstack(results).squeeze()
-y_test_boot = np.dstack(list(predictions_list)).squeeze()
+# Close the process pool & wait for all jobs to complete
+pool.close()
+pool.join()
 
-print(y_test_boot2.shape == y_test_boot.shape)
-print(np.all(y_test_boot2.shape == y_test_boot.shape))
+# Collect the results
+y_test_boot = np.dstack([ar.get() for ar in async_results]).squeeze()
+
+# Vote on concatenated predictions
 
 y_test_vote = vote(y_test_boot)
 print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
@@ -1424,51 +1429,6 @@ urllib.request.urlretrieve(ftp_url, os.path.join(tmpdir, "README2.md"))
 # ~~~~~~
 #
 
-# TODO
-
-###############################################################################
-# Modules and packages
-# --------------------
-#
-# A module is a Python file.
-# A package is a directory which MUST contain a special file called ``__init__.py``
-#
-# To import, extend variable `PYTHONPATH`::
-#
-#      export PYTHONPATH=path_to_parent_python_module:${PYTHONPATH}
-#
-# Or
-
-import sys
-sys.path.append("path_to_parent_python_module")
-
-
-###############################################################################
-#
-# The ``__init__.py`` file can be empty. But you can set which modules the
-# package exports as the API, while keeping other modules internal,
-# by overriding the __all__ variable, like so:
-
-###############################################################################
-# ``parentmodule/__init__.py`` file::
-#
-#     from . import submodule1
-#     from . import submodule2
-#
-#     from .submodule3 import function1
-#     from .submodule3 import function2
-#
-#     __all__ = ["submodule1", "submodule2",
-#                "function1", "function2"]
-#
-# User can import::
-#
-#     import parentmodule.submodule1
-#     import parentmodule.function1
-
-###############################################################################
-# Python Unit Testing
-#
 # TODO
 
 
@@ -1601,6 +1561,205 @@ print(help(my_function))
 #
 #        Some description
 #        """
+
+
+###############################################################################
+# Modules and packages
+# --------------------
+#
+# Python `packages and modules <https://docs.python.org/3/tutorial/modules.html>`_
+# structure python code into modular "libraries" to be shared.
+
+###############################################################################
+# Package
+# ~~~~~~~
+# 
+# Packages are a way of structuring Python’s module namespace by using “dotted module names”.
+# A package is a directory (here, ``stat_pkg``) containing a ``__init__.py`` file.
+
+###############################################################################
+# Example, ``package``
+# ::
+#     stat_pkg/
+#     ├── __init__.py
+#     └── datasets_mod.py
+#
+# The ``__init__.py`` can be empty.
+# Or it can be used to define the package API, i.e., the modules (``*.py`` files)
+# that are exported and those that remain internal.
+
+###############################################################################
+# Example, file ``stat_pkg/__init__.py``
+# ::
+#     # 1) import function for modules in the packages
+#     from .module import make_regression
+#
+#     # 2) Make them visible in the package
+#     __all__ = ["make_regression"]
+
+
+###############################################################################
+# Module
+# ~~~~~~
+#
+# A module is a python file.
+# Example, ``stat_pkg/datasets_mod.py``
+# ::
+#     import numpy as np
+#     def make_regression(n_samples=10, n_features=2, add_intercept=False):
+#         ...
+#         return X, y, coef
+
+
+###############################################################################
+# Usage
+#
+
+import stat_pkg as pkg
+
+X, y, coef = pkg.make_regression()
+print(X.shape)
+
+###############################################################################
+# The search path
+# ~~~~~~~~~~~~~~~
+# 
+# With a directive like ``import stat_pkg``, Python will searches for
+#
+# - a module, file named ``stat_pkg.py`` or,
+# - a package, directory named ``stat_pkg`` containing a ``stat_pkg/__init__.py`` file.
+#
+# Python will search in a list of directories given by the variable
+# ``sys.path``. This variable is initialized from these locations:
+#
+#  - The directory containing the input script (or the current directory when no file is specified).
+#  - **``PYTHONPATH``** (a list of directory names, with the same syntax as the shell variable ``PATH``).
+#
+# In our case, to be able to import ``stat_pkg``, the parent directory of ``stat_pkg``
+# must be in ``sys.path``.
+# You can modify ``PYTHONPATH`` by any method, or access it via ``sys`` package, example:
+# ::
+#     import sys
+#     sys.path.append("/home/ed203246/git/pystatsml/python_lang")
+
+###############################################################################
+# Unit testing
+# ------------
+#
+# When developing a library (e.g., a python package) that is bound to evolve and being corrected, we want to ensure that:
+# (i) The code correctly implements some expected functionalities;
+# (ii) the modifications and additions don't break those functionalities; 
+#
+# Unit testing is a framework to asses to those two points. See sources:
+#  
+# - `Unit testing reference doc <https://docs.python.org/3/library/unittest.html>`_
+# - `Getting Started With Testing in Python <https://realpython.com/python-testing/>`_
+
+###############################################################################
+# Write unit tests (test cases)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# In a directory usually called ``tests`` create a `test case <https://docs.python.org/3/library/unittest.html#unittest.TestCase>`_, i.e., a python file 
+# ``test_datasets_mod.py`` (general syntax is ``test_<mymodule>.py``) that will execute some
+# functionalities of the module and test if the output are as expected. 
+# `test_datasets_mod.py` file contains specific directives:
+#
+# 1. ``import unittest``,
+# 2. ``class TestDatasets(unittest.TestCase)``, the test case class. The general syntax is ``class Test<MyModule>(unittest.TestCase)``
+# 3. ``def test_make_regression(self)``, test a function of an element of the module. The general syntax is ``test_<my function>(self)``
+# 4. ``self.assertTrue(np.allclose(X.shape, (10, 4)))``, test a specific functionality. The general syntax is ``self.assert<True|Equal|...>(<some boolean expression>)``
+# 5. ``unittest.main()``, where tests should be executed.
+#
+# Example:
+# ::
+#     import unittest
+#     import numpy as np
+#     from stat_pkg import make_regression
+#
+#     class TestDatasets(unittest.TestCase):
+#
+#         def test_make_regression(self):
+#             X, y, coefs = make_regression(n_samples=10, n_features=3,
+#                                           add_intercept=True)     
+#             self.assertTrue(np.allclose(X.shape, (10, 4)))
+#             self.assertTrue(np.allclose(y.shape, (10, )))
+#             self.assertTrue(np.allclose(coefs.shape, (4, )))
+#
+#     if __name__ == '__main__':
+#         unittest.main()
+
+###############################################################################
+# Run the tests  (test runner)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# The `test runner <https://wiki.python.org/moin/PythonTestingToolsTaxonomy>`_ 
+# orchestrates the execution of tests and provides the outcome to the user.
+# Many `test runners <https://blog.kortar.org/?p=370>`_ are available.
+#
+# `unittest <https://docs.python.org/3/library/unittest.html>`_ is the first unit test framework,
+# it comes with Python standard library.
+# It employs an object-oriented approach, grouping tests into classes known as test cases, 
+# each containing distinct methods representing individual tests.
+#
+# Unitest generally requires that tests are organized as importable modules,
+# `see details <https://docs.python.org/3/library/unittest.html#command-line-interface>`_.
+# Here, we do not introduce this complexity: we directly execute a test file that isn’t importable
+# as a module.
+# ::
+#     python tests/test_datasets_mod.py
+#
+# `Unittest test discovery <https://docs.python.org/3/library/unittest.html#unittest-test-discovery>`_:
+# (``-m unittest discover``) within (``-s``) ``tests`` directory, with verbose (``-v``) outputs.
+# ::
+#    python -m unittest discover -v -s tests
+
+###############################################################################
+# Doctest: add unit tests in docstring
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# `Doctest <https://docs.python.org/3/library/doctest.html>`_ is an inbuilt test framework that comes bundled with Python by default.
+# The doctest module searches for code fragments that resemble interactive Python sessions and runs those sessions to confirm they operate as shown.
+# It promotes `Test-driven (TDD) methodology <https://medium.com/@muirujackson/python-test-driven-development-6235c479baa2>`_
+#
+# Example file: ``python stat_pkg/supervised_models.py``
+# ::
+#     class LinearRegression:
+#         """Ordinary least squares Linear Regression.
+#
+#         Application Programming Interface (API) is compliant with scikit-learn:
+#         fit(X, y), predict(X)
+#
+#         Parameters
+#         ----------
+#         fit_intercept : bool, default=True
+#             Whether to calculate the intercept for this model. If set
+#             to False, no intercept will be used in calculations
+#             (i.e. data is expected to be centered).
+#
+#         Examples
+#         --------
+#         >>> import numpy as np
+#         >>> from stat_pkg import LinearRegression
+#         >>> X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]])
+#         >>> # y = 1 * x_0 + 2 * x_1 + 3
+#         >>> y = np.dot(X, np.array([1, 2])) + 3
+#         >>> reg = LinearRegression().fit(X, y)
+#         >>> reg.coef_
+#         array([3., 1., 2.0])
+#         >>> reg.predict(np.array([[3, 5]]))
+#         array([16.])
+#         """
+#
+# test:
+# ::
+#     python stat_pkg/supervised_models.py
+#
+
+###############################################################################
+# 
+# ~~~~~~~~~~~~~~~~~~~~~~~~
+#
+
 
 ###############################################################################
 # Exercises
