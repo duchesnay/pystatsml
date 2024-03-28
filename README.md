@@ -98,6 +98,17 @@ The easier is to install Anaconda at https://www.continuum.io with python >= 3. 
 - Jupyter
 - pandoc
 - LaTeX to generate pdf
+- scikit-learn
+- statsmodels
+- torch
+- torchvision
+
+
+```
+conda install sklearn
+conda install torchvision
+conda install -c conda-forge skorch
+```
 
 Then install:
 
@@ -155,3 +166,4 @@ b. Build
 ```
 make docx
 ```
+

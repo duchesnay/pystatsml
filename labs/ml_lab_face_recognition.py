@@ -465,7 +465,7 @@ cnn = NeuralNetClassifier(
         lr=0.001,
         optimizer=torch.optim.Adam,
         device=device,
-        train_split=skorch.dataset.CVSplit(cv=5, stratified=True),
+        train_split=skorch.dataset.ValidSplit(cv=5, stratified=True),
         verbose=0)
 
 scaler = preprocessing.MinMaxScaler()
@@ -525,7 +525,7 @@ resnet = NeuralNetClassifier(
     optimizer__weight_decay=0.0001,  # L2 regularization
     # Shuffle training data on each epoch
     # iterator_train__shuffle=True,
-    train_split=skorch.dataset.CVSplit(cv=5, stratified=True),
+    train_split=skorch.dataset.ValidSplit(cv=5, stratified=True),
     device=device,
     verbose=0)
 

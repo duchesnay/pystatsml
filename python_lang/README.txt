@@ -1,5 +1,5 @@
-Scientific Python
-=================
+Python language
+===============
 
 - Python language
 

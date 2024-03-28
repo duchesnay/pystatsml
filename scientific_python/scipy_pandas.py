@@ -68,11 +68,6 @@ print(pd.concat([user1, height], axis=1))
 users = pd.concat([user1, user2, user3])
 print(users)
 
-##############################################################################
-# Concatenate rows: append
-
-user1.append(user2)
-
 
 ##############################################################################
 # Join DataFrame
@@ -307,8 +302,6 @@ print(df.describe(include=['object']))  # limit to one (or more) types
 ##############################################################################
 # Statistics per group (groupby)
 
-print(df.groupby("job").mean())
-
 print(df.groupby("job")["age"].mean())
 
 print(df.groupby("job").describe(include='all'))
@@ -328,8 +321,9 @@ for grp, data in df.groupby("job"):
 # Remove duplicate data
 # ~~~~~~~~~~~~~~~~~~~~~
 
-
-df = users.append(users.iloc[0], ignore_index=True)
+df = users.copy()
+# Create a duplicate: Append the first at the end
+df.loc[len(df.index)] = users.iloc[0]
 
 print(df.duplicated())                 # Series of booleans
 # (True if a row is identical to a previous row)

@@ -22,7 +22,7 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split
 
 np.set_printoptions(precision=2)
-pd.set_option('precision', 2)
+# pd.set_option('precision', 2)
 
 # %%
 # Support Vector Machines (SVM)
