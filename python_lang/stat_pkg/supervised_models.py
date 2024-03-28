@@ -39,7 +39,7 @@ class LinearRegression:
     array([16.])
     """
 
-    def __init__(self, fit_intercept=True) -> None:
+    def __init__(self, fit_intercept=True):
         self.fit_intercept = fit_intercept
 
     def fit(self, X, y):

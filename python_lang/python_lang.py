@@ -1656,22 +1656,26 @@ print(X.shape)
 # - `Getting Started With Testing in Python <https://realpython.com/python-testing/>`_
 
 ###############################################################################
-# Write unit tests (test cases)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# unittest: test your code
+# ~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# 1) Write unit tests (test cases)
 #
 # In a directory usually called ``tests`` create a `test case <https://docs.python.org/3/library/unittest.html#unittest.TestCase>`_, i.e., a python file 
 # ``test_datasets_mod.py`` (general syntax is ``test_<mymodule>.py``) that will execute some
 # functionalities of the module and test if the output are as expected. 
 # `test_datasets_mod.py` file contains specific directives:
 #
-# 1. ``import unittest``,
-# 2. ``class TestDatasets(unittest.TestCase)``, the test case class. The general syntax is ``class Test<MyModule>(unittest.TestCase)``
-# 3. ``def test_make_regression(self)``, test a function of an element of the module. The general syntax is ``test_<my function>(self)``
-# 4. ``self.assertTrue(np.allclose(X.shape, (10, 4)))``, test a specific functionality. The general syntax is ``self.assert<True|Equal|...>(<some boolean expression>)``
-# 5. ``unittest.main()``, where tests should be executed.
+# - ``import unittest``,
+# - ``class TestDatasets(unittest.TestCase)``, the test case class. The general syntax is ``class Test<MyModule>(unittest.TestCase)``
+# - ``def test_make_regression(self)``, test a function of an element of the module. The general syntax is ``test_<my function>(self)``
+# - ``self.assertTrue(np.allclose(X.shape, (10, 4)))``, test a specific functionality. The general syntax is ``self.assert<True|Equal|...>(<some boolean expression>)``
+# - ``unittest.main()``, where tests should be executed.
 #
 # Example:
+#
 # ::
+#
 #     import unittest
 #     import numpy as np
 #     from stat_pkg import make_regression
@@ -1689,8 +1693,7 @@ print(X.shape)
 #         unittest.main()
 
 ###############################################################################
-# Run the tests  (test runner)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2) Run the tests  (test runner)
 #
 # The `test runner <https://wiki.python.org/moin/PythonTestingToolsTaxonomy>`_ 
 # orchestrates the execution of tests and provides the outcome to the user.
@@ -1705,12 +1708,16 @@ print(X.shape)
 # `see details <https://docs.python.org/3/library/unittest.html#command-line-interface>`_.
 # Here, we do not introduce this complexity: we directly execute a test file that isn’t importable
 # as a module.
+#
 # ::
+#
 #     python tests/test_datasets_mod.py
 #
 # `Unittest test discovery <https://docs.python.org/3/library/unittest.html#unittest-test-discovery>`_:
 # (``-m unittest discover``) within (``-s``) ``tests`` directory, with verbose (``-v``) outputs.
+#
 # ::
+#
 #    python -m unittest discover -v -s tests
 
 ###############################################################################
@@ -1719,23 +1726,16 @@ print(X.shape)
 #
 # `Doctest <https://docs.python.org/3/library/doctest.html>`_ is an inbuilt test framework that comes bundled with Python by default.
 # The doctest module searches for code fragments that resemble interactive Python sessions and runs those sessions to confirm they operate as shown.
-# It promotes `Test-driven (TDD) methodology <https://medium.com/@muirujackson/python-test-driven-development-6235c479baa2>`_
+# It promotes `Test-driven (TDD) methodology <https://medium.com/@muirujackson/python-test-driven-development-6235c479baa2>`_.
 #
-# Example file: ``python stat_pkg/supervised_models.py``
+# 1) Add doc test in the docstrings, see `python stat_pkg/supervised_models.py 
+# <https://github.com/duchesnay/pystatsml/blob/master/python_lang/stat_pkg/supervised_models.py>`_:
+#
 # ::
+#
 #     class LinearRegression:
 #         """Ordinary least squares Linear Regression.
-#
-#         Application Programming Interface (API) is compliant with scikit-learn:
-#         fit(X, y), predict(X)
-#
-#         Parameters
-#         ----------
-#         fit_intercept : bool, default=True
-#             Whether to calculate the intercept for this model. If set
-#             to False, no intercept will be used in calculations
-#             (i.e. data is expected to be centered).
-#
+#         ...
 #         Examples
 #         --------
 #         >>> import numpy as np
@@ -1749,12 +1749,42 @@ print(X.shape)
 #         >>> reg.predict(np.array([[3, 5]]))
 #         array([16.])
 #         """
+#     def __init__(self, fit_intercept=True):
+#         self.fit_intercept = fit_intercept
+#     ...
 #
-# test:
+# 2) Add the call to doctest module ad the end of the python file:
+#
 # ::
+#
+#     if __name__ == "__main__":
+#         import doctest
+#         doctest.testmod()     
+#
+# 3) Run doc tests:
+#
+# ::
+#
 #     python stat_pkg/supervised_models.py
 #
-
+# Test failed with the output:
+#
+# ::
+#
+#     **********************************************************************
+#     File ".../supervised_models.py", line 36, in __main__.LinearRegression
+#     Failed example:
+#         reg.coef_
+#     Expected:
+#         array([3., 1., 2.0])
+#     Got:
+#         array([3., 1., 2.])
+#     **********************************************************************
+#     1 items had failures:
+#        1 of   7 in __main__.LinearRegression
+#     ***Test Failed*** 1 failures.
+#
+ 
 ###############################################################################
 # 
 # ~~~~~~~~~~~~~~~~~~~~~~~~
