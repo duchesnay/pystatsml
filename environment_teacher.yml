@@ -1,0 +1,24 @@
+name: pystatsml_teacher
+channels:
+  - conda-forge
+dependencies:
+  - ipython
+  - scipy
+  - numpy
+  - pandas>=2.0.3
+  - jupyter
+  - matplotlib
+  - scikit-learn>=1.3.0
+  - seaborn
+  - statsmodels>=0.14.0
+  - torchvision
+  - skorch
+  - pandoc
+  - sphinx-gallery
+  - nbstripout
+  - pip:
+      - docxbuilder
+      - docxbuilder[math]
+
+  
+

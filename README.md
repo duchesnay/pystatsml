@@ -66,8 +66,48 @@ Directories and main files:
     └── dl_transfer-learning_cifar10-ants-
 
 
-Build
------
+Installation for students
+-------------------------
+
+Install Anaconda at https://www.continuum.io with python >= 3.
+
+Standard user (student) should install the required data analysis packages:
+
+```
+conda env create -f environment_student.yml
+conda activate pystatsml_student
+```
+
+Installation for teachers to build the documents
+------------------------------------------------
+
+Expert user (teacher) who wants to o build the course should install additional packages including:
+
+- pandoc
+- [sphinx-gallery](https://sphinx-gallery.readthedocs.io)
+- [nbstripout](https://github.com/kynan/nbstripout)
+
+
+```
+conda env create -f environment_teacher.yml
+conda activate pystatsml_teacher
+```
+
+Build the documents.
+
+Configure your git repository with nbstripout pre-commit hook for users who don't want to track output in VCS.
+
+```
+nbstripout --install
+```
+
+
+Optional: install LaTeX to generate pdf. For Linux debian like:
+
+```
+sudo apt-get install latexmk texlive-latex-extra
+```
+
 
 After pulling the repository execute Jupyter notebooks (outputs are expected to be removed before git submission).
 ```
@@ -89,79 +129,8 @@ Clean everything and  strip output from Jupyter notebook (useless if you install
 make clean
 ```
 
-Dependencies
-------------
-The easier is to install Anaconda at https://www.continuum.io with python >= 3. Anaconda provides
+Optional to generate  Microsoft docx. Use [docxbuilder](https://docxbuilder.readthedocs.io/en/latest/docxbuilder.html)
 
-- python 3
-- ipython
-- Jupyter
-- pandoc
-- LaTeX to generate pdf
-- scikit-learn
-- statsmodels
-- torch
-- torchvision
-
-
-```
-conda install sklearn
-conda install torchvision
-conda install -c conda-forge skorch
-```
-
-Then install:
-
-1. [sphinx-gallery](https://sphinx-gallery.readthedocs.io)
-
-```
-conda install -c conda-forge sphinx-gallery
-```
-
-2. [nbstripout](https://github.com/kynan/nbstripout)
-
-```
-conda install -c conda-forge nbstripout
-```
-
-Configure your git repository with nbstripout pre-commit hook for users who don't want to track output in VCS.
-
-```
-nbstripout --install
-```
-
-3. Pandoc
-
-```
- conda install conda-forge::nbconvert-pandoc
-```
-
-b. Now make sure .gitattributes is tracked:
-
-```
-git add .gitattributes
-```
-
-4. LaTeX (optional for pdf)
-
-For Linux debian like:
-
-```
-sudo apt-get install latexmk texlive-latex-extra
-```
-
-5. MS docx (optional)
-
-[docxbuilder](https://docxbuilder.readthedocs.io/en/latest/docxbuilder.html)
-
-a. Install
-
-```
-pip install docxbuilder
-pip install docxbuilder[math]
-```
-
-b. Build
 
 ```
 make docx

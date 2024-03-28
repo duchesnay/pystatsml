@@ -1728,8 +1728,8 @@ print(X.shape)
 # The doctest module searches for code fragments that resemble interactive Python sessions and runs those sessions to confirm they operate as shown.
 # It promotes `Test-driven (TDD) methodology <https://medium.com/@muirujackson/python-test-driven-development-6235c479baa2>`_.
 #
-# 1) Add doc test in the docstrings, see `python stat_pkg/supervised_models.py 
-# <https://github.com/duchesnay/pystatsml/blob/master/python_lang/stat_pkg/supervised_models.py>`_:
+# 1) Add doc test in the docstrings, 
+# see `python stat_pkg/supervised_models.py <https://github.com/duchesnay/pystatsml/blob/master/python_lang/stat_pkg/supervised_models.py>`_:
 #
 # ::
 #

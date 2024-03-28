@@ -228,39 +228,7 @@ Update conda package and environment manager to current version
     conda update conda
 
 
-Install additional packages. Those commands install qt back-end (Fix a temporary issue to run spyder)
-
-::
-
-    conda install pyqt
-    conda install PyOpenGL
-    conda update --all
-
-
-Install seaborn for graphics
-
-::
-
-    conda install seaborn
-    # install a specific version from anaconda chanel
-    conda install -c anaconda pyqt=4.11.4
-
-List installed packages
-
-::
-
-    conda list
-
-Search available packages
-
-:: 
-
-    conda search pyqt
-    conda search scikit-learn
-
-
-
-**Environments**
+`Conda environments <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_
 
 
 - A conda environment is a directory that contains a specific collection of conda packages that you have installed.
@@ -271,22 +239,77 @@ List of all environments
 
 ::
 
-    conda info --envs
+    conda env list
 
-1. Create new environment
-2. Activate
-3. Install new package
+
+Creating an environment. Examples `environment_student.yml <https://github.com/duchesnay/pystatsml/blob/master/environment_student.yml>`_
 
 ::
 
-    conda create --name test
-    # Or
-    conda env create -f environment.yml
-    source activate test
-    conda info --envs
+    name: pystatsml_student
+    channels:
+    - conda-forge
+    dependencies:
+    - ipython
+    - scipy
+    - numpy
+    - pandas>=2.0.3
+    - jupyter
+    - matplotlib
+    - scikit-learn>=1.3.0
+    - seaborn
+    - statsmodels>=0.14.0
+    - torchvision
+    - skorch
+
+
+
+Then create with:
+
+::
+
+    conda env create -f environment_student.yml
+
+
+Activate/deactivate  an environment
+
+::
+
+    conda activate environment_student
+    conda deactivate
+
+Updating an environment (additional or better package, remove packages).
+Update the contents of your environment.yml file accordingly and then run the following command:
+
+::
+    conda env update --file environment.yml --prune
+
+List/search of the package(s) in an environment
+
+::
+
     conda list
+    conda list numpy
+
+
+Search for available version of package in an environment
+
+::
+
     conda search -f numpy
+
+Install new package in an environment
+
+::
+    
     conda install numpy
+
+
+Delete an environment
+
+::
+
+    conda remove -n environment_student --all
 
 **Miniconda**
 
