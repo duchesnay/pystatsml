@@ -9,22 +9,40 @@ Source  `Kevin Markham <https://github.com/justmarkham/python-reference>`_
 # ----------------
 #
 
+###############################################################################
 # 'generic import' of math module
+
 import math
 math.sqrt(25)
 
+###############################################################################
 # import a function
+
 from math import sqrt
 sqrt(25)    # no longer have to reference the module
 
+###############################################################################
 # import multiple functions at once
 
-# import all functions in a module (generally discouraged)
+from math import sqrt, exp
+
+###############################################################################
+# import all functions in a module (strongly discouraged)
+#
+# ::
+#
 # from os import *
 
+
+###############################################################################
 # define an alias
 
+import numpy as np
+np.sqrt(9)
+
+###############################################################################
 # show all functions in math module
+
 content = dir(math)
 
 ###############################################################################
@@ -32,7 +50,9 @@ content = dir(math)
 # ----------------
 #
 
+###############################################################################
 # Numbers
+
 10 + 4          # add (returns 14)
 10 - 4          # subtract (returns 6)
 10 * 4          # multiply (returns 40)
@@ -40,19 +60,23 @@ content = dir(math)
 10 / 4          # divide (returns 2 because both types are 'int')
 10 / float(4)   # divide (returns 2.5)
 5 % 4           # modulo (returns 1) - also known as the remainder
-
 10 / 4          # true division (returns 2.5)
 10 // 4         # floor division (returns 2)
 
 
+###############################################################################
 # Boolean operations
+#
 # comparisons (these return True)
+
 5 > 3
 5 >= 3
 5 != 3
 5 == 5
 
+###############################################################################
 # Boolean operations (these return True)
+
 5 > 3 and 6 > 3
 5 > 3 or 5 < 3
 not False
@@ -63,31 +87,39 @@ False or not False and True     # evaluation order: not, and, or
 # Data types
 # ----------
 #
+# Determine the type of an object
 
-# determine the type of an object
 type(2)         # returns 'int'
 type(2.0)       # returns 'float'
 type('two')     # returns 'str'
 type(True)      # returns 'bool'
 type(None)      # returns 'NoneType'
 
-# check if an object is of a given type
+###############################################################################
+# Check if an object is of a given type
+
 isinstance(2.0, int)            # returns False
 isinstance(2.0, (int, float))   # returns True
 
-# convert an object to a given type
+###############################################################################
+# Convert an object to a given type
+
 float(2)
 int(2.9)
 str(2.9)
 
+###############################################################################
 # zero, None, and empty containers are converted to False
+
 bool(0)
 bool(None)
 bool('')    # empty string
 bool([])    # empty list
 bool({})    # empty dictionary
 
-# non-empty containers and non-zeros are converted to True
+###############################################################################
+# Non-empty containers and non-zeros are converted to True
+
 bool(2)
 bool('two')
 bool([2])
@@ -100,40 +132,69 @@ bool([2])
 # Different objects categorized along a certain ordered sequence, lists
 # are ordered, iterable, mutable (adding or removing objects changes the
 # list size), can contain multiple data types.
+#
+# Creation
+# 
+# Empty list (two ways)
 
-
-# create an empty list (two ways)
 empty_list = []
 empty_list = list()
 
-# create a list
+###############################################################################
+# List with values
+
 simpsons = ['homer', 'marge', 'bart']
 
-# examine a list
+###############################################################################
+# Examine a list
+
 simpsons[0]     # print element 0 ('homer')
 len(simpsons)   # returns the length (3)
 
-# modify a list (does not return the list)
+###############################################################################
+# Modify a list (does not return the list)
+#
+# Append
+
 simpsons.append('lisa')                 # append element to end
 simpsons.extend(['itchy', 'scratchy'])  # append multiple elements to end
 # insert element at index 0 (shifts everything right)
+
+###############################################################################
+# Insert
+
 simpsons.insert(0, 'maggie')
 # searches for first instance and removes it
+
+###############################################################################
+# Remove
+
 simpsons.remove('bart')
 simpsons.pop(0)                         # removes element 0 and returns it
 # removes element 0 (does not return it)
 del simpsons[0]
 simpsons[0] = 'krusty'                  # replace element 0
 
-# concatenate lists (slower than 'extend' method)
+###############################################################################
+# Concatenate lists (slower than 'extend' method)
+
 neighbors = simpsons + ['ned', 'rod', 'todd']
 
-# find elements in a list
+###############################################################################
+# Replicate
+
+rep = ["a"] * 2 + ["b"] * 3
+
+###############################################################################
+# Find elements in a list
+
 'lisa' in simpsons
 simpsons.count('lisa')      # counts the number of instances
 simpsons.index('itchy')     # returns index of first instance
 
-# list slicing [start:end:stride]
+###############################################################################
+# List slicing (selection) ``[start:end:stride]``
+
 weekdays = ['mon', 'tues', 'wed', 'thurs', 'fri']
 weekdays[0]         # element 0
 weekdays[0:3]       # elements 0, 1, 2
@@ -141,55 +202,29 @@ weekdays[:3]        # elements 0, 1, 2
 weekdays[3:]        # elements 3, 4
 weekdays[-1]        # last element (element 4)
 weekdays[::2]       # every 2nd element (0, 2, 4)
-weekdays[::-1]      # backwards (4, 3, 2, 1, 0)
 
+###############################################################################
+# Reverse list
+
+weekdays[::-1]      # backwards (4, 3, 2, 1, 0)
 # alternative method for returning the list backwards
 list(reversed(weekdays))
 
-# sort a list in place (modifies but does not return the list)
+###############################################################################
+# Sort list
+#
+# Sort a list in place (modifies but does not return the list)
+
 simpsons.sort()
 simpsons.sort(reverse=True)     # sort in reverse
 simpsons.sort(key=len)          # sort by a key
 
-# return a sorted list (but does not modify the original list)
+###############################################################################
+# Return a sorted list (but does not modify the original list)
+
 sorted(simpsons)
 sorted(simpsons, reverse=True)
 sorted(simpsons, key=len)
-
-###############################################################################
-# Reference and copy
-# ~~~~~~~~~~~~~~~~~~
-#
-# `References <https://levelup.gitconnected.com/understanding-reference-and-copy-in-python-c681341a0cd8>`_ are used to access objects in memory, here lists.
-# A single object may have multiple references. Modifying the content of the one reference
-# will change the content of all other references.
-
-
-num = [1, 2, 3]
-same_num = num   # create a second reference to the same list
-same_num[0] = 0  # modifies both 'num' and 'same_num'
-print(same_num)
-
-###############################################################################
-# Copies are references to different objects.
-# Modifying the content of the one reference, will not affect the others.
-
-# copy a list (three ways)
-new_num = num.copy()
-new_num = num[:]
-new_num = list(num)
-
-# examine objects
-id(num) == id(same_num)  # returns True
-id(num) == id(new_num)  # returns False
-num is same_num         # returns True
-num is new_num          # returns False
-num == same_num         # returns True
-num == new_num          # returns True (their contents are equivalent)
-
-# conatenate +, replicate *
-[1, 2, 3] + [4, 5, 6]
-["a"] * 2 + ["b"] * 3
 
 
 ###############################################################################
@@ -316,7 +351,6 @@ print('first line\nsecond line' == r'first line\nsecond line')
 
 s = b'first line\nsecond line'
 print(s)
-
 print(s.decode('utf-8').split())
 
 
@@ -455,6 +489,7 @@ languages.update('go', 'spark')  # add multiple elements (list or set)
 
 # get a sorted list of unique elements from a list
 sorted(set([9, 0, 2, 1, 0]))    # returns [0, 1, 2, 9]
+
 
 ###############################################################################
 # Execution control statements
@@ -714,7 +749,6 @@ print_text()
 ###############################################################################
 # Function with one argument and no return values
 
-
 def print_this(x):
     print(x)
 
@@ -769,7 +803,6 @@ def power_this(x, power=2):
 ###############################################################################
 # **Return several values** as tuple
 
-
 def min_max(nums):
     return min(nums), max(nums)
 
@@ -780,8 +813,58 @@ min_max_num = min_max([1, 2, 3])         # min_max_num = (1, 3)
 # return values can be assigned into multiple variables using tuple unpacking
 min_num, max_num = min_max([1, 2, 3])    # min_num = 1, max_num = 3
 
+
 ###############################################################################
-# Example, function, and dictionary comprehension
+# Reference and copy
+# ~~~~~~~~~~~~~~~~~~
+#
+# `References <https://levelup.gitconnected.com/understanding-reference-and-copy-in-python-c681341a0cd8>`_ are used to access objects in memory, here lists.
+# A single object may have multiple references. Modifying the content of the one reference
+# will change the content of all other references.
+#
+# Modify a a reference of a list
+
+num = [1, 2, 3]
+same_num = num   # create a second reference to the same list
+same_num[0] = 0  # modifies both 'num' and 'same_num'
+print(num, same_num)
+
+###############################################################################
+# Copies are references to different objects.
+# Modifying the content of the one reference, will not affect the others.
+#
+# Modify a copy of a list
+
+new_num = num.copy()
+new_num = num[:]
+new_num = list(num)
+new_num[0] = -1  # modifies 'new_num' but not 'num'
+print(num, new_num)
+
+###############################################################################
+# Examine objects
+
+id(num) == id(same_num)  # returns True
+id(num) == id(new_num)  # returns False
+num is same_num         # returns True
+num is new_num          # returns False
+num == same_num         # returns True
+num == new_num          # returns True (their contents are equivalent)
+
+###############################################################################
+# Functions' arguments are references to objects.
+# Thus functions can modify their arguments with possible side effect.
+ 
+def change(x, index, newval):
+    x[index] = newval
+
+l = [0, 1, 2]
+change(x=l, index=1, newval=33)
+print(l)
+
+
+###############################################################################
+# Example: function, and dictionary comprehension
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # Example of a function ``join_dict_to_table(dict1, dict2)`` joining two dictionaries
@@ -794,8 +877,9 @@ def join_dict_to_table(dict1, dict2):
              for key in dict1.keys() & dict2.keys()]
     return table
 
-
-print(join_dict_to_table(simpsons_roles_dict, simpsons_ages_dict))
+print("Roles:", simpsons_roles_dict)
+print("Ages:", simpsons_ages_dict)
+print("Join:", join_dict_to_table(simpsons_roles_dict, simpsons_ages_dict))
 
 ###############################################################################
 # Regular expression
@@ -903,7 +987,6 @@ re.sub('[^0-9a-zA-Z\s]+', '', 'H^&ell`.,|o W]{+orld')
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 import os
-
 
 ###############################################################################
 # Get/set current working directory
@@ -1580,6 +1663,7 @@ print(help(my_function))
 ###############################################################################
 # Example, ``package``
 # ::
+#
 #     stat_pkg/
 #     ├── __init__.py
 #     └── datasets_mod.py
@@ -1591,6 +1675,7 @@ print(help(my_function))
 ###############################################################################
 # Example, file ``stat_pkg/__init__.py``
 # ::
+#
 #     # 1) import function for modules in the packages
 #     from .module import make_regression
 #
@@ -1605,6 +1690,7 @@ print(help(my_function))
 # A module is a python file.
 # Example, ``stat_pkg/datasets_mod.py``
 # ::
+#
 #     import numpy as np
 #     def make_regression(n_samples=10, n_features=2, add_intercept=False):
 #         ...

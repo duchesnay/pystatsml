@@ -69,24 +69,26 @@ Directories and main files:
 Installation for students
 -------------------------
 
-Install Anaconda at https://www.continuum.io with python >= 3.
+Install Anaconda at https://www.anaconda.com/ with python >= 3.
 
-Standard user (student) should install the required data analysis packages:
+Standard user (student) should install the required data analysis packages.
+Create and activate the `pystatsml_student` environment:
 
 ```
 conda env create -f environment_student.yml
 conda activate pystatsml_student
 ```
 
-Installation for teachers to build the documents
-------------------------------------------------
+Installation for teachers: to build the documents
+-------------------------------------------------
 
-Expert user (teacher) who wants to o build the course should install additional packages including:
+Expert users (teachers) who need to build (pdf, html, etc.) the course should install additional packages including:
 
 - pandoc
 - [sphinx-gallery](https://sphinx-gallery.readthedocs.io)
 - [nbstripout](https://github.com/kynan/nbstripout)
 
+Create and activate the ``pystatsml_teacher`` environment:
 
 ```
 conda env create -f environment_teacher.yml
@@ -94,13 +96,11 @@ conda activate pystatsml_teacher
 ```
 
 Build the documents.
-
-Configure your git repository with nbstripout pre-commit hook for users who don't want to track output in VCS.
+Configure your git repository with `nbstripout`: a pre-commit hook for users who don't want to track notebooks' outputs in git.
 
 ```
 nbstripout --install
 ```
-
 
 Optional: install LaTeX to generate pdf. For Linux debian like:
 
@@ -109,28 +109,31 @@ sudo apt-get install latexmk texlive-latex-extra
 ```
 
 
-After pulling the repository execute Jupyter notebooks (outputs are expected to be removed before git submission).
+After pulling the repository execute Jupyter notebooks (outputs are expected to be removed before git submission):
+
 ```
 make exe
 ```
 
 Build the pdf file (requires LaTeX):
+
 ```
 make pdf
 ```
 
 Build the html files:
+
 ```
 make html
 ```
 
-Clean everything and  strip output from Jupyter notebook (useless if you installed the nbstripout hook, ):
+Clean everything:
+
 ```
 make clean
 ```
 
-Optional to generate  Microsoft docx. Use [docxbuilder](https://docxbuilder.readthedocs.io/en/latest/docxbuilder.html)
-
+Optional to generate  Microsoft docx. Use [docxbuilder](https://docxbuilder.readthedocs.io/en/latest/docxbuilder.html):
 
 ```
 make docx

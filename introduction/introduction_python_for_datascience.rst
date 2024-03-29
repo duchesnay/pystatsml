@@ -212,26 +212,17 @@ Anaconda is a python distribution that ships most of python tools and libraries.
 
     bash Anaconda3-2.4.1-Linux-x86_64.sh
 
-3. Add anaconda path in your PATH variable (For Linux in your ``.bashrc`` file):
+3. Add anaconda path in your PATH variable (For Linux in your ``.bashrc`` file), example:
 
 ::
 
     export PATH="${HOME}/anaconda3/bin:$PATH"
 
-**Managing with ``conda``**
 
+**Conda environments**
 
-Update conda package and environment manager to current version
-
-::
-
-    conda update conda
-
-
-`Conda environments <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_
-
-
-- A conda environment is a directory that contains a specific collection of conda packages that you have installed.
+- A `Conda environments <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_
+  contains a specific collection of conda packages that you have installed.
 - Control packages environment for a specific purpose: collaborating with someone else, delivering an application to your client, 
 - Switch between environments
 
@@ -242,7 +233,7 @@ List of all environments
     conda env list
 
 
-Creating an environment. Examples `environment_student.yml <https://github.com/duchesnay/pystatsml/blob/master/environment_student.yml>`_
+Creating an environment. Example, `environment_student.yml <https://github.com/duchesnay/pystatsml/blob/master/environment_student.yml>`_:
 
 ::
 
@@ -263,28 +254,30 @@ Creating an environment. Examples `environment_student.yml <https://github.com/d
     - skorch
 
 
-
-Then create with:
+Create the environment (go have a coffee):
 
 ::
 
     conda env create -f environment_student.yml
 
 
-Activate/deactivate  an environment
+Activate/deactivate an environment:
 
 ::
 
     conda activate environment_student
     conda deactivate
 
+
 Updating an environment (additional or better package, remove packages).
 Update the contents of your environment.yml file accordingly and then run the following command:
 
 ::
+
     conda env update --file environment.yml --prune
 
-List/search of the package(s) in an environment
+
+List all packages or search for a specific package in the current environment:
 
 ::
 
@@ -292,20 +285,21 @@ List/search of the package(s) in an environment
     conda list numpy
 
 
-Search for available version of package in an environment
+Search for available versions of package in an environment:
 
 ::
 
     conda search -f numpy
 
-Install new package in an environment
+
+Install new package in an environment:
 
 ::
     
     conda install numpy
 
 
-Delete an environment
+Delete an environment:
 
 ::
 
@@ -316,11 +310,8 @@ Delete an environment
 Anaconda without the collection of (>700) packages.
 With Miniconda you download only the packages you want with the conda command: ``conda install PACKAGENAME``
 
-
-
-1. Download anaconda (Python 3.x) https://conda.io/miniconda.html
-
-2. Install it, on Linux
+1. Download `Miniconda <https://docs.anaconda.com/free/miniconda/index.html>`_
+2. Install it, on Linux:
 
 ::
 
@@ -332,7 +323,8 @@ With Miniconda you download only the packages you want with the conda command: `
 
     export PATH=${HOME}/miniconda3/bin:$PATH
 
-4. Install required packages
+
+4. Install required packages:
 
 ::
 
@@ -354,7 +346,7 @@ Additional packages with pip
 
     pip install -U --user seaborn
 
-Example, for neuroimaging:
+Example:
 
 ::
 
