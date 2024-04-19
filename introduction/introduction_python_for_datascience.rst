@@ -1,8 +1,8 @@
-Introduction to python language
+Introduction to Python language
 -------------------------------
 
-Python main caracteristics
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Python main features
+~~~~~~~~~~~~~~~~~~~~
 
 - Python is popular `Google trends <https://trends.google.com/trends/explore?cat=31&date=all&q=python,R,matlab,spss,stata>`_ (Python vs. R, Matlab, SPSS, Stata).
 - Python is interpreted: source files ``.py`` are executed by the interpreter which is executed by the processor.
@@ -53,8 +53,6 @@ Python ecosystem for data-science
    :scale: 100
    :align: center
 
-Main Libraries
-~~~~~~~~~~~~~~
 
 `Numpy <https://numpy.org/>`_: Basic numerical operation and matrix operation
 
@@ -115,10 +113,10 @@ See `Example gallery <https://seaborn.pydata.org/examples/index.html>`_
 `Pytorch <https://pytorch.org/>`_ for deep learning.
 
 
-Integrated Development Environment: IDE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Development with Integrated Development Environment (IDE) and JupyterLab
+------------------------------------------------------------------------
 
-Software development environment that provide:
+Integrated Development Environment (IDE) are software development environment that provide:
 
 - Source-code editor (auto-completion, etc.).
 - Execution facilities (interactive, etc.).
@@ -126,7 +124,7 @@ Software development environment that provide:
 
 
 Visual Studio Code (VS Code)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Setup:
 
@@ -155,7 +153,7 @@ Execution, three possibilities:
   3. Remember hosts: (``F1, Ctrl+Shift+P``): Remote-SSH: Add New SSH Host or clicking on the Add New icon in the SSH Remote Explorer in the Activity Bar
 
 Spyder
-^^^^^^
+~~~~~~
 
 `Spyder <https://www.spyder-ide.org/>`_ is a basic IDE dedicated to data-science.
 
@@ -196,15 +194,15 @@ Drawbacks (`source <https://www.databricks.com/glossary/jupyter-notebook>`_):
 - Difficult to operationalize your code when using Jupyter notebooks as they don't feature any built-in integration or tools for operationalizing your machine learning models.
 - Difficult to scale: Jupyter notebooks are designed for single-node data science. If your data is too big to fit in your computer's memory, using Jupyter notebooks becomes significantly more difficult.
 
-Anaconda
-~~~~~~~~
+Anaconda and Conda environments
+-------------------------------
 
 Anaconda is a python distribution that ships most of python tools and libraries.
 
-**Installation**
+Installation
+~~~~~~~~~~~~
 
-
-1. Download anaconda (Python 3.x) http://continuum.io/downloads
+1. `Download anaconda <https://www.anaconda.com/download>`_
 
 2. Install it, on Linux
 
@@ -219,7 +217,8 @@ Anaconda is a python distribution that ships most of python tools and libraries.
     export PATH="${HOME}/anaconda3/bin:$PATH"
 
 
-**Conda environments**
+Conda environments
+~~~~~~~~~~~~~~~~~~
 
 - A `Conda environments <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_
   contains a specific collection of conda packages that you have installed.
@@ -305,7 +304,8 @@ Delete an environment:
 
     conda remove -n environment_student --all
 
-**Miniconda**
+Miniconda
+~~~~~~~~~
 
 Anaconda without the collection of (>700) packages.
 With Miniconda you download only the packages you want with the conda command: ``conda install PACKAGENAME``

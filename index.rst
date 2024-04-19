@@ -41,6 +41,7 @@ Scientific Python
 
     auto_gallery/scipy_numpy.rst
     auto_gallery/scipy_pandas.rst
+    auto_gallery/scipy_webscraping.rst
     scientific_python/scipy_matplotlib.rst
 
 ==========
