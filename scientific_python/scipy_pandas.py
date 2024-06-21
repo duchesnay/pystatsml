@@ -82,7 +82,6 @@ print(user4)
 # Use intersection of keys from both frames
 
 merge_inter = pd.merge(users, user4)
-
 print(merge_inter)
 
 
@@ -105,8 +104,8 @@ print(staked)
 
 ##############################################################################
 # “pivots” a DataFrame from long (stacked) format to wide format,
-
-print(staked.pivot(index='name', columns='variable', values='value'))
+wide = staked.pivot(index='name', columns='variable', values='value')
+print(wide)
 
 
 ##############################################################################
@@ -121,22 +120,19 @@ users.tail()            # print the last 5 rows
 
 
 ##############################################################################
-# Descriptive statistics
-
-users.describe(include="all")
-
-##############################################################################
 # Meta-information
 
-users.index             # "Row names"
-users.columns           # column names
+users.columns           # Column names
+users.index             # Row name"
+users.shape             # number of rows and columns
 users.dtypes            # data types of each column
 users.values            # underlying numpy array
-users.shape             # number of rows and columns
 
 ##############################################################################
 # Columns selection
 # -----------------
+
+print(users.columns)
 
 users['gender']         # select one column
 type(users['gender'])   # Series
@@ -149,6 +145,12 @@ users[my_cols]                  # ...and use that list to select columns
 type(users[my_cols])            # DataFrame
 
 ##############################################################################
+# `iloc` is strictly integer position based
+
+users.iloc[:, 2] # select third column
+
+
+##############################################################################
 # Rows selection (basic)
 # ----------------------
 
@@ -158,8 +160,11 @@ type(users[my_cols])            # DataFrame
 df = users.copy()
 df.iloc[0]     # first row
 df.iloc[0, :]  # first row
+df.iloc[[0, 1], :]  # Two first row
+
 df.iloc[0, 0]  # first item of first row
 df.iloc[0, 0] = 55
+
 
 ##############################################################################
 # `loc` supports mixed integer and label based access.
@@ -177,30 +182,12 @@ df.loc[0, "age"] = 55
 df = users[users.gender == "F"]
 print(df)
 
-##############################################################################
-# Get the two first rows using `iloc` (strictly integer position)
-
-df.iloc[[0, 1], :]  # Ok, but watch the index: 0, 3
 
 ##############################################################################
-# Use `loc`
-
-try:
-    df.loc[[0, 1], :]  # Failed
-except KeyError as err:
-    print(err)
-
-##############################################################################
-# Reset index
+# Reset index, useful when index is meaningless
 
 df = df.reset_index(drop=True)  # Watch the index
 print(df)
-print(df.loc[[0, 1], :])
-
-
-##############################################################################
-# Sorting
-# -------
 
 ##############################################################################
 # Rows iteration
@@ -299,12 +286,25 @@ print(df.describe())
 print(df.describe(include='all'))
 print(df.describe(include=['object']))  # limit to one (or more) types
 
+
+##############################################################################
+# Categorical columns: count and proportions of values
+
+df['job'].value_counts()
+df['job'].value_counts(normalize=True).round(2)
+
+
+##############################################################################
+# Categorical columns: length of strings
+
+df['job'].str.len()
+
+
 ##############################################################################
 # Statistics per group (groupby)
 
 print(df.groupby("job")["age"].mean())
-
-print(df.groupby("job").describe(include='all'))
+# print(df.groupby("job").describe(include='all'))
 
 
 ##############################################################################
@@ -425,8 +425,9 @@ print(size_outlr_mean.mean())
 # Based on non-parametric statistics: use the median
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# Median absolute deviation (MAD), based on the median, is a robust non-parametric statistics.
-# https://en.wikipedia.org/wiki/Median_absolute_deviation
+# `Median absolute deviation (MAD) <https://en.wikipedia.org/wiki/Median_absolute_deviation>`_
+# is based on the median, is a robust non-parametric statistics.
+
 
 mad = 1.4826 * np.median(np.abs(size - size.median()))
 size_outlr_mad = size.copy()
@@ -460,10 +461,19 @@ salary = pd.read_csv(url)
 ##############################################################################
 # Excel
 # ~~~~~
+#
+# Package `openpyxl` is required. To install type:
+#
+# ::
+#     
+#    conda install -c conda-forge openpyxl
 
 xls_filename = os.path.join(tmpdir, "users.xlsx")
+
+# Write
 users.to_excel(xls_filename, sheet_name='users', index=False)
 
+# Read
 pd.read_excel(xls_filename, sheet_name='users')
 
 # Multiple sheets

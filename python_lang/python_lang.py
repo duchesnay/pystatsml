@@ -37,6 +37,7 @@ from math import sqrt, exp
 ###############################################################################
 # define an alias
 
+import nltk
 import numpy as np
 np.sqrt(9)
 
@@ -431,6 +432,15 @@ simpsons_ages_dict = {'Homer': 45, 'Marge': 43,
 
 print(simpsons_roles_dict.keys() & simpsons_ages_dict.keys())
 
+inter = simpsons_roles_dict.keys() & simpsons_ages_dict.keys()
+
+l = list()
+
+for n in inter:
+    l.append([n, simpsons_ages_dict[n], simpsons_roles_dict[n]])
+    
+[[n, simpsons_ages_dict[n], simpsons_roles_dict[n]] for n in inter]
+
 ###############################################################################
 # String substitution using a dictionary: syntax ``%(key)format``, where ``format``
 # is the formatting character e.g. ``s`` for string.
@@ -550,7 +560,7 @@ range(0, 5, 2)  # returns [0, 2, 4]: third argument specifies the 'stride'
 ###############################################################################
 # Iterate on list values
 
-fruits = ['apple', 'banana', 'cherry']
+fruits = ['Apple', 'Banana', 'cherry']
 for fruit in fruits:
     print(fruit.upper())
 
@@ -558,7 +568,7 @@ for fruit in fruits:
 # Iterate with index
 
 for i in range(len(fruits)):
-    print(fruits[i].upper())
+    print(fruits[i].lower())
 
 ###############################################################################
 # Iterate with index and values: ``enumerate``
@@ -572,23 +582,6 @@ v = 0
 for i in range(10 ** 6):
     v += 1
 
-###############################################################################
-# Example, use loop, dictionary and set to count words in a sentence
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
-
-quote = """Tick-tow
-our incomes are like our shoes; if too small they gall and pinch us
-but if too large they cause us to stumble and to trip
-"""
-
-words = quote.split()
-
-count = {word: 0 for word in set(words)}
-for word in words:
-    count[word] += 1
-
-print(count)
 ###############################################################################
 # List comprehensions, iterators, etc.
 # ------------------------------------
@@ -609,7 +602,7 @@ print(count)
 nums = [1, 2, 3, 4, 5]
 cubes = []
 for num in nums:
-    cubes.append(num**3)
+    cubes.append(num ** 3)
 
 ###############################################################################
 # Equivalent list comprehension
@@ -710,6 +703,31 @@ import itertools
 # Example: Cartesian product
 
 print([[x, y] for x, y in itertools.product(['a', 'b', 'c'], [1, 2])])
+
+
+###############################################################################
+# Example, use loop, dictionary and set to count words in a sentence
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+
+quote = """Tick-tow
+our incomes are like our shoes; if too small they gall and pinch us
+but if too large they cause us to stumble and to trip
+"""
+
+words = quote.split()
+len(words)
+
+count = {word: 0 for word in set(words)}
+
+for word in words:
+    count[word] += 1
+    # count[word] = count[word] + 1
+
+print(count)
+
+import numpy as np
+freq_veq = np.array(list(count.values())) / len(words)
 
 ###############################################################################
 # Exceptions handling
@@ -872,6 +890,10 @@ print(l)
 # is the key, the second and third columns are the values of the dictionaries.
 
 
+simpsons_ages_dict = {'Homer': 45, 'Marge': 43, 'Bart': 11, 'Lisa': 10}
+simpsons_roles_dict = {'Homer': 'father', 'Marge': 'mother', 'Bart': 'son',
+                       'Maggie': 'daughter'}
+
 def join_dict_to_table(dict1, dict2):
     table = [[key] + [dict1[key], dict2[key]]
              for key in dict1.keys() & dict2.keys()]
@@ -879,7 +901,8 @@ def join_dict_to_table(dict1, dict2):
 
 print("Roles:", simpsons_roles_dict)
 print("Ages:", simpsons_ages_dict)
-print("Join:", join_dict_to_table(simpsons_roles_dict, simpsons_ages_dict))
+print("Join:", join_dict_to_table(simpsons_roles_dict, 
+                                  simpsons_ages_dict))
 
 ###############################################################################
 # Regular expression
@@ -1564,6 +1587,18 @@ class Disk(Shape2D):
     def area(self):
         return math.pi * self.radius ** 2
 
+###############################################################################
+# Object creation
+
+square = Square(2)
+
+###############################################################################
+# Call a method of the object
+
+square.area()
+
+###############################################################################
+# More sophisticated use
 
 shapes = [Square(2), Disk(3)]
 

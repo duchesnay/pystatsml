@@ -75,18 +75,36 @@ Machine Learning
     optimization/optim_gradient_descent.rst
     auto_gallery/ml_lab_face_recognition.rst
 
-=============
-Deep Learning
-=============
+===========================
+Deep Learning: introduction
+===========================
 
 .. toctree::
     :maxdepth: 2
 
     deep_learning/dl_backprop_numpy-pytorch-sklearn.rst
     deep_learning/dl_mlp_mnist_pytorch.rst
+
+=================================
+Deep Learning for computer vision
+=================================
+
+.. toctree::
+    :maxdepth: 2
+    
     deep_learning/dl_cnn_cifar10_pytorch.rst
     deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.rst
 
+=============================================
+Deep Learning for natural language processing
+=============================================
+
+.. toctree::
+    :maxdepth: 2
+    
+    deep_learning/dl_nlp.rst
+
+    
 ==================
 Indices and tables
 ==================
