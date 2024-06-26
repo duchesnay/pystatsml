@@ -322,6 +322,7 @@ for grp, data in df.groupby("job"):
 # ~~~~~~~~~~~~~~~~~~~~~
 
 df = users.copy()
+
 # Create a duplicate: Append the first at the end
 df.loc[len(df.index)] = users.iloc[0]
 
@@ -535,7 +536,7 @@ pd.read_sql_query('select * from salary where education="Master";', conn)
 # Data Frame
 # ~~~~~~~~~~
 #
-# 1. Read the iris dataset at 'https://github.com/neurospin/pystatsml/tree/master/datasets/iris.csv'
+# 1. Read the iris dataset at 'https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv'
 #
 # 2. Print column names
 #

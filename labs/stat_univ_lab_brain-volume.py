@@ -74,7 +74,8 @@ assert brain_vol.shape == (766, 9)
 # **Compute Total Intra-cranial volume**
 # `tiv_vol` = `gm_vol` + `csf_vol` + `wm_vol`.
 
-brain_vol["tiv_vol"] = brain_vol["gm_vol"] + brain_vol["wm_vol"] + brain_vol["csf_vol"]
+brain_vol["tiv_vol"] = brain_vol["gm_vol"] + \
+    brain_vol["wm_vol"] + brain_vol["csf_vol"]
 
 ###############################################################################
 # **Compute tissue fractions**
@@ -189,6 +190,8 @@ import seaborn as sns
 # Plot
 sns.violinplot(x="site", y="gm_f", data=brain_vol1)
 # sns.violinplot(x="site", y="wm_f", data=brain_vol1)
+
+brain_vol1.groupby('site')['age'].describe()
 
 ###############################################################################
 # Stats with scipy

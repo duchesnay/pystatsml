@@ -24,7 +24,7 @@ Important links:
     introduction/introduction_python_for_datascience.rst
 
 ===============
-Python language
+Python Language
 ===============
 
 .. toctree::
@@ -76,7 +76,7 @@ Machine Learning
     auto_gallery/ml_lab_face_recognition.rst
 
 ===========================
-Deep Learning: introduction
+Deep Learning: Introduction
 ===========================
 
 .. toctree::
@@ -86,7 +86,7 @@ Deep Learning: introduction
     deep_learning/dl_mlp_mnist_pytorch.rst
 
 =================================
-Deep Learning for computer vision
+Deep Learning for Computer Vision
 =================================
 
 .. toctree::
@@ -95,15 +95,14 @@ Deep Learning for computer vision
     deep_learning/dl_cnn_cifar10_pytorch.rst
     deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.rst
 
-=============================================
-Deep Learning for natural language processing
-=============================================
+===========================
+Natural Language Processing
+===========================
 
 .. toctree::
     :maxdepth: 2
     
-    deep_learning/dl_nlp.rst
-
+    nlp/nlp_bow.rst
     
 ==================
 Indices and tables

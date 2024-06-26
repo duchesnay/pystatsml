@@ -225,12 +225,6 @@ Conda environments
 - Control packages environment for a specific purpose: collaborating with someone else, delivering an application to your client, 
 - Switch between environments
 
-List of all environments
-
-::
-
-    conda env list
-
 
 Creating an environment. Example, `environment_student.yml <https://github.com/duchesnay/pystatsml/blob/master/environment_student.yml>`_:
 
@@ -260,10 +254,11 @@ Create the environment (go have a coffee):
     conda env create -f environment_student.yml
 
 
-Activate/deactivate an environment:
+List of all environments. Activate/deactivate an environment:
 
 ::
 
+    conda env list
     conda activate environment_student
     conda deactivate
 
