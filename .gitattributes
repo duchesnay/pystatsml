@@ -1,5 +1,0 @@
-*.npz filter=lfs diff=lfs merge=lfs -text
-*.npy filter=lfs diff=lfs merge=lfs -text
-*.nii filter=lfs diff=lfs merge=lfs -text
-*.nii.gz filter=lfs diff=lfs merge=lfs -text
-*.csv filter=lfs diff=lfs merge=lfs -text
