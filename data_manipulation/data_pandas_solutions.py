@@ -5,7 +5,7 @@ Exercises: Pandas: data manipulation
 Data Frame
 ~~~~~~~~~~
 
-1. Read the iris dataset at 'https://github.com/neurospin/pystatsml/tree/master/datasets/iris.csv'
+1. Read the iris dataset at 'https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv'
 
 2. Print column names
 

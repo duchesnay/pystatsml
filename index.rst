@@ -32,17 +32,16 @@ Python Language
 
     auto_gallery/python_lang.rst
 
-=================
-Scientific Python
-=================
+===================================
+Data Manipulation and Visualization
+===================================
 
 .. toctree::
     :maxdepth: 2
 
-    auto_gallery/scipy_numpy.rst
-    auto_gallery/scipy_pandas.rst
-    auto_gallery/scipy_webscraping.rst
-    scientific_python/scipy_matplotlib.rst
+    auto_gallery/data_numpy.rst
+    auto_gallery/data_pandas.rst
+    data_manipulation/scipy_matplotlib.rst
 
 ==========
 Statistics
@@ -52,58 +51,18 @@ Statistics
     :maxdepth: 2
 
     statistics/stat_univ.rst
-    auto_gallery/stat_univ_lab_brain-volume.rst
-    statistics/lmm/lmm.rst
-    statistics/stat_multiv.rst
-    statistics/time_series.rst
 
-================
-Machine Learning
-================
+
+=================
+Scientific Python
+=================
 
 .. toctree::
     :maxdepth: 2
 
-    machine_learning/decomposition.rst
-    machine_learning/manifold.rst
-    machine_learning/clustering.rst
-    machine_learning/linear_regression.rst
-    machine_learning/linear_classification.rst
-    auto_gallery/ml_supervized_nonlinear.rst
-    auto_gallery/ml_resampling.rst
-    machine_learning/ensemble_learning.rst
-    optimization/optim_gradient_descent.rst
-    auto_gallery/ml_lab_face_recognition.rst
+    scientific_python/time_series.rst
 
-===========================
-Deep Learning: Introduction
-===========================
 
-.. toctree::
-    :maxdepth: 2
-
-    deep_learning/dl_backprop_numpy-pytorch-sklearn.rst
-    deep_learning/dl_mlp_mnist_pytorch.rst
-
-=================================
-Deep Learning for Computer Vision
-=================================
-
-.. toctree::
-    :maxdepth: 2
-    
-    deep_learning/dl_cnn_cifar10_pytorch.rst
-    deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.rst
-
-===========================
-Natural Language Processing
-===========================
-
-.. toctree::
-    :maxdepth: 2
-    
-    nlp/nlp_bow.rst
-    
 ==================
 Indices and tables
 ==================

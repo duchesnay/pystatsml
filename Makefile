@@ -6,9 +6,9 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
-NTBOOK        = $(shell ls scientific_python/*.ipynb statistics/*.ipynb  statistics/lmm/lmm.ipynb machine_learning/*.ipynb optimization/*.ipynb deep_learning/*.ipynb nlp/*.ipynb)
+NTBOOK        = $(shell ls data_manipulation/*.ipynb statistics/*.ipynb scientific_python/*.ipynb)
 # Notebook to execute. Exclude DL file (requires GPU)
-NTBOOK_TO_EXE = $(shell ls scientific_python/*.ipynb statistics/*.ipynb  statistics/lmm/lmm.ipynb machine_learning/*.ipynb optimization/*.ipynb nlp/*.ipynb)
+NTBOOK_TO_EXE = $(shell ls data_manipulation/*.ipynb statistics/*.ipynb scientific_python/*.ipynb)
 
 #NTBOOK        = $(shell ls statistics/*.ipynb)
 NTBOOK_FILES  = $(NTBOOK:.ipynb=_files)
@@ -92,6 +92,7 @@ exe:
 	for nb in $(NTBOOK_TO_EXE) ; do jupyter nbconvert --to notebook --execute $$nb --output $$(basename $$nb); done
 #	$(EXEIPYNB) $(NTBOOK)
 #	@echo toto nbconvert --to notebook --execute $< --output $(basename $<)
+# jupyter nbconvert --to notebook --execute scientific_python/scipy_matplotlib.ipynb
 
 html: rst
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

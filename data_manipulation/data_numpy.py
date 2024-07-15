@@ -1,24 +1,33 @@
 '''
-Numpy: arrays and matrices
+Numpy: Arrays and Matrices
 ==========================
 
-NumPy is an extension to the Python programming language, adding support for large, multi-dimensional (numerical) arrays and matrices, along with a large library of high-level mathematical functions to operate on these arrays.
+NumPy is an extension to the Python programming language, adding support for large, multi-dimensional
+(numerical) arrays and matrices, along with a large library of high-level mathematical functions to
+operate on these arrays.
 
-**Sources**:
+Numpy functions are executed by **compiled in C or Fortran libraries**,
+providing the performance of compiled languages.
 
-- Kevin Markham: https://github.com/justmarkham
+**Sources**: `Kevin Markham <https://github.com/justmarkham>`_
 
 Computation time:
-
-    import numpy as np
-
-    l = [v for v in range(10 ** 8)]
-    s = 0
-    %time for v in l: s += v
-
-    arr = np.arange(10 ** 8)
-    %time arr.sum()
 '''
+
+import numpy as np
+import time
+
+start_time = time.time()
+l = [v for v in range(10 ** 8)]
+s = 0
+for v in l: s += v
+print("Python code, time ellapsed: %.2fs" % (time.time() - start_time))
+
+start_time = time.time()
+arr = np.arange(10 ** 8)
+arr.sum()
+print("Numpy code, time ellapsed: %.2fs" % (time.time() - start_time))
+
 
 ##############################################################################
 # Create arrays
@@ -27,43 +36,123 @@ Computation time:
 # Create ndarrays from lists.
 # note: every element must be the same type (will be converted if possible)
 
-import numpy as np
-
 data1 = [1, 2, 3, 4, 5]             # list
-arr1 = np.array(data1)              # 1d array
-data2 = [range(1, 5), range(5, 9)]  # list of lists
-arr2 = np.array(data2)              # 2d array
-arr2.tolist()                       # convert array back to list
+arr = np.array(data1)              # 1d array
+data = [range(1, 5), range(5, 9)]  # list of lists
+arr = np.array(data)              # 2d array
+print(arr)
+arr.tolist()                       # convert array back to list
 
 
 ##############################################################################
-# create special arrays
+# Create special arrays
 
-np.zeros(10)
-np.zeros((3, 6))
+np.zeros(10)       # [0, 0, ..., 0]
+np.zeros((3, 6))   # 3 x 6 array of zeros
 np.ones(10)
 np.linspace(0, 1, 5)            # 0 to 1 (inclusive) with 5 points
 np.logspace(0, 3, 4)            # 10^0 to 10^3 (inclusive) with 4 points
+np.arange(10)                   # [0, 1 ..., 9]
 
-##############################################################################
-# arange is like range, except it returns an array (not a list)
-
-int_array = np.arange(5)
-float_array = int_array.astype(float)
 
 ##############################################################################
 # Examining arrays
-# ----------------
 
-arr1.dtype      # float64
-arr2.ndim       # 2
-arr2.shape      # (2, 4) - axis 0 is rows, axis 1 is columns
-arr2.size       # 8 - total number of elements
-len(arr2)       # 2 - size of first dimension (aka axis)
+arr.shape      # (2, 4) - axis 0 is rows, axis 1 is columns
+arr.dtype      # dtype('int64')
+arr.ndim       # 2
+arr.size       # 8 - total number of elements
+len(arr)       # 2 - size of first dimension (aka axis)
+
+
+##############################################################################
+# Selection
+# ---------
+
+arr[1, 2] # Get third item of the second line
+
+##############################################################################
+# Slicing
+# ~~~~~~~
+#
+# Syntax: ``start:stop:step`` with ``start`` *(default 0)* ``stop`` *(default last)* ``step`` *(default 1)*
+#
+# - ``:`` is equivalent to ``0:last:1``; ie, take all elements, from 0 to the end with step = 1.
+# - ``:k`` is equivalent to ``0:k:1``; ie, take all elements, from 0 to k with step = 1.
+# - ``k:`` is equivalent to ``k:end:1``; ie, take all elements, from k to the end with step = 1.
+# - ``::-1`` is equivalent to ``0:end:-1``; ie, take all elements, from k to the end in reverse order, with step = -1.
+
+arr[0, :] # Get first line
+arr[:, 2] # Get third column
+arr[:, :2]     # columns strictly before index 2 (2 first columns)
+arr[:, 2:]     # columns after index 2 included
+arr2 = arr[:, 1:4]  # columns between index 1 (included) and 4 (excluded)
+print(arr2)
+
+# Slicing returns a view (not a copy)
+# Modification
+
+arr2[0, 0] = 33
+print(arr2)
+print(arr)
+
+##############################################################################
+# Reverse order of row 0
+
+print(arr[0, ::-1])
+
+
+##############################################################################
+# Fancy indexing: Integer or boolean array indexing
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Fancy indexing returns a copy not a view.
+#
+# Integer array indexing
+
+arr2 = arr[:, [1, 2, 3]]  # return a copy
+print(arr2)
+arr2[0, 0] = 44
+print(arr2)
+print(arr)
+
+
+##############################################################################
+# Boolean arrays indexing
+
+arr2 = arr[arr > 5]  # return a copy
+
+print(arr2)
+arr2[0] = 44
+print(arr2)
+print(arr)
+
+
+##############################################################################
+# However, In the context of lvalue indexing (left hand side value of an assignment)
+# Fancy authorizes the modification of the original array
+
+arr[arr > 5] = 0
+print(arr)
+
+##############################################################################
+# Array indexing return copy or view?
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# General rules:
+#
+# - Slicing always returns a view.
+# - Fancy indexing (boolean mask, integers) returns copy
+# - lvalue indexing i.e. the indices are placed in the left hand side value of an assignment,
+#   provides a view.
+
+
+##############################################################################
+# Array manipulation
+# ------------------
 
 ##############################################################################
 # Reshaping
-# ---------
 
 arr = np.arange(10, dtype=float).reshape((2, 5))
 print(arr.shape)
@@ -73,6 +162,7 @@ print(arr.reshape(5, 2))
 # Add an axis
 
 a = np.array([0, 1])
+print(a)
 a_col = a[:, np.newaxis]
 print(a_col)
 #or
@@ -84,7 +174,7 @@ a_col = a[:, None]
 print(a_col.T)
 
 ##############################################################################
-# Flatten: always returns a flat copy of the orriginal array
+# Flatten: always returns a flat copy of the original array
 
 arr_flt = arr.flatten()
 arr_flt[0] = 33
@@ -99,10 +189,32 @@ arr_flt[0] = 33
 print(arr_flt)
 print(arr)
 
+##############################################################################
+# Stack arrays
+# `NumPy Joining Array <https://www.w3schools.com/python/numpy/numpy_array_join.asp>`_
+
+a = np.array([0, 1])
+b = np.array([2, 3])
 
 ##############################################################################
-# Summary on axis, reshaping/flattening and selection
-# ---------------------------------------------------
+# Horizontal stacking
+
+np.hstack([a, b])
+
+##############################################################################
+# Vertical stacking
+
+np.vstack([a, b])
+
+##############################################################################
+# Default Vertical
+
+np.stack([a, b])
+
+
+##############################################################################
+# Advanced Numpy: reshaping/flattening and selection
+# --------------------------------------------------
 #
 # Numpy internals: By default Numpy use C convention, ie, Row-major language:
 # The matrix is stored by rows. In C, the last index changes most rapidly as one moves through the array as stored in memory.
@@ -145,133 +257,12 @@ print(x[:, 0, :])
 
 print(x[:, :, 0])
 
-##############################################################################
-# Simple example with 2 array
-#
-# Exercise:
-#
-# - Get second line
-# - Get third column
-
-arr = np.arange(10, dtype=float).reshape((2, 5))
-print(arr)
-
-arr[1, :]
-arr[:, 2]
 
 ##############################################################################
 # Ravel
 
 print(x.ravel())
 
-
-##############################################################################
-# Stack arrays
-# ------------
-#
-# `NumPy Joining Array <https://www.w3schools.com/python/numpy/numpy_array_join.asp>`_
-
-a = np.array([0, 1])
-b = np.array([2, 3])
-
-##############################################################################
-# Horizontal stacking
-
-np.hstack([a, b])
-
-##############################################################################
-# Vertical stacking
-
-np.vstack([a, b])
-
-##############################################################################
-# Default Vertical
-
-np.stack([a, b])
-
-##############################################################################
-# Selection
-# ---------
-#
-# Single item
-
-arr = np.arange(10, dtype=float).reshape((2, 5))
-
-arr[0]         # 0th element (slices like a list)
-arr[0, 3]      # row 0, column 3: returns 4
-arr[0][3]      # alternative syntax
-
-##############################################################################
-# Slicing
-# ~~~~~~~
-#
-# Syntax: ``start:stop:step`` with ``start`` *(default 0)* ``stop`` *(default last)* ``step`` *(default 1)*
-#
-
-arr[0, :]      # row 0: returns 1d array ([1, 2, 3, 4])
-arr[:, 0]      # column 0: returns 1d array ([1, 5])
-arr[:, :2]     # columns strictly before index 2 (2 first columns)
-arr[:, 2:]     # columns after index 2 included
-arr2 = arr[:, 1:4]  # columns between index 1 (included) and 4 (excluded)
-print(arr2)
-
-
-##############################################################################
-# Slicing returns a view (not a copy)
-# Modification
-
-arr2[0, 0] = 33
-print(arr2)
-print(arr)
-
-##############################################################################
-# Row 0: reverse order
-print(arr[0, ::-1])
-
-# The rule of thumb here can be: in the context of lvalue indexing (i.e. the indices are placed in the left hand side value of an assignment), no view or copy of the array is created (because there is no need to). However, with regular values, the above rules for creating views does apply.
-
-##############################################################################
-# Fancy indexing: Integer or boolean array indexing
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
-# Fancy indexing returns a copy not a view.
-#
-# Integer array indexing
-
-arr2 = arr[:, [1, 2, 3]]  # return a copy
-print(arr2)
-arr2[0, 0] = 44
-print(arr2)
-print(arr)
-
-
-##############################################################################
-# Boolean arrays indexing
-
-arr2 = arr[arr > 5]  # return a copy
-
-print(arr2)
-arr2[0] = 44
-print(arr2)
-print(arr)
-
-
-##############################################################################
-# However, In the context of lvalue indexing (left hand side value of an assignment)
-# Fancy authorizes the modification of the original array
-
-arr[arr > 5] = 0
-print(arr)
-
-##############################################################################
-# Boolean arrays indexing continues
-
-names = np.array(['Bob', 'Joe', 'Will', 'Bob'])
-names == 'Bob'                          # returns a boolean array
-names[names != 'Bob']                   # logical selection
-(names == 'Bob') | (names == 'Will')    # keywords "and/or" don't work with boolean arrays
-names[names != 'Bob'] = 'Joe'           # assign based on a logical selection
-np.unique(names)                        # set function
 
 ##############################################################################
 # Vectorized operations

@@ -300,11 +300,13 @@ texinfo_documents = [
 
 sphinx_gallery_conf = {
     # path to your examples scripts
-    'examples_dirs' : ['python_lang', 'scientific_python', 'statistics', 'machine_learning', 'labs'],
+    #'examples_dirs' : ['python_lang', 'scientific_python', 'statistics', 'machine_learning', 'labs'],
+    'examples_dirs' : ['python_lang', 'data_manipulation', 'labs'],
     'filename_pattern': '/',
     'ignore_pattern': r'__init__\.py',
     # path where to save gallery generated examples
-    'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery'],
+    #'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery'],
+    'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery'],
     'backreferences_dir': None}
 
 # -- Options for docxbuilder -----------------------------------------------
