@@ -51,6 +51,7 @@ Statistics
     :maxdepth: 2
 
     statistics/stat_univ.rst
+    statistics/stat_montecarlo.rst
 
 
 =================
