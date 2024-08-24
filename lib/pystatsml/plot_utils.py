@@ -13,6 +13,88 @@ import seaborn as sns
 
 from matplotlib.patches import Ellipse
 
+def plot_pvalue_under_h0(stat_vals, stat_probs, stat_obs, stat_h0=0,
+                         bar_width=None,
+                         thresh_low=None, thresh_high=None):
+    """Plot p-value and observed statistic under null hypothesis
+
+    Parameters
+    ----------
+    stat_vals : numpy array (1D)
+        Statistic values under H0
+    stat_probs : numpy array (1D)
+        Probabilities of statistic (PDF or PMF) values under H0
+    stat_obs : float
+        Statistic observed
+    stat_h0 : float
+        Statistic under H0
+    bar_width : None, float
+        if bar_width is not None use bar plot, else use plot
+    thresh_low : float
+        Low threshold for observed statistic, low value (for two sided test)
+    thresh_high : float
+        Hight threshold for observed statistic, low value (for two sided test)
+    """
+    if bar_width is not None:
+        plt.bar(stat_vals, stat_probs, color='k', width=bar_width, fill=False,
+                label=r'$P(Stat|H_0)$')
+    else:
+        plt.plot(stat_vals, stat_probs, 'k-', label=r'$P(Stat|H_0)$')
+
+    # p-value areas
+    stat_probs_ = np.zeros(len(stat_probs))
+
+    if thresh_low:
+        stat_probs_[stat_vals <= thresh_low] = stat_probs[stat_vals <= thresh_low]
+    if thresh_high:
+        stat_probs_[stat_vals >= thresh_high] = stat_probs[stat_vals >= thresh_high]   
+
+    dx = np.diff(stat_vals)[0]
+    plt.bar(stat_vals, stat_probs_, color="#1f77b4", width=dx, label=r'p-value')
+
+    #plt.fill_between(stat_vals, 0, stat_probs_,
+    #                color="#1f77b4", alpha=.8, label="p-value", step='post')
+    plt.axvline(x=stat_obs, color='r', ls='--', lw=2, label='Stat. observed')
+    plt.axvline(x=stat_h0, color="k", lw=2, label=r'Stat. H0')
+
+    plt.legend()
+    plt.title('Observed statistic under null hypothesis')
+
+def plot_pvalue_under_h0_(stat_vals, stat_probs, stat_obs, thresh_low=None, thresh_high=None):
+    """Plot p-value and observed statistic under null hypothesis
+
+    Parameters
+    ----------
+    stat_vals : numpy array (1D)
+        Statistic values under H0
+    stat_probs : numpy array (1D)
+        Probabilities of statistic (PDF or PMF) values under H0
+    stat_obs : float
+        Observed statistic   
+    thresh_low : float
+        Low threshold for observed statistic, low value (for two sided test)
+    thresh_high : float
+        Hight threshold for observed statistic, low value (for two sided test)
+    """
+
+    plt.plot(stat_vals, stat_probs, 'k-', label="$P(Stat|H_0)$")
+
+    # p-value areas
+    stat_probs_ = np.zeros(len(stat_probs))
+
+    if thresh_low:
+        stat_probs_[stat_vals <= thresh_low] = stat_probs[stat_vals <= thresh_low]
+    if thresh_high:
+        stat_probs_[stat_vals >= thresh_high] = stat_probs[stat_vals >= thresh_high]   
+
+    plt.fill_between(stat_vals, 0, stat_probs_,
+                    alpha=.8, label="p-value", step='post')
+    plt.axvline(x=stat_obs, color='r', ls='--', lw=2, label='Observed Stat.')
+
+    plt.legend()
+    plt.title('Observed statistic under null hypothesis')
+
+ 
 def plot_cov_ellipse(cov, pos, nstd=2, ax=None, **kwargs):
     """
     Plots an `nstd` sigma error ellipse based on the specified covariance
