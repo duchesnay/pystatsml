@@ -54,15 +54,16 @@ Statistics
     statistics/stat_montecarlo.rst
 
 
-=================
-Scientific Python
-=================
+===========================
+Numerical Methods in Python
+===========================
 
 .. toctree::
     :maxdepth: 2
 
+    scientific_python/numerical_differentiation_integration.rst
     scientific_python/time_series.rst
-
+    scientific_python/optim_gradient_descent.rst
 
 ==================
 Indices and tables

@@ -12,6 +12,7 @@ dependencies:
   - scikit-learn>=1.3.0
   - seaborn
   - statsmodels>=0.14.0
+  - numdifftools
   - nltk
   - wordcloud
   - torchvision
