@@ -1,14 +1,8 @@
-Univariate statistics
-=====================
+Statistics
+==========
 
-- Estimators of the main statistical measuresx
-- Main distributions
-- Hypothesis Testing
-- Testing pairwise associations
-- Non-parametric test of pairwise associations
-- Linear model
-- Linear model with statsmodels
-- Multiple comparisons
-- Labs
+- Univariate statistics
+- Multivariate statistics
+- Resampling and Monte-Carlo Methods
 
 

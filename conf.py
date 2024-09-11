@@ -300,13 +300,13 @@ texinfo_documents = [
 
 sphinx_gallery_conf = {
     # path to your examples scripts
-    #'examples_dirs' : ['python_lang', 'scientific_python', 'statistics', 'machine_learning', 'labs'],
-    'examples_dirs' : ['python_lang', 'data_manipulation', 'labs'],
+    #'examples_dirs' : ['python_lang', 'data_manipulation', 'statistics', 'machine_learning', 'labs'],
+    'examples_dirs' : ['python_lang', 'data_manipulation', 'statistics', 'machine_learning', 'labs', 'nlp'],
     'filename_pattern': '/',
     'ignore_pattern': r'__init__\.py',
     # path where to save gallery generated examples
     #'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery'],
-    'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery'],
+    'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery'],
     'backreferences_dir': None}
 
 # -- Options for docxbuilder -----------------------------------------------
@@ -316,7 +316,7 @@ docx_documents = [
          'title': 'Statistics and Machine Learning in Python',
          'created': 'Edouard Duchesnay',
          'subject': 'Statistics and Machine Learning in Python',
-         'keywords': ['Python', 'Numpy', 'Pandas', 'statsmodels']
+         'keywords': [' Machine Learning', 'Python', 'Numpy', 'Pandas', 'statsmodels']
      }, True),
 ]
 # docx_style = 'path/to/custom_style.docx'

@@ -43,17 +43,6 @@ Data Manipulation and Visualization
     auto_gallery/data_pandas.rst
     data_manipulation/scipy_matplotlib.rst
 
-==========
-Statistics
-==========
-
-.. toctree::
-    :maxdepth: 2
-
-    statistics/stat_univ.rst
-    statistics/stat_multiv.rst
-    statistics/stat_montecarlo.rst
-
 
 ===========================
 Numerical Methods in Python
@@ -62,9 +51,56 @@ Numerical Methods in Python
 .. toctree::
     :maxdepth: 2
 
-    scientific_python/numerical_differentiation_integration.rst
-    scientific_python/time_series.rst
-    scientific_python/optim_gradient_descent.rst
+    numerical_methods/numerical_differentiation_integration.rst
+    numerical_methods/time_series.rst
+    numerical_methods/optim_gradient_descent.rst
+
+
+==========
+Statistics
+==========
+
+.. toctree::
+    :maxdepth: 2
+
+    statistics/stat_univ.rst
+    auto_gallery/stat_univ_lab_brain-volume.rst
+    statistics/lmm/lmm.rst
+    statistics/stat_multiv.rst
+    statistics/stat_montecarlo.rst
+
+
+================
+Machine Learning
+================
+
+.. toctree::
+    :maxdepth: 2
+
+    machine_learning/introduction_to_ml.rst
+    machine_learning/decomposition.rst
+    machine_learning/manifold.rst
+    machine_learning/clustering.rst
+    machine_learning/linear_regression.rst
+    machine_learning/linear_classification.rst
+    auto_gallery/ml_supervized_nonlinear.rst
+    auto_gallery/ml_resampling.rst
+    machine_learning/ensemble_learning.rst
+    optimization/optim_gradient_descent.rst
+    auto_gallery/ml_lab_face_recognition.rst
+
+
+
+
+===========================
+Natural Language Processing
+===========================
+
+.. toctree::
+    :maxdepth: 2
+    
+    nlp/nlp_bow.rst
+
 
 ==================
 Indices and tables
