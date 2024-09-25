@@ -43,7 +43,6 @@ Data Manipulation and Visualization
     auto_gallery/data_pandas.rst
     data_manipulation/scipy_matplotlib.rst
 
-
 ===========================
 Numerical Methods in Python
 ===========================
@@ -54,7 +53,6 @@ Numerical Methods in Python
     numerical_methods/numerical_differentiation_integration.rst
     numerical_methods/time_series.rst
     numerical_methods/optim_gradient_descent.rst
-
 
 ==========
 Statistics
@@ -68,7 +66,6 @@ Statistics
     statistics/lmm/lmm.rst
     statistics/stat_multiv.rst
     statistics/stat_montecarlo.rst
-
 
 ================
 Machine Learning
@@ -89,8 +86,25 @@ Machine Learning
     optimization/optim_gradient_descent.rst
     auto_gallery/ml_lab_face_recognition.rst
 
+===========================
+Deep Learning: Introduction
+===========================
 
+.. toctree::
+    :maxdepth: 2
 
+    deep_learning/dl_backprop_numpy-pytorch-sklearn.rst
+    deep_learning/dl_mlp_mnist_pytorch.rst
+
+=================================
+Deep Learning for Computer Vision
+=================================
+
+.. toctree::
+    :maxdepth: 2
+    
+    deep_learning/dl_cnn_cifar10_pytorch.rst
+    deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.rst
 
 ===========================
 Natural Language Processing
@@ -100,7 +114,6 @@ Natural Language Processing
     :maxdepth: 2
     
     nlp/nlp_bow.rst
-
 
 ==================
 Indices and tables

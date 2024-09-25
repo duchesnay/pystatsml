@@ -1,4 +1,4 @@
-name: pystatsml_teacher
+name: pystatsml
 channels:
   - conda-forge
 dependencies:

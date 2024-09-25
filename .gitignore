@@ -22,3 +22,6 @@ deep_learning/*.rst
 nlp/*rst
 *_files
 younes/
+# pixi environments
+.pixi
+*.egg-info
