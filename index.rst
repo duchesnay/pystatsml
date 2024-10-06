@@ -41,7 +41,7 @@ Data Manipulation and Visualization
 
     auto_gallery/data_numpy.rst
     auto_gallery/data_pandas.rst
-    data_manipulation/scipy_matplotlib.rst
+    data_manipulation/data_visualization.rst
 
 ===========================
 Numerical Methods in Python

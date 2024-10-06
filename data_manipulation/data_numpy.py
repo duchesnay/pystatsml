@@ -58,11 +58,22 @@ np.arange(10)                   # [0, 1 ..., 9]
 ##############################################################################
 # Examining arrays
 
-arr.shape      # (2, 4) - axis 0 is rows, axis 1 is columns
-arr.dtype      # dtype('int64')
-arr.ndim       # 2
-arr.size       # 8 - total number of elements
-len(arr)       # 2 - size of first dimension (aka axis)
+
+print("Shape of the array: ",
+      arr.shape)
+
+print("Type of the array: ",
+      arr.dtype)
+
+print("Number of items in the array: ",
+      arr.size)
+ 
+print("Memory size of one array item in bytes: ",
+      arr.itemsize)
+ 
+# memory size of numpy array in bytes
+print("Memory size of numpy array in bytes: %i, and in bits: %i" %
+      (arr.size * arr.itemsize, arr.size * arr.itemsize * 8 ))
 
 
 ##############################################################################

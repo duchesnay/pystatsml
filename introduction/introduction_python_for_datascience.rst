@@ -204,6 +204,7 @@ Windows
     cd myenv
     pixi add python=3.8
     pixi add scikit-learn pandas statsmodels seaborn
+    pixi add spyder spyder-kernels
 
 
 Example with pystatsml, After downloading `pystatsml repository <https://github.com/duchesnay/pystatsml>`_:
