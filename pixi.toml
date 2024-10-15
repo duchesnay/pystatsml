@@ -30,3 +30,4 @@ nbstripout = "*"
 
 [pypi-dependencies]
 docxbuilder = { version = "*", extras = ["math"] }
+semopy = { version = "*"}
