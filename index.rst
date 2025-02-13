@@ -67,9 +67,9 @@ Statistics
     statistics/stat_multiv.rst
     statistics/stat_montecarlo.rst
 
-================
-Machine Learning
-================
+=====================
+Unsupervised Learning
+=====================
 
 .. toctree::
     :maxdepth: 2
@@ -78,13 +78,31 @@ Machine Learning
     machine_learning/decomposition.rst
     machine_learning/manifold.rst
     machine_learning/clustering.rst
+    
+===================
+Supervised Learning
+===================
+
+.. toctree::
+    :maxdepth: 2
+
     machine_learning/linear_regression.rst
     machine_learning/linear_classification.rst
-    auto_gallery/ml_supervized_nonlinear.rst
+    auto_gallery/kernel_svm.rst
+    auto_gallery/ensemble_learning.rst
+
+========================
+Out-of-Sample Validation 
+========================
+
+.. toctree::
+    :maxdepth: 2
+
     auto_gallery/ml_resampling.rst
-    machine_learning/ensemble_learning.rst
-    optimization/optim_gradient_descent.rst
     auto_gallery/ml_lab_face_recognition.rst
+
+    
+
 
 ===========================
 Deep Learning: Introduction

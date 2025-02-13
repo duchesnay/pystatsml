@@ -410,12 +410,14 @@ Integrated Development Environment (IDE) are software development environment th
 Visual Studio Code (VS Code)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Setup:
+Setup
 
 - `Installation <https://code.visualstudio.com/>`_.
-- Tuto for `Linux <https://linuxhint.com/install-visual-studio-code-ubuntu22-04/>`_.
+- Tuto for `Linux <https://linuxhint.com/install-visual-studio-code-ubuntu22-04/>`_.pen the Command Palette (Ctrl+Shift+P)
 - Useful settings for python: `VS Code for python <https://code.visualstudio.com/docs/python/python-quick-start>`_
 - Extensions for data-science in python: ``Python, Jupyter, Python Extension Pack, Python Pylance, Path Intellisense``
+
+`Set Python environment <https://code.visualstudio.com/docs/python/environments/>`_: Open the Command Palette ``(Ctrl+Shift+P)`` search ``>Python: Select interpreter``.
 
 Execution, three possibilities:
 
@@ -427,7 +429,6 @@ Execution, three possibilities:
     * Optional, ``Shift/Enter`` will send selected text to interactive Jupyter notebook:
       in settings (gear wheel or ``CTL,``: press control and comma keys),
       check box: ``Jupyter > Interactive Window Text Editor > Execute Selection``
-      
 
 
 `Remote Development using SSH <https://code.visualstudio.com/docs/remote/ssh>`_
