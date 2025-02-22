@@ -1,6 +1,8 @@
 '''
-Resampling methods
-==================
+Out-of-sample validation for model selection and evaluation
+===========================================================
+
+`Source scikit-learn model selection and evaluation <https://scikit-learn.org/stable/model_selection.html>`_
 '''
 
 import numpy as np
@@ -21,50 +23,54 @@ X, y = datasets.make_regression(n_samples=100, n_features=100,
 # Train, validation and test sets
 # -------------------------------
 #
-# Machine learning algorithms overfit taining data. Predictive performances **MUST** be evaluated on independant hold-out dataset.
+# Machine learning algorithms tend to overfit training data. Predictive performances **MUST** be evaluated on independant hold-out dataset.
+# A split of into a training test and an independent test set mandatory.
+# However to set the hyperparameters the dataset is generally splitted into three sets:
+#
+# 1. **Training Set (Fitting the Model and Learning Parameters)**
+#
+# - The training set is used to fit the model by learning its parameters (e.g., weights in a neural network, coefficients in a regression model).
+# - The algorithm adjusts its parameters to minimize a chosen loss function (e.g., MSE for regression, cross-entropy for classification).
+# - The model learns patterns from this data, but using only the training set risks overfitting—where the model memorizes data instead of generalizing.
+#
+# - Role: Learn the parameters of the model.
+#
+# 2. **Validation Set (Hyperparameter Tuning and Model Selection)**
+#
+# - The validation set is used to fine-tune the model's hyperparameters (e.g., learning rate, number of layers, number of clusters).
+# - Hyperparameters are not directly learned from data but are instead set before training.
+# - The validation set helps to assess different model configurations, preventing overfitting by ensuring that the model generalizes beyond the training set.
+# - If we see high performance on the training set but poor performance on the validation set, we are likely overfitting.
+# - The process of choosing the best hyperparameters based on the validation set is called **model selection**.
+#
+# - Role: Tune hyperparameters and select the best model configuration.
+# - Data Leakage Risk: If we tune hyperparameters too much on the validation set, it essentially becomes part of training, leading to potential overfitting on it.
+#
+# 3. **Test Set (Final Independent Evaluation)**
+#
+# - The test set is an independent dataset used to evaluate the final model after training and hyperparameter tuning.
+# - This provides an unbiased estimate of how the model will perform on completely new data.
+# - The model should never be trained or tuned using the test set to ensure a fair evaluation.
+# - Performance metrics (e.g., accuracy, F1-score, ROC-AUC) on the test set indicate how well the model is expected to perform in real-world scenarios.
+# - Role: Evaluate the final model's performance on unseen data.
 #
 # .. figure:: ../images/train_val_test_cv.png
 #    :alt: Train, validation and test sets.
 #
-# 1. **Training dataset**: Dataset used to fit the model
-#    (set the model parameters like weights). The *training error* can be
-#    easily calculated by applying the statistical learning method to the
-#    observations used in its training. But because of overfitting, the
-#    **training error rate can dramatically underestimate the error** that
-#    would be obtained on new samples.
-# 2. **Validation dataset**: Dataset used to provide an unbiased evaluation
-#    of a model fit on the training dataset while
-#    **tuning model hyperparameters**, ie. **model selection**.
-#    The validation error is the average error that results from a learning
-#    method to predict the response on a new (validation) samples that is,
-#    on samples that were not used in training the method.
-# 3. **Test dataset**: Dataset used to provide an unbiased
-#    **evaluation of a final model** fitted on the training dataset.
-#    It is only used once a model is completely trained (using the train and
-#    validation sets).
 #
-# What is the Difference Between Test and Validation Datasets? by
-# [Jason Brownlee](https://machinelearningmastery.com/difference-test-validation-datasets/)
+# Summary:
 #
-# Thus the original dataset is generally split in a training, validation and a
-# test data sets. Large training+validation set (80%) small test set (20%) might
-# provide a poor estimation of the predictive performances (same argument
-# stands for train vs validation samples). On the contrary, large test set and
-# small training set might produce a poorly estimated learner.
-# This is why, on situation where we cannot afford such split, cross-validation
-# scheme can be use for model selection or/and for model evaluation.
-#
-# If sample size is limited, train/validation/test split may not be possible.
-# **Cross Validation (CV)** (see below) can be used to replace:
-#
-# - Outer (train/test) split of model evaluation.
-# - Inner train/validation split of model selection (more frequent situation).
-# - Inner and outer splits, leading to two nested CV.
-
+# - Training set
+#       * Fits model parameters.
+#       * High risk of overfitting if the model is too complex.
+# - Validation set
+#       * Tunes hyperparameters and selects the best model.
+#       * Risk of of overfitting if tuning too much.
+# - Test set
+#       * Provides a final evaluation on unseen data.
 
 # %%
-# Split dataset in train/test sets for model evaluation
-# -----------------------------------------------------
+# Split dataset in train/test sets to train and assess the the final model after training and hyperparameter tuning.
 #
 
 X_train, X_test, y_train, y_test =\
@@ -79,73 +85,21 @@ print("Test R2: %.2f" % metrics.r2_score(y_test, y_pred_test))
 
 
 # %%
-# Train/validation/test splits: model selection and model evaluation
-# ------------------------------------------------------------------
-#
-# The **Grid search procedure** (`GridSearchCV`) performs a
-# model selection of the best **hyper-parameters** :math:`\alpha` over a grid of possible values.
-# Train set is  "splitted (inner split) into train/validation sets.
-#
-# **Model selection with grid search procedure:**
-#
-# 1. Fit the learner (\ie. estimate **parameters** :math:`\mathbf{\Omega}_k`)
-#    on training set: :math:`\mathbf{X}_{train}, \mathbf{y}_{train} \rightarrow f_{\alpha_k, \mathbf{\Omega}_k}(.)`
-# 2. Evaluate the model on the validation set and keep the hyper-parameter(s) that
-#    minimises the error measure :math:`\alpha_* = \arg \min L(f_{\alpha_k, \mathbf{\Omega}_k}(\mathbf{X}_{val}), \mathbf{y}_{val})`
-# 3. Refit the learner on all training + validation data,
-#    :math:`\mathbf{X}_{train \cup val}, \mathbf{y}_{train \cup val}`,
-#    using the best hyper parameters (:math:`\alpha_*`): :math:`\rightarrow f_{\alpha_*, \mathbf{\Omega}_*}(.)`
-#
-# **Model evaluation:** on the test set:
-# :math:`L(f_{\alpha_*, \mathbf{\Omega}_*}(\mathbf{X}_{test}), \mathbf{y}_{test})`
-
-train_idx, validation_idx = train_test_split(np.arange(X_train.shape[0]),
-                                             test_size=0.25, shuffle=True,
-                                             random_state=42)
-
-split_inner = PredefinedSplit(test_fold=validation_idx)
-print("Train set size: %i" % X_train[train_idx].shape[0])
-print("Validation set size: %i" % X_train[validation_idx].shape[0])
-print("Test set size: %i" % X_test.shape[0])
-
-lm_cv = GridSearchCV(lm.Ridge(), {'alpha': 10. ** np.arange(-3, 3)},
-                     cv=split_inner, n_jobs=5)
-
-# Fit, indluding model selection with internal Train/validation split
-lm_cv.fit(X_train, y_train)
-
-# Predict
-y_pred_test = lm_cv.predict(X_test)
-print("Test R2: %.2f" % metrics.r2_score(y_test, y_pred_test))
-
-
-# %%
 # Cross-Validation (CV)
 # ---------------------
 #
-# If sample size is limited, train/validation/test split may not be possible.
-# **Cross Validation (CV)** can be used to replace train/validation split
-# and/or train+validation / test split.
+# If sample size is limited, train/validation/test split may be impossible:
 #
-# Cross-Validation scheme randomly divides the set of observations into
-# *K* groups, or **folds**, of approximately equal size.
-# The first fold is treated as a validation set, and the method
-# :math:`f()` is fitted on the remaining union of *K - 1* folds:
-# (:math:`f(\boldsymbol{X}_{-K}, \boldsymbol{y}_{-K})`).
-# The measure of performance (the score function :math:`\mathcal{S}`),
-# either a error measure or an correct prediction measure is an average
-# of a loss error or correct prediction measure, noted :math:`\mathcal{L}`,
-# between a true target value and the predicted target value.
-# The score function is evaluated of the on the observations in the held-out
-# fold. For each sample *i* we consider the model estimated
-# :math:`f(\boldsymbol{X}_{-k(i)}, \boldsymbol{y}_{-k(i)}` on the data set
-# without the group *k* that contains *i* noted *-k(i)*.
-# This procedure is repeated *K* times; each time, a different group of
-# observations is treated as a test set.
-# Then we compare the predicted value
-# (:math:`f_{-k(i)}(\boldsymbol{x}_i) = \hat{y_i})`
-# with true value :math:`y_i` using a Error or Loss function
-# :math:`\mathcal{L}(y, \hat{y})`.
+# - Large training+validation set (80%) small test set (20%) might provide a poor estimation of the
+#   predictive performances on few test samples. The same argument stands for train vs validation samples.
+# - On the contrary, large test set and small training set might produce a poorly estimated learner.
+#
+# **Cross Validation (CV)** (`Scikit-learn <https://scikit-learn.org/stable/modules/cross_validation.html>`_)can be used to replace train/validation split
+# and/or train+validation / test split. Main procedure:
+#
+# 1. The dataset is divided into k equal-sized subsets (folds).
+# 2. The model is trained k times, each time using k-1 folds as the training set and 1 fold as the validation set.
+# 3. The final performance is the average of the k validation scores.
 #
 # For 10-fold we can either average over 10 values (Macro measure) or
 # concatenate the 10 experiments and compute the micro measures.
@@ -154,28 +108,19 @@ print("Test R2: %.2f" % metrics.r2_score(y_test, y_pred_test))
 #
 # - **Micro measure: average(individual scores)**: compute a score
 #   :math:`\mathcal{S}` for each sample and average over all samples.
-#   It is simillar to **average score(concatenation)**: an averaged score
+#   It is similar to **average score(concatenation)**: an averaged score
 #   computed over all concatenated samples.
-#
-# .. raw:: latex
-#    \mathcal{S}(f) = \frac{1}{N} \sum_i^N \mathcal{L}\left(y_i, f(\boldsymbol{x}_{-k(i)}, \boldsymbol{y}_{-k(i)}) \right).
-#
 # - **Macro measure mean(CV scores)** (the most commonly used method):
 #   compute a score :math:`\mathcal{S}` on each each fold *k* and average
-#   accross folds:
+#   across folds:
 #
-# .. raw:: latex
-#    \begin{align*}
-#    \mathcal{S}(f) &= \frac{1}{K} \sum_k^K \mathcal{S}_k(f).\\
-#    \mathcal{S}(f) &= \frac{1}{K} \sum_k^K \frac{1}{N_k} \sum_{i \in k} \mathcal{L}\left(y_i, f(\boldsymbol{x}_{-k(i)}, \boldsymbol{y}_{-k(i)}) \right).
-#    \end{align*}
-#
-# These two measures (an average of average vs. a global average) are generaly
+# These two measures (an average of average vs. a global average) are generally
 # similar. They may differ slightly is folds are of different sizes.
 # This validation scheme is known as the **K-Fold CV**.
 # Typical choices of *K* are 5 or 10, [Kohavi 1995].
-# The extreme case where *K = N* is known as **leave-one-out cross-validation,
+# The extreme case where *K = N* is known as **Leave-One-Out Cross-Validation,
 # LOO-CV**.
+
 
 # %%
 # CV for regression
@@ -202,9 +147,9 @@ print("Train r2:%.2f" % np.mean(r2_train))
 print("Test  r2:%.2f" % np.mean(r2_test))
 
 # %%
-# Scikit-learn provides user-friendly function to perform CV:
+# Scikit-learn provides user-friendly function to perform CV
 #
-# `cross_val_score()`: single metric
+# `cross_val_score <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html>`_: single metric
 
 from sklearn.model_selection import cross_val_score
 
@@ -217,7 +162,7 @@ print("Test  r2:%.2f" % scores.mean())
 
 
 # %%
-# `cross_validate()`: multi metric, + time, etc.
+# `cross_validate <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html>`_: multi metric, + time, etc.
 
 from sklearn.model_selection import cross_validate
 
@@ -229,16 +174,18 @@ print("Test R2:%.2f; MAE:%.2f" % (scores['test_r2'].mean(),
 
 
 # %%
-# CV for classification: stratifiy for the target label
+# CV for classification: stratify for the target label
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # With classification problems it is essential to sample folds where each
 # set contains approximately the same percentage of samples of each target
 # class as the complete set. This is called **stratification**.
-# In this case, we will use ``StratifiedKFold`` with is a variation of
-# k-fold which returns stratified folds.
-# Usually the error function :math:`L()` are, at least, the sensitivity
-# and the specificity. However other function could be used.
+# In this case, we will use `StratifiedKFold <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html>`_
+# with is a variation of k-fold which returns stratified folds.
+# As error function we recommend:
+#
+# - The `balanced accuracy <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score>`_
+# - The `ROC-AUC <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score>`_
 #
 # **CV with explicit loop**:
 
@@ -263,7 +210,7 @@ print("Test AUC:%.2f; bACC:%.2f" % (np.mean(bacc), np.mean(auc)))
 
 
 # %%
-# `cross_val_score()`: single metric
+# `cross_val_score <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html>`_: single metric
 
 scores = cross_val_score(estimator=mod, X=X, y=y, cv=5)
 
@@ -272,6 +219,7 @@ print("Test  ACC:%.2f" % scores.mean())
 
 # %%
 # Provide your own CV and score
+
 def balanced_acc(estimator, X, y, **kwargs):
     """Balanced acuracy scorer."""
     return metrics.recall_score(y, estimator.predict(X), average=None).mean()
@@ -282,7 +230,7 @@ print("Test  bACC:%.2f" % scores.mean())
 
 
 # %%
-# `cross_validate()`: multi metric, + time, etc.
+# `cross_validate <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html>`_: multi metric, + time, etc.
 
 from sklearn.model_selection import cross_validate
 
@@ -293,26 +241,33 @@ print("Test AUC:%.2f; bACC:%.2f" % (scores['test_roc_auc'].mean(),
                                     scores['test_balanced_accuracy'].mean()))
 
 
-
 # %%
-# Cross-validation for model selection
-# ------------------------------------
+# Cross-validation for model selection (GridSearchCV)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # Combine CV and grid search:
-# Re-split (inner split) train set into CV folds train/validation folds and
-# build a `GridSearchCV` out of it:
+# `GridSearchCV <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html>`_
+# perform hyperparameter tuning (model selection) by systematically searching the best combination of hyperparameters 
+# evaluating all possible combinations (over a grid of possible values) using cross-validation:
+#
+# 1. Define the model: Choose a machine learning model (e.g., SVM, Random Forest).
+# 2. Specify hyperparameters: Create a dictionary of hyperparameters and their possible values.
+# 3. Perform exhaustive search: GridSearchCV trains the model with every possible combination of hyperparameters.
+# 4. Cross-validation: For each combination, it uses k-fold cross-validation (default cv=5).
+# 5. Select the best model: The combination with the highest validation performance is chosen.
+#    By default, refit an estimator using the best found parameters on the whole dataset.
 
-# Outer split:
+# Outer, tain/test, split:
 X_train, X_test, y_train, y_test =\
     train_test_split(X, y, test_size=0.25, shuffle=True, random_state=42)
 
 cv_inner = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
-# Cross-validation for model selection
+# Inner Cross-Validation (tain/validation, splits) for model selection
 lm_cv = GridSearchCV(lm.LogisticRegression(), {'C': 10. ** np.arange(-3, 3)},
                      cv=cv_inner, n_jobs=5)
 
-# Fit, indluding model selection with internal CV
+# Fit, including model selection with internal CV
 lm_cv.fit(X_train, y_train)
 
 # Predict
@@ -322,7 +277,7 @@ print("Test bACC: %.2f" % metrics.balanced_accuracy_score(y_test, y_pred_test))
 
 # %%
 # Cross-validation for both model (outer) evaluation and model (inner) selection
-# ------------------------------------------------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 cv_outer = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 cv_inner = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
@@ -341,14 +296,15 @@ print("Test AUC:%.2f; bACC:%.2f, Time: %.2fs" % (scores['test_roc_auc'].mean(),
 
 # %%
 # Models with built-in cross-validation
-# --------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 # Let sklearn select the best parameters over a default grid.
 #
 # **Classification**
 
 print("== Logistic Ridge (L2 penalty) ==")
-mod_cv = lm.LogisticRegressionCV(class_weight='balanced', scoring='balanced_accuracy',
+mod_cv = lm.LogisticRegressionCV(class_weight='balanced',
+                                 scoring='balanced_accuracy',
                                  n_jobs=-1, cv=5)
 scores = cross_val_score(estimator=mod_cv, X=X, y=y, cv=5)
 print("Test  ACC:%.2f" % scores.mean())
@@ -377,7 +333,7 @@ print("Test  r2:%.2f" % scores.mean())
 
 # %%
 # Random Permutations: sample the null distribution
-# -------------------------------------------------
+# =================================================
 #
 # A permutation test is a type of non-parametric randomization test in which the null distribution of a test statistic is estimated by randomly permuting the observations.
 #
@@ -391,7 +347,7 @@ print("Test  r2:%.2f" % scores.mean())
 #
 # Sample the distributions of r-squared and coefficients of ridge regression under the null hypothesis. Simulated dataset:
 
-# Regression dataset where first 2 features are predictives
+# Regression dataset where first two features are predictive
 np.random.seed(0)
 n_features = 5
 n_features_info = 2
@@ -403,9 +359,6 @@ Xbeta = np.dot(X, beta)
 eps = np.random.randn(n_samples)
 y = Xbeta + eps
 
-# %%
-# Random permutations
-# -------------------
 
 # Fit model on all data (!! risk of overfit)
 model = lm.RidgeCV()
@@ -488,7 +441,7 @@ _ = axes[-1].set_xlabel("Coefficient distribution under null hypothesis")
 
 # %%
 # Bootstrapping
-# -------------
+# =============
 #
 # Bootstrapping is a statistical technique which consists in generating sample (called bootstrap samples) from an initial dataset of size *N* by randomly drawing with replacement *N* observations. It provides sub-samples with the same distribution than the original dataset. It aims to:
 #

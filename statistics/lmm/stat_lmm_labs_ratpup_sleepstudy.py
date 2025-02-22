@@ -1,6 +1,6 @@
 '''
-Labs: Linear Mixed Models
-=========================
+Hands-On: Linear Mixed Models
+=============================
 
 Two labs on Linear Mixed Models:
 

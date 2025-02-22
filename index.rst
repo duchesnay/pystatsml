@@ -3,32 +3,33 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-=======
-Phantom
-=======
-
-============
-Introduction
-============
-
+=================================
 Important links:
-
-- `Web page <https://duchesnay.github.io/pystatsml/>`_
-- `Github <https://github.com/duchesnay/pystatsml>`_
-- `Latest pdf <https://raw.github.com/duchesnay/data/master/pdf/StatisticsMachineLearningPython.pdf>`_
-- `Official deposit for citation <https://hal.archives-ouvertes.fr/hal-03038776>`_.
+=================================
 
 .. toctree::
     :maxdepth: 2
+
+- `Github <https://github.com/duchesnay/pystatsml>`_
+- `Latest pdf <https://raw.github.com/duchesnay/data/master/pdf/StatisticsMachineLearningPython.pdf>`_
+- `Official deposit for citation <https://hal.archives-ouvertes.fr/hal-03038776>`_.
+- `Web page <https://duchesnay.github.io/pystatsml/>`_
+
+=================================
+Python ecosystem for data science
+=================================
+
+.. toctree::
+    :maxdepth: 1
 
     introduction/introduction_python_for_datascience.rst
 
 ===============
-Python Language
+Python language
 ===============
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     auto_gallery/python_lang.rst
 
@@ -37,7 +38,7 @@ Data Manipulation and Visualization
 ===================================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     auto_gallery/data_numpy.rst
     auto_gallery/data_pandas.rst
@@ -48,7 +49,7 @@ Numerical Methods in Python
 ===========================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     numerical_methods/numerical_differentiation_integration.rst
     numerical_methods/time_series.rst
@@ -59,7 +60,7 @@ Statistics
 ==========
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     statistics/stat_univ.rst
     auto_gallery/stat_univ_lab_brain-volume.rst
@@ -72,7 +73,7 @@ Unsupervised Learning
 =====================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     machine_learning/introduction_to_ml.rst
     machine_learning/decomposition.rst
@@ -84,24 +85,22 @@ Supervised Learning
 ===================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     machine_learning/linear_regression.rst
     machine_learning/linear_classification.rst
     auto_gallery/kernel_svm.rst
     auto_gallery/ensemble_learning.rst
-
-========================
-Out-of-Sample Validation 
-========================
-
-.. toctree::
-    :maxdepth: 2
-
-    auto_gallery/ml_resampling.rst
     auto_gallery/ml_lab_face_recognition.rst
 
-    
+==================
+Resampling methods 
+==================
+
+.. toctree::
+    :maxdepth: 1
+
+    auto_gallery/ml_resampling.rst
 
 
 ===========================
@@ -109,7 +108,7 @@ Deep Learning: Introduction
 ===========================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     deep_learning/dl_backprop_numpy-pytorch-sklearn.rst
     deep_learning/dl_mlp_mnist_pytorch.rst
@@ -119,7 +118,7 @@ Deep Learning for Computer Vision
 =================================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
     
     deep_learning/dl_cnn_cifar10_pytorch.rst
     deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.rst
@@ -129,7 +128,7 @@ Natural Language Processing
 ===========================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
     
     nlp/nlp_bow.rst
 

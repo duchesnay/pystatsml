@@ -1,8 +1,8 @@
 Introduction to Python language
--------------------------------
+===============================
 
 Python main features
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 - Python is popular `Google trends <https://trends.google.com/trends/explore?cat=31&date=all&q=python,R,matlab,spss,stata>`_ (Python vs. R, Matlab, SPSS, Stata).
 - Python is interpreted: source files ``.py`` are executed by the interpreter which is executed by the processor.
@@ -13,7 +13,7 @@ Python main features
 - Efficient data manipulation is obtained using libraries (`Numpy, Scipy, Pytroch`) executed in compiled code.
 
 Development process
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 **Edit python file then execute**
 
@@ -44,8 +44,8 @@ Quite with ``CTL-D``
 
 Quite with ``CTL-D``
 
-Python ecosystem for data-science
----------------------------------
+Overview of Python ecosystem for data-science
+=============================================
 
 .. RST https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html
 
@@ -113,7 +113,7 @@ See `Example gallery <https://seaborn.pydata.org/examples/index.html>`_
 `Pytorch <https://pytorch.org/>`_ for deep learning.
 
 Development Environment
------------------------
+=======================
 
 A typical Python development environment consists of several key components, which work together to facilitate coding, testing, and debugging. Here are the main components:
 
@@ -167,10 +167,10 @@ A typical Python development environment consists of several key components, whi
 
 
 Package & Environments Dependency Management
---------------------------------------------
+============================================
 
 Pixi Package and Environment Manager
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------
 
 `Pixi <https://pixi.sh/latest/>`_  is a modern **package management** tool designed to enhance the experience of **managing Python environments** 
 particularly for data science and machine learning workflows. It aims to improve upon the existing tools like Conda by offering faster and more efficient package management:
@@ -243,8 +243,8 @@ Install/uninstall a package
     pixi remove numpy
 
 
-Anaconda and Conda Environments
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Anaconda and Conda environments
+-------------------------------
 
 Anaconda is a python distribution that ships most of python tools and libraries.
 
@@ -379,7 +379,7 @@ With Miniconda you download only the packages you want with the conda command: `
 
 
 Pip
-~~~
+---
 
 **pip** alternative for packages management (update ``-U`` in user directory ``--user``):
 
@@ -398,7 +398,7 @@ Example:
 
 
 Development with Integrated Development Environment (IDE) and JupyterLab
-------------------------------------------------------------------------
+========================================================================
 
 Integrated Development Environment (IDE) are software development environment that provide:
 
@@ -408,7 +408,7 @@ Integrated Development Environment (IDE) are software development environment th
 
 
 Visual Studio Code (VS Code)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------
 
 Setup
 
@@ -438,7 +438,7 @@ Execution, three possibilities:
   3. Remember hosts: (``F1, Ctrl+Shift+P``): Remote-SSH: Add New SSH Host or clicking on the Add New icon in the SSH Remote Explorer in the Activity Bar
 
 Spyder
-~~~~~~
+------
 
 `Spyder <https://www.spyder-ide.org/>`_ is a basic IDE dedicated to data-science.
 
@@ -454,7 +454,7 @@ Shortcuts:
 - ``F9`` run line/selection
 
 JupyterLab (Jupyter Notebook)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
 `JupyterLab <https://jupyter.org/>`_   allows data scientists to create and share document, ie, Jupyter Notebook. A Notebook is that is a document ``.ipynb`` including:
 
