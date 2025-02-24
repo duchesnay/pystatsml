@@ -111,7 +111,7 @@ Deep Learning: Introduction
     :maxdepth: 1
 
     deep_learning/dl_backprop_numpy-pytorch-sklearn.rst
-    deep_learning/dl_mlp_mnist_pytorch.rst
+    deep_learning/dl_mlp_pytorch.rst
 
 =================================
 Deep Learning for Computer Vision
