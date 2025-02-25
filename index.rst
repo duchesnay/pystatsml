@@ -121,7 +121,7 @@ Deep Learning for Computer Vision
     :maxdepth: 1
     
     deep_learning/dl_cnn_cifar10_pytorch.rst
-    deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.rst
+    deep_learning/dl_cnn-pretraining_pytorch.rst
 
 ===========================
 Natural Language Processing
