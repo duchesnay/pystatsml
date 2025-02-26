@@ -75,10 +75,10 @@ Unsupervised Learning
 .. toctree::
     :maxdepth: 1
 
-    machine_learning/introduction_to_ml.rst
-    machine_learning/decomposition.rst
-    machine_learning/manifold.rst
-    machine_learning/clustering.rst
+    ml_unsupervised/introduction_to_ml.rst
+    ml_unsupervised/linear_dimensionality_reduction.rst
+    ml_unsupervised/manifold_learning.rst
+    ml_unsupervised/clustering.rst
     
 ===================
 Supervised Learning
@@ -87,8 +87,8 @@ Supervised Learning
 .. toctree::
     :maxdepth: 1
 
-    machine_learning/linear_regression.rst
-    machine_learning/linear_classification.rst
+    ml_supervised/linear_regression.rst
+    ml_supervised/linear_classification.rst
     auto_gallery/kernel_svm.rst
     auto_gallery/ensemble_learning.rst
     auto_gallery/ml_lab_face_recognition.rst

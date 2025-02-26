@@ -301,7 +301,7 @@ texinfo_documents = [
 sphinx_gallery_conf = {
     # path to your examples scripts
     #'examples_dirs' : ['python_lang', 'data_manipulation', 'statistics', 'machine_learning', 'labs'],
-    'examples_dirs' : ['python_lang', 'data_manipulation', 'statistics', 'machine_learning', 'labs', 'nlp'],
+    'examples_dirs' : ['python_lang', 'data_manipulation', 'statistics', 'ml_supervised', 'labs', 'nlp'],
     'filename_pattern': '/',
     'ignore_pattern': r'__init__\.py',
     # path where to save gallery generated examples
