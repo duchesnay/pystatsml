@@ -87,6 +87,7 @@ Supervised Learning
 .. toctree::
     :maxdepth: 1
 
+    ml_supervised/overfitting.rst
     ml_supervised/linear_regression.rst
     ml_supervised/linear_classification.rst
     auto_gallery/kernel_svm.rst
