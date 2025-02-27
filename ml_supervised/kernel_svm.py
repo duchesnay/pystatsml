@@ -1,11 +1,7 @@
 '''
-Non-Linear Kernel methods and Support Vector Machines (SVM)
+Non-Linear Kernel Methods and Support Vector Machines (SVM)
 ===========================================================
 '''
-
-# get_ipython().run_line_magic('matplotlib', 'inline')
-import matplotlib.pyplot as plt
-
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -18,42 +14,61 @@ from sklearn import datasets
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
 
-np.set_printoptions(precision=2)
-# pd.set_option('precision', 2)
+# Plot
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Plot parameters
+plt.style.use('seaborn-v0_8-whitegrid')
+fig_w, fig_h = plt.rcParams.get('figure.figsize')
+plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
+
 
 # %%
-# SVM are based kernel methods require only a user-specified kernel function
+# Kernel algorithms
+# -----------------
+#
+# Kernel Machine are based kernel methods require only a user-specified kernel function
 # :math:`K(x_i, x_j)`, i.e., a **similarity function** over pairs of data
 # points :math:`(x_i, x_j)` into kernel (dual) space on which learning
 # algorithms operate linearly, i.e. every operation on points is a linear
 # combination of :math:`K(x_i, x_j)`.
 # Outline of the SVM algorithm:
 #
-# 1. Map points  :math:`x` into kernel space using a kernel function:
+# 1. **Map points**  :math:`x` into **kernel space** using a **kernel function**:
 #    :math:`x \rightarrow K(x, .)`.
-# 2. Learning algorithms operates linearly by dot product into high-kernel
-#    space :math:`K(., x_i) \cdot K(., x_j)`.
+#    Learning algorithms operates linearly by dot product into high-kernel
+#    space: :math:`K(., x_i) \cdot K(., x_j)`.
 #     - Using the kernel trick (Mercer’s Theorem) replaces dot product in high
 #       dimensional space by a simpler operation such that
 #       :math:`K(., x_i) \cdot K(., x_j) = K(x_i, x_j)`.
-#       Thus we only need to compute a similarity measure  for each pairs of
-#       point and store in a :math:`N \times N` Gram matrix.
-#     - Finally, The learning process consist of estimating the $\alpha_i$ of
-#       the decision function that maximises the hinge loss (of :math:`f(x)`)
-#       plus some penalty when applied on all training points.
+#     - Thus we only need to compute a similarity measure :math:`K(x_i, x_j)` for each pairs of
+#       point and store in a :math:`N \times N` Gram matrix of.
+
+
+# %%
+# SVM
+# ---
+#
+# 2. **The learning process** consist of estimating the :math:`\alpha_i`
+# of the decision function that maximizes the hinge loss (of :math:`f(x)`)
+# plus some penalty when applied on all training points.
+#
+# 3. **Prediction** of a new point :math:`x` using the decision function.
 #
 # .. math::
 #
 #    f(x) = \text{sign} \left(\sum_i^N \alpha_i~y_i~K(x_i, x)\right).
 #
-# 3. Predict a new point $x$ using the decision function.
-#
 # .. figure:: ../images/svm_rbf_kernel_mapping_and_decision_function.png
 #    :alt: Support Vector Machines.
+
+
+# %%
+# Kernel function
+# ---------------
 #
-# Gaussian kernel (RBF, Radial Basis Function):
-#
-# One of the most commonly used kernel is the Radial Basis Function (RBF) Kernel.
+# One of the most commonly used kernel is the **Radial Basis Function (RBF) Kernel**.
 # For a pair of points :math:`x_i, x_j` the RBF kernel is defined as:
 #
 # .. raw:: latex
@@ -72,7 +87,7 @@ np.set_printoptions(precision=2)
 
 
 # %%
-# dataset
+# Dataset
 
 X, y = datasets.load_breast_cancer(return_X_y=True)
 X_train, X_test, y_train, y_test = \
@@ -90,8 +105,9 @@ X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
 # %%
-# Fit-predict
-# Probalility is a logistic of the decision_function
+# `Scikit-learn SVC <https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_
+# (Support Vector Classification) with probalility function applying a logistic of
+# the decision_function
 
 svm = SVC(kernel='rbf', probability=True).fit(X_train, y_train)
 y_pred = svm.predict(X_test)
