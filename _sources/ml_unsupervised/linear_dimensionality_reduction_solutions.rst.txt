@@ -1,0 +1,180 @@
+Dimension reduction and feature extraction
+==========================================
+
+Principal Component Analysis
+----------------------------
+
+Implement PCA
+~~~~~~~~~~~~~
+
+-  Write a class ``BasicPCA`` with two methods ``fit(X)`` that estimates
+   the data mean and principal components directions. ``transform(X)``
+   that project a new the data into the principal components.
+
+-  Check that your ``BasicPCA`` performed similarly to the one from
+   sklearn: ``from sklearn.decomposition import PCA``
+
+.. code:: ipython3
+
+    import numpy as np
+    import scipy
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    %matplotlib inline
+    #%matplotlib qt
+    
+    np.random.seed(42)
+    
+    
+    import numpy as np
+    from sklearn.decomposition import PCA
+    
+    
+    class BasicPCA():
+        def fit(self, X):
+            # U : Unitary matrix having left singular vectors as columns.
+            #     Of shape (n_samples,n_samples) or (n_samples,n_comps), depending on
+            #     full_matrices.
+            #
+            # s : The singular values, sorted in non-increasing order. Of shape (n_comps,), 
+            #     with n_comps = min(n_samples, n_features).
+            #
+            # Vh: Unitary matrix having right singular vectors as rows. 
+            #     Of shape (n_features, n_features) or (n_comps, n_features) depending on full_matrices.
+            self.mean = X.mean(axis=0)
+            Xc = X - self.mean  # Centering is required
+            U, s, V = scipy.linalg.svd(Xc, full_matrices=False)
+            self.explained_variance_ = (s ** 2) / X.shape[0]
+            self.explained_variance_ratio_ = (self.explained_variance_ /
+                                     self.explained_variance_.sum())
+            self.princ_comp_dir = V
+    
+        def transform(self, X):
+            Xc = X - self.mean
+            return(np.dot(Xc, self.princ_comp_dir.T))
+    
+    # test
+    np.random.seed(42)
+     
+    # dataset
+    n_samples = 100
+    experience = np.random.normal(size=n_samples)
+    salary = 1500 + experience + np.random.normal(size=n_samples, scale=.5)
+    X = np.column_stack([experience, salary])
+    
+    X = np.column_stack([experience, salary])
+    pca = PCA(n_components=2)
+    pca.fit(X)
+    
+    basic_pca = BasicPCA()
+    basic_pca.fit(X)
+    
+    print(pca.explained_variance_ratio_)
+    assert np.all(basic_pca.transform(X) == pca.transform(X))
+
+
+Apply PCA on iris dataset
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Apply your sklearn PCA on ``iris`` dataset available at:
+‘https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv’.
+
+.. code:: ipython3
+
+    import matplotlib.pyplot as plt
+    
+    from sklearn.decomposition import PCA
+    # https://tgmstat.wordpress.com/2013/11/28/computing-and-visualizing-pca-in-r/
+    
+    import numpy as np
+    import pandas as pd
+    
+    try:
+        salary = pd.read_csv('datasets/iris.csv')
+    except:
+        url = 'https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv'
+        df = pd.read_csv(url)
+    
+    print(df.head())
+
+Describe the data set. Should the dataset been standardized ?
+
+.. code:: ipython3
+
+    print(df.describe())
+
+Describe the structure of correlation among variables.
+
+.. code:: ipython3
+
+    X = np.array(df.iloc[:, :4])
+    #np.around(np.corrcoef(X.T), 3)
+
+.. code:: ipython3
+
+    # Center and standardize
+    
+    X = np.array(df.iloc[:, :4])
+    X -= np.mean(X, axis=0)
+    X /= np.std(X, axis=0, ddof=1)
+    np.around(np.corrcoef(X.T), 3)
+
+Compute a PCA with the maximum number of components.
+
+.. code:: ipython3
+
+    pca = PCA(n_components=X.shape[1])
+    pca.fit(X)
+
+Retrieve the explained variance ratio. Determine :math:`K` the number of
+components.
+
+.. code:: ipython3
+
+    print(pca.explained_variance_ratio_)
+    
+    K = 2
+    pca = PCA(n_components=X.shape[1])
+    pca.fit(X)
+    PC = pca.transform(X)
+    #print(PC)
+
+Print the :math:`K` principal components direction and correlation of
+the :math:`K` principal components with original variables. Interpret
+the contribution of original variables into the PC.
+
+.. code:: ipython3
+
+    print(pca.components_)
+    CorPC = pd.DataFrame(
+        [[np.corrcoef(X[:, j], PC[:, k])[0, 1] for j in range(X.shape[1])]
+            for k in range(K)],
+                columns = df.columns[:4],
+        index = ["PC %i"%k for k in range(K)]
+    )
+    
+    print(CorPC)
+
+Plot samples projected into the :math:`K` first PCs. Color samples with
+their species.
+
+.. code:: ipython3
+
+    colors = {'setosa':'r', 'versicolor':'g', 'virginica':'blue'}
+    print(df["species"].unique())
+    #plt.scatter(df['experience'], df['salary'], c=df['education'].apply(lambda x: colors[x]), s=100)
+    plt.scatter(PC[:, 0], PC[:, 1], c=df["species"].apply(lambda x: colors[x]))
+    plt.xlabel("PC1")
+    plt.ylabel("PC2")
+
+Pairewise plot
+
+.. code:: ipython3
+
+    import seaborn as sns
+    
+    df["PC1"] = PC[:, 0]
+    df["PC2"] = PC[:, 1]
+    
+    ax = sns.pairplot(df, hue="species")
+

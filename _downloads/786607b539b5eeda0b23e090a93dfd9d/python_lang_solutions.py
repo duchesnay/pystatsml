@@ -142,16 +142,21 @@ fd = open(tmpfilename, "w")
 fd.write(bsd_4clause)
 fd.close()
 
+
 fd = open(tmpfilename, "r")
 
 count = dict()
-for line in fd:
+count = {}
+
+for line in fd:    
     line = line.lower()
     for word in line.split():
         if not word in count:
             count[word] = 1
         else:
             count[word] += 1
+
+fd.close()
 
 print(count)
 

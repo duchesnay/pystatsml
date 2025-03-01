@@ -1,10 +1,30 @@
 '''
-Lab: Brain volumes study
-=======================
+Hands-On: Brain volumes study
+=============================
 
 The study provides the brain volumes of grey matter (gm), white matter (wm)
 and cerebrospinal fluid) (csf) of 808 anatomical MRI scans.
 '''
+
+import os
+import tempfile
+import urllib.request
+
+import pandas as pd
+
+# Stat
+import statsmodels.formula.api as smfrmla
+import statsmodels.api as sm
+import scipy.stats
+
+# Plot
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Plot parameters
+plt.style.use('seaborn-v0_8-whitegrid')
+fig_w, fig_h = plt.rcParams.get('figure.figsize')
+plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
 
 ###############################################################################
 # Manipulate data
@@ -15,12 +35,6 @@ and cerebrospinal fluid) (csf) of 808 anatomical MRI scans.
 #
 # Create 2 subdirectories: `data` that will contain downloaded data and
 # `reports` for results of the analysis.
-
-import os
-import os.path
-import pandas as pd
-import tempfile
-import urllib.request
 
 WD = os.path.join(tempfile.gettempdir(), "brainvol")
 os.makedirs(WD, exist_ok=True)
@@ -74,7 +88,8 @@ assert brain_vol.shape == (766, 9)
 # **Compute Total Intra-cranial volume**
 # `tiv_vol` = `gm_vol` + `csf_vol` + `wm_vol`.
 
-brain_vol["tiv_vol"] = brain_vol["gm_vol"] + brain_vol["wm_vol"] + brain_vol["csf_vol"]
+brain_vol["tiv_vol"] = brain_vol["gm_vol"] + \
+    brain_vol["wm_vol"] + brain_vol["csf_vol"]
 
 ###############################################################################
 # **Compute tissue fractions**
@@ -96,11 +111,6 @@ brain_vol.to_excel(os.path.join(WD, "data", "brain_vol.xlsx"),
 ###############################################################################
 # Load excel file `brain_vol.xlsx`
 
-import os
-import pandas as pd
-import seaborn as sns
-import statsmodels.formula.api as smfrmla
-import statsmodels.api as sm
 
 brain_vol = pd.read_excel(os.path.join(WD, "data", "brain_vol.xlsx"),
                           sheet_name='data')
@@ -167,10 +177,6 @@ print(desc_group_num)
 #    atrophy process in patient population faster than in the control population.
 # 5. The effect of the medication in the patient population.
 
-import statsmodels.api as sm
-import statsmodels.formula.api as smfrmla
-import scipy.stats
-import seaborn as sns
 
 ###############################################################################
 # **1 Site effect on Grey Matter atrophy**
@@ -189,6 +195,8 @@ import seaborn as sns
 # Plot
 sns.violinplot(x="site", y="gm_f", data=brain_vol1)
 # sns.violinplot(x="site", y="wm_f", data=brain_vol1)
+
+brain_vol1.groupby('site')['age'].describe()
 
 ###############################################################################
 # Stats with scipy

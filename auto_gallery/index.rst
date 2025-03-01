@@ -1,13 +1,9 @@
 :orphan:
 
+NLP
+===
 
-
-.. _sphx_glr_auto_gallery:
-
-Labs
-====
-
-- Supervized classification: face recognition
+- Bag-of-Words Models
 
 
 
@@ -16,14 +12,28 @@ Labs
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="The study provides the brain volumes of grey matter (gm), white matter (wm) and cerebrospinal f...">
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Source: Web Scraping With Python – Step-By-Step Guide">
 
 .. only:: html
 
- .. figure:: /auto_gallery/images/thumb/sphx_glr_stat_univ_lab_brain-volume_thumb.png
-     :alt: Lab: Brain volumes study
+  .. image:: /auto_gallery/images/thumb/sphx_glr_nlp_webscraping_thumb.png
+    :alt:
 
-     :ref:`sphx_glr_auto_gallery_stat_univ_lab_brain-volume.py`
+  :ref:`sphx_glr_auto_gallery_nlp_webscraping.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Web Scraping</div>
+    </div>
+
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 
@@ -33,49 +43,20 @@ Labs
 .. toctree::
    :hidden:
 
-   /auto_gallery/stat_univ_lab_brain-volume
+   /auto_gallery/nlp_webscraping
 
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This lab is inspired by a scikit-learn lab: `Faces recognition example using eigenfaces and SVM...">
 
 .. only:: html
 
- .. figure:: /auto_gallery/images/thumb/sphx_glr_ml_lab_face_recognition_thumb.png
-     :alt: Lab: Faces recognition using various learning models
+  .. container:: sphx-glr-footer sphx-glr-footer-gallery
 
-     :ref:`sphx_glr_auto_gallery_ml_lab_face_recognition.py`
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-.. raw:: html
+      :download:`Download all examples in Python source code: auto_gallery_python.zip </auto_gallery/auto_gallery_python.zip>`
 
-    </div>
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
-.. toctree::
-   :hidden:
-
-   /auto_gallery/ml_lab_face_recognition
-.. raw:: html
-
-    <div class="sphx-glr-clear"></div>
-
-
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-gallery
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-    :download:`Download all examples in Python source code: auto_gallery_python.zip </auto_gallery/auto_gallery_python.zip>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-    :download:`Download all examples in Jupyter notebooks: auto_gallery_jupyter.zip </auto_gallery/auto_gallery_jupyter.zip>`
+      :download:`Download all examples in Jupyter notebooks: auto_gallery_jupyter.zip </auto_gallery/auto_gallery_jupyter.zip>`
 
 
 .. only:: html

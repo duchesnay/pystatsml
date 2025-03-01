@@ -3,12 +3,35 @@
 
 .. _sphx_glr_auto_gallery_sg_execution_times:
 
+
 Computation times
 =================
-**00:02.741** total execution time for **auto_gallery** files:
+**00:03.600** total execution time for 1 file **from auto_gallery**:
 
-+--------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_gallery_python_lang.py` (``python_lang.py``)                     | 00:02.741 | 0.0 MB |
-+--------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_gallery_python_lang_solutions.py` (``python_lang_solutions.py``) | 00:00.000 | 0.0 MB |
-+--------------------------------------------------------------------------------------+-----------+--------+
+.. container::
+
+  .. raw:: html
+
+    <style scoped>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" class="init">
+    $(document).ready( function () {
+        $('table.sg-datatable').DataTable({order: [[1, 'desc']]});
+    } );
+    </script>
+
+  .. list-table::
+   :header-rows: 1
+   :class: table table-striped sg-datatable
+
+   * - Example
+     - Time
+     - Mem (MB)
+   * - :ref:`sphx_glr_auto_gallery_nlp_webscraping.py` (``nlp_webscraping.py``)
+     - 00:03.600
+     - 0.0

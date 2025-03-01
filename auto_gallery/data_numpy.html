@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Numpy: Arrays and Matrices &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Pandas: data manipulation" href="data_pandas.html" />
+    <link rel="prev" title="Import libraries" href="python_lang.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-gallery-data-numpy-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="numpy-arrays-and-matrices">
+<span id="sphx-glr-auto-gallery-data-numpy-py"></span><h1>Numpy: Arrays and Matrices<a class="headerlink" href="#numpy-arrays-and-matrices" title="Link to this heading">¶</a></h1>
+<p>NumPy is an extension to the Python programming language, adding support for large, multi-dimensional
+(numerical) arrays and matrices, along with a large library of high-level mathematical functions to
+operate on these arrays.</p>
+<p>Numpy functions are executed by <strong>compiled in C or Fortran libraries</strong>,
+providing the performance of compiled languages.</p>
+<p><strong>Sources</strong>: <a class="reference external" href="https://github.com/justmarkham">Kevin Markham</a></p>
+<p>Computation time:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="mi">8</span><span class="p">)]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span> <span class="n">s</span> <span class="o">+=</span> <span class="n">v</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Python code, time ellapsed: </span><span class="si">%.2f</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">arr</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Numpy code, time ellapsed: </span><span class="si">%.2f</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Python code, time ellapsed: 10.62s
+Numpy code, time ellapsed: 0.48s
+</pre></div>
+</div>
+<section id="create-arrays">
+<h2>Create arrays<a class="headerlink" href="#create-arrays" title="Link to this heading">¶</a></h2>
+<p>Create ndarrays from lists.
+note: every element must be the same type (will be converted if possible)</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">data1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>             <span class="c1"># list</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>              <span class="c1"># 1d array</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">)]</span>  <span class="c1"># list of lists</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>              <span class="c1"># 2d array</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="n">arr</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>                       <span class="c1"># convert array back to list</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[1 2 3 4]
+ [5 6 7 8]]
+
+[[1, 2, 3, 4], [5, 6, 7, 8]]
+</pre></div>
+</div>
+<p>Create special arrays</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>       <span class="c1"># [0, 0, ..., 0]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>   <span class="c1"># 3 x 6 array of zeros</span>
+<span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>            <span class="c1"># 0 to 1 (inclusive) with 5 points</span>
+<span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>            <span class="c1"># 10^0 to 10^3 (inclusive) with 4 points</span>
+<span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>                   <span class="c1"># [0, 1 ..., 9]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+</pre></div>
+</div>
+<p>Examining arrays</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of the array: &quot;</span><span class="p">,</span>
+      <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Type of the array: &quot;</span><span class="p">,</span>
+      <span class="n">arr</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of items in the array: &quot;</span><span class="p">,</span>
+      <span class="n">arr</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Memory size of one array item in bytes: &quot;</span><span class="p">,</span>
+      <span class="n">arr</span><span class="o">.</span><span class="n">itemsize</span><span class="p">)</span>
+
+<span class="c1"># memory size of numpy array in bytes</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Memory size of numpy array in bytes: </span><span class="si">%i</span><span class="s2">, and in bits: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="n">arr</span><span class="o">.</span><span class="n">itemsize</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">size</span> <span class="o">*</span> <span class="n">arr</span><span class="o">.</span><span class="n">itemsize</span> <span class="o">*</span> <span class="mi">8</span> <span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Shape of the array:  (2, 4)
+Type of the array:  int64
+Number of items in the array:  8
+Memory size of one array item in bytes:  8
+Memory size of numpy array in bytes: 64, and in bits: 512
+</pre></div>
+</div>
+</section>
+<section id="selection">
+<h2>Selection<a class="headerlink" href="#selection" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">arr</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># Get third item of the second line</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>np.int64(7)
+</pre></div>
+</div>
+<section id="slicing">
+<h3>Slicing<a class="headerlink" href="#slicing" title="Link to this heading">¶</a></h3>
+<p>Syntax: <code class="docutils literal notranslate"><span class="pre">start:stop:step</span></code> with <code class="docutils literal notranslate"><span class="pre">start</span></code> <em>(default 0)</em> <code class="docutils literal notranslate"><span class="pre">stop</span></code> <em>(default last)</em> <code class="docutils literal notranslate"><span class="pre">step</span></code> <em>(default 1)</em></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">:</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">0:last:1</span></code>; ie, take all elements, from 0 to the end with step = 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:k</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">0:k:1</span></code>; ie, take all elements, from 0 to k with step = 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">k:</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">k:end:1</span></code>; ie, take all elements, from k to the end with step = 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">::-1</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">0:end:-1</span></code>; ie, take all elements, from k to the end in reverse order, with step = -1.</p></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># Get first line</span>
+<span class="n">arr</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># Get third column</span>
+<span class="n">arr</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>     <span class="c1"># columns strictly before index 2 (2 first columns)</span>
+<span class="n">arr</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]</span>     <span class="c1"># columns after index 2 included</span>
+<span class="n">arr2</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>  <span class="c1"># columns between index 1 (included) and 4 (excluded)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span>
+
+<span class="c1"># Slicing returns a view (not a copy)</span>
+<span class="c1"># Modification</span>
+
+<span class="n">arr2</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">33</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[2 3 4]
+ [6 7 8]]
+[[33  3  4]
+ [ 6  7  8]]
+[[ 1 33  3  4]
+ [ 5  6  7  8]]
+</pre></div>
+</div>
+<p>Reverse order of row 0</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[ 4  3 33  1]
+</pre></div>
+</div>
+</section>
+<section id="fancy-indexing-integer-or-boolean-array-indexing">
+<h3>Fancy indexing: Integer or boolean array indexing<a class="headerlink" href="#fancy-indexing-integer-or-boolean-array-indexing" title="Link to this heading">¶</a></h3>
+<p>Fancy indexing returns a copy not a view.</p>
+<p>Integer array indexing</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">arr2</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>  <span class="c1"># return a copy</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span>
+<span class="n">arr2</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">44</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[33  3  4]
+ [ 6  7  8]]
+[[44  3  4]
+ [ 6  7  8]]
+[[ 1 33  3  4]
+ [ 5  6  7  8]]
+</pre></div>
+</div>
+<p>Boolean arrays indexing</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">arr2</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">arr</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">]</span>  <span class="c1"># return a copy</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span>
+<span class="n">arr2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">44</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[33  6  7  8]
+[44  6  7  8]
+[[ 1 33  3  4]
+ [ 5  6  7  8]]
+</pre></div>
+</div>
+<p>However, In the context of lvalue indexing (left hand side value of an assignment)
+Fancy authorizes the modification of the original array</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">arr</span><span class="p">[</span><span class="n">arr</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[1 0 3 4]
+ [5 0 0 0]]
+</pre></div>
+</div>
+</section>
+<section id="array-indexing-return-copy-or-view">
+<h3>Array indexing return copy or view?<a class="headerlink" href="#array-indexing-return-copy-or-view" title="Link to this heading">¶</a></h3>
+<p>General rules:</p>
+<ul class="simple">
+<li><p>Slicing always returns a view.</p></li>
+<li><p>Fancy indexing (boolean mask, integers) returns copy</p></li>
+<li><p>lvalue indexing i.e. the indices are placed in the left hand side value of an assignment,
+provides a view.</p></li>
+</ul>
+</section>
+</section>
+<section id="array-manipulation">
+<h2>Array manipulation<a class="headerlink" href="#array-manipulation" title="Link to this heading">¶</a></h2>
+<p>Reshaping</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(2, 5)
+[[0. 1.]
+ [2. 3.]
+ [4. 5.]
+ [6. 7.]
+ [8. 9.]]
+</pre></div>
+</div>
+<p>Add an axis</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="n">a_col</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a_col</span><span class="p">)</span>
+<span class="c1">#or</span>
+<span class="n">a_col</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0 1]
+[[0]
+ [1]]
+</pre></div>
+</div>
+<p>Transpose</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">a_col</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[0 1]]
+</pre></div>
+</div>
+<p>Flatten: always returns a flat copy of the original array</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">arr_flt</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">arr_flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">33</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr_flt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[33.  1.  2.  3.  4.  5.  6.  7.  8.  9.]
+[[0. 1. 2. 3. 4.]
+ [5. 6. 7. 8. 9.]]
+</pre></div>
+</div>
+<p>Ravel: returns a view of the original array whenever possible.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">arr_flt</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">arr_flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">33</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr_flt</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[33.  1.  2.  3.  4.  5.  6.  7.  8.  9.]
+[[33.  1.  2.  3.  4.]
+ [ 5.  6.  7.  8.  9.]]
+</pre></div>
+</div>
+<p>Stack arrays
+<a class="reference external" href="https://www.w3schools.com/python/numpy/numpy_array_join.asp">NumPy Joining Array</a></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Horizontal stacking</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([0, 1, 2, 3])
+</pre></div>
+</div>
+<p>Vertical stacking</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([[0, 1],
+       [2, 3]])
+</pre></div>
+</div>
+<p>Default Vertical</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([[0, 1],
+       [2, 3]])
+</pre></div>
+</div>
+</section>
+<section id="advanced-numpy-reshaping-flattening-and-selection">
+<h2>Advanced Numpy: reshaping/flattening and selection<a class="headerlink" href="#advanced-numpy-reshaping-flattening-and-selection" title="Link to this heading">¶</a></h2>
+<p>Numpy internals: By default Numpy use C convention, ie, Row-major language:
+The matrix is stored by rows. In C, the last index changes most rapidly as one moves through the array as stored in memory.</p>
+<p>For 2D arrays, sequential move in the memory will:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>iterate over rows (axis 0)</dt><dd><ul>
+<li><p>iterate over columns (axis 1)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>For 3D arrays, sequential move in the memory will:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>iterate over plans (axis 0)</dt><dd><ul>
+<li><dl class="simple">
+<dt>iterate over rows (axis 1)</dt><dd><ul>
+<li><p>iterate over columns (axis 2)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<figure class="align-default">
+<img alt="../_images/numpy_array3d.png" src="../_images/numpy_array3d.png" />
+</figure>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23]
+</pre></div>
+</div>
+<p>Reshape into 3D (axis 0, axis 1, axis 2)</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[[ 0  1  2  3]
+  [ 4  5  6  7]
+  [ 8  9 10 11]]
+
+ [[12 13 14 15]
+  [16 17 18 19]
+  [20 21 22 23]]]
+</pre></div>
+</div>
+<p>Selection get first plan</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 0  1  2  3]
+ [ 4  5  6  7]
+ [ 8  9 10 11]]
+</pre></div>
+</div>
+<p>Selection get first rows</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 0  1  2  3]
+ [12 13 14 15]]
+</pre></div>
+</div>
+<p>Selection get first columns</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 0  4  8]
+ [12 16 20]]
+</pre></div>
+</div>
+<p>Ravel</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23]
+</pre></div>
+</div>
+</section>
+<section id="vectorized-operations">
+<h2>Vectorized operations<a class="headerlink" href="#vectorized-operations" title="Link to this heading">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nums</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">nums</span> <span class="o">*</span> <span class="mi">10</span>                           <span class="c1"># multiply each element by 10</span>
+<span class="n">nums</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>                <span class="c1"># square root of each element</span>
+<span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>                       <span class="c1"># also floor, rint (round to nearest int)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>                      <span class="c1"># checks for NaN</span>
+<span class="n">nums</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>                 <span class="c1"># add element-wise</span>
+<span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span>  <span class="c1"># compare element-wise</span>
+
+<span class="c1"># Compute Euclidean distance between 2 vectors</span>
+<span class="n">vec1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">vec2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">vec1</span> <span class="o">-</span> <span class="n">vec2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># math and stats</span>
+<span class="n">rnd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># random normals in 4x2 array</span>
+<span class="n">rnd</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">rnd</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">rnd</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>                <span class="c1"># index of minimum element</span>
+<span class="n">rnd</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">rnd</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>             <span class="c1"># sum of columns</span>
+<span class="n">rnd</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>             <span class="c1"># sum of rows</span>
+
+<span class="c1"># methods for boolean arrays</span>
+<span class="p">(</span><span class="n">rnd</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>             <span class="c1"># counts number of positive values</span>
+<span class="p">(</span><span class="n">rnd</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>             <span class="c1"># checks if any value is True</span>
+<span class="p">(</span><span class="n">rnd</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>             <span class="c1"># checks if all values are True</span>
+
+<span class="c1"># random numbers</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12234</span><span class="p">)</span>       <span class="c1"># Set the seed</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>        <span class="c1"># 2 x 3 matrix in [0, 1]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>         <span class="c1"># random normals (mean 0, sd 1)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># 10 randomly picked 0 or 1</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([0, 0, 0, 1, 1, 0, 1, 1, 1, 1])
+</pre></div>
+</div>
+</section>
+<section id="broadcasting">
+<h2>Broadcasting<a class="headerlink" href="#broadcasting" title="Link to this heading">¶</a></h2>
+<p>Sources: <a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broadcasting.html">https://docs.scipy.org/doc/numpy-1.13.0/user/basics.broadcasting.html</a>
+Implicit conversion to allow operations on arrays of different sizes.
+- The smaller array is stretched or “broadcasted” across the larger array so that they have compatible shapes.
+- Fast vectorized operation in C instead of Python.
+- No needless copies.</p>
+<section id="rules">
+<h3>Rules<a class="headerlink" href="#rules" title="Link to this heading">¶</a></h3>
+<p>Starting with the trailing axis and working backward, Numpy compares arrays dimensions.</p>
+<ul class="simple">
+<li><p>If two dimensions are equal then continues</p></li>
+<li><p>If one of the operand has dimension 1 stretches it to match the largest one</p></li>
+<li><p>When one of the shapes runs out of dimensions (because it has less dimensions than the other shape), Numpy will use 1 in the comparison process until the other shape’s dimensions run out as well.</p></li>
+</ul>
+<figure class="align-default" id="id1">
+<img alt="../_images/numpy_broadcasting.png" src="../_images/numpy_broadcasting.png" />
+<figcaption>
+<p><span class="caption-text">Source: <a class="reference external" href="http://www.scipy-lectures.org">http://www.scipy-lectures.org</a></span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">]])</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 0  1  2]
+ [10 11 12]
+ [20 21 22]
+ [30 31 32]]
+</pre></div>
+</div>
+<p>Center data column-wise</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">-</span> <span class="n">a</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([[-15., -15., -15.],
+       [ -5.,  -5.,  -5.],
+       [  5.,   5.,   5.],
+       [ 15.,  15.,  15.]])
+</pre></div>
+</div>
+<p>Scale (center, normalise) data column-wise</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">a</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">a</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([[-1.34164079, -1.34164079, -1.34164079],
+       [-0.4472136 , -0.4472136 , -0.4472136 ],
+       [ 0.4472136 ,  0.4472136 ,  0.4472136 ],
+       [ 1.34164079,  1.34164079,  1.34164079]])
+</pre></div>
+</div>
+<p>Examples</p>
+<p>Shapes of operands A, B and result:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span>      <span class="p">(</span><span class="mi">2</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">5</span> <span class="n">x</span> <span class="mi">4</span>
+<span class="n">B</span>      <span class="p">(</span><span class="mi">1</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>      <span class="mi">1</span>
+<span class="n">Result</span> <span class="p">(</span><span class="mi">2</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">5</span> <span class="n">x</span> <span class="mi">4</span>
+
+<span class="n">A</span>      <span class="p">(</span><span class="mi">2</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">5</span> <span class="n">x</span> <span class="mi">4</span>
+<span class="n">B</span>      <span class="p">(</span><span class="mi">1</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>      <span class="mi">4</span>
+<span class="n">Result</span> <span class="p">(</span><span class="mi">2</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">5</span> <span class="n">x</span> <span class="mi">4</span>
+
+<span class="n">A</span>      <span class="p">(</span><span class="mi">3</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">15</span> <span class="n">x</span> <span class="mi">3</span> <span class="n">x</span> <span class="mi">5</span>
+<span class="n">B</span>      <span class="p">(</span><span class="mi">3</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">15</span> <span class="n">x</span> <span class="mi">1</span> <span class="n">x</span> <span class="mi">5</span>
+<span class="n">Result</span> <span class="p">(</span><span class="mi">3</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">15</span> <span class="n">x</span> <span class="mi">3</span> <span class="n">x</span> <span class="mi">5</span>
+
+<span class="n">A</span>      <span class="p">(</span><span class="mi">3</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">15</span> <span class="n">x</span> <span class="mi">3</span> <span class="n">x</span> <span class="mi">5</span>
+<span class="n">B</span>      <span class="p">(</span><span class="mi">2</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>       <span class="mi">3</span> <span class="n">x</span> <span class="mi">5</span>
+<span class="n">Result</span> <span class="p">(</span><span class="mi">3</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">15</span> <span class="n">x</span> <span class="mi">3</span> <span class="n">x</span> <span class="mi">5</span>
+
+<span class="n">A</span>      <span class="p">(</span><span class="mi">3</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">15</span> <span class="n">x</span> <span class="mi">3</span> <span class="n">x</span> <span class="mi">5</span>
+<span class="n">B</span>      <span class="p">(</span><span class="mi">2</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>       <span class="mi">3</span> <span class="n">x</span> <span class="mi">1</span>
+<span class="n">Result</span> <span class="p">(</span><span class="mi">3</span><span class="n">d</span> <span class="n">array</span><span class="p">):</span>  <span class="mi">15</span> <span class="n">x</span> <span class="mi">3</span> <span class="n">x</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">¶</a></h2>
+<p>Given the array:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># random normals in 4x2 array</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For each column find the row index of the minimum value.</p></li>
+<li><p>Write a function <code class="docutils literal notranslate"><span class="pre">standardize(X)</span></code> that return an array whose columns are centered and scaled (by std-dev).</p></li>
+</ul>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.139 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-data-numpy-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/dcf6ac83ab04d68771a5fdaca66bdca1/data_numpy.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">data_numpy.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/4616fb4e99d185a3c7dbfc67fdd685b2/data_numpy.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">data_numpy.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/6e410e2ed61f3b80ab39f3e2c0406e12/data_numpy.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">data_numpy.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html">Introduction to Python language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#overview-of-python-ecosystem-for-data-science">Overview of Python ecosystem for data-science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#development-environment">Development Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#package-environments-dependency-management">Package &amp; Environments Dependency Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#development-with-integrated-development-environment-ide-and-jupyterlab">Development with Integrated Development Environment (IDE) and JupyterLab</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html">Import libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#basic-operations">Basic operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#data-types">Data types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#execution-control-statements">Execution control statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#functions">Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#regular-expression">Regular expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#system-programming">System programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#networking">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#documenting">Documenting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#modules-and-packages">Modules and packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#unit-testing">Unit testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_lang.html#exercises">Exercises</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Numpy: Arrays and Matrices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_pandas.html">Pandas: data manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_manipulation/data_visualization.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/numerical_differentiation_integration.html">Numerical Differentiation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/numerical_differentiation_integration.html#numerical-integration">Numerical Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/time_series.html">Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/optim_gradient_descent.html">Optimization (Minimization) by Gradient Descent</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stat_univ_lab_brain-volume.html">Hands-On: Brain volumes study</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/lmm/lmm.html">Linear Mixed Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_montecarlo.html">Resampling and Monte Carlo Methods</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ml_unsupervised/introduction_to_ml.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ml_unsupervised/linear_dimensionality_reduction.html">Linear Dimensionality Reduction and Feature Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ml_unsupervised/manifold_learning.html">Manifold learning: non-linear dimension reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ml_unsupervised/clustering.html">Clustering</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ml_supervised/overfitting.html">Overfitting and Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ml_supervised/linear_regression.html">Linear Models for Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ml_supervised/linear_classification.html">Linear Models for Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kernel_svm.html">Non-Linear Kernel Methods and Support Vector Machines (SVM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensemble_learning.html">Non-Linear Ensemble Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml_lab_face_recognition.html">Hands-On: Faces recognition using various learning models</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html">Out-of-sample Validation for Model Selection and Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html#random-permutations-sample-the-null-distribution">Random Permutations: sample the null distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html#bootstrapping">Bootstrapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resampling.html#parallel-computation">Parallel Computation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_pytorch.html">Multilayer Perceptron (MLP)</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional Neural Networks (CNNs)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn-pretraining_pytorch.html">Pretraining and Transfer Learning</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../nlp/nlp_bow.html">Bag-of-Words Models</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="python_lang.html" title="previous chapter">Import libraries</a></li>
+      <li>Next: <a href="data_pandas.html" title="next chapter">Pandas: data manipulation</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/auto_gallery/data_numpy.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

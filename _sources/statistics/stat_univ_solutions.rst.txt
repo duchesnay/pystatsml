@@ -30,13 +30,6 @@ One sample t-test
     x = np.random.normal(loc=1.76, scale=.1, size=n)
     print(x)
 
-
-.. parsed-literal::
-
-    [1.80967142 1.74617357 1.82476885 1.91230299 1.73658466 1.7365863
-     1.91792128 1.83674347 1.71305256 1.814256  ]
-
-
 -  Compute the t-value (tval)
 
 -  Plot the T(n-1) distribution for 100 tvalues values within [0, 10].
@@ -75,24 +68,6 @@ One sample t-test
     plt.fill_between(upper_tval_tvalues, 0, stats.t.pdf(upper_tval_tvalues, n-1), alpha=.8)
     plt.legend()
 
-
-.. parsed-literal::
-
-    2.3970974188695773 0.020044104794361296
-
-
-
-
-.. parsed-literal::
-
-    <matplotlib.legend.Legend at 0x7f85d5f97790>
-
-
-
-
-.. image:: stat_univ_solutions_files/stat_univ_solutions_6_2.png
-
-
 Simple linear regression and correlation (application)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -123,42 +98,12 @@ Conclusion ?
     
     print(df.head())
 
-
-.. parsed-literal::
-
-       low  age  lwt  race  smoke  ptl  ht  ui  ftv   bwt
-    0    0   19  182     2      0    0   0   1    0  2523
-    1    0   33  155     3      0    0   0   0    3  2551
-    2    0   20  105     1      1    0   0   0    1  2557
-    3    0   21  108     1      1    0   0   1    2  2594
-    4    0   18  107     1      1    0   0   1    0  2600
-
-
 .. code:: ipython3
 
     print(stats.pearsonr(df.age, df.bwt))
     print(stats.pearsonr(df.bwt, df.lwt))
     
     plt.plot(df.bwt, df.lwt, 'o')
-
-
-.. parsed-literal::
-
-    (0.09031781366853263, 0.21647524185521977)
-    (0.18573328444909917, 0.010504176115208836)
-
-
-
-
-.. parsed-literal::
-
-    [<matplotlib.lines.Line2D at 0x7f85d42e74d0>]
-
-
-
-
-.. image:: stat_univ_solutions_files/stat_univ_solutions_9_2.png
-
 
 Simple linear regression (maths)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -287,73 +232,6 @@ Compute:
     import sklearn.feature_selection
     #sklearn.feature_selection.f_regression??
     sklearn.feature_selection.f_regression(x.reshape((n, 1)), y)
-
-
-.. parsed-literal::
-
-    y=491.486913 x + 13584.043803  r:0.538886, r-squared:0.290398, p-value:0.000112, std_err:115.823381
-
-
-
-.. image:: stat_univ_solutions_files/stat_univ_solutions_11_1.png
-
-
-.. parsed-literal::
-
-                                OLS Regression Results                            
-    ==============================================================================
-    Dep. Variable:                 salary   R-squared:                       0.290
-    Model:                            OLS   Adj. R-squared:                  0.274
-    Method:                 Least Squares   F-statistic:                     18.01
-    Date:                Fri, 08 Jan 2021   Prob (F-statistic):           0.000112
-    Time:                        14:12:45   Log-Likelihood:                -445.98
-    No. Observations:                  46   AIC:                             896.0
-    Df Residuals:                      44   BIC:                             899.6
-    Df Model:                           1                                         
-    Covariance Type:            nonrobust                                         
-    ==============================================================================
-                     coef    std err          t      P>|t|      [0.025      0.975]
-    ------------------------------------------------------------------------------
-    Intercept   1.358e+04   1051.464     12.919      0.000    1.15e+04    1.57e+04
-    experience   491.4869    115.823      4.243      0.000     258.060     724.914
-    ==============================================================================
-    Omnibus:                       24.503   Durbin-Watson:                   2.180
-    Prob(Omnibus):                  0.000   Jarque-Bera (JB):                6.259
-    Skew:                           0.581   Prob(JB):                       0.0437
-    Kurtosis:                       1.616   Cond. No.                         16.2
-    ==============================================================================
-    
-    Notes:
-    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-
-
-::
-
-
-    ---------------------------------------------------------------------------
-
-    AttributeError                            Traceback (most recent call last)
-
-    <ipython-input-5-508b55ecf4f4> in <module>
-         84 import sklearn.feature_selection
-         85 #sklearn.feature_selection.f_regression??
-    ---> 86 sklearn.feature_selection.f_regression(x.reshape((n, 1)), y)
-    
-
-    ~/anaconda3/lib/python3.7/site-packages/pandas/core/generic.py in __getattr__(self, name)
-       5137             if self._info_axis._can_hold_identifiers_and_holds_name(name):
-       5138                 return self[name]
-    -> 5139             return object.__getattribute__(self, name)
-       5140 
-       5141     def __setattr__(self, name: str, value) -> None:
-
-
-    AttributeError: 'Series' object has no attribute 'reshape'
-
-
-
-.. image:: stat_univ_solutions_files/stat_univ_solutions_11_4.png
-
 
 Multiple regression
 ~~~~~~~~~~~~~~~~~~~
