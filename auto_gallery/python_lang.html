@@ -2111,117 +2111,106 @@ salary]]</p></li>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Import libraries</a></li>
+<li><a class="reference internal" href="#basic-operations">Basic operations</a></li>
+<li><a class="reference internal" href="#data-types">Data types</a><ul>
+<li><a class="reference internal" href="#lists">Lists</a></li>
+<li><a class="reference internal" href="#tuples">Tuples</a></li>
+<li><a class="reference internal" href="#strings">Strings</a></li>
+<li><a class="reference internal" href="#dictionaries">Dictionaries</a></li>
+<li><a class="reference internal" href="#sets">Sets</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#execution-control-statements">Execution control statements</a><ul>
+<li><a class="reference internal" href="#conditional-statements">Conditional statements</a></li>
+<li><a class="reference internal" href="#loops">Loops</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a><ul>
+<li><a class="reference internal" href="#list-comprehensions">List comprehensions</a></li>
+<li><a class="reference internal" href="#set-comprehension">Set comprehension</a></li>
+<li><a class="reference internal" href="#dictionary-comprehension">Dictionary comprehension</a></li>
+<li><a class="reference internal" href="#iterators-itertools-package">Iterators <code class="docutils literal notranslate"><span class="pre">itertools</span></code> package</a></li>
+<li><a class="reference internal" href="#example-use-loop-dictionary-and-set-to-count-words-in-a-sentence">Example, use loop, dictionary and set to count words in a sentence</a></li>
+<li><a class="reference internal" href="#exceptions-handling">Exceptions handling</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#reference-and-copy">Reference and copy</a></li>
+<li><a class="reference internal" href="#example-function-and-dictionary-comprehension">Example: function, and dictionary comprehension</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#regular-expression">Regular expression</a></li>
+<li><a class="reference internal" href="#system-programming">System programming</a><ul>
+<li><a class="reference internal" href="#operating-system-interfaces-os">Operating system interfaces (os)</a></li>
+<li><a class="reference internal" href="#file-input-output">File input/output</a></li>
+<li><a class="reference internal" href="#explore-list-directories">Explore, list directories</a></li>
+<li><a class="reference internal" href="#command-execution-with-subprocess">Command execution with subprocess</a></li>
+<li><a class="reference internal" href="#multiprocessing-and-multithreading">Multiprocessing and multithreading</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
+<li><a class="reference internal" href="#networking">Networking</a><ul>
+<li><a class="reference internal" href="#ftp">FTP</a></li>
+<li><a class="reference internal" href="#http">HTTP</a></li>
+<li><a class="reference internal" href="#sockets">Sockets</a></li>
+<li><a class="reference internal" href="#xmlrpc">xmlrpc</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
+<li><a class="reference internal" href="#style-guide-for-python-programming">Style guide for Python programming</a></li>
+<li><a class="reference internal" href="#documenting">Documenting</a></li>
+<li><a class="reference internal" href="#modules-and-packages">Modules and packages</a><ul>
+<li><a class="reference internal" href="#package">Package</a></li>
+<li><a class="reference internal" href="#module">Module</a></li>
+<li><a class="reference internal" href="#the-search-path">The search path</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#unit-testing">Unit testing</a><ul>
+<li><a class="reference internal" href="#unittest-test-your-code">unittest: test your code</a></li>
+<li><a class="reference internal" href="#doctest-add-unit-tests-in-docstring">Doctest: add unit tests in docstring</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exercises">Exercises</a><ul>
+<li><a class="reference internal" href="#exercise-1-functions">Exercise 1: functions</a></li>
+<li><a class="reference internal" href="#exercise-2-functions-list-loop">Exercise 2: functions + list + loop</a></li>
+<li><a class="reference internal" href="#exercise-3-file-i-o">Exercise 3: File I/O</a></li>
+<li><a class="reference internal" href="#exercise-4-oop">Exercise 4: OOP</a></li>
+</ul>
+</li>
+</ul>
 
-
-
-
-
-
-
-
-
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/auto_gallery/python_lang.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html">Introduction to Python language</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#overview-of-python-ecosystem-for-data-science">Overview of Python ecosystem for data-science</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#development-environment">Development Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#package-environments-dependency-management">Package &amp; Environments Dependency Management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#development-with-integrated-development-environment-ide-and-jupyterlab">Development with Integrated Development Environment (IDE) and JupyterLab</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Import libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#basic-operations">Basic operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#data-types">Data types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#execution-control-statements">Execution control statements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#regular-expression">Regular expression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#system-programming">System programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#networking">Networking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#style-guide-for-python-programming">Style guide for Python programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#documenting">Documenting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#modules-and-packages">Modules and packages</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#unit-testing">Unit testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#exercises">Exercises</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="data_numpy.html">Numpy: Arrays and Matrices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data_pandas.html">Pandas: data manipulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_manipulation/data_visualization.html">Data visualization: matplotlib &amp; seaborn</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/numerical_differentiation_integration.html">Numerical Differentiation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/numerical_differentiation_integration.html#numerical-integration">Numerical Integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/time_series.html">Time Series</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/optim_gradient_descent.html">Optimization (Minimization) by Gradient Descent</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate Statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stat_univ_lab_brain-volume.html">Hands-On: Brain volumes study</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../statistics/lmm/lmm.html">Linear Mixed Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate Statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_montecarlo.html">Resampling and Monte Carlo Methods</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../ml_unsupervised/introduction_to_ml.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ml_unsupervised/linear_dimensionality_reduction.html">Linear Dimensionality Reduction and Feature Extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ml_unsupervised/manifold_learning.html">Manifold learning: non-linear dimension reduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ml_unsupervised/clustering.html">Clustering</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../ml_supervised/overfitting.html">Overfitting and Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ml_supervised/linear_regression.html">Linear Models for Regression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ml_supervised/linear_classification.html">Linear Models for Classification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="kernel_svm.html">Non-Linear Kernel Methods and Support Vector Machines (SVM)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ensemble_learning.html">Non-Linear Ensemble Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ml_lab_face_recognition.html">Hands-On: Faces recognition using various learning models</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="resampling.html">Out-of-sample Validation for Model Selection and Evaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="resampling.html#random-permutations-sample-the-null-distribution">Random Permutations: sample the null distribution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="resampling.html#bootstrapping">Bootstrapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="resampling.html#parallel-computation">Parallel Computation</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_pytorch.html">Multilayer Perceptron (MLP)</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional Neural Networks (CNNs)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn-pretraining_pytorch.html">Pretraining and Transfer Learning</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../nlp/nlp_bow.html">Bag-of-Words Models</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../introduction/introduction_python_for_datascience.html" title="previous chapter">Introduction to Python language</a></li>
-      <li>Next: <a href="data_numpy.html" title="next chapter">Numpy: Arrays and Matrices</a></li>
-  </ul></li>
-</ul>
-</div>
-
-
-
-
-
-
-
-
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>

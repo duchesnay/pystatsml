@@ -77,115 +77,33 @@ $(document).ready( function () {
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
-
-
-
-
-
-
-
-
-
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ml_unsupervised/sg_execution_times.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </search>
-<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html">Introduction to Python language</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#overview-of-python-ecosystem-for-data-science">Overview of Python ecosystem for data-science</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#development-environment">Development Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#package-environments-dependency-management">Package &amp; Environments Dependency Management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/introduction_python_for_datascience.html#development-with-integrated-development-environment-ide-and-jupyterlab">Development with Integrated Development Environment (IDE) and JupyterLab</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#unit-testing">Unit testing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/data_numpy.html">Numpy: Arrays and Matrices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/data_pandas.html">Pandas: data manipulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_manipulation/data_visualization.html">Data visualization: matplotlib &amp; seaborn</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/numerical_differentiation_integration.html">Numerical Differentiation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/numerical_differentiation_integration.html#numerical-integration">Numerical Integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/time_series.html">Time Series</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../numerical_methods/optim_gradient_descent.html">Optimization (Minimization) by Gradient Descent</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_univ.html">Univariate Statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Hands-On: Brain volumes study</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../statistics/lmm/lmm.html">Linear Mixed Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_multiv.html">Multivariate Statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../statistics/stat_montecarlo.html">Resampling and Monte Carlo Methods</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction_to_ml.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="linear_dimensionality_reduction.html">Linear Dimensionality Reduction and Feature Extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="manifold_learning.html">Manifold learning: non-linear dimension reduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../ml_supervised/overfitting.html">Overfitting and Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ml_supervised/linear_regression.html">Linear Models for Regression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ml_supervised/linear_classification.html">Linear Models for Classification</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/kernel_svm.html">Non-Linear Kernel Methods and Support Vector Machines (SVM)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ensemble_learning.html">Non-Linear Ensemble Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Hands-On: Faces recognition using various learning models</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/resampling.html">Out-of-sample Validation for Model Selection and Evaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/resampling.html#random-permutations-sample-the-null-distribution">Random Permutations: sample the null distribution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/resampling.html#bootstrapping">Bootstrapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/resampling.html#parallel-computation">Parallel Computation</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_pytorch.html">Multilayer Perceptron (MLP)</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional Neural Networks (CNNs)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn-pretraining_pytorch.html">Pretraining and Transfer Learning</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../nlp/nlp_bow.html">Bag-of-Words Models</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-
-
-
-
-
-
-
-
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
