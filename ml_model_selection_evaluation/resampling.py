@@ -1,10 +1,16 @@
 '''
-Out-of-sample validation for model selection and evaluation
+Out-of-sample Validation for Model Selection and Evaluation
 ===========================================================
 
 `Source scikit-learn model selection and evaluation <https://scikit-learn.org/stable/model_selection.html>`_
 '''
 
+from sklearn.base import is_classifier, clone
+from joblib import Parallel, delayed
+from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import cross_validate
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -131,7 +137,6 @@ print("Test R2: %.2f" % metrics.r2_score(y_test, y_pred_test))
 #
 # **CV with explicit loop:**
 
-from sklearn.model_selection import KFold
 
 estimator = lm.Ridge(alpha=10)
 
@@ -151,7 +156,6 @@ print("Test  r2:%.2f" % np.mean(r2_test))
 #
 # `cross_val_score <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html>`_: single metric
 
-from sklearn.model_selection import cross_val_score
 
 scores = cross_val_score(estimator=estimator, X=X, y=y, cv=5)
 print("Test  r2:%.2f" % scores.mean())
@@ -164,7 +168,6 @@ print("Test  r2:%.2f" % scores.mean())
 # %%
 # `cross_validate <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html>`_: multi metric, + time, etc.
 
-from sklearn.model_selection import cross_validate
 
 scores = cross_validate(estimator=mod, X=X, y=y, cv=cv,
                         scoring=['r2', 'neg_mean_absolute_error'])
@@ -189,7 +192,6 @@ print("Test R2:%.2f; MAE:%.2f" % (scores['test_r2'].mean(),
 #
 # **CV with explicit loop**:
 
-from sklearn.model_selection import StratifiedKFold
 
 X, y = datasets.make_classification(n_samples=100, n_features=100, shuffle=True,
                                     n_informative=10, random_state=42)
@@ -203,8 +205,10 @@ bacc, auc = [], []
 
 for train, test in cv.split(X, y):
     mod.fit(X[train, :], y[train])
-    bacc.append(metrics.roc_auc_score(y[test], mod.decision_function(X[test, :])))
-    auc.append(metrics.balanced_accuracy_score(y[test], mod.predict(X[test, :])))
+    bacc.append(metrics.roc_auc_score(
+        y[test], mod.decision_function(X[test, :])))
+    auc.append(metrics.balanced_accuracy_score(
+        y[test], mod.predict(X[test, :])))
 
 print("Test AUC:%.2f; bACC:%.2f" % (np.mean(bacc), np.mean(auc)))
 
@@ -224,6 +228,7 @@ def balanced_acc(estimator, X, y, **kwargs):
     """Balanced acuracy scorer."""
     return metrics.recall_score(y, estimator.predict(X), average=None).mean()
 
+
 scores = cross_val_score(estimator=mod, X=X, y=y, cv=cv,
                          scoring=balanced_acc)
 print("Test  bACC:%.2f" % scores.mean())
@@ -232,7 +237,6 @@ print("Test  bACC:%.2f" % scores.mean())
 # %%
 # `cross_validate <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html>`_: multi metric, + time, etc.
 
-from sklearn.model_selection import cross_validate
 
 scores = cross_validate(estimator=mod, X=X, y=y, cv=cv,
                         scoring=['balanced_accuracy', 'roc_auc'])
@@ -247,7 +251,7 @@ print("Test AUC:%.2f; bACC:%.2f" % (scores['test_roc_auc'].mean(),
 #
 # Combine CV and grid search:
 # `GridSearchCV <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html>`_
-# perform hyperparameter tuning (model selection) by systematically searching the best combination of hyperparameters 
+# perform hyperparameter tuning (model selection) by systematically searching the best combination of hyperparameters
 # evaluating all possible combinations (over a grid of possible values) using cross-validation:
 #
 # 1. Define the model: Choose a machine learning model (e.g., SVM, Random Forest).
@@ -291,8 +295,9 @@ scores = cross_validate(estimator=mod, X=X, y=y, cv=cv_outer,
                         scoring=['balanced_accuracy', 'roc_auc'])
 
 print("Test AUC:%.2f; bACC:%.2f, Time: %.2fs" % (scores['test_roc_auc'].mean(),
-                                        scores['test_balanced_accuracy'].mean(),
-                                        scores['fit_time'].sum()))
+                                                 scores['test_balanced_accuracy'].mean(
+),
+    scores['fit_time'].sum()))
 
 # %%
 # Models with built-in cross-validation
@@ -313,7 +318,7 @@ print("Test  ACC:%.2f" % scores.mean())
 # **Regression**
 
 X, y, coef = datasets.make_regression(n_samples=50, n_features=100, noise=10,
-                         n_informative=2, random_state=42, coef=True)
+                                      n_informative=2, random_state=42, coef=True)
 
 print("== Ridge (L2 penalty) ==")
 model = lm.RidgeCV(cv=3)
@@ -384,7 +389,8 @@ for perm_i in range(1, nperm + 1):
 
 # One-tailed empirical p-value
 pval_pred_perm = np.sum(scores_perm >= scores_perm[0]) / scores_perm.shape[0]
-pval_coef_perm = np.sum(coefs_perm >= coefs_perm[0, :], axis=0) / coefs_perm.shape[0]
+pval_coef_perm = np.sum(
+    coefs_perm >= coefs_perm[0, :], axis=0) / coefs_perm.shape[0]
 
 print("R2 p-value: %.3f" % pval_pred_perm)
 print("Coeficients p-values:", np.round(pval_coef_perm, 3))
@@ -403,6 +409,7 @@ print(pval_coef_perm_tmax)
 # Coeffitients 0 and 1 are significantly different from 0.
 #
 
+
 def hist_pvalue(perms, ax, name):
     """Plot statistic distribution as histogram.
 
@@ -415,17 +422,19 @@ def hist_pvalue(perms, ax, name):
     pval = np.sum(perms >= perms[0]) / perms.shape[0]
     weights = np.ones(perms.shape[0]) / perms.shape[0]
     ax.hist([perms[perms >= perms[0]], perms], histtype='stepfilled',
-             bins=100, label="p-val<%.3f" % pval,
-             weights=[weights[perms >= perms[0]], weights])
-    ax.axvline(x=perms[0], color="k", linewidth=2)#, label="observed statistic")
+            bins=100, label="p-val<%.3f" % pval,
+            weights=[weights[perms >= perms[0]], weights])
+    # , label="observed statistic")
+    ax.axvline(x=perms[0], color="k", linewidth=2)
     ax.set_ylabel(name)
     ax.legend()
     return ax
 
+
 n_coef = coefs_perm.shape[1]
 fig, axes = plt.subplots(n_coef, 1, figsize=(12, 9))
 for i in range(n_coef):
-    hist_pvalue( coefs_perm[:, i], axes[i], str(i))
+    hist_pvalue(coefs_perm[:, i], axes[i], str(i))
 
 _ = axes[-1].set_xlabel("Coefficient distribution under null hypothesis")
 
@@ -445,7 +454,7 @@ _ = axes[-1].set_xlabel("Coefficient distribution under null hypothesis")
 #
 # Bootstrapping is a statistical technique which consists in generating sample (called bootstrap samples) from an initial dataset of size *N* by randomly drawing with replacement *N* observations. It provides sub-samples with the same distribution than the original dataset. It aims to:
 #
-# 1. Assess the variability (standard error, [confidence intervals.](https://sebastianraschka.com/blog/2016/model-evaluation-selection-part2.html#the-bootstrap-method-and-empirical-confidence-intervals)) of performances scores or estimated parameters (see Efron et al. 1986).
+# 1. Assess the variability (standard error, `Confidence Intervals (CI) <https://sebastianraschka.com/blog/2016/model-evaluation-selection-part2.html#the-bootstrap-method-and-empirical-confidence-intervals>`_ of performances scores or estimated parameters (see Efron et al. 1986).
 # 2. Regularize model by fitting several models on bootstrap samples and averaging their predictions (see Baging and random-forest).
 #
 # A great advantage of bootstrap is its simplicity. It is a straightforward way to derive estimates of standard errors and confidence intervals for complex estimators of complex parameters of the distribution, such as percentile points, proportions, odds ratio, and correlation coefficients.
@@ -483,7 +492,8 @@ for boot_i in range(nboot):
 scores_boot = pd.DataFrame(scores_boot, columns=scores_names)
 scores_stat = scores_boot.describe(percentiles=[.975, .5, .025])
 
-print("r-squared: Mean=%.2f, SE=%.2f, CI=(%.2f %.2f)" %      tuple(scores_stat.loc[["mean", "std", "2.5%", "97.5%"], "r2"]))
+print("r-squared: Mean=%.2f, SE=%.2f, CI=(%.2f %.2f)" %
+      tuple(scores_stat.loc[["mean", "std", "2.5%", "97.5%"], "r2"]))
 
 coefs_boot = pd.DataFrame(coefs_boot)
 coefs_stat = coefs_boot.describe(percentiles=[.975, .5, .025])
@@ -500,71 +510,66 @@ ax = sns.violinplot(x="Variable", y="Coef. distribution", data=staked)
 _ = ax.axhline(0, ls='--', lw=2, color="black")
 
 # %%
-# Parallel computation with joblib
-# --------------------------------
+# Parallel Computation
+# ====================
 #
 # Dataset
 
-import numpy as np
-from sklearn import datasets
-import sklearn.linear_model as lm
-import sklearn.metrics as metrics
-from sklearn.model_selection import StratifiedKFold
-X, y = datasets.make_classification(n_samples=20, n_features=5, n_informative=2, random_state=42)
+X, y = datasets.make_classification(
+    n_samples=20, n_features=5, n_informative=2, random_state=42)
 cv = StratifiedKFold(n_splits=5)
 
 
 # %%
-# Use `cross_validate` function
+# Classic sequential computation of CV:
 
-from sklearn.model_selection import cross_validate
+estimator = lm.LogisticRegression(C=1, solver='lbfgs')
+y_test_pred_seq = np.zeros(len(y))  # Store predictions in the original order
+coefs_seq = list()
+for train, test in cv.split(X, y):
+    X_train, X_test, y_train, y_test = X[train,
+                                         :], X[test, :], y[train], y[test]
+    estimator.fit(X_train, y_train)
+    y_test_pred_seq[test] = estimator.predict(X_test)
+    coefs_seq.append(estimator.coef_)
+
+test_accs = [metrics.accuracy_score(
+    y[test], y_test_pred_seq[test]) for train, test in cv.split(X, y)]
+
+# Accuracy
+print(np.mean(test_accs), test_accs)
+
+# Coef
+coefs_cv = np.array(coefs_seq)
+print("Mean of the coef")
+print(coefs_cv.mean(axis=0).round(2))
+print("Std Err of the coef")
+print((coefs_cv.std(axis=0) / np.sqrt(coefs_cv.shape[0])).round(2))
+
+# %%
+# Parallelization using `cross_validate <https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html>`_
+# function
 
 estimator = lm.LogisticRegression(C=1, solver='lbfgs')
 cv_results = cross_validate(estimator, X, y, cv=cv, n_jobs=5)
 print(np.mean(cv_results['test_score']), cv_results['test_score'])
 
-
 # %%
-# Sequential computation
-#
-# If we want have full control of the operations performed within each fold (retrieve the models parameters, etc.). We would like to parallelize the folowing sequetial code:
+# Parallel computation with `joblib <https://joblib.readthedocs.io/en/stable/>`_:
 
-# In[22]:
+# %% 1. Callback function
 
-
-estimator = lm.LogisticRegression(C=1, solver='lbfgs')
-y_test_pred_seq = np.zeros(len(y)) # Store predictions in the original order
-coefs_seq = list()
-for train, test in cv.split(X, y):
-    X_train, X_test, y_train, y_test = X[train, :], X[test, :], y[train], y[test]
-    estimator.fit(X_train, y_train)
-    y_test_pred_seq[test] = estimator.predict(X_test)
-    coefs_seq.append(estimator.coef_)
-
-test_accs = [metrics.accuracy_score(y[test], y_test_pred_seq[test]) for train, test in cv.split(X, y)]
-print(np.mean(test_accs), test_accs)
-coefs_cv = np.array(coefs_seq)
-print(coefs_cv)
-
-print(coefs_cv.mean(axis=0))
-print("Std Err of the coef")
-print(coefs_cv.std(axis=0) / np.sqrt(coefs_cv.shape[0]))
-
-
-# %%
-# Parallel computation with joblib
-# --------------------------------
-
-
-from joblib import Parallel, delayed
-from sklearn.base import is_classifier, clone
 
 def _split_fit_predict(estimator, X, y, train, test):
-    X_train, X_test, y_train, y_test = X[train, :], X[test, :], y[train], y[test]
+    X_train, X_test, y_train, y_test = X[train,
+                                         :], X[test, :], y[train], y[test]
     estimator.fit(X_train, y_train)
     return [estimator.predict(X_test), estimator.coef_]
 
+
 estimator = lm.LogisticRegression(C=1, solver='lbfgs')
+
+# %% 2. Execution
 
 parallel = Parallel(n_jobs=5)
 cv_ret = parallel(
@@ -574,18 +579,19 @@ cv_ret = parallel(
 
 y_test_pred_cv, coefs_cv = zip(*cv_ret)
 
-# Retrieve predictions in the original order
+# %% 3. Retrieve results
+
 y_test_pred = np.zeros(len(y))
 for i, (train, test) in enumerate(cv.split(X, y)):
     y_test_pred[test] = y_test_pred_cv[i]
 
-test_accs = [metrics.accuracy_score(y[test], y_test_pred[test]) for train, test in cv.split(X, y)]
+test_accs = [metrics.accuracy_score(
+    y[test], y_test_pred[test]) for train, test in cv.split(X, y)]
 print(np.mean(test_accs), test_accs)
 
 
 # %%
-# Test same predictions and same coeficients
+# Test same predictions and same coefficients
 
 assert np.all(y_test_pred == y_test_pred_seq)
 assert np.allclose(np.array(coefs_cv).squeeze(), np.array(coefs_seq).squeeze())
-

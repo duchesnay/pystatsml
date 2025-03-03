@@ -19,57 +19,74 @@ Courses are available in three formats:
 All notebooks and python files are converted into `rst` format and then assembled together using sphinx.
 
 Directories and main files:
-
     introduction/
-    ├── machine_learning.rst
-    └── python_ecosystem.rst
+    └── introduction_python_for_datascience.rst
 
-    python_lang/                        # (Python language)
-    ├── python_lang.py # (main file)
+    python_lang/
+    ├── python_lang.py
     └── python_lang_solutions.py
 
-    scientific_python/
-    ├── matplotlib.ipynb
-    ├── scipy_numpy.py
-    ├── scipy_numpy_solutions.py
-    ├── scipy_pandas.py
-    └── scipy_pandas_solutions.py
+    data_manipulation/
+    ├── data_numpy.py
+    ├── data_numpy_solutions.py
+    ├── data_pandas.py
+    ├── data_pandas_solutions.py
+    └── data_visualization.ipynb
 
-    statistics/                         # (Statistics)
-    ├── stat_multiv.ipynb               # (multivariate statistics)
-    ├── stat_univ.ipynb                 # (univariate statistics)
-    ├── stat_univ_solutions.ipynb
-    ├── stat_univ_lab01_brain-volume.py # (lab)
-    ├── stat_univ_solutions.ipynb
-    └── time_series.ipynb
-
-    machine_learning/                   # (Machine learning)
-    ├── clustering.ipynb
-    ├── decomposition.ipynb
-    ├── decomposition_solutions.ipynb
-    ├── linear_classification.ipynb
-    ├── linear_regression.ipynb
-    ├── manifold.ipynb
-    ├── non_linear_prediction.ipynb
-    ├── resampling.ipynb
-    ├── resampling_solution.py
-    └── sklearn.ipynb
-
-    optimization/
+    numerical_methods/
     ├── optim_gradient_descent.ipynb
-    └── optim_gradient_descent_lab.ipynb
+    ├── numerical_differentiation_integration.ipynb
+    ├── symbolic_maths.ipynb
+    ├── symbolic_maths.rst
+    ├── time_series.ipynb
+    └── time_series.rst
+
+    statistics/
+    ├── stat_univ.ipynb
+    ├── stat_univ_solutions.ipynb
+    ├── stat_multiv.ipynb
+    ├── stat_multiv_solutions.py
+    ├── lmm
+    │   └── lmm.ipynb
+    └── stat_montecarlo.ipynb
+
+    ml_unsupervised/
+    ├── clustering.ipynb
+    ├── introduction_to_ml.rst
+    ├── linear_dimensionality_reduction.ipynb
+    ├── linear_dimensionality_reduction_solutions.ipynb
+    ├── manifold_learning.ipynb
+    └── manifold_learning_solutions.ipynb
+
+    ml_supervised/
+    ├── overfitting.ipynb
+    ├── ensemble_learning.py
+    ├── kernel_svm.py
+    ├── linear_classification.ipynb
+    └── linear_regression.ipynb
 
     deep_learning/
     ├── dl_backprop_numpy-pytorch-sklearn.ipynb
+    ├── dl_mlp_pytorch.ipynb
     ├── dl_cnn_cifar10_pytorch.ipynb
-    ├── dl_mlp_mnist_pytorch.ipynb
-    └── dl_transfer-learning_cifar10-ants-
+    └── dl_cnn-pretraining_pytorch.rst
 
 
 Installation for students
 -------------------------
 
-Install Anaconda at https://www.anaconda.com/ with python >= 3.
+Clone the repository
+~~~~~~~~~~~~~~~~~~~~
+
+```
+git clone https://github.com/duchesnay/pystatsml.git
+cd pystatsml
+```
+
+Using Anaconda
+~~~~~~~~~~~~~~
+
+Install [Anaconda](https://www.anaconda.com) with python >= 3.
 
 Standard user (student) should install the required data analysis packages.
 Create and activate the `pystatsml_student` environment:
@@ -78,6 +95,49 @@ Create and activate the `pystatsml_student` environment:
 conda env create -f environment_student.yml
 conda activate pystatsml_student
 ```
+
+Usinf Pixi
+~~~~~~~~~~
+
+Install [Pixi](https://pixi.sh/latest/)
+
+Linux & macOS
+
+```
+curl -fsSL https://pixi.sh/install.sh | bash
+```
+
+Windows
+
+```
+iwr -useb https://pixi.sh/install.ps1 | iex
+```
+
+
+Install dependencies contained in pixi.toml file (within the project directory)
+
+```
+pixi install
+```
+
+Activate an environment (within the project directory)
+
+```
+pixi shell
+```
+
+What’s in the environment?
+
+```
+pixi list
+```
+
+Deactivating an environment
+
+```
+exit
+```
+
 
 Installation for teachers: to build the documents
 -------------------------------------------------

@@ -3,17 +3,24 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-=================================
-Important links:
-=================================
 
 .. toctree::
     :maxdepth: 2
+    :caption: Table of Contents
+
+    index.rst
+
+===============
+Important links
+===============
 
 - `Github <https://github.com/duchesnay/pystatsml>`_
 - `Latest pdf <https://raw.github.com/duchesnay/data/master/pdf/StatisticsMachineLearningPython.pdf>`_
 - `Official deposit for citation <https://hal.archives-ouvertes.fr/hal-03038776>`_.
 - `Web page <https://duchesnay.github.io/pystatsml/>`_
+
+.. toctree::
+    :maxdepth: 2
 
 =================================
 Python ecosystem for data science
@@ -101,7 +108,7 @@ Resampling methods
 .. toctree::
     :maxdepth: 1
 
-    auto_gallery/ml_resampling.rst
+    auto_gallery/resampling.rst
 
 
 ===========================
@@ -140,4 +147,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

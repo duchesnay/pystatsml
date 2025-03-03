@@ -158,7 +158,13 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
+#html_sidebars = { '**': ['localtoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
+html_sidebars = { '**': ['localtoc.html', 'sourcelink.html', 'searchbox.html', 'searchbox.html'] }
 
+# html_sidebars = {
+    
+#    '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html']
+# }
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
 #html_additional_pages = {}
@@ -300,13 +306,11 @@ texinfo_documents = [
 
 sphinx_gallery_conf = {
     # path to your examples scripts
-    #'examples_dirs' : ['python_lang', 'data_manipulation', 'statistics', 'machine_learning', 'labs'],
-    'examples_dirs' : ['python_lang', 'data_manipulation', 'statistics', 'ml_supervised', 'labs', 'nlp'],
+    'examples_dirs' : ['python_lang', 'data_manipulation', 'statistics', 'ml_supervised', 'ml_model_selection_evaluation', 'labs', 'nlp'],
     'filename_pattern': '/',
     'ignore_pattern': r'__init__\.py',
     # path where to save gallery generated examples
-    #'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery'],
-    'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery'],
+    'gallery_dirs'  : ['auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery', 'auto_gallery'],
     'backreferences_dir': None}
 
 # -- Options for docxbuilder -----------------------------------------------
