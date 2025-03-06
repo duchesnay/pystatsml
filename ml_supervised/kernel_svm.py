@@ -60,7 +60,7 @@ plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
 #
 #    f(x) = \text{sign} \left(\sum_i^N \alpha_i~y_i~K(x_i, x)\right).
 #
-# .. figure:: ../images/svm_rbf_kernel_mapping_and_decision_function.png
+# .. figure:: ../ml_supervised/images/svm_rbf_kernel_mapping_and_decision_function.png
 #    :alt: Support Vector Machines.
 
 

@@ -5,12 +5,17 @@ Python main features
 --------------------
 
 - Python is popular `Google trends <https://trends.google.com/trends/explore?cat=31&date=all&q=python,R,matlab,spss,stata>`_ (Python vs. R, Matlab, SPSS, Stata).
-- Python is interpreted: source files ``.py`` are executed by the interpreter which is executed by the processor.
+- Python is interpreted: source files ``.py`` are translated into an intermediate representaion whic is executed by the interpreter which is executed by the processor.
   Conversely, to interpreted languages, compiled languages, such as C or C++, rely on two steps: (i) source files are compiled into a binary program. (ii) binaries are executed by the CPU.
   directly.
 - Python integrates an automatic memory management mechanism: the **Garbage Collector (GC)**. (do not prevent from memory leak).
 - Python is a dynamically-typed language (Java is statically typed).
 - Efficient data manipulation is obtained using libraries (`Numpy, Scipy, Pytroch`) executed in compiled code.
+
+.. image:: images/interpreted_vs_compiled.png
+   :scale: 100
+   :align: center
+   :alt: Python is interpreted
 
 Development process
 -------------------

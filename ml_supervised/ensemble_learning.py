@@ -62,7 +62,7 @@ X_test = scaler.transform(X_test)
 # Each internal node represents a "test" on an feature resulting on the split of the current sample. At each step the algorithm selects the feature and a cutoff value that maximises a given metric. Different metrics exist for regression tree (target is continuous) or classification tree (the target is qualitative).
 # This process is repeated on each derived subset in a recursive manner called recursive partitioning. The recursion is completed when the subset at a node has all the same value of the target variable, or when splitting no longer adds value to the predictions. This general principle is implemented by many recursive partitioning tree algorithms.
 #
-# .. figure:: ../images/classification_tree.png
+# .. figure:: ../ml_supervised/images/classification_tree.png
 #    :width: 400
 #    :alt: Classification tree.
 #
@@ -116,7 +116,7 @@ print("bAcc: %.2f, AUC: %.2f " % (
 # A random forest is a meta estimator that fits a number of **decision tree learners** on various sub-samples of the dataset and use averaging to improve the predictive accuracy and control over-fitting.
 # Random forest models reduce the risk of overfitting by introducing randomness by:
 #
-# .. figure:: ../images/random_forest.png
+# .. figure:: ../ml_supervised/images/random_forest.png
 #    :width: 300
 #    :alt: Random forest.
 #
@@ -167,7 +167,7 @@ print("bAcc: %.2f, AUC: %.2f " % (
 #   fitting the learners. Values smaller than 1 leads to **Stochastic Gradient Boosting**.
 #   It thus controls for over-fitting reducing variance and increasing bias.
 #
-# .. figure:: ../images/gradient_boosting.png
+# .. figure:: ../ml_supervised/images/gradient_boosting.png
 #    :width: 500
 #    :alt: Gradient boosting.
 
