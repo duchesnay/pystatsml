@@ -13,7 +13,7 @@ Python main features
 - Efficient data manipulation is obtained using libraries (`Numpy, Scipy, Pytroch`) executed in compiled code.
 
 .. image:: images/interpreted_vs_compiled.png
-   :scale: 100
+   :scale: 80
    :align: center
    :alt: Python is interpreted
 
@@ -55,7 +55,7 @@ Overview of Python ecosystem for data-science
 .. RST https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html
 
 .. image:: images/python_ecosystem.png
-   :scale: 100
+   :scale: 80
    :align: center
 
 
