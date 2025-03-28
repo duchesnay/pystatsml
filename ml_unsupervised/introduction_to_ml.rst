@@ -17,3 +17,6 @@ Machine learning can adress various type of problems, including:
     a. **Dimensionality reduction** (or feature extraction) in machine learning refers to techniques that reduce the number of input variables or features in a dataset while preserving essential information and exploiting redundant or irrelevant features. It can be helpful for visualization or analysis of high-dimension data.
     b. **Clustering** groups similar data points together based on their features. It helps identify patterns or structures within the data by organizing it into clusters, where points within the same cluster are more similar to each other than to those in different clusters.
 
+.. image:: images/ml_overview.png
+  :width: 15cm
+  :alt: Overview of Machine Learning algorithms.
