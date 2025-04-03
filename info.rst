@@ -20,6 +20,7 @@ Upload to github
 "$WD/build/html" contains the pystsamsl website. Now we start to upload to github server. Clone from github to a temporary directory, and checkout gh-pages branch
 
 First time
+
 ```
 WD=~/git/pystatsml
 cd ~/git
@@ -44,6 +45,7 @@ firefox  index.html
 ```
 
 Update
+
 ```
 WD=~/git/pystatsml
 cd $WD
