@@ -1,26 +1,50 @@
-Univariate statistics
+Univariate Statistics
 =====================
 
 Basics univariate statistics are required to explore dataset:
 
--  Discover associations between a variable of interest and potential
-   predictors. It is strongly recommended to start with simple
-   univariate methods before moving to complex multivariate predictors.
+- Discover associations between a variable of interest and potential
+  predictors. It is strongly recommended to start with simple univariate
+  methods before moving to complex multivariate predictors.
 
--  Assess the prediction performances of machine learning predictors.
+- Assess the prediction performances of machine learning predictors.
 
--  Most of the univariate statistics are based on the linear model which
-   is one of the main model in machine learning.
+- Most of the univariate statistics are based on the linear model which
+  is one of the main model in machine learning.
 
 Libraries
 ---------
 
-**Data**
+**Statistics**
+
+- Descriptive statistics and distributions:
+  `Numpy <https://numpy.org/doc/stable/reference/routines.statistics.html>`__
+- Distributions and tests:
+  `scipy.stats <https://docs.scipy.org/doc/scipy/reference/tutorial/stats.html>`__
+- Advanced statistics (linear models, tests, time series):
+  `Statsmodels <https://www.statsmodels.org/>`__, see also `Statsmodels
+  API <https://www.statsmodels.org/stable/api.html>`__:
+
+  - ``statsmodels.api``: Imported using
+    ``import statsmodels.api as sm``.
+  - ``statsmodels.formula.api``: A convenience interface for specifying
+    models using formula strings and DataFrames. Canonically imported
+    using ``import statsmodels.formula.api as smf``
+  - ``statsmodels.tsa.api``: Time-series models and methods. Canonically
+    imported using ``import statsmodels.tsa.api as tsa``.
 
 .. code:: ipython3
 
+    # Manipulate data
     import numpy as np
     import pandas as pd
+    
+    # Statistics
+    import scipy.stats
+    import statsmodels.api as sm
+    #import statsmodels.stats.api as sms
+    import statsmodels.formula.api as smf
+    from statsmodels.stats.stattools import jarque_bera
 
 **Plots**
 
@@ -28,34 +52,12 @@ Libraries
 
     import matplotlib.pyplot as plt
     import seaborn as sns
-
-**Statistics**
-
--  Basic:
-   `scipy.stats <https://docs.scipy.org/doc/scipy/reference/tutorial/stats.html>`__
--  Advanced: `statsmodels <https://www.statsmodels.org/>`__.
-   `statsmodels API <https://www.statsmodels.org/stable/api.html>`__:
-
-   -  ``statsmodels.api``: Cross-sectional models and methods.
-      Canonically imported using ``import statsmodels.api as sm``.
-   -  ``statsmodels.formula.api``: A convenience interface for
-      specifying models using formula strings and DataFrames.
-      Canonically imported using import
-      ``statsmodels.formula.api as smf``
-   -  ``statsmodels.tsa.api``: Time-series models and methods.
-      Canonically imported using ``import statsmodels.tsa.api as tsa``.
-
-.. code:: ipython3
-
-    import scipy.stats
-    import statsmodels.api as sm
-    #import statsmodels.stats.api as sms
-    import statsmodels.formula.api as smf
-    from statsmodels.stats.stattools import jarque_bera 
-
-.. code:: ipython3
-
-    %matplotlib inline
+    import pystatsml.plot_utils
+    
+    # Plot parameters
+    plt.style.use('seaborn-v0_8-whitegrid')
+    fig_w, fig_h = plt.rcParams.get('figure.figsize')
+    plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
 
 **Datasets**
 
@@ -76,9 +78,19 @@ Iris
     # Load iris datset
     iris = sm.datasets.get_rdataset("iris").data
     iris.columns = [s.replace('.', '') for s in iris.columns]
+    iris.columns
 
-Estimators of the main statistical measures
--------------------------------------------
+
+
+
+.. parsed-literal::
+
+    Index(['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth', 'Species'], dtype='object')
+
+
+
+Descriptive Statistics
+----------------------
 
 Mean
 ~~~~
@@ -104,9 +116,9 @@ The estimator :math:`\bar{x}` on a sample of size :math:`n`:
 
 :math:`\bar{x}` is itself a random variable with properties:
 
--  :math:`E(\bar{x}) = \bar{x}`,
+- :math:`E(\bar{x}) = \bar{x}`,
 
--  :math:`\operatorname{Var}(\bar{x}) = \frac{\operatorname{Var}(X)}{n}`.
+- :math:`\operatorname{Var}(\bar{x}) = \frac{\operatorname{Var}(X)}{n}`.
 
 Variance
 ~~~~~~~~
@@ -200,17 +212,17 @@ It is most commonly considered for the mean with the estimator
          &= \frac{\sigma_x}{\sqrt{n}}.
    \end{align}
 
-Descriptives statistics with numpy
+Descriptives statistics with Numpy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  Generate 2 random samples: :math:`x \sim N(1.78, 0.1)` and
-   :math:`y \sim N(1.66, 0.1)`, both of size 10.
+- Generate 2 random samples: :math:`x \sim N(1.78, 0.1)` and
+  :math:`y \sim N(1.66, 0.1)`, both of size 10.
+- Compute :math:`\bar{x}, \sigma_x, \sigma_{xy}` (``xbar, xvar, xycov``)
+  using only the ``np.sum()`` operation.
 
--  Compute :math:`\bar{x}, \sigma_x, \sigma_{xy}`
-   (``xbar, xvar, xycov``) using only the ``np.sum()`` operation.
-   Explore the ``np.`` module to find out which numpy functions performs
-   the same computations and compare them (using ``assert``) with your
-   previous results.
+Explore the ``np.`` module to find out which Numpy functions performs
+the same computations and compare them (using ``assert``) with your
+previous results.
 
 Caution! By default ``np.var()`` used the biased estimator (with
 ddof=0). Set ddof=1 to use unbiased estimator.
@@ -218,6 +230,7 @@ ddof=0). Set ddof=1 to use unbiased estimator.
 .. code:: ipython3
 
     n = 10
+    np.random.seed(seed=42)  # make the example reproducible
     x = np.random.normal(loc=1.78, scale=.1, size=n)
     y = np.random.normal(loc=1.66, scale=.1, size=n)
     
@@ -226,7 +239,11 @@ ddof=0). Set ddof=1 to use unbiased estimator.
     
     xvar = np.var(x, ddof=1)
     assert xvar == np.sum((x - xbar) ** 2) / (n - 1)
-    
+
+Covariance
+
+.. code:: ipython3
+
     xycov = np.cov(x, y)
     print(xycov)
     
@@ -238,11 +255,11 @@ ddof=0). Set ddof=1 to use unbiased estimator.
 
 .. parsed-literal::
 
-    [[ 0.01025944 -0.00661557]
-     [-0.00661557  0.0167    ]]
+    [[ 0.00522741 -0.00060351]
+     [-0.00060351  0.00570515]]
 
 
-Descriptives statistics on Iris dataset
+Descriptives Statistics on Iris Dataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **With Pandas**
@@ -251,7 +268,7 @@ Columns’ means
 
 .. code:: ipython3
 
-    iris.mean()
+    iris[['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth']].mean()
 
 
 
@@ -270,7 +287,7 @@ Columns’ std-dev. Pandas normalizes by N-1 by default.
 
 .. code:: ipython3
 
-    iris.std()
+    iris[['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth']].std()
 
 
 
@@ -290,7 +307,6 @@ Columns’ std-dev. Pandas normalizes by N-1 by default.
 .. code:: ipython3
 
     X = iris[['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth']].values
-    iris.columns
     X.mean(axis=0)
 
 
@@ -318,8 +334,68 @@ normalize by N-1 to get the unbiased estimator.
 
 
 
-Main distributions
-------------------
+Probability Distributions
+-------------------------
+
+- Probabilities of occurrence of possible outcomes
+- Description of a random phenomenon in terms of its sample space
+
+Terminology:
+
+- Random variable, RV: :math:`X`: takes values from a sample space.
+- **Probability Density Function**
+  `PDF <https://en.wikipedia.org/wiki/Probability_density_function>`__:
+  :math:`P(X) \in [0, 1]` for :math:`X \in \mathbb{R}` or **Probability
+  mass function**
+  `PMF <https://en.wikipedia.org/wiki/Probability_mass_function>`__ if
+  :math:`X` is a discrete RV.
+- **Cumulative Distribution Function**
+  `CDF <https://en.wikipedia.org/wiki/Cumulative_distribution_function>`__
+  :math:`P(X \leq x)`.
+- **Percent Point Function** or `Quantile
+  Function <https://en.wikipedia.org/wiki/Quantile_function>`__ (inverse
+  of CDF), i.e., values of :math:`x` such :math:`P(X \leq x)=` a given
+  quantile.
+
+Histogram as probability `density function estimator <https://en.wikipedia.org/wiki/Density_estimation>`__
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`numpy.histogram <https://numpy.org/doc/stable/reference/generated/numpy.histogram.html#numpy.histogram>`__
+can be used to probability density function at the each histogram bin,
+setting ``density=True`` parameter. Warning, `histogram doesn’t sum to
+1 <https://stackoverflow.com/questions/21532667/numpy-histogram-cumulative-density-does-not-sum-to-1>`__.
+Histogram as PDF estimator should be multiplied by dx’s to sum to 1.
+
+.. code:: ipython3
+
+    x = np.random.normal(size=50000)
+    hist, bins = np.histogram(x, bins=50, density=True)
+    dx = np.diff(bins)
+    print("Sum(Hist)=", np.sum(hist), "Sum(Hist * dx)=", np.sum(hist * dx))
+    
+    pdf = scipy.stats.norm.pdf(bins) # True probability density function
+    
+    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, sharex=True)
+    ax1.bar(bins[1:], hist, width=dx, fill=False, label="Estimation")
+    ax1.plot(bins, pdf, 'r-', label="True Norm.")
+    ax1.legend()
+    ax2.bar(bins[1:], (hist * dx).cumsum(), fill=False, width=dx)
+    fig.tight_layout()
+
+
+.. parsed-literal::
+
+    Sum(Hist)= 5.589909828006291 Sum(Hist * dx)= 1.0
+
+
+
+.. image:: stat_univ_files/stat_univ_23_1.png
+
+
+`Kernel Density Estimation (KDE) <https://en.wikipedia.org/wiki/Kernel_density_estimation>`__
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+TODO
 
 Normal distribution
 ~~~~~~~~~~~~~~~~~~~
@@ -335,20 +411,105 @@ iterates of independent random variables, each with a well-defined
 expected value and well-defined variance, will be approximately normally
 distributed, regardless of the underlying distribution.
 
+Documentation:
+
+- `numpy.random.normal <https://numpy.org/doc/stable/reference/random/generated/numpy.random.normal.html>`__
+- `scipy.stats.norm <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html#scipy.stats.norm>`__
+
+Random number generator using Numpy
+
 .. code:: ipython3
 
-    mu = 0 # mean
-    variance = 2 #variance
-    sigma = np.sqrt(variance) #standard deviation",
-    x = np.linspace(mu - 3 * variance, mu + 3 * variance, 100)
-    _ = plt.plot(x, scipy.stats.norm.pdf(x, mu, sigma))
+    # using numpy:
+    x = np.random.normal(loc=10, scale=10, size=(3, 2))
+
+Distribution using Scipy
+
+- Random number generator :math:`X \sim \mathcal{N}(\mu,\,\sigma^{2})`:
+  ``norm.rvs(loc=mean, scale=sd, size=n)``
+- **Probability Density Function (PDF)**: :math:`P(X) \in [0, 1]` for
+  :math:`X \in \mathbb{R}`: ``norm.pdf(values, loc=mean, scale=sd)``
+- **Cumulative Distribution Function (CDF)** :math:`P(X \leq x)` :
+  ``norm.cdf(x, loc=mean, scale=sd)``
+- Percent Point Function (inverse of CDF), i.e., values of :math:`x`
+  such :math:`P(X < x)=` a given percentiles :
+  ``norm.ppf(q, loc=0, scale=1)``
+
+.. code:: ipython3
+
+    mean, sd, n = 0, 1, 10000
+    
+    # Random number generator
+    x_rv = scipy.stats.norm.rvs(loc=mean, scale=sd, size=n)
+    x_range = np.linspace(mean-3*sd, mean+3*sd, 100)
+    
+    # PDF: P(values)
+    pdf_x_range = scipy.stats.norm.pdf(x_range, loc=mean, scale=sd)
+
+.. code:: ipython3
+
+    # CDF: P(X < values)
+    cdf_x_range = scipy.stats.norm.cdf(x_range, loc=mean, scale=sd)
+    
+    # PPF: Values such P(X < values) = percentiles
+    percentiles_of_cdf = [0.025, 0.10, 0.25, 0.5, 0.75, 0.90, 0.975]
+    x_for_percentiles_of_cdf = scipy.stats.norm.ppf(percentiles_of_cdf,
+                                                    loc=mean, scale=sd)
+    
+    # Percentiles of CDF = CDF(x values for CDF percentiles)
+    assert np.allclose(percentiles_of_cdf,
+                       scipy.stats.norm.cdf(x_for_percentiles_of_cdf))
+    
+    # Values for percentiles of CDF
+    ["P(X<{:.02f})={:.1%}".format(val, ppf) for 
+     ppf, val in zip(percentiles_of_cdf,
+                     scipy.stats.norm.ppf(percentiles_of_cdf,
+                                          loc=mean, scale=sd))]
 
 
 
-.. image:: stat_univ_files/stat_univ_24_0.png
+
+.. parsed-literal::
+
+    ['P(X<-1.96)=2.5%',
+     'P(X<-1.28)=10.0%',
+     'P(X<-0.67)=25.0%',
+     'P(X<0.00)=50.0%',
+     'P(X<0.67)=75.0%',
+     'P(X<1.28)=90.0%',
+     'P(X<1.96)=97.5%']
 
 
-The Chi-Square distribution
+
+Plot histogram, true distribution (PDF), and area of CDF
+
+.. code:: ipython3
+
+    _ = plt.hist(x_rv, density=True, bins=100, fill=False,
+                 label="Histogram (Estimator)")
+    _ = plt.plot(x_range, pdf_x_range, 'r-', label="PDF: P(X)")
+    
+    # PPF: Values such P(X < values) = 2.5%
+    percentile_of_cdf = 0.025
+    x_for_percentile_of_cdf = scipy.stats.norm.ppf(percentile_of_cdf,
+                                                   loc=mean, scale=sd)
+    
+    x_range = np.linspace(mean-3*sd, mean+3*sd, 10000)
+    pdf_x_range = scipy.stats.norm.pdf(x_range, loc=mean, scale=sd)
+    pdf_x_range[x_range > x_for_percentile_of_cdf] = 0
+    _ = plt.fill_between(x=x_range, y1=np.zeros(len(pdf_x_range)), y2=pdf_x_range,
+                         alpha=.5,
+                         label="CDF=P(X<{:.02f})={:.01%}".format(x_for_percentile_of_cdf,
+                                                                 percentile_of_cdf),
+                         color='r')
+    _ = plt.legend()
+
+
+
+.. image:: stat_univ_files/stat_univ_32_0.png
+
+
+The Chi-Square Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The chi-square or :math:`\chi_n^2` distribution with :math:`n` degrees
@@ -357,10 +518,10 @@ independent standard normal random variables :math:`\mathcal{N}(0, 1)`.
 Let :math:`X \sim \mathcal{N}(\mu, \sigma^2)`, then,
 :math:`Z=(X - \mu)/\sigma \sim \mathcal{N}(0, 1)`, then:
 
--  The squared standard :math:`Z^2 \sim \chi_1^2` (one df).
+- The squared standard :math:`Z^2 \sim \chi_1^2` (one df).
 
--  **The distribution of sum of squares** of :math:`n` normal random
-   variables: :math:`\sum_i^n Z_i^2 \sim \chi_n^2`
+- **The distribution of sum of squares** of :math:`n` normal random
+  variables: :math:`\sum_i^n Z_i^2 \sim \chi_n^2`
 
 The sum of two :math:`\chi^2` RV with :math:`p` and :math:`q` df is a
 :math:`\chi^2` RV with :math:`p+q` df. This is useful when
@@ -369,7 +530,23 @@ summing/subtracting sum of squares.
 The :math:`\chi^2`-distribution is used to model **errors** measured as
 **sum of squares** or the distribution of the sample **variance**.
 
-The Fisher’s F-distribution
+The chi-squared distribution is a special case of the gamma
+distribution, with gamma parameters a = df/2, loc = 0 and scale = 2.
+
+Documentation: -
+`numpy.random.chisquare <https://numpy.org/doc/stable/reference/random/generated/numpy.random.chisquare.html>`__
+-
+`scipy.stats.chi2 <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2.html#scipy.stats.chi2>`__
+
+.. code:: ipython3
+
+    df, mean, sd, n = 30, 0, 1, 10000
+    x_rv = scipy.stats.chi2.rvs(df=df, loc=mean, scale=sd, size=n)
+    x_range = np.linspace(mean-3*sd, mean+3*sd, 100)
+    prob_x_range = scipy.stats.chi2.pdf(x_range, df=df, loc=mean, scale=sd)
+    cdf_x_range = scipy.stats.chi2.cdf(x_range, df=df ,loc=mean, scale=sd)
+
+The Fisher’s F-Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The :math:`F`-distribution, :math:`F_{n, p}`, with :math:`n` and
@@ -386,39 +563,29 @@ The :math:`F`-distribution plays a central role in hypothesis testing
 answering the question: **Are two variances equals?, is the ratio or two
 errors significantly large ?**.
 
+Documentation: -
+`scipy.stats.f <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f.html#scipy.stats.f>`__
+
 .. code:: ipython3
 
-    fvalues = np.linspace(.1, 5, 100)
+    dfn, dfd, mean, sd, n = 30, 5, 0, 1, 10000
+    x_rv = scipy.stats.f.rvs(dfn=dfn, dfd=dfd, loc=mean, scale=sd, size=n)
+    x_range = np.linspace(mean-3*sd, mean+3*sd, 100)
+    prob_x_range = scipy.stats.f.pdf(x_range, dfn=dfn, dfd=dfd, loc=mean, scale=sd)
+    cdf_x_range = scipy.stats.f.cdf(x_range, dfn=dfn, dfd=dfd, loc=mean, scale=sd)
     
+    fvalues = np.linspace(.1, 5, 100)
     # pdf(x, df1, df2): Probability density function at x of F.
     plt.plot(fvalues, scipy.stats.f.pdf(fvalues, 1, 30), 'b-', label="F(1, 30)")
     plt.plot(fvalues, scipy.stats.f.pdf(fvalues, 5, 30), 'r-', label="F(5, 30)")
-    plt.legend()
-    
-    # cdf(x, df1, df2): Cumulative distribution function of F.
-    # ie. 
-    proba_at_f_inf_3 = scipy.stats.f.cdf(3, 1, 30) # P(F(1,30) < 3)
-    
-    # ppf(q, df1, df2): Percent point function (inverse of cdf) at q of F.
-    f_at_proba_inf_95 = scipy.stats.f.ppf(.95, 1, 30) # q such P(F(1,30) < .95)
-    assert scipy.stats.f.cdf(f_at_proba_inf_95, 1, 30) == .95
-    
-    # sf(x, df1, df2): Survival function (1 - cdf) at x of F.
-    proba_at_f_sup_3 = scipy.stats.f.sf(3, 1, 30) # P(F(1,30) > 3)
-    assert  proba_at_f_inf_3 + proba_at_f_sup_3 == 1
-    
-    # p-value: P(F(1, 30)) < 0.05
-    low_proba_fvalues = fvalues[fvalues > f_at_proba_inf_95]
-    plt.fill_between(low_proba_fvalues, 0, scipy.stats.f.pdf(low_proba_fvalues, 1, 30),
-                     alpha=.8, label="P < 0.05")
-    plt.show()
+    _ = plt.legend()
 
 
 
-.. image:: stat_univ_files/stat_univ_27_0.png
+.. image:: stat_univ_files/stat_univ_36_0.png
 
 
-The Student’s :math:`t`-distribution
+The Student’s :math:`t`-Distribution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let :math:`M \sim \mathcal{N}(0, 1)` and :math:`V \sim \chi_n^2`. The
@@ -433,56 +600,362 @@ is the ratio:
 The distribution of the difference between an estimated parameter and
 its true (or assumed) value divided by the standard deviation of the
 estimated parameter (standard error) follow a :math:`t`-distribution.
-**Is this parameters different from a given value?**
 
-Hypothesis Testing
-------------------
+Documentation:
+`scipy.stats.t <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t>`__
 
-**Examples**
+.. code:: ipython3
 
--  Test a proportion: Biased coin ? 200 heads have been found over 300
-   flips, is it coins biased ?
+    df, mean, sd, n = 30, 0, 1, 10000
+    x_rv = scipy.stats.t.rvs(df=df, loc=mean, scale=sd, size=n)
+    x_range = np.linspace(mean-5*sd, mean+5*sd, 100)
+    prob_x_range = scipy.stats.t.pdf(x_range, df=df, loc=mean, scale=sd)
+    cdf_x_range = scipy.stats.t.cdf(x_range, df=df, loc=mean, scale=sd)
+    
+    plt.plot(x_range, scipy.stats.t.pdf(x_range, 30), 'r-', label="T(30, 0, 1)")
+    plt.plot(x_range, scipy.stats.t.pdf(x_range, 2), 'b-', label="T(2, 0, 1)")
+    plt.plot(x_range, scipy.stats.norm.pdf(x_range, loc=mean, scale=sd), 'g--',
+             label="N(0, 1)")
+    _ = plt.legend()
 
--  Test the association between two variables.
 
-   -  Exemple height and sex: In a sample of 25 individuals (15 females,
-      10 males), is female height is different from male height ?
-   -  Exemple age and arterial hypertension: In a sample of 25
-      individuals is age height correlated with arterial hypertension ?
 
-**Steps**
+.. image:: stat_univ_files/stat_univ_38_0.png
 
-1. Model the data
 
-2. Fit: estimate the model parameters (frequency, mean, correlation,
-   regression coeficient)
+Central Limit Theorem (CLT)
+---------------------------
 
-3. Compute a test statistic from model the parameters.
+See `3Blue1Brown: But what is the Central Limit
+Theorem? <https://www.youtube.com/watch?v=zeJD6dqJ5lo>`__.
 
-4. Formulate the null hypothesis: What would be the (distribution of
-   the) test statistic if the observations are the result of pure
-   chance.
+Let :math:`\{X_1, ..., X_i,..., X_n\}` be a sequence of independent and
+identically distributed (i.i.d.) (:math:`\sim X`) random variables (RV)
+with parameters:
 
-5. Compute the probability (:math:`p`-value) to obtain a larger value
-   for the test statistic by chance (under the null hypothesis).
+- :math:`E[X_i] = \mu_X`,
+- :math:`Var[X_i] = \sigma_X^2 < \ \infty` (finite variance).
 
-Flip coin: Simplified example
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Distribution of the Sum of Samples
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Biased coin ? 2 heads have been found over 3 flips, is it coins biased ?
+Let :math:`S_n = \sum^n_i X_i` the sum of those RV. Then, the sum of RV
+converge in distribution to a normal distribution:
 
-1. Model the data: number of heads follow a Binomial disctribution.
+.. math::
 
-2. Compute model parameters: N=3, P = the frequency of number of heads
-   over the number of flip: 2/3.
 
-3. Compute a test statistic, same as frequency.
+   S_n = \sum^n_i X_i \rightarrow \mathcal{N}(n \mu_X, \sqrt{n}\sigma_X)
 
-4. Under the null hypothesis the distribution of the number of tail is:
+Note that the centered and scaled sum converge in distribution to a
+normal distribution of parameters :math:`0, 1`:
+:math:`\frac{\sum^n_i X_i -n\mu}{\sqrt{n}\sigma_X}\rightarrow\mathcal{N}(0, 1)`
 
-== = = ============
-1  2 3 count #heads
-== = = ============
+The Distribution of the Sample Mean
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Central Limit Theorem also apply for the sample mean: Let i.i.d. samples
+:math:`X_i` from from *almost any* distribution of parameters
+:math:`\mu_X, \sigma_X`. Then the sample mean :math:`\bar{X}`, for
+samples of size 30 or more, is approximately normally distributed:
+
+.. math::
+
+
+   \bar{X} = \frac{\sum^n_i X_i}{n} \rightarrow \mathcal{N}(\mu_X, \frac{\sigma_X}{\sqrt{n}})
+
+Simple but useful demonstrations:
+
+.. raw:: latex
+
+   \begin{align*}
+   E[\bar{X}_n] = & E[\frac{1}{n}\sum^n_i X_i]\\
+   & \frac{1}{n} \sum^n_i E[X_i], X_i~\text{are i.i.d., i.e., }~E[X_i] = \mu_X \forall i\\
+   & \frac{1}{n}  n \mu_X\\
+   &  \mu_X\\
+   \end{align*}
+
+.. raw:: latex
+
+   \begin{align*}
+   Var[\bar{X}_n] = & Var[\frac{1}{n}\sum^n_i X_i] \\
+   & (\frac{1}{n})^2  \sum^2_X, X_i~\text{are i.i.d., i.e., }~Var[X_i] = \sigma^2_X \forall i\\
+   & (\frac{1}{n})^2  n \sigma^2_X\\
+   & \sigma_X^2/n\\
+   Sd[\bar{X}_n] = & \sigma_X/\sqrt{n}
+   \end{align*}
+
+Note that the **standard deviation of the sample mean is the standard
+deviation of the parent RV scaled by** :math:`\sqrt{n}`. The larger the
+sample size, the better the approximation.
+
+The Central Limit Theorem is illustrated for several common population
+distributions in `The Sampling Distribution of the Sample
+Mean <https://stats.libretexts.org/Bookshelves/Introductory_Statistics/Introductory_Statistics_(Shafer_and_Zhang)/06%3A_Sampling_Distributions/6.02%3A_The_Sampling_Distribution_of_the_Sample_Mean>`__.
+
+Examples
+~~~~~~~~
+
+**Distribution of the sum of samples from the uniform distribution**
+
+See `Scipy Uniform
+Distribution <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.uniform.html>`__
+
+.. code:: ipython3
+
+    n_sample = 1000
+    n_repeat = 10000
+    
+    # Distribution parameters, true mean and standard deviation
+    a, b = 0, 1
+    mu_unif, sd_unif = 1 / 2 * (b - a), np.sqrt(1 / 12 * (b - a) ** 2)
+    
+    # Xn's
+    xn_s = np.array([scipy.stats.uniform.rvs(size=n_sample).sum()
+                    for i in range(n_repeat)])
+    
+    # Xn's centered and scaled
+    xn_s_cs = (xn_s - n_sample * mu_unif) / (np.sqrt(n_sample) * sd_unif)
+    
+    h_ = plt.hist(xn_s_cs, range=(-3, 3), density=True, bins=43, fill=False,
+                  label="Sum(Unif.)")
+    
+    # Normal distribution
+    x_range = np.linspace(-3, 3, 30)
+    prob_x_range = scipy.stats.norm.pdf(x_range, loc=0, scale=1)
+    plt.plot(x_range, prob_x_range, 'r-', label="N(0, 1)")
+    _ = plt.legend()
+
+
+
+.. image:: stat_univ_files/stat_univ_43_0.png
+
+
+**Distribution of the sum of samples from the the exponential
+distribution**
+
+See `Scipy Exponential
+Distribution <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.expon.html>`__
+
+.. code:: ipython3
+
+    n_sample = 1000
+    n_repeat = 10000
+    
+    # Distribution parameters, true mean and standard deviation
+    lambda_ = 1
+    mu_exp, sd_exp = 1 / lambda_, np.sqrt(1 / (lambda_ ** 2))
+    
+    # Xn's
+    xn_s = np.array([scipy.stats.expon.rvs(size=n_sample).sum()
+                    for i in range(n_repeat)])
+    
+    # Xn's centered and scaled
+    xn_s_cs = (xn_s - n_sample * mu_exp) / (np.sqrt(n_sample) * sd_exp)
+    
+    h_ = plt.hist(xn_s_cs, range=(-3, 3), density=True, bins=43, fill=False,
+                  label="Sum(Exp.)")
+    
+    # Normal distribution
+    x_range = np.linspace(-3, 3, 30)
+    prob_x_range = scipy.stats.norm.pdf(x_range, loc=0, scale=1)
+    plt.plot(x_range, prob_x_range, 'r-', label="N(0, 1)")
+    _ = plt.legend()
+
+
+
+.. image:: stat_univ_files/stat_univ_45_0.png
+
+
+**Distribution of the mean from the Binomial distribution**
+
+`Binomial
+distribution <https://en.wikipedia.org/wiki/Binomial_distribution>`__
+with
+`scipy <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom.html>`__:
+
+.. code:: ipython3
+
+    n_sample = 1000
+    n_repeat = 10000
+    
+    # Binomial distribution parameters
+    n, p = n_sample, 0.5
+    
+    # Distribution parameters, true mean and standard deviation
+    mu, sd = n * p , np.sqrt(n * p * (1 - p))
+    
+    # Xbar's
+    xbar_s = np.array([scipy.stats.binom.rvs(n=n, p=p, size=n_sample).mean()
+                       for i in range(n_repeat)])
+    
+    print("True stat.: mu={:.01f}, sd={:.03f}".format(mu, sd / np.sqrt(n_sample)))
+    print("Est. stat.: mu={:.01f}, sd={:.03f}".format(xbar_s.mean(), xbar_s.std()))
+
+
+
+.. parsed-literal::
+
+    True stat.: mu=500.0, sd=0.500
+    Est. stat.: mu=500.0, sd=0.504
+
+
+Statistical inference and Decision Making using Hypothesis Testing
+------------------------------------------------------------------
+
+`Inferential
+statistics <https://en.wikipedia.org/wiki/Statistical_inference>`__
+involves the use of a sample (1) to estimate some characteristic in a
+large population; and (2) to test a research hypothesis about a given
+population.
+
+Typology of tests
+~~~~~~~~~~~~~~~~~
+
+Tests should be adapted to the type of variable:
+
+1. For **categorical variables** tests use **count** of categories,
+   **proportions, or frequencies**. Examples:
+
+- Test a proportion: 200 heads have been found over 300 flips, is this
+  coin biased toward head or could it be observed by chance?
+- 1,000 voters are questioned about their vote. 55% said they had voted
+  for candidate A and 45% for candidate B. Is this a significant
+  difference?
+
+2. For **numerical variables tests use means, standard-deviations or
+   medians**. Examples:
+
+- Test the effect of some condition (treatment or some action):
+
+  - We observed an increase of monthly revenue of 100 stores after
+    marketing campaign. Could this increase be attributed to chance or
+    to the marketing campaign?
+  - Arterial hypertension of 50 patients has been reduced by some
+    medication. Is it pure randomness?
+
+- Test the association between two variables:
+
+  - Height and sex: In a sample of 25 individuals (15 females, 10
+    males), is female height is different from male height?
+  - Age and arterial hypertension: In a sample of 25 individuals is age
+    height correlated with arterial hypertension ?
+
+Tests can be grouped in two categories:
+
+1. **Parametric tests** assume that the data follow some distribution,
+   and can be summarized by a parameters: mean and standard-deviation
+   for quantitative variables; count proportion or frequencies for
+   categorical variables.
+
+2. **Non-Parametric tests**. Non-parametric tests are not based on a
+   model of the data and therefore do not make the assumption that they
+   follow a certain distribution. Non-Parametric tests are generally
+   based on ranking of values or medians.
+
+General Testing Procedure
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. **Model the data** (for parametric tests).
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+E.g., the height of males and females can be represented by their means,
+i.e., assuming two normal distributions. Then fit the model to the data,
+i.e., estimate the model parameters (frequency, mean, correlation,
+regression coefficient). E.g., compute the means of females and males
+height.
+
+2. Calculate a **decision statistic** (for all tests)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Formulate the null hypothesis :math:`H_0`, i.e., what would be
+  situation under pure chance? E.g., if sex has no effect on
+  individuals’ height males and females means height will be equals.
+
+- Derive a test statistic on the data capturing deviation from null
+  hypothesis taking account the number of samples. For parametric
+  statistics, the test statistic is derived from model parameters, e.g.,
+  the differences of means of males and females height, taking account
+  the number of samples.
+
+3. Inference
+^^^^^^^^^^^^
+
+Assess the deviation of the test statistic from its expected value under
+:math:`H_0` (pure chance). Two possibilities:
+
+**P-value** based on null hypothesis:
+
+What is the probability that the computed test statistic :math:`\bar{X}`
+would be observed under pure chance? I.e., What is the probability that
+the test statistics under :math:`H_0` would be more extreme, i.e.,
+“larger” or “smaller” than :math:`\bar{X}`? \* Calculate the
+distribution of test statistic :math:`X` under :math:`H_0`. \* Compute
+the probability (P-value) to obtain a larger test statistic by chance
+(under the null hypothesis).
+
+For a symmetric distribution the two sided p-value :math:`P` is defined
+as: - :math:`P(\bar{X} \leq X | H_0) = P/2`, or -
+:math:`P(X \geq \bar{X}) = P/2`
+
+:math:`\bar{X}` is declared to be **significantly different to the null
+hypothesis** if the p-value is less than a **significance level**
+:math:`\alpha` generally considered as :math:`5\%`.
+
+**Confidence interval (CI)**
+
+CI is a range of values :math:`x_1, x_2` that is likely (given a
+**confidence level**, e.g., :math:`95\%`) to contain the true value of
+the statistic :math:`\bar{X}`. Outside this range the value is
+considered to be unlikely. Note that the confidence level is
+:math:`1 - \alpha`, the significance level. See `Interpreting Confidence
+Intervals <https://www.youtube.com/watch?v=ftYdEm6pEkE>`__
+
+The 95% CI (Confidence Interval) is the range of values :math:`x_1, x_2`
+such :math:`P(x_1 < \bar{X} < x_2) = 95\%`.
+
+For a symmetric distribution the two sided :math:`95\% (= 1 - 5\%)`
+confidence interval, is defined as: - :math:`x_1` such
+:math:`P(\bar{X} \leq x_1) = 2.5\% =5\%/2` - :math:`x_2` such
+:math:`P(x_2 \leq \bar{X}) = 2.5\%`
+
+Terminology
+
+- Margin of error = :math:`\bar{X} - x_1` (for symmetric distribution).
+- Confidence Interval = :math:`[x_1, x_2]`.
+- Confidence level is 1 - significance level
+
+Categorical variable: the Binomial Test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Simplified example (small sample)** of the `the binomial
+test <https://en.wikipedia.org/wiki/Binomial_test>`__: Three voters are
+questioned about their vote. Two voted for candidate A and one for B.
+How likely this difference Is this a significant difference,
+
+**1. Model the data:** Let :math:`x` the number of vote for A. It
+follows a `Binomial
+distribution <https://en.wikipedia.org/wiki/Binomial_distribution>`__.
+Compute the model parameters: :math:`N=3`, and :math:`\hat{p}=2/3` (the
+frequency of number of vote A over the number of voters).
+
+**2. Compute a test statistic** measuring the deviation of the number of
+vote for A (:math:`x=2`) over three voters from the expected values
+under the null hypothesis where :math:`x` would be :math:`1.5`.
+Similarly, we could consider the deviation of the observed proportion
+:math:`\hat{p}=2/3` from :math:`\pi_0=50\%`.
+
+**3. To make inference**, we have to compute the probability to obtain
+more than two votes for A by chance. We need the distribution of
+:math:`x` under :math:`H_0` (:math:`P(x|H0)`) to sum all the
+probabilities where :math:`x` is larger or equal to 2, i.e.,
+:math:`P(x\geq 2| H_0)`. With such small sample size (:math:`n=3`) this
+distribution is obtained by enumerating all configurations that produce
+a given number of heads :math:`x`:
+
+== = = ================
+1  2 3 count vote for A
+== = = ================
 \      0
 H      1
 \  H   1
@@ -491,263 +964,419 @@ H  H   2
 H    H 2
 \  H H 2
 H  H H 3
-== = = ============
+== = = ================
 
-8 possibles configurations, probabilities of differents values for
-:math:`p` are: :math:`x` measure the number of success.
+Eight possibles configurations, probabilities of different values for
+:math:`x` are:
 
--  :math:`P(x=0) = 1/8`
--  :math:`P(x=1) = 3/8`
--  :math:`P(x=2) = 3/8`
--  :math:`P(x=3) = 1/8`
+- :math:`P(x=0) = 1/8`
+- :math:`P(x=1) = 3/8`
+- :math:`P(x=2) = 3/8`
+- :math:`P(x=3) = 1/8`
+
+Plot of the distribution of the number of :math:`x` (A vote over 3
+voters) under the null hypothesis:
 
 .. code:: ipython3
 
-    plt.figure(figsize=(5, 3))
-    plt.bar([0, 1, 2, 3], [1/8, 3/8, 3/8, 1/8], width=0.9)
+    plt.bar([0, 1, 2, 3], [1/8, 3/8, 3/8, 1/8], width=.95, fill=False)
     _ = plt.xticks([0, 1, 2, 3], [0, 1, 2, 3])
-    plt.xlabel("Distribution of the number of head over 3 flip under the null hypothesis")
+    _ = plt.xlabel("Dist. of the nb of head over 3 flip under the null hyp.")
+
+
+
+.. image:: stat_univ_files/stat_univ_51_0.png
+
+
+Finally, we compute the probability (P-value) to observe a value larger
+or equal that :math:`x=2` (or :math:`P=2/3`) under the null hypothesis?
+This probability is the :math:`p`-value:
+
+.. math::
+
+
+   P(x\geq 2| H_0) = P(x=2| H_0) + P(x=3| H_0) = 3/8 + 1/8 = 1/2
+
+**P-value = 0.5**, meaning that there is 50% of chance to get
+:math:`x=2` or larger by chance.
+
+**large sample example:** 100 voters are questioned about their vote. 60
+declared they voted for candidate A and 40 for candidate B. Is this a
+significant difference?
+
+**1. Model the data:** Let :math:`x` the number of vote for A. :math:`x`
+follows a binomial distribution. Compute model parameters:
+:math:`n=100, \hat{p}=60/100`. Where :math:`\hat{p}` is the observed
+proportion of A.
+
+**2. Compute a test statistic** that measure the deviation of
+:math:`x=60` (vote for A) from the expected value: :math:`n\pi_0=50`
+under the null hypothesis, i.e., where :math:`\pi_0=50\%`. The
+distribution of the number of vote for A (:math:`x`) follow the
+`Binomial
+distribution <https://en.wikipedia.org/wiki/Binomial_distribution>`__ of
+parameters :math:`N=100, P=0.5` approximated with normal distribution
+when :math:`n` is large enough.
+
+For large sample, the most usual (and easiest) approximation is through
+the standard normal distribution, in which a z-test is performed of the
+test statistic :math:`Z`, given by:
+
+.. math::
+
+
+   Z = \frac{x - n\pi_0}{\sqrt{n p_0 (1 - \pi_0)}}
+
+one may rearrange and write the z-test above as deviation of
+:math:`\hat{p}` from :math:`\pi_0=50\%`
+
+.. math::
+
+
+   Z = \frac{\hat{p} - \pi_0}{\sqrt{\pi_0 (1 - \pi_0)}}\sqrt{n}
+
+Note that the statistic is the product of two parts:
+
+- The **effect size**:
+  :math:`\frac{\hat{p} - \pi_0}{\sqrt{\pi_0 (1 - \pi_0)}}` that measure
+  a standardized deviation.
+- The squared root of the sample size :math:`\sqrt{n}`.
+
+Large statistic is obtained with large deviation with large sample size.
+
+**5. Inference**
+
+Compute the p-value using `Scipy to compute the
+CDF <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom.html>`__
+of the binomial distribution:
+
+.. code:: ipython3
+
+    n, k, pi0 = 100, 60, 0.5
+    pval_greater = 1 - scipy.stats.binom.cdf(k, n, pi0)
+    pval_greater = scipy.stats.binom.sf(k, n, pi0)
+    
+    # Two sidded pval = 2 * pval_greater
+    pval = pval_greater * 2
+    print("P-value (Two sided): P(X<={:0d} or X>={:0d}|H0)={:.4f}".format(n-k, k, pval))
+
+
+.. parsed-literal::
+
+    P-value (Two sided): P(X<=40 or X>=60|H0)=0.0352
+
+
+`Scipy normal
+distribution <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html>`__
+
+.. code:: ipython3
+
+    n = 100
+    z = (0.6 - 0.5) / (0.5 * (1 - 0.5)) * np.sqrt(n)
+    #z = (60 - n * 0.5 + 1/2) / (n * 0.5 * (1 - 0.5)) * np.sqrt(n)
+    
+    scipy.stats.norm.sf(z, loc=0) * 2
 
 
 
 
 .. parsed-literal::
 
-    Text(0.5, 0, 'Distribution of the number of head over 3 flip under the null hypothesis')
+    np.float64(6.334248366623996e-05)
 
 
 
-
-.. image:: stat_univ_files/stat_univ_30_1.png
-
-
-3. Compute the probability (:math:`p`-value) to observe a value larger
-   or equal that 2 under the null hypothesis ? This probability is the
-   :math:`p`-value:
-
-   .. math::
-
-
-      P(x\geq 2| H_0) = P(x=2) + P(x=3) = 3/8 + 1/8 = 4/8 = 1/2
-
-Flip coin: Real Example
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Biased coin ? 60 heads have been found over 100 flips, is it coins
-biased ?
-
-1. Model the data: number of heads follow a Binomial disctribution.
-
-2. Compute model parameters: N=100, P=60/100.
-
-3. Compute a test statistic, same as frequency.
-
-4. Compute a test statistic: 60/100.
-
-5. Under the null hypothesis the distribution of the number of tail
-   (:math:`k`) follow the **binomial distribution** of parameters N=100,
-   **P=0.5**:
-
-   .. math::
-
-
-      Pr(X=k|H_0) = Pr(X=k|n=100, p=0.5) = {100 \choose k}0.5^k (1-0.5)^{(100-k)}.
-
-.. raw:: latex
-
-   \begin{align*}
-   P(X=k\geq 60|H_0) &=  \sum_{k=60}^{100}{100 \choose k}0.5^k (1-0.5)^{(100-k)}\\
-    &= 1 - \sum_{k=1}^{60}{100 \choose k}0.5^k (1-0.5)^{(100-k)}, \text{the cumulative distribution function.}
-   \end{align*}
-
-**Use tabulated binomial distribution**
+Plot of the binomial distribution and the probability to observe more
+than 60 vote for A by chance:
 
 .. code:: ipython3
 
-    succes = np.linspace(30, 70, 41)
-    plt.plot(succes, scipy.stats.binom.pmf(succes, 100, 0.5),
-             'b-', label="Binomial(100, 0.5)")
-    upper_succes_tvalues = succes[succes > 60]
-    plt.fill_between(upper_succes_tvalues, 0,
-                     scipy.stats.binom.pmf(upper_succes_tvalues, 100, 0.5),
-                     alpha=.8, label="p-value")
-    _ = plt.legend()
     
+    stat_vals = np.linspace(30, 70, 41)
+    stat_probs = scipy.stats.binom.pmf(stat_vals, n, pi0) # H0: 0.5
+    stat_obs = k
     
-    pval = 1 - scipy.stats.binom.cdf(60, 100, 0.5)
-    print(pval)
+    pystatsml.plot_utils.plot_pvalue_under_h0(stat_vals, stat_probs,
+                                              stat_obs=60, stat_h0=50,
+                                              thresh_low=40, thresh_high=60)
+
+
+
+.. image:: stat_univ_files/stat_univ_58_0.png
+
+
+Simply use `Scipy binomial
+test <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html>`__
+that the probability of success is p.
+
+.. code:: ipython3
+
+    test = scipy.stats.binomtest(k=k, n=n, p=pi0, alternative='two-sided')
+    ci_low, ci_high = test.proportion_ci(confidence_level=0.95, method='exact')
+    
+    print("Estimate: {:.2f}, p-val: {:e}, CI: [{:.5f}, {:.5f}]".\
+        format(test.statistic, test.pvalue, ci_low, ci_high))
 
 
 .. parsed-literal::
 
-    0.01760010010885238
+    Estimate: 0.60, p-val: 5.688793e-02, CI: [0.49721, 0.69671]
 
 
+Quantitative variable: One Sample T-test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: stat_univ_files/stat_univ_32_1.png
+The `one sample
+t-test <https://en.wikipedia.org/wiki/Student%27s_t-test#One-sample_t-test>`__
+is used to determine whether a sample comes from a population with a
+specific mean. For example you want to test if the average height of a
+population is :math:`1.75~m`.
 
+This test is used when we have two measurements for each individual at
+two different times or under two conditions: for each individual, we
+calculate the difference between the two conditions and test the
+positivity (increase) or negativity (decrease) of the mean of the
+differences.
 
-**Random sampling of the Binomial distribution under the null
-hypothesis**
+Example: is the arterial hypertension of 50 patients measured before and
+after some medication has been reduced by the treatment?
+
+Example: `Monthly revenue figures of for 100 stores before and after a
+marketing
+campaigns <https://julius.ai/use-case/how-to-perform-a-paired-samples-t-test>`__.
+We compute the difference
+(:math:`x_i = x_i^\text{after} - x_i^\text{before}`) for each store
+:math:`i`. If the average difference :math:`\bar{x}=1/n \sum_i x_i` is
+significantly positive (resp. negative), then the marketing campaigns
+will be considered as efficient (resp. detrimental).
 
 .. code:: ipython3
 
-    sccess_h0 = scipy.stats.binom.rvs(100, 0.5, size=10000, random_state=4)
-    print(sccess_h0)
-    
-    pval_rnd = np.sum(sccess_h0 >= 60) / (len(sccess_h0) + 1)
-    print("P-value using monte-carlo sampling of the Binomial distribution under H0=",
-          pval_rnd)
+    df = pd.read_csv("../datasets/Monthly Revenue (in thousands).csv")
+    print(df.head())
+    df = df.pivot(index='store_id', columns='time', values='revenue')
+    # Keep only the 30 first samples
+    df = df[:30]
+    df.after -= 3 # force to smaller effect size
+    print(df.head())
+    x = df.after - df.before
 
 
 .. parsed-literal::
 
-    [60 52 51 ... 45 51 44]
-    P-value using monte-carlo sampling of the Binomial distribution under H0= 0.025897410258974102
+       store_id    time   revenue
+    0         1  before  54.96714
+    1         2  before  48.61736
+    2         3  before  56.47689
+    3         4  before  65.23030
+    4         5  before  47.65847
+    time         after    before
+    store_id                    
+    1         49.89029  54.96714
+    2         48.51413  48.61736
+    3         56.76331  56.47689
+    4         63.21891  65.23030
+    5         48.85204  47.65847
 
 
-One sample :math:`t`-test
-~~~~~~~~~~~~~~~~~~~~~~~~~
+**1. Model the data (parametric test)**
 
-The one-sample :math:`t`-test is used to determine whether a sample
-comes from a population with a specific mean. For example you want to
-test if the average height of a population is :math:`1.75~m`.
+We model the observation as the sample mean :math:`\bar{x}` plus some
+error :math:`\varepsilon_i`, i.e., :math:`x_i = \bar{x} + \varepsilon_i`
+The :math:`\varepsilon_i` are called the **residuals**.
 
-Assumptions
-^^^^^^^^^^^
+Assumptions:
 
-1. Independence of **residuals** (:math:`\varepsilon_i`). This
-   assumptions **must** be satisfied.
-2. Normality of residuals. Approximately normally distributed can be
-   accepted.
+- The :math:`x_i`\ ’s are not expected to follow a normal distribution.
+  But the :math:`\varepsilon_i` should be approximately normally
+  distributed.
+- The :math:`\varepsilon_i` must be independent and identically
+  distributed :math:`i.i.d.`.
 
-Remarks: Although the parent population does not need to be normally
-distributed, the distribution of the population of sample means,
-:math:`\overline{x}`, is assumed to be normal. By the central limit
-theorem, if the sampling of the parent population is independent then
-the sample means will be approximately normal.
+Indeed according to the central limit theorem, if the sampling of the
+parent population :math:`x` is independent then the sample mean
+:math:`\bar{x}` will be approximately normal.
 
-1 Model the data
-^^^^^^^^^^^^^^^^
-
-Assume that height is normally distributed:
-:math:`X \sim \mathcal{N}(\mu, \sigma)`, ie:
-
-.. raw:: latex
-
-   \begin{align}
-   \text{height}_i &= \text{average height over the population} + \text{error}_i\\
-   x_i &= \bar{x} + \varepsilon_i
-   \end{align}
-
-The :math:`\varepsilon_i` are called the residuals
-
-2 Fit: estimate the model parameters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-:math:`\bar{x}, s_x` are the estimators of :math:`\mu, \sigma`.
-
-3 Compute a test statistic
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-In testing the null hypothesis that the population mean is equal to a
-specified value :math:`\mu_0=1.75`, one uses the statistic:
-
-.. raw:: latex
-
-   \begin{align}
-    t &= \frac{\text{difference of means}}{\text{std-dev of noise}} \sqrt{n}\\
-    t &= \text{effect size} \sqrt{n}\\ 
-    t &= \frac{\bar{x} - \mu_0}{s_x} \sqrt{n} 
-   \end{align}
-
-4 Compute the probability of the test statistic under the null hypotheis. This require to have the distribution of the t statistic under :math:`H_0`.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Example
-^^^^^^^
-
-Given the following samples, we will test whether its true mean is 1.75.
-
-Warning, when computing the std or the variance, set ``ddof=1``. The
-default value, ``ddof=0``, leads to the biased estimator of the
-variance.
+Fit: estimate the model parameters, the mean
+:math:`\bar{x}=1/n \sum_i x_i=2.26` (thousands of dollars) and standard
+deviation :math:`s`. Warning, when computing the std or the variance,
+set ``ddof=1``. The default value, ``ddof=0``, leads to the biased
+estimator of the variance.
 
 .. code:: ipython3
 
-    x = [1.83,  1.83,  1.73,  1.82,  1.83,  1.73,  1.99,  1.85,  1.68,  1.87]
-    
-    xbar = np.mean(x)  # sample mean
-    mu0 = 1.75  # hypothesized value
+    xbar = np.mean(x)      # sample mean
+    mu0 = 0                # mean under H0
     s = np.std(x, ddof=1)  # sample standard deviation
-    n = len(x)  # sample size
+    n = len(x)             # sample size
+    df = n - 1
+
+**2. Compute a test statistic**
+
+- Formulate hypothesis:
+
+  - Null hypothesis: :math:`H_0: \bar{x}=0`, i.e., the marketing
+    campaign had no effect on sales.
+  - Alternative hypothesis: :math:`H_0: \bar{x}\neq 0`, i.e., the
+    marketing campaign had positive (:math:`\bar{x}>0`) or negative
+    effect (:math:`\bar{x}<0`) on sales.
+
+  Note that is is a **two-sided test** of effects on both ways.
+
+- Compute a test statistic that measure the deviation of
+  :math:`\bar{x}=2.26` from the expected value under the null hypothesis
+  (no effect of the campaign) which is: :math:`\mu_0=0`. The test
+  statistic :math:`T`, is given by:
+
+  .. math::
+
+
+     T = \frac{\bar{x} - \mu_0}{s}\sqrt{n}
+
+Note that the statistic is the product of two parts:
+
+- The **effect size**: :math:`\frac{\bar{x} - \mu_0}{s}` that measure a
+  standardized deviation. It a “signal to noise ratio” of what is
+  explained by the model divided by the error.
+
+- The squared root of the sample size.
+
+Under the null hypothesis the distribution of T follow the `Student
+t-distribution <https://en.wikipedia.org/wiki/Student%27s_t-distribution>`__
+of parameters df=\ :math:`n-1`. Note that according the central limit
+theorem, if the observations are independent, then :math:`T` will be
+approximately normal :math:`\mathcal{N}(0,1)`.
+
+.. code:: ipython3
+
+    tval = (xbar - mu0) / s * np.sqrt(n)
+
+**3. Inference**
+
+**P-value (null hypothesis)** is computed using `Scipy to compute the
+CDF <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html>`__
+of the student distribution.
+
+.. code:: ipython3
+
+    pval_greater = 1 - scipy.stats.t.cdf(tval, df)
+    pval_greater = scipy.stats.t.sf(tval, df)
+    # T distribution is symmetric
+    # => pval_lower = pval_greater
+    # => two-sided = pval_greater * 2
+    pval = 2 * pval_greater
+
+Plot observed T value under null hypothesis
+
+- the distribution of t-statistic under the null hypothesis
+  :math:`P_{T}(X|H_0)`,
+- the two sided p-value, CDF of
+  :math:`P_{T}(X\leq-T) + P_{T}(X\geq T|H_0)`, and
+- the observed :math:`T` value
+
+.. code:: ipython3
+
+    stat_vals = np.linspace(-5, 5, 100)
+    stat_probs = scipy.stats.t.pdf(x=stat_vals, df=df, loc=0) # H0 => loc=0
     
-    print(xbar)
+    pystatsml.plot_utils.plot_pvalue_under_h0(stat_vals, stat_probs,
+                                              stat_obs=tval, stat_h0=0,
+                                              thresh_low=-tval, thresh_high=tval)
+
+
+
+.. image:: stat_univ_files/stat_univ_70_0.png
+
+
+**Confidence interval (alternative hypothesis)** of the observed
+estimate :math:`\bar{x}` is given by:
+
+.. math::
+
+
+   \bar{x} \pm t_{\alpha/2}\frac{s}{\sqrt{n}}
+
+Where :math:`t_{\alpha/2}` is the statistic critical value, obtained by
+the the CMF of the t-distribution with :math:`n-1` degrees of freedom.
+
+Use the Percent Point Function
+`PPF <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html#scipy.stats.t>`__
+or quantile function of the to compute the critical value .
+
+See `Confidence Interval for a population mean, t
+distribution <https://www.youtube.com/watch?v=6r5IZCjvIHI>`__.
+
+.. code:: ipython3
+
+    # Critical value for t at alpha / 2:
+    t_alpha2 = -scipy.stats.t.ppf(q=0.05/2, df=df, loc=0)
     
-    tobs = (xbar - mu0) / (s / np.sqrt(n)) 
-    print(tobs)
+    ci_low = xbar - t_alpha2 * s / np.sqrt(n)
+    ci_high = xbar + t_alpha2 * s / np.sqrt(n)
+    
+    print("Estimate: {:.2f}, t-val: {:.2f}, p-val: {:e}, df: {}, CI: [{:.5f}, {:.5f}]".
+          format(xbar, tval, pval, df, ci_low, ci_high))
 
 
 .. parsed-literal::
 
-    1.816
-    2.3968766311585883
+    Estimate: 2.26, t-val: 2.36, p-val: 2.500022e-02, df: 29, CI: [0.30515, 4.22272]
 
 
-The **:math:`p`-value** is the probability to observe a value :math:`t`
-more extreme than the observed one :math:`t_{obs}` under the null
-hypothesis :math:`H_0`: :math:`P(t > t_{obs} | H_0)`
+Simply use `Scipy one sample
+t-test <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_1samp.html>`__
 
 .. code:: ipython3
 
-    tvalues = np.linspace(-10, 10, 100)
-    plt.plot(tvalues, scipy.stats.t.pdf(tvalues, n-1), 'b-', label="T(n-1)")
-    upper_tval_tvalues = tvalues[tvalues > tobs]
-    plt.fill_between(upper_tval_tvalues, 0, scipy.stats.t.pdf(upper_tval_tvalues, n-1),
-                     alpha=.8, label="p-value")
-    _ = plt.legend()
+    ttest = scipy.stats.ttest_1samp(x, 0, alternative='two-sided')
+    ci_low, ci_high = ttest.confidence_interval()
+    
+    print("Estimate: {:.2f}, t-val: {:.2f}, p-val: {:e}, df: {}, CI: [{:.5f}, {:.5f}]".
+          format(ttest._estimate, ttest.statistic, ttest.pvalue, ttest.df, ci_low, ci_high))
 
 
+.. parsed-literal::
 
-.. image:: stat_univ_files/stat_univ_38_0.png
+    Estimate: 2.26, t-val: 2.36, p-val: 2.500022e-02, df: 29, CI: [0.30515, 4.22272]
 
 
-Testing pairwise associations
------------------------------
+`Boostraping for Confidence
+Intervals <https://www.youtube.com/watch?v=TqOeMYtOc1w>`__
+
+Statistical Tests of Pairwise Associations
+------------------------------------------
 
 Univariate statistical analysis: explore association betweens pairs of
 variables.
 
--  In statistics, a **categorical variable** or **factor** is a variable
-   that can take on one of a limited, and usually fixed, number of
-   possible values, thus assigning each individual to a particular group
-   or “category”. The levels are the possibles values of the variable.
-   Number of levels = 2: binomial; Number of levels > 2: multinomial.
-   There is no intrinsic ordering to the categories. For example, gender
-   is a categorical variable having two categories (male and female) and
-   there is no intrinsic ordering to the categories. For example, Sex
-   (Female, Male), Hair color (blonde, brown, etc.).
+- In statistics, a **categorical variable** or **factor** is a variable
+  that can take on one of a limited, and usually fixed, number of
+  possible values, thus assigning each individual to a particular group
+  or “category”. The levels are the possibles values of the variable.
+  Number of levels = 2: binomial; Number of levels > 2: multinomial.
+  There is no intrinsic ordering to the categories. For example, gender
+  is a categorical variable having two categories (male and female) and
+  there is no intrinsic ordering to the categories. For example, Sex
+  (Female, Male), Hair color (blonde, brown, etc.).
 
--  An **ordinal variable** is a categorical variable with a clear
-   ordering of the levels. For example: drinks per day (none, small,
-   medium and high).
+- An **ordinal variable** is a categorical variable with a clear
+  ordering of the levels. For example: drinks per day (none, small,
+  medium and high).
 
--  A **continuous** or **quantitative variable**
-   :math:`x \in \mathbb{R}` is one that can take any value in a range of
-   possible values, possibly infinite. E.g.: salary, experience in
-   years, weight.
+- A **continuous** or **quantitative variable** :math:`x \in \mathbb{R}`
+  is one that can take any value in a range of possible values, possibly
+  infinite. E.g.: salary, experience in years, weight.
 
-**What statistical test should I use?**
-
-See: http://www.ats.ucla.edu/stat/mult_pkg/whatstat/
+`What statistical test should I
+use? <http://www.ats.ucla.edu/stat/mult_pkg/whatstat/>`__
 
 .. figure:: images/stat_tests_flowchart.png
    :alt: Statistical tests
 
    Statistical tests
 
-Pearson correlation test: test association between two quantitative variables
------------------------------------------------------------------------------
+Pearson Correlation: Test Association Between Two Quantitative Variables
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Test the correlation coefficient of two quantitative variables. The test
 calculates a Pearson correlation coefficient and the :math:`p`-value for
@@ -776,11 +1405,11 @@ with :math:`n-2` degrees of freedom.
 
 .. parsed-literal::
 
-    0.8297883544365898 9.497428029783463e-14
+    0.8838265556020785 1.8786054559764614e-17
 
 
-Two sample (Student) :math:`t`-test: compare two means
-------------------------------------------------------
+Two sample (Student) T-test: Compare Two Means
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. figure:: images/model_two-sample.png
    :alt: Two-sample model
@@ -795,40 +1424,32 @@ after treatment for each individual) use the one-sample :math:`t`-test
 of the difference. The variances of the two samples may be assumed to be
 equal (a.k.a. homoscedasticity) or unequal (a.k.a. heteroscedasticity).
 
-Assumptions
-~~~~~~~~~~~
-
-1. Independence of **residuals** (:math:`\varepsilon_i`). This
-   assumptions **must** be satisfied.
-2. Normality of residuals. Approximately normally distributed can be
-   accepted.
-3. Homosedasticity use T-test, Heterosedasticity use Welch t-test.
-
 1. Model the data
-~~~~~~~~~~~~~~~~~
+
+Assumptions:
+
+- Independence of **residuals** (:math:`\varepsilon_i`). This
+  assumptions **must** be satisfied.
+- Normality of residuals. Approximately normally distributed can be
+  accepted.
+- Homosedasticity use T-test, Heterosedasticity use Welch t-test.
 
 Assume that the two random variables are normally distributed:
 :math:`y_1 \sim \mathcal{N}(\mu_{1}, \sigma_{1}), y_2 \sim \mathcal{N}(\mu_{2}, \sigma_2)`.
 
-2. Fit: estimate the model parameters
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Estimate means and variances:
+Fit: estimate the model parameters, means and variances:
 :math:`\bar{y_1}, s^2_{y_1}, \bar{y_2}, s^2_{y_2}`.
 
-3. :math:`t`-test
-~~~~~~~~~~~~~~~~~
+2. t-test
 
 The general principle is
 
 .. raw:: latex
 
-   \begin{align}
-   t &= \frac{\text{difference of means}}{\text{standard dev of error}}\\
-     &= \frac{\text{difference of means}}{\text{its standard error}}\\
-     &= \frac{\bar{y_1}-\bar{y_2}}{\sqrt{\sum\varepsilon^2}}\sqrt{n-2}\\
-   &= \frac{\bar{y_1}-\bar{y_2}}{s_{\bar{y_1}-\bar{y_2}}}
-   \end{align}
+   \begin{align*}
+   t &= \frac{\text{difference of means}}{\text{standard dev of error}} = \frac{\bar{y_1}-\bar{y_2}}{s_{\bar{y_1}-\bar{y_2}}}\\
+     &= \frac{\bar{y_1}-\bar{y_2}}{\sqrt{\sum\varepsilon^2}}\sqrt{n-2}
+   \end{align*}
 
 Since :math:`y_1` and :math:`y_2` are independant:
 
@@ -892,14 +1513,13 @@ Equal sample sizes, equal variances
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If we simplify the problem assuming equal samples of size
-:math:`n_1 = n_2 = n` we get
+:math:`n_1 = n_2 = n/2` we get
 
 .. raw:: latex
 
    \begin{align}
-   t &= \frac{\bar{y_1} - \bar{y_2}}{s \sqrt{2}} \cdot \sqrt{n}\\
-   &\approx \text{effect size} \cdot \sqrt{n}\\
-   &\approx \frac{\text{difference of means}}{\text{standard deviation of the noise}} \cdot \sqrt{n}
+   t &= \frac{\bar{y_1} - \bar{y_2}}{s} \cdot \sqrt{n}\\
+   &\approx \frac{\text{difference of means}}{\text{standard deviation of the noise}} \cdot \sqrt{n} = &\approx \text{effect size} \cdot \sqrt{n}
    \end{align}
 
 Example
@@ -910,25 +1530,25 @@ using the **standard t-test, assuming equal variance**.
 
 .. code:: ipython3
 
-    height = np.array([ 1.83,  1.83,  1.73,  1.82,  1.83,  1.73,  1.99,  1.85,  1.68,  1.87,
-                        1.66,  1.71,  1.73,  1.64,  1.70,  1.60,  1.79,  1.73,  1.62,  1.77])
+    height = np.array([1.83, 1.83, 1.73, 1.82, 1.83, 1.73, 1.99, 1.85, 1.68, 1.87,
+                       1.66, 1.71, 1.73, 1.64, 1.70, 1.60, 1.79, 1.73, 1.62, 1.77])
     
     grp = np.array(["M"] * 10 + ["F"] * 10)
     
     # Compute with scipy
-    scipy.stats.ttest_ind(height[grp == "M"], height[grp == "F"], equal_var=True)
-
-
+    ttest = scipy.stats.ttest_ind(height[grp == "M"], height[grp == "F"], equal_var=True)
+    
+    print("Estimate: {:.2f}, t-val: {:.2f}, p-val: {:e}, df: {}".\
+        format(ttest._estimate, ttest.statistic, ttest.pvalue, ttest.df))
 
 
 .. parsed-literal::
 
-    Ttest_indResult(statistic=3.5511519888466885, pvalue=0.00228208937112721)
+    Estimate: 0.12, t-val: 3.55, p-val: 2.282089e-03, df: 18.0
 
 
-
-ANOVA :math:`F`-test (quantitative ~ categorial (>=2 levels))
--------------------------------------------------------------
+ANOVA F-test: Quantitative as a function of Categorical Factor with Three Levels or More
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Analysis of variance (ANOVA) provides a statistical test of whether or
 not the means of several (k) groups are equal, and therefore generalizes
@@ -942,49 +1562,46 @@ one-way anova.
 
 `Wikipedia <https://en.wikipedia.org/wiki/F-test>`__:
 
--  Test if any group is on average superior, or inferior, to the others
-   versus the null hypothesis that all four strategies yield the same
-   mean response
+- Test if any group is on average superior, or inferior, to the others
+  versus the null hypothesis that all four strategies yield the same
+  mean response
 
--  Detect any of several possible differences.
+- Detect any of several possible differences.
 
--  The advantage of the ANOVA :math:`F`-test is that we do not need to
-   pre-specify which strategies are to be compared, and we do not need
-   to adjust for making multiple comparisons.
+- The advantage of the ANOVA :math:`F`-test is that we do not need to
+  pre-specify which strategies are to be compared, and we do not need to
+  adjust for making multiple comparisons.
 
--  The disadvantage of the ANOVA :math:`F`-test is that if we reject the
-   null hypothesis, we do not know which strategies can be said to be
-   significantly different from the others.
-
-Assumptions
-~~~~~~~~~~~
-
-1. The samples are randomly selected in an independent manner from the k
-   populations.
-2. All k populations have distributions that are approximately normal.
-   Check by plotting groups distribution.
-3. The k population variances are equal. Check by plotting groups
-   distribution.
+- The disadvantage of the ANOVA :math:`F`-test is that if we reject the
+  null hypothesis, we do not know which strategies can be said to be
+  significantly different from the others.
 
 1. Model the data
-~~~~~~~~~~~~~~~~~
 
-Is there a difference in Petal Width in species from iris dataset. Let
-:math:`y_1, y_2` and :math:`y_3` be Petal Width in three species.
+Assumptions
+
+- The samples are randomly selected in an independent manner from the k
+  populations.
+- All k populations have distributions that are approximately normal.
+  Check by plotting groups distribution.
+- The k population variances are equal. Check by plotting groups
+  distribution.
+
+The question is: Is there a difference in Petal Width in species from
+iris dataset? Let :math:`y_1, y_2` and :math:`y_3` be Petal Width in
+three species.
 
 Here we assume (see assumptions) that the three populations were sampled
 from three random variables that are normally distributed. I.e.,
 :math:`Y_1 \sim N(\mu_1, \sigma_1), Y_2 \sim N(\mu_2, \sigma_2)` and
 :math:`Y_3 \sim N(\mu_3, \sigma_3)`.
 
-2. Fit: estimate the model parameters
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**2. Fit: estimate the model parameters**
 
 Estimate means and variances:
 :math:`\bar{y}_i, \sigma_i,\;\; \forall i \in \{1, 2, 3\}`.
 
-3. :math:`F`-test
-~~~~~~~~~~~~~~~~~
+**3. :math:`F`-test**
 
 The formula for the one-way ANOVA F-test statistic is
 
@@ -1025,7 +1642,8 @@ happen if the population means of the groups all have the same value.
 Note that when there are only two groups for the one-way ANOVA F-test,
 :math:`F=t^2` where :math:`t` is the Student’s :math:`t` statistic.
 
-Iris dataset:
+Example with the Iris Dataset:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ipython3
 
@@ -1041,7 +1659,8 @@ Iris dataset:
     ax = sns.violinplot(x="Species", y="SepalLength", data=iris)
     ax = sns.swarmplot(x="Species", y="SepalLength", data=iris,
                        color="white")
-    ax = sns.swarmplot(x="Species", y="SepalLength",  color="black", data=means, size=10)
+    ax = sns.swarmplot(x="Species", y="SepalLength",  color="black",
+                       data=means, size=10)
     
     # ANOVA
     lm = smf.ols('SepalLength ~ Species', data=iris).fit()
@@ -1110,11 +1729,11 @@ Iris dataset:
 
 
 
-.. image:: stat_univ_files/stat_univ_45_2.png
+.. image:: stat_univ_files/stat_univ_82_2.png
 
 
-Chi-square, :math:`\chi^2` (categorial ~ categorial)
-----------------------------------------------------
+Chi-square, :math:`\chi^2`: Categorical v.s. Categorical Factors
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Computes the chi-square, :math:`\chi^2`, statistic and :math:`p`-value
 for the hypothesis test of independence of frequencies in the observed
@@ -1123,10 +1742,13 @@ against an expected contingency table obtained by computing expected
 frequencies based on the marginal sums under the assumption of
 independence.
 
-Example: 20 participants: 10 exposed to some chemical product and 10 non
-exposed (exposed = 1 or 0). Among the 20 participants 10 had cancer 10
-not (cancer = 1 or 0). :math:`\chi^2` tests the association between
-those two variables.
+Example
+^^^^^^^
+
+20 participants: 10 exposed to some chemical product and 10 non exposed
+(exposed = 1 or 0). Among the 20 participants 10 had cancer 10 not
+(cancer = 1 or 0). :math:`\chi^2` tests the association between those
+two variables.
 
 .. code:: ipython3
 
@@ -1204,11 +1826,11 @@ Computing expected cross-table
      [5. 5.]]
 
 
-Non-parametric test of pairwise associations
---------------------------------------------
+Non-parametric Tests of Pairwise Associations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Spearman rank-order correlation (quantitative ~ quantitative)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Spearman Rank-Order Correlation (Quantitative vs Quantitative)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Spearman correlation is a non-parametric measure of the monotonicity
 of the relationship between two datasets.
@@ -1253,14 +1875,13 @@ increases, so does :math:`y`. Negative correlations imply that as
 
 
 
-.. image:: stat_univ_files/stat_univ_51_1.png
+.. image:: stat_univ_files/stat_univ_88_1.png
 
 
-Wilcoxon signed-rank test (quantitative ~ cte)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Wilcoxon Signed-Rank Rest (Quantitative vs Cte)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Source: https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test
-
+`Wikipedia <https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test>`__:
 The Wilcoxon signed-rank test is a non-parametric statistical hypothesis
 test used when comparing two related samples, matched samples, or
 repeated measurements on a single sample to assess whether their
@@ -1301,12 +1922,12 @@ symmetric distribution around zero.
 
 .. parsed-literal::
 
-    Ttest_relResult(statistic=0.7766377807752968, pvalue=0.44693401731548044)
-    WilcoxonResult(statistic=23.0, pvalue=0.001209259033203125)
+    TtestResult(statistic=np.float64(0.7766377807752968), pvalue=np.float64(0.44693401731548044), df=np.int64(19))
+    WilcoxonResult(statistic=np.float64(23.0), pvalue=np.float64(0.001209259033203125))
 
 
-Mann–Whitney :math:`U` test (quantitative ~ categorial (2 levels))
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mann–Whitney :math:`U` test (Quantitative vs Categorical Factor with Two Levels)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In statistics, the Mann–Whitney :math:`U` test (also called the
 Mann–Whitney–Wilcoxon, Wilcoxon rank-sum test or Wilcoxon–Mann–Whitney
@@ -1340,11 +1961,11 @@ it is nearly as efficient as the :math:`t`-test on normal distributions.
 
 .. parsed-literal::
 
-    Ttest_indResult(statistic=0.6104564820307219, pvalue=0.5451934484051324)
-    MannwhitneyuResult(statistic=41.0, pvalue=9.037238869417781e-06)
+    TtestResult(statistic=np.float64(0.6104564820307219), pvalue=np.float64(0.5451934484051324), df=np.float64(38.0))
+    MannwhitneyuResult(statistic=np.float64(41.0), pvalue=np.float64(1.8074477738835562e-05))
 
 
-Linear model
+Linear Model
 ------------
 
 .. figure:: images/model_lm.png
@@ -1363,32 +1984,31 @@ the independent variables :math:`x_i^p` is formulated as
 
        y_i = \beta_0 + \beta_1 x_{1i} + \cdots + \beta_p x_{pi} + \varepsilon_i \qquad i = 1, \ldots, n 
 
--  The :math:`\beta`\ ’s are the model parameters, ie, the regression
-   coeficients.
+- The :math:`\beta`\ ’s are the model parameters, ie, the regression
+  coeficients.
 
--  :math:`\beta_0` is the intercept or the bias.
+- :math:`\beta_0` is the intercept or the bias.
 
--  :math:`\varepsilon_i` are the **residuals**.
+- :math:`\varepsilon_i` are the **residuals**.
 
--  **An independent variable (IV)**. It is a variable that stands alone
-   and isn’t changed by the other variables you are trying to measure.
-   For example, someone’s age might be an independent variable. Other
-   factors (such as what they eat, how much they go to school, how much
-   television they watch) aren’t going to change a person’s age. In
-   fact, when you are looking for some kind of relationship between
-   variables you are trying to see if the independent variable causes
-   some kind of change in the other variables, or dependent variables.
-   In Machine Learning, these variables are also called the
-   **predictors**.
+- **An independent variable (IV)**. It is a variable that stands alone
+  and isn’t changed by the other variables you are trying to measure.
+  For example, someone’s age might be an independent variable. Other
+  factors (such as what they eat, how much they go to school, how much
+  television they watch) aren’t going to change a person’s age. In fact,
+  when you are looking for some kind of relationship between variables
+  you are trying to see if the independent variable causes some kind of
+  change in the other variables, or dependent variables. In Machine
+  Learning, these variables are also called the **predictors**.
 
--  A **dependent variable**. It is something that depends on other
-   factors. For example, a test score could be a dependent variable
-   because it could change depending on several factors such as how much
-   you studied, how much sleep you got the night before you took the
-   test, or even how hungry you were when you took it. Usually when you
-   are looking for a relationship between two things you are trying to
-   find out what makes the dependent variable change the way it does. In
-   Machine Learning this variable is called a **target variable**.
+- A **dependent variable**. It is something that depends on other
+  factors. For example, a test score could be a dependent variable
+  because it could change depending on several factors such as how much
+  you studied, how much sleep you got the night before you took the
+  test, or even how hungry you were when you took it. Usually when you
+  are looking for a relationship between two things you are trying to
+  find out what makes the dependent variable change the way it does. In
+  Machine Learning this variable is called a **target variable**.
 
 Assumptions
 ~~~~~~~~~~~
@@ -1401,7 +2021,7 @@ Assumptions
 `Regression diagnostics: testing the assumptions of linear
 regression <http://people.duke.edu/~rnau/testing.htm>`__
 
-Simple regression: test association between two quantitative variables
+Simple Regression: Test Association Between Two Quantitative Variables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Using the dataset “salary”, explore the association between the
@@ -1412,8 +2032,7 @@ Experience is quantitative), considering only non-managers.
 
     df = salary[salary.management == 'N']
 
-1. Model the data
-^^^^^^^^^^^^^^^^^
+**1. Model the data**
 
 Model the data on some **hypothesis** e.g.: salary is a linear function
 of the experience.
@@ -1443,18 +2062,17 @@ values of independant variable and the intercept:
      +
      \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \epsilon_5 \end{bmatrix}\end{split}
 
--  :math:`\beta`: the slope or coefficient or parameter of the model,
+- :math:`\beta`: the slope or coefficient or parameter of the model,
 
--  :math:`\beta_0`: the **intercept** or **bias** is the second
-   parameter of the model,
+- :math:`\beta_0`: the **intercept** or **bias** is the second parameter
+  of the model,
 
--  :math:`\epsilon_i`: is the :math:`i`\ th error, or residual with
-   :math:`\epsilon \sim \mathcal{N}(0, \sigma^2)`.
+- :math:`\epsilon_i`: is the :math:`i`\ th error, or residual with
+  :math:`\epsilon \sim \mathcal{N}(0, \sigma^2)`.
 
 The simple regression is equivalent to the Pearson correlation.
 
-2. Fit: estimate the model parameters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**2. Fit: estimate the model parameters**
 
 The goal it so estimate :math:`\beta`, :math:`\beta_0` and
 :math:`\sigma^2`.
@@ -1517,9 +2135,6 @@ Divide both sides by :math:`n`:
     plt.xlabel('Experience (years)')
     plt.ylabel('Salary')
     plt.show()
-    
-    print("Using seaborn")
-    ax = sns.regplot(x="experience", y="salary", data=df)
 
 
 .. parsed-literal::
@@ -1530,25 +2145,15 @@ Divide both sides by :math:`n`:
 
 
 
-.. image:: stat_univ_files/stat_univ_60_1.png
+.. image:: stat_univ_files/stat_univ_97_1.png
 
 
-.. parsed-literal::
-
-    Using seaborn
-
-
-
-.. image:: stat_univ_files/stat_univ_60_3.png
-
-
-Multiple regression
+Multiple Regression
 ~~~~~~~~~~~~~~~~~~~
 
-Theory
-^^^^^^
+**Theory**
 
-Muliple Linear Regression is the most basic supervised learning
+Multiple Linear Regression is the most basic supervised learning
 algorithm.
 
 Given: a set of training data :math:`\{x_1, ... , x_N\}` with
@@ -1609,7 +2214,7 @@ Minimize the Mean Squared Error MSE loss:
 .. math::
 
 
-   MSE(\beta) =  = \frac{1}{N}\sum_{i=1}^{N}(y_i - \mathbf{x}_i^T\beta)^2
+   MSE(\beta) = \frac{1}{N}\sum_{i=1}^{N}(y_i - \mathbf{x}_i^T\beta)^2
 
 Using the matrix notation, the **mean squared error (MSE) loss can be
 rewritten**:
@@ -1619,7 +2224,7 @@ rewritten**:
 
    MSE(\beta) = \frac{1}{N}||y - X\beta||_2^2.
 
-The :math:`\beta` that minimises the MSE can be found by:
+The :math:`\beta` that minimizes the MSE can be found by:
 
 .. raw:: latex
 
@@ -1635,7 +2240,6 @@ The :math:`\beta` that minimises the MSE can be found by:
 where :math:`(X^TX)^{-1} X^T` is a pseudo inverse of :math:`X`.
 
 Simulated dataset where:
-^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. math::
 
@@ -1677,14 +2281,13 @@ Simulated dataset where:
      [ 1.          0.31424733 -0.90802408 -1.4123037 ]]
 
 
-Fit with ``numpy``
-^^^^^^^^^^^^^^^^^^
+**Fit with ``numpy``**
 
 Estimate the parameters
 
 .. code:: ipython3
 
-    Xpinv = linalg.pinv2(X)
+    Xpinv = linalg.pinv(X)
     betahat = np.dot(Xpinv, y)
     print("Estimated beta:\n", betahat)
 
@@ -1695,16 +2298,16 @@ Estimate the parameters
      [10.14742501  0.57938106  0.51654653  0.17862194]
 
 
-Linear model with statsmodels
------------------------------
+Linear Model with Statsmodels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Sources: http://statsmodels.sourceforge.net/devel/examples/
+`Statmodels
+examples <http://statsmodels.sourceforge.net/devel/examples/>`__
 
-Multiple regression
-~~~~~~~~~~~~~~~~~~~
+Multiple Regression Using Numpy Array
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Interface with statsmodels without formulae (``sm``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ipython3
 
@@ -1726,8 +2329,8 @@ Interface with statsmodels without formulae (``sm``)
     Dep. Variable:                      y   R-squared:                       0.363
     Model:                            OLS   Adj. R-squared:                  0.322
     Method:                 Least Squares   F-statistic:                     8.748
-    Date:                Fri, 08 Jan 2021   Prob (F-statistic):           0.000106
-    Time:                        15:05:47   Log-Likelihood:                -71.271
+    Date:                Thu, 03 Apr 2025   Prob (F-statistic):           0.000106
+    Time:                        13:00:31   Log-Likelihood:                -71.271
     No. Observations:                  50   AIC:                             150.5
     Df Residuals:                      46   BIC:                             158.2
     Df Model:                           3                                         
@@ -1750,16 +2353,18 @@ Interface with statsmodels without formulae (``sm``)
     [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 
 
-Statsmodels with Pandas using formulae (``smf``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Multiple Regression Pandas using formulae (``smf``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Use ``R`` language syntax for data.frame. For an additive model:
+
 :math:`y_i = \beta^0 + x_i^1 \beta^1 + x_i^2 \beta^2 + \epsilon_i \equiv`
 ``y ~ x1 + x2``.
 
 .. code:: ipython3
 
-    df = pd.DataFrame(np.column_stack([X, y]), columns=['inter', 'x1','x2', 'x3', 'y'])
+    df = pd.DataFrame(np.column_stack([X, y]),
+                      columns=['inter', 'x1','x2', 'x3', 'y'])
     print(df.columns, df.shape)
     # Build a model excluding the intercept, it is implicit
     model = smf.ols("y~x1 + x2 + x3", df).fit()
@@ -1774,8 +2379,8 @@ Use ``R`` language syntax for data.frame. For an additive model:
     Dep. Variable:                      y   R-squared:                       0.363
     Model:                            OLS   Adj. R-squared:                  0.322
     Method:                 Least Squares   F-statistic:                     8.748
-    Date:                Fri, 08 Jan 2021   Prob (F-statistic):           0.000106
-    Time:                        15:05:47   Log-Likelihood:                -71.271
+    Date:                Thu, 03 Apr 2025   Prob (F-statistic):           0.000106
+    Time:                        13:00:31   Log-Likelihood:                -71.271
     No. Observations:                  50   AIC:                             150.5
     Df Residuals:                      46   BIC:                             158.2
     Df Model:                           3                                         
@@ -1798,8 +2403,8 @@ Use ``R`` language syntax for data.frame. For an additive model:
     [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 
 
-Multiple regression with categorical independent variables or factors: Analysis of covariance (ANCOVA)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Multiple Regression Mixing Covariates and Factors (ANCOVA)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Analysis of covariance (ANCOVA) is a linear model that blends ANOVA and
 linear regression. ANCOVA evaluates whether population means of a
@@ -1818,8 +2423,9 @@ variables that are not of primary interest, known as covariates (CV).
     print("Jarque-Bera normality test p-value %.5f" % \
           sm.stats.jarque_bera(lm.resid)[1])
     
-    ax = sns.displot(df, x='residuals', kind="kde", fill=True)
-    ax = sns.displot(df, x='residuals', kind="kde", hue='management', fill=True)
+    ax = sns.displot(df, x='residuals', kind="kde", fill=True, aspect=1, height=fig_h*0.7)
+    ax = sns.displot(df, x='residuals', kind="kde", hue='management', fill=True,
+                     aspect=1, height=fig_h*0.7)
 
 
 .. parsed-literal::
@@ -1828,11 +2434,11 @@ variables that are not of primary interest, known as covariates (CV).
 
 
 
-.. image:: stat_univ_files/stat_univ_72_1.png
+.. image:: stat_univ_files/stat_univ_109_1.png
 
 
 
-.. image:: stat_univ_files/stat_univ_72_2.png
+.. image:: stat_univ_files/stat_univ_109_2.png
 
 
 Normality assumption of the residuals can be rejected (p-value < 0.05).
@@ -1841,15 +2447,16 @@ There is an efect of the “management” factor, take it into account.
 One-way AN(C)OVA
 ^^^^^^^^^^^^^^^^
 
--  ANOVA: one categorical independent variable, i.e. one factor.
+- ANOVA: one categorical independent variable, i.e. one factor.
 
--  ANCOVA: ANOVA with some covariates.
+- ANCOVA: ANOVA with some covariates.
 
 .. code:: ipython3
 
     oneway = smf.ols('salary ~ management + experience', df).fit()
     df["residuals"] = oneway.resid
-    sns.displot(df, x='residuals', kind="kde", fill=True)
+    sns.displot(df, x='residuals', kind="kde", fill=True,
+                aspect=1, height=fig_h*0.7)
     print(sm.stats.anova_lm(oneway, typ=2))
     print("Jarque-Bera normality test p-value %.3f" %  \
           sm.stats.jarque_bera(oneway.resid)[1])
@@ -1865,7 +2472,7 @@ One-way AN(C)OVA
 
 
 
-.. image:: stat_univ_files/stat_univ_75_1.png
+.. image:: stat_univ_files/stat_univ_112_1.png
 
 
 Distribution of residuals is still not normal but closer to normality.
@@ -1881,7 +2488,8 @@ Ancova with two categorical independent variables, i.e. two factors.
     twoway = smf.ols('salary ~ education + management + experience', df).fit()
     
     df["residuals"] = twoway.resid
-    sns.displot(df, x='residuals', kind="kde", fill=True)
+    sns.displot(df, x='residuals', kind="kde", fill=True,
+                aspect=1, height=fig_h*0.7)
     print(sm.stats.anova_lm(twoway, typ=2))
     
     print("Jarque-Bera normality test p-value %.3f" %  \
@@ -1899,13 +2507,13 @@ Ancova with two categorical independent variables, i.e. two factors.
 
 
 
-.. image:: stat_univ_files/stat_univ_78_1.png
+.. image:: stat_univ_files/stat_univ_115_1.png
 
 
 Normality assumtion cannot be rejected. Assume it. Education, management
 and experience are significantly associated with salary.
 
-Comparing two nested models
+Comparing Two Nested Models
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``oneway`` is nested within ``twoway``. Comparing two nested models
@@ -1920,16 +2528,16 @@ using an :math:`F`-test on residuals:
 
 .. parsed-literal::
 
-    (43.35158945918107, 7.672449570495418e-11, 2.0)
+    (np.float64(43.35158945918104), np.float64(7.6724495704955e-11), np.float64(2.0))
 
 
 twoway is significantly better than one way
 
-Factor coding
+Factor Coding
 ^^^^^^^^^^^^^
 
-See http://statsmodels.sourceforge.net/devel/contrasts.html
-
+`Statsmodels
+contrasts <http://statsmodels.sourceforge.net/devel/contrasts.html>`__.
 By default Pandas use “dummy coding”. Explore:
 
 .. code:: ipython3
@@ -1953,7 +2561,7 @@ By default Pandas use “dummy coding”. Explore:
      [1. 1. 0. 0. 3.]]
 
 
-Contrasts and post-hoc tests
+Contrasts and Post-hoc Tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ipython3
@@ -1987,7 +2595,7 @@ Contrasts and post-hoc tests
     ==============================================================================
 
 
-Multiple comparisons
+Multiple Comparisons
 --------------------
 
 .. code:: ipython3
@@ -2007,8 +2615,8 @@ Multiple comparisons
     
     # 
     import scipy.stats as stats
-    import matplotlib.pyplot as plt
-    tvals, pvals = np.full(n_features, np.NAN), np.full(n_features, np.NAN)
+    #import matplotlib.pyplot as plt
+    tvals, pvals = np.full(n_features, np.nan), np.full(n_features, np.nan)
     for j in range(n_features):
         tvals[j], pvals[j] = stats.ttest_ind(Y[grp=="g1", j], Y[grp=="g2", j],
                                              equal_var=True)
@@ -2034,7 +2642,7 @@ Multiple comparisons
 
 
 
-.. image:: stat_univ_files/stat_univ_88_0.png
+.. image:: stat_univ_files/stat_univ_125_0.png
 
 
 Note that under the null hypothesis the distribution of the *p*-values
@@ -2042,18 +2650,18 @@ is uniform.
 
 Statistical measures:
 
--  **True Positive (TP)** equivalent to a hit. The test correctly
-   concludes the presence of an effect.
+- **True Positive (TP)** equivalent to a hit. The test correctly
+  concludes the presence of an effect.
 
--  True Negative (TN). The test correctly concludes the absence of an
-   effect.
+- True Negative (TN). The test correctly concludes the absence of an
+  effect.
 
--  **False Positive (FP)** equivalent to a false alarm, **Type I
-   error**. The test improperly concludes the presence of an effect.
-   Thresholding at :math:`p\text{-value} < 0.05` leads to 47 FP.
+- **False Positive (FP)** equivalent to a false alarm, **Type I error**.
+  The test improperly concludes the presence of an effect. Thresholding
+  at :math:`p\text{-value} < 0.05` leads to 47 FP.
 
--  False Negative (FN) equivalent to a miss, Type II error. The test
-   improperly concludes the absence of an effect.
+- False Negative (FN) equivalent to a miss, Type II error. The test
+  improperly concludes the absence of an effect.
 
 .. code:: ipython3
 
@@ -2068,14 +2676,15 @@ Statistical measures:
     No correction, FP: 47 (expected: 45.00), TP: 71
 
 
-Bonferroni correction for multiple comparisons
+Bonferroni Correction for Multiple Comparisons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Bonferroni correction is based on the idea that if an experimenter
 is testing :math:`P` hypotheses, then one way of maintaining the
-familywise error rate (FWER) is to test each individual hypothesis at a
-statistical significance level of :math:`1/P` times the desired maximum
-overall level.
+**Family-wise error rate**
+`FWER <https://en.wikipedia.org/wiki/Family-wise_error_rate>`__ is to
+test each individual hypothesis at a statistical significance level of
+:math:`1/P` times the desired maximum overall level.
 
 So, if the desired significance level for the whole family of tests is
 :math:`\alpha` (usually 0.05), then the Bonferroni correction would test
@@ -2100,7 +2709,7 @@ each individual hypothesis at :math:`\alpha = 0.05/8 = 0.00625`.
     FWER correction, FP: 0, TP: 6
 
 
-The False discovery rate (FDR) correction for multiple comparisons
+The False Discovery Rate (FDR) Correction for Multiple Comparisons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 FDR-controlling procedures are designed to control the expected

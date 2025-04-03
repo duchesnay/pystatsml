@@ -10,42 +10,68 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_gallery_stat_univ_lab_brain-volume.py>`
-        to download the full example code
+        :ref:`Go to the end <sphx_glr_download_auto_gallery_stat_univ_lab_brain-volume.py>`
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
 .. _sphx_glr_auto_gallery_stat_univ_lab_brain-volume.py:
 
 
-Lab: Brain volumes study
-=======================
+Hands-On: Brain volumes study
+=============================
 
 The study provides the brain volumes of grey matter (gm), white matter (wm)
 and cerebrospinal fluid) (csf) of 808 anatomical MRI scans.
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-12
+.. GENERATED FROM PYTHON SOURCE LINES 8-29
+
+.. code-block:: Python
+
+
+    import os
+    import tempfile
+    import urllib.request
+
+    import pandas as pd
+
+    # Stat
+    import statsmodels.formula.api as smfrmla
+    import statsmodels.api as sm
+    import scipy.stats
+
+    # Plot
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    # Plot parameters
+    plt.style.use('seaborn-v0_8-whitegrid')
+    fig_w, fig_h = plt.rcParams.get('figure.figsize')
+    plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 30-32
 
 Manipulate data
 ---------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-18
+.. GENERATED FROM PYTHON SOURCE LINES 34-38
 
 Set the working directory within a directory called "brainvol"
 
 Create 2 subdirectories: `data` that will contain downloaded data and
 `reports` for results of the analysis.
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-34
+.. GENERATED FROM PYTHON SOURCE LINES 38-48
 
-.. code-block:: default
+.. code-block:: Python
 
-
-    import os
-    import os.path
-    import pandas as pd
-    import tempfile
-    import urllib.request
 
     WD = os.path.join(tempfile.gettempdir(), "brainvol")
     os.makedirs(WD, exist_ok=True)
@@ -63,7 +89,7 @@ Create 2 subdirectories: `data` that will contain downloaded data and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-43
+.. GENERATED FROM PYTHON SOURCE LINES 49-57
 
 **Fetch data**
 
@@ -74,9 +100,9 @@ Create 2 subdirectories: `data` that will contain downloaded data and
 - White matter volume `wm.csv` (columns: `participant_id`, `session`, `wm_vol`)
 - Cerebrospinal Fluid `csf.csv` (columns: `participant_id`, `session`, `csf_vol`)
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-61
+.. GENERATED FROM PYTHON SOURCE LINES 57-75
 
-.. code-block:: default
+.. code-block:: Python
 
 
     base_url = 'https://github.com/duchesnay/pystatsml/raw/master/datasets/brain_volumes/%s'
@@ -102,28 +128,26 @@ Create 2 subdirectories: `data` that will contain downloaded data and
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     tables can be merge using shared columns
-      participant_id session  gm_vol
-    0    sub-S1-0002  ses-01    0.67
-    1    sub-S1-0002  ses-02    0.68
-    2    sub-S1-0002  ses-03    0.67
-    3    sub-S1-0004  ses-01    0.89
-    4    sub-S1-0004  ses-02    0.88
+      participant_id session    gm_vol
+    0    sub-S1-0002  ses-01  0.672506
+    1    sub-S1-0002  ses-02  0.678772
+    2    sub-S1-0002  ses-03  0.665592
+    3    sub-S1-0004  ses-01  0.890714
+    4    sub-S1-0004  ses-02  0.881127
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 76-77
 
 **Merge tables** according to `participant_id`
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-67
+.. GENERATED FROM PYTHON SOURCE LINES 77-81
 
-.. code-block:: default
+.. code-block:: Python
 
 
     brain_vol = pd.merge(pd.merge(pd.merge(demo, gm), wm), csf)
@@ -136,13 +160,13 @@ Create 2 subdirectories: `data` that will contain downloaded data and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
+.. GENERATED FROM PYTHON SOURCE LINES 82-83
 
 **Drop rows with missing values**
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-73
+.. GENERATED FROM PYTHON SOURCE LINES 83-87
 
-.. code-block:: default
+.. code-block:: Python
 
 
     brain_vol = brain_vol.dropna()
@@ -155,33 +179,34 @@ Create 2 subdirectories: `data` that will contain downloaded data and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-76
+.. GENERATED FROM PYTHON SOURCE LINES 88-90
 
 **Compute Total Intra-cranial volume**
 `tiv_vol` = `gm_vol` + `csf_vol` + `wm_vol`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-79
+.. GENERATED FROM PYTHON SOURCE LINES 90-94
 
-.. code-block:: default
-
-
-    brain_vol["tiv_vol"] = brain_vol["gm_vol"] + brain_vol["wm_vol"] + brain_vol["csf_vol"]
+.. code-block:: Python
 
 
-
+    brain_vol["tiv_vol"] = brain_vol["gm_vol"] + \
+        brain_vol["wm_vol"] + brain_vol["csf_vol"]
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-82
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
 **Compute tissue fractions**
 `gm_f = gm_vol / tiv_vol`, `wm_f  = wm_vol / tiv_vol`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-86
+.. GENERATED FROM PYTHON SOURCE LINES 97-101
 
-.. code-block:: default
+.. code-block:: Python
 
 
     brain_vol["gm_f"] = brain_vol["gm_vol"] / brain_vol["tiv_vol"]
@@ -194,13 +219,13 @@ Create 2 subdirectories: `data` that will contain downloaded data and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-88
+.. GENERATED FROM PYTHON SOURCE LINES 102-103
 
 **Save in a excel file** `brain_vol.xlsx`
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-92
+.. GENERATED FROM PYTHON SOURCE LINES 103-107
 
-.. code-block:: default
+.. code-block:: Python
 
 
     brain_vol.to_excel(os.path.join(WD, "data", "brain_vol.xlsx"),
@@ -213,25 +238,20 @@ Create 2 subdirectories: `data` that will contain downloaded data and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-95
+.. GENERATED FROM PYTHON SOURCE LINES 108-110
 
 Descriptive Statistics
 ----------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-98
+.. GENERATED FROM PYTHON SOURCE LINES 112-113
 
 Load excel file `brain_vol.xlsx`
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-111
+.. GENERATED FROM PYTHON SOURCE LINES 113-121
 
-.. code-block:: default
+.. code-block:: Python
 
 
-    import os
-    import pandas as pd
-    import seaborn as sns
-    import statsmodels.formula.api as smfrmla
-    import statsmodels.api as sm
 
     brain_vol = pd.read_excel(os.path.join(WD, "data", "brain_vol.xlsx"),
                               sheet_name='data')
@@ -246,15 +266,15 @@ Load excel file `brain_vol.xlsx`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-115
+.. GENERATED FROM PYTHON SOURCE LINES 122-125
 
 **Descriptive statistics**
 Most of participants have several MRI sessions (column `session`)
 Select on rows from session one "ses-01"
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-121
+.. GENERATED FROM PYTHON SOURCE LINES 125-131
 
-.. code-block:: default
+.. code-block:: Python
 
 
     brain_vol1 = brain_vol[brain_vol.session == "ses-01"]
@@ -269,13 +289,13 @@ Select on rows from session one "ses-01"
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-123
+.. GENERATED FROM PYTHON SOURCE LINES 132-133
 
 Global descriptives statistics of numerical variables
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-128
+.. GENERATED FROM PYTHON SOURCE LINES 133-138
 
-.. code-block:: default
+.. code-block:: Python
 
 
     desc_glob_num = brain_vol1.describe()
@@ -287,8 +307,6 @@ Global descriptives statistics of numerical variables
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -305,13 +323,13 @@ Global descriptives statistics of numerical variables
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-130
+.. GENERATED FROM PYTHON SOURCE LINES 139-140
 
 Global Descriptive statistics of categorical variable
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-140
+.. GENERATED FROM PYTHON SOURCE LINES 140-150
 
-.. code-block:: default
+.. code-block:: Python
 
 
     desc_glob_cat = brain_vol1[["site", "group", "sex"]].describe(include='all')
@@ -329,8 +347,6 @@ Global Descriptive statistics of categorical variable
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
            site    group  sex
@@ -340,28 +356,28 @@ Global Descriptive statistics of categorical variable
     freq     65      157  155
     Get count by level
              site  group    sex
-    S7      65.00    nan    nan
-    S5      62.00    nan    nan
-    S8      59.00    nan    nan
-    S3      29.00    nan    nan
-    S4      15.00    nan    nan
-    S1      13.00    nan    nan
-    S6       1.00    nan    nan
-    Patient   nan 157.00    nan
-    Control   nan  87.00    nan
-    M         nan    nan 155.00
-    F         nan    nan  89.00
+    S7      65.00    NaN    NaN
+    S5      62.00    NaN    NaN
+    S8      59.00    NaN    NaN
+    S3      29.00    NaN    NaN
+    S4      15.00    NaN    NaN
+    S1      13.00    NaN    NaN
+    S6       1.00    NaN    NaN
+    Patient   NaN 157.00    NaN
+    Control   NaN  87.00    NaN
+    M         NaN    NaN 155.00
+    F         NaN    NaN  89.00
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-142
+.. GENERATED FROM PYTHON SOURCE LINES 151-152
 
 Remove the single participant from site 6
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-150
+.. GENERATED FROM PYTHON SOURCE LINES 152-160
 
-.. code-block:: default
+.. code-block:: Python
 
 
     brain_vol = brain_vol[brain_vol.site != "S6"]
@@ -377,32 +393,30 @@ Remove the single participant from site 6
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
              site  group    sex
-    S7      65.00    nan    nan
-    S5      62.00    nan    nan
-    S8      59.00    nan    nan
-    S3      29.00    nan    nan
-    S4      15.00    nan    nan
-    S1      13.00    nan    nan
-    Patient   nan 157.00    nan
-    Control   nan  86.00    nan
-    M         nan    nan 155.00
-    F         nan    nan  88.00
+    S7      65.00    NaN    NaN
+    S5      62.00    NaN    NaN
+    S8      59.00    NaN    NaN
+    S3      29.00    NaN    NaN
+    S4      15.00    NaN    NaN
+    S1      13.00    NaN    NaN
+    Patient   NaN 157.00    NaN
+    Control   NaN  86.00    NaN
+    M         NaN    NaN 155.00
+    F         NaN    NaN  88.00
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-152
+.. GENERATED FROM PYTHON SOURCE LINES 161-162
 
 Descriptives statistics of numerical variables per clinical status
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-156
+.. GENERATED FROM PYTHON SOURCE LINES 162-166
 
-.. code-block:: default
+.. code-block:: Python
 
     desc_group_num = brain_vol1[["group", 'gm_vol']].groupby("group").describe()
     print(desc_group_num)
@@ -413,8 +427,6 @@ Descriptives statistics of numerical variables per clinical status
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -427,7 +439,7 @@ Descriptives statistics of numerical variables per clinical status
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-169
+.. GENERATED FROM PYTHON SOURCE LINES 167-179
 
 Statistics
 ----------
@@ -442,24 +454,7 @@ Objectives:
    atrophy process in patient population faster than in the control population.
 5. The effect of the medication in the patient population.
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-175
-
-.. code-block:: default
-
-
-    import statsmodels.api as sm
-    import statsmodels.formula.api as smfrmla
-    import scipy.stats
-    import seaborn as sns
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 176-187
+.. GENERATED FROM PYTHON SOURCE LINES 182-193
 
 **1 Site effect on Grey Matter atrophy**
 
@@ -473,43 +468,152 @@ for the associated p-value to be valid.
   This property is known as homoscedasticity.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-190
+.. GENERATED FROM PYTHON SOURCE LINES 195-196
 
 Plot
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-193
+.. GENERATED FROM PYTHON SOURCE LINES 196-201
 
-.. code-block:: default
+.. code-block:: Python
 
     sns.violinplot(x="site", y="gm_f", data=brain_vol1)
     # sns.violinplot(x="site", y="wm_f", data=brain_vol1)
 
+    brain_vol1.groupby('site')['age'].describe()
 
 
 
-.. image:: /auto_gallery/images/sphx_glr_stat_univ_lab_brain-volume_001.png
-    :alt: stat univ lab brain volume
-    :class: sphx-glr-single-img
 
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-
-    <AxesSubplot:xlabel='site', ylabel='gm_f'>
+.. image-sg:: /auto_gallery/images/sphx_glr_stat_univ_lab_brain-volume_001.png
+   :alt: stat univ lab brain volume
+   :srcset: /auto_gallery/images/sphx_glr_stat_univ_lab_brain-volume_001.png
+   :class: sphx-glr-single-img
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-195
+.. raw:: html
+
+    <div class="output_subarea output_html rendered_html output_result">
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>count</th>
+          <th>mean</th>
+          <th>std</th>
+          <th>min</th>
+          <th>25%</th>
+          <th>50%</th>
+          <th>75%</th>
+          <th>max</th>
+        </tr>
+        <tr>
+          <th>site</th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>S1</th>
+          <td>13.00</td>
+          <td>32.31</td>
+          <td>11.59</td>
+          <td>20.00</td>
+          <td>25.00</td>
+          <td>29.00</td>
+          <td>33.00</td>
+          <td>57.00</td>
+        </tr>
+        <tr>
+          <th>S3</th>
+          <td>29.00</td>
+          <td>38.28</td>
+          <td>13.09</td>
+          <td>18.00</td>
+          <td>25.00</td>
+          <td>37.00</td>
+          <td>51.00</td>
+          <td>59.00</td>
+        </tr>
+        <tr>
+          <th>S4</th>
+          <td>15.00</td>
+          <td>37.20</td>
+          <td>13.78</td>
+          <td>20.00</td>
+          <td>23.50</td>
+          <td>37.00</td>
+          <td>50.00</td>
+          <td>56.00</td>
+        </tr>
+        <tr>
+          <th>S5</th>
+          <td>62.00</td>
+          <td>35.42</td>
+          <td>12.61</td>
+          <td>18.00</td>
+          <td>25.25</td>
+          <td>31.50</td>
+          <td>44.00</td>
+          <td>61.00</td>
+        </tr>
+        <tr>
+          <th>S7</th>
+          <td>65.00</td>
+          <td>34.51</td>
+          <td>11.85</td>
+          <td>19.00</td>
+          <td>24.00</td>
+          <td>31.00</td>
+          <td>45.00</td>
+          <td>59.00</td>
+        </tr>
+        <tr>
+          <th>S8</th>
+          <td>59.00</td>
+          <td>31.59</td>
+          <td>10.69</td>
+          <td>18.00</td>
+          <td>24.00</td>
+          <td>29.00</td>
+          <td>34.50</td>
+          <td>60.00</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 202-203
 
 Stats with scipy
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-200
+.. GENERATED FROM PYTHON SOURCE LINES 203-208
 
-.. code-block:: default
+.. code-block:: Python
 
 
     fstat, pval = scipy.stats.f_oneway(*[brain_vol1.gm_f[brain_vol1.site == s]
@@ -522,8 +626,6 @@ Stats with scipy
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Oneway Anova gm_f ~ site F=14.82, p-value=1.188136E-12
@@ -531,13 +633,13 @@ Stats with scipy
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-202
+.. GENERATED FROM PYTHON SOURCE LINES 209-210
 
 Stats with statsmodels
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-210
+.. GENERATED FROM PYTHON SOURCE LINES 210-218
 
-.. code-block:: default
+.. code-block:: Python
 
 
     anova = smfrmla.ols("gm_f ~ site", data=brain_vol1).fit()
@@ -553,30 +655,28 @@ Stats with statsmodels
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Site explains 23.82% of the grey matter fraction variance
               sum_sq     df     F  PR(>F)
     site        0.11   5.00 14.82    0.00
-    Residual    0.35 237.00   nan     nan
+    Residual    0.35 237.00   NaN     NaN
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-213
+.. GENERATED FROM PYTHON SOURCE LINES 219-221
 
 **2. Test the association between the age and gray matter atrophy** in the
 control and patient population independently.
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-216
+.. GENERATED FROM PYTHON SOURCE LINES 223-224
 
 Plot
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-222
+.. GENERATED FROM PYTHON SOURCE LINES 224-230
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sns.lmplot(x="age", y="gm_f", hue="group", data=brain_vol1)
@@ -587,21 +687,22 @@ Plot
 
 
 
-.. image:: /auto_gallery/images/sphx_glr_stat_univ_lab_brain-volume_002.png
-    :alt: stat univ lab brain volume
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_gallery/images/sphx_glr_stat_univ_lab_brain-volume_002.png
+   :alt: stat univ lab brain volume
+   :srcset: /auto_gallery/images/sphx_glr_stat_univ_lab_brain-volume_002.png
+   :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 223-224
+.. GENERATED FROM PYTHON SOURCE LINES 231-232
 
 Stats with scipy
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-243
+.. GENERATED FROM PYTHON SOURCE LINES 232-251
 
-.. code-block:: default
+.. code-block:: Python
 
 
     print("--- In control population ---")
@@ -628,8 +729,6 @@ Stats with scipy
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     --- In control population ---
@@ -643,13 +742,13 @@ Stats with scipy
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-245
+.. GENERATED FROM PYTHON SOURCE LINES 252-253
 
 Stats with statsmodels
 
-.. GENERATED FROM PYTHON SOURCE LINES 245-258
+.. GENERATED FROM PYTHON SOURCE LINES 253-266
 
-.. code-block:: default
+.. code-block:: Python
 
 
     print("--- In control population ---")
@@ -670,8 +769,6 @@ Stats with statsmodels
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     --- In control population ---
@@ -680,8 +777,8 @@ Stats with statsmodels
     Dep. Variable:                    gm_f   R-squared:                       0.106
     Model:                             OLS   Adj. R-squared:                  0.095
     Method:                  Least Squares   F-statistic:                     9.929
-    Date:              ven., 08 janv. 2021   Prob (F-statistic):            0.00226
-    Time:                         16:12:34   Log-Likelihood:                 159.34
+    Date:              jeu., 03 avril 2025   Prob (F-statistic):            0.00226
+    Time:                         12:17:57   Log-Likelihood:                 159.34
     No. Observations:                   86   AIC:                            -314.7
     Df Residuals:                       84   BIC:                            -309.8
     Df Model:                            1                                         
@@ -707,8 +804,8 @@ Stats with statsmodels
     Dep. Variable:                    gm_f   R-squared:                       0.280
     Model:                             OLS   Adj. R-squared:                  0.275
     Method:                  Least Squares   F-statistic:                     60.16
-    Date:              ven., 08 janv. 2021   Prob (F-statistic):           1.09e-12
-    Time:                         16:12:34   Log-Likelihood:                 289.38
+    Date:              jeu., 03 avril 2025   Prob (F-statistic):           1.09e-12
+    Time:                         12:17:57   Log-Likelihood:                 289.38
     No. Observations:                  157   AIC:                            -574.8
     Df Residuals:                      155   BIC:                            -568.7
     Df Model:                            1                                         
@@ -732,19 +829,19 @@ Stats with statsmodels
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 259-262
+.. GENERATED FROM PYTHON SOURCE LINES 267-270
 
 Before testing for differences of atrophy between the patients ans the controls
 **Preliminary tests for age x group effect** (patients would be older or
 younger than Controls)
 
-.. GENERATED FROM PYTHON SOURCE LINES 264-265
+.. GENERATED FROM PYTHON SOURCE LINES 272-273
 
 Plot
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-268
+.. GENERATED FROM PYTHON SOURCE LINES 273-276
 
-.. code-block:: default
+.. code-block:: Python
 
 
     sns.violinplot(x="group", y="age", data=brain_vol1)
@@ -752,29 +849,28 @@ Plot
 
 
 
-.. image:: /auto_gallery/images/sphx_glr_stat_univ_lab_brain-volume_003.png
-    :alt: stat univ lab brain volume
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_gallery/images/sphx_glr_stat_univ_lab_brain-volume_003.png
+   :alt: stat univ lab brain volume
+   :srcset: /auto_gallery/images/sphx_glr_stat_univ_lab_brain-volume_003.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    <AxesSubplot:xlabel='group', ylabel='age'>
+    <Axes: xlabel='group', ylabel='age'>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 269-270
+.. GENERATED FROM PYTHON SOURCE LINES 277-278
 
 Stats with scipy
 
-.. GENERATED FROM PYTHON SOURCE LINES 270-273
+.. GENERATED FROM PYTHON SOURCE LINES 278-281
 
-.. code-block:: default
+.. code-block:: Python
 
 
     print(scipy.stats.ttest_ind(brain_vol1_ctl.age, brain_vol1_pat.age))
@@ -785,22 +881,20 @@ Stats with scipy
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    Ttest_indResult(statistic=-1.2155557697674162, pvalue=0.225343592508479)
+    TtestResult(statistic=np.float64(-1.2155557697674162), pvalue=np.float64(0.225343592508479), df=np.float64(241.0))
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 274-275
+.. GENERATED FROM PYTHON SOURCE LINES 282-283
 
 Stats with statsmodels
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-279
+.. GENERATED FROM PYTHON SOURCE LINES 283-287
 
-.. code-block:: default
+.. code-block:: Python
 
 
     print(smfrmla.ols("age ~ group", data=brain_vol1).fit().summary())
@@ -812,8 +906,6 @@ Stats with statsmodels
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
                                  OLS Regression Results                            
@@ -821,8 +913,8 @@ Stats with statsmodels
     Dep. Variable:                     age   R-squared:                       0.006
     Model:                             OLS   Adj. R-squared:                  0.002
     Method:                  Least Squares   F-statistic:                     1.478
-    Date:              ven., 08 janv. 2021   Prob (F-statistic):              0.225
-    Time:                         16:12:34   Log-Likelihood:                -949.69
+    Date:              jeu., 03 avril 2025   Prob (F-statistic):              0.225
+    Time:                         12:17:57   Log-Likelihood:                -949.69
     No. Observations:                  243   AIC:                             1903.
     Df Residuals:                      241   BIC:                             1910.
     Df Model:                            1                                         
@@ -846,14 +938,14 @@ Stats with statsmodels
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 280-282
+.. GENERATED FROM PYTHON SOURCE LINES 288-290
 
 **Preliminary tests for sex x group** (more/less males in patients than
 in Controls)
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-292
+.. GENERATED FROM PYTHON SOURCE LINES 290-300
 
-.. code-block:: default
+.. code-block:: Python
 
 
     crosstab = pd.crosstab(brain_vol1.sex, brain_vol1.group)
@@ -871,8 +963,6 @@ in Controls)
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Obeserved contingency table
@@ -886,13 +976,13 @@ in Controls)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-294
+.. GENERATED FROM PYTHON SOURCE LINES 301-302
 
 **3. Test for differences of atrophy between the patients and the controls**
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-299
+.. GENERATED FROM PYTHON SOURCE LINES 302-307
 
-.. code-block:: default
+.. code-block:: Python
 
 
     print(sm.stats.anova_lm(smfrmla.ols("gm_f ~ group", data=brain_vol1).fit(),
@@ -905,25 +995,23 @@ in Controls)
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
               sum_sq     df    F  PR(>F)
     group       0.00   1.00 0.01    0.92
-    Residual    0.46 241.00  nan     nan
+    Residual    0.46 241.00  NaN     NaN
     No significant difference in atrophy between patients and controls
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 300-301
+.. GENERATED FROM PYTHON SOURCE LINES 308-309
 
 This model is simplistic we should adjust for age and site
 
-.. GENERATED FROM PYTHON SOURCE LINES 301-306
+.. GENERATED FROM PYTHON SOURCE LINES 309-314
 
-.. code-block:: default
+.. code-block:: Python
 
 
     print(sm.stats.anova_lm(smfrmla.ols(
@@ -936,32 +1024,30 @@ This model is simplistic we should adjust for age and site
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
               sum_sq     df     F  PR(>F)
     group       0.00   1.00  1.82    0.18
     site        0.11   5.00 19.79    0.00
     age         0.09   1.00 86.86    0.00
-    Residual    0.25 235.00   nan     nan
+    Residual    0.25 235.00   NaN     NaN
     No significant difference in GM between patients and controls
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 307-308
+.. GENERATED FROM PYTHON SOURCE LINES 315-316
 
 Observe age effect
 
-.. GENERATED FROM PYTHON SOURCE LINES 310-312
+.. GENERATED FROM PYTHON SOURCE LINES 318-320
 
 **4. Test for interaction between age and clinical status**, ie: is the brain
 atrophy process in patient population faster than in the control population.
 
-.. GENERATED FROM PYTHON SOURCE LINES 312-324
+.. GENERATED FROM PYTHON SOURCE LINES 320-332
 
-.. code-block:: default
+.. code-block:: Python
 
 
     ancova = smfrmla.ols("gm_f ~ group:age + age + site", data=brain_vol1).fit()
@@ -981,15 +1067,13 @@ atrophy process in patient population faster than in the control population.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
                sum_sq     df     F  PR(>F)
     site         0.11   5.00 20.28    0.00
     age          0.10   1.00 89.37    0.00
     group:age    0.00   1.00  3.28    0.07
-    Residual     0.25 235.00   nan     nan
+    Residual     0.25 235.00   NaN     NaN
     = Parameters =
     Intercept               0.52
     site[T.S3]              0.01
@@ -1009,28 +1093,26 @@ atrophy process in patient population faster than in the control population.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.007 seconds)
+   **Total running time of the script:** (0 minutes 3.003 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_stat_univ_lab_brain-volume.py:
 
+.. only:: html
 
-.. only :: html
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: stat_univ_lab_brain-volume.ipynb <stat_univ_lab_brain-volume.ipynb>`
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: stat_univ_lab_brain-volume.py <stat_univ_lab_brain-volume.py>`
 
-     :download:`Download Python source code: stat_univ_lab_brain-volume.py <stat_univ_lab_brain-volume.py>`
+    .. container:: sphx-glr-download sphx-glr-download-zip
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: stat_univ_lab_brain-volume.ipynb <stat_univ_lab_brain-volume.ipynb>`
+      :download:`Download zipped: stat_univ_lab_brain-volume.zip <stat_univ_lab_brain-volume.zip>`
 
 
 .. only:: html

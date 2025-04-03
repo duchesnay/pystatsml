@@ -10,8 +10,8 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_gallery_stat_multiv_solutions.py>`
-        to download the full example code
+        :ref:`Go to the end <sphx_glr_download_auto_gallery_stat_multiv_solutions.py>`
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -27,8 +27,6 @@ Munivariate statistics exercises
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -54,7 +52,7 @@ Munivariate statistics exercises
 
 |
 
-.. code-block:: default
+.. code-block:: Python
 
     import pandas as pd
     import numpy as np
@@ -131,28 +129,26 @@ Munivariate statistics exercises
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.120 seconds)
+   **Total running time of the script:** (0 minutes 0.005 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_stat_multiv_solutions.py:
 
+.. only:: html
 
-.. only :: html
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: stat_multiv_solutions.ipynb <stat_multiv_solutions.ipynb>`
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: stat_multiv_solutions.py <stat_multiv_solutions.py>`
 
-     :download:`Download Python source code: stat_multiv_solutions.py <stat_multiv_solutions.py>`
+    .. container:: sphx-glr-download sphx-glr-download-zip
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: stat_multiv_solutions.ipynb <stat_multiv_solutions.ipynb>`
+      :download:`Download zipped: stat_multiv_solutions.zip <stat_multiv_solutions.zip>`
 
 
 .. only:: html

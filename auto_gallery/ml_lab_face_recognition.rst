@@ -10,16 +10,16 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_gallery_ml_lab_face_recognition.py>`
-        to download the full example code
+        :ref:`Go to the end <sphx_glr_download_auto_gallery_ml_lab_face_recognition.py>`
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
 .. _sphx_glr_auto_gallery_ml_lab_face_recognition.py:
 
 
-Lab: Faces recognition using various learning models
-====================================================
+Hands-On: Faces recognition using various learning models
+=========================================================
 
 This lab is inspired by a scikit-learn lab:
 `Faces recognition example using eigenfaces and SVMs <https://scikit-learn.org/stable/auto_examples/applications/plot_face_recognition.html>`_
@@ -30,13 +30,13 @@ It uses scikit-learan and pytorch models using `skorch <https://github.com/skorc
   * skorch abstracts away the training loop, making a lot of boilerplate code obsolete.
     A simple `net.fit(X, y)` is enough.
 
-Note that more sofisticated models can be used,
+Note that more sophisticated models can be used,
 `see <https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78>`_
 for a overview.
 
 Models:
 
-- Eigenfaces unsupervized exploratory analysis.
+- Eigenfaces unsupervised exploratory analysis.
 - `LogisticRegression <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html>`_ with L2 regularization (includes model selection with 5CV`_
 - `SVM-RBF <https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_  (includes model selection with 5CV.
 - `MLP using sklearn <https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html>`_ using sklearn (includes model selection with 5CV)
@@ -49,17 +49,25 @@ Pipelines:
 - Univariate feature filtering (Anova) with Logistic-L2
 - PCA with LogisticRegression with L2 regularization
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-77
+.. GENERATED FROM PYTHON SOURCE LINES 33-85
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import numpy as np
     from time import time
-    import matplotlib.pyplot as plt
     import pandas as pd
+
+    # Plot
+    import matplotlib.pyplot as plt
     import seaborn as sns
 
+    # Plot parameters
+    plt.style.use('seaborn-v0_8-whitegrid')
+    fig_w, fig_h = plt.rcParams.get('figure.figsize')
+    plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
+
+    # ML
     from sklearn.model_selection import train_test_split
     from sklearn.model_selection import GridSearchCV
     from sklearn.metrics import classification_report
@@ -99,19 +107,37 @@ Pipelines:
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+.. code-block:: pytb
+
+    Traceback (most recent call last):
+      File "/home/ed203246/git/pystatsml/labs/ml_lab_face_recognition.py", line 76, in <module>
+        from skorch import NeuralNetClassifier
+      File "/home/ed203246/git/pystatsml/.pixi/envs/default/lib/python3.13/site-packages/skorch/__init__.py", line 10, in <module>
+        from .classifier import NeuralNetClassifier
+      File "/home/ed203246/git/pystatsml/.pixi/envs/default/lib/python3.13/site-packages/skorch/classifier.py", line 54, in <module>
+        class NeuralNetClassifier(ClassifierMixin, NeuralNet):
+        ...<177 lines>...
+                return self.predict_proba(X).argmax(axis=1)
+      File "/home/ed203246/git/pystatsml/.pixi/envs/default/lib/python3.13/site-packages/skorch/classifier.py", line 55, in NeuralNetClassifier
+        __doc__ = get_neural_net_clf_doc(NeuralNet.__doc__)
+      File "/home/ed203246/git/pystatsml/.pixi/envs/default/lib/python3.13/site-packages/skorch/classifier.py", line 47, in get_neural_net_clf_doc
+        start, end = pattern.search(doc).span()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+    AttributeError: 'NoneType' object has no attribute 'span'
 
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 78-80
+.. GENERATED FROM PYTHON SOURCE LINES 86-88
 
 Utils
 -----
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-107
+.. GENERATED FROM PYTHON SOURCE LINES 88-115
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -141,20 +167,14 @@ Utils
 
 
 
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 108-110
+.. GENERATED FROM PYTHON SOURCE LINES 116-118
 
 Download the data
 -----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-132
+.. GENERATED FROM PYTHON SOURCE LINES 118-140
 
-.. code-block:: default
+.. code-block:: Python
 
 
     lfw_people = fetch_lfw_people(min_faces_per_person=70, resize=0.4)
@@ -179,31 +199,14 @@ Download the data
 
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    Total dataset size:
-    n_samples: 1288
-    n_features: 1850
-    n_classes: 7
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 133-135
+.. GENERATED FROM PYTHON SOURCE LINES 141-143
 
 Split into a training and testing set in stratified way
 -------------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-143
+.. GENERATED FROM PYTHON SOURCE LINES 143-151
 
-.. code-block:: default
+.. code-block:: Python
 
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -214,27 +217,13 @@ Split into a training and testing set in stratified way
 
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    {'Ariel Sharon': 0.06, 'Colin Powell': 0.18, 'Donald Rumsfeld': 0.09, 'George W Bush': 0.41, 'Gerhard Schroeder': 0.08, 'Hugo Chavez': 0.05, 'Tony Blair': 0.11}
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 144-145
+.. GENERATED FROM PYTHON SOURCE LINES 152-153
 
 Plot mean faces and 4 samples of each individual
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-158
+.. GENERATED FROM PYTHON SOURCE LINES 153-166
 
-.. code-block:: default
+.. code-block:: Python
 
 
     single_faces = [X_train[y_train == lab][:5] for lab in np.unique(y_train)]
@@ -250,17 +239,7 @@ Plot mean faces and 4 samples of each individual
 
 
 
-
-
-.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_001.png
-    :alt: Ariel Sharon, Ariel Sharon, Ariel Sharon, Ariel Sharon, Ariel Sharon, Colin Powell, Colin Powell, Colin Powell, Colin Powell, Colin Powell, Donald Rumsfeld, Donald Rumsfeld, Donald Rumsfeld, Donald Rumsfeld, Donald Rumsfeld, George W Bush, George W Bush, George W Bush, George W Bush, George W Bush, Gerhard Schroeder, Gerhard Schroeder, Gerhard Schroeder, Gerhard Schroeder, Gerhard Schroeder, Hugo Chavez, Hugo Chavez, Hugo Chavez, Hugo Chavez, Hugo Chavez, Tony Blair, Tony Blair, Tony Blair, Tony Blair, Tony Blair
-    :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 159-164
+.. GENERATED FROM PYTHON SOURCE LINES 167-172
 
 Eigenfaces
 ----------
@@ -268,9 +247,9 @@ Eigenfaces
 Compute a PCA (eigenfaces) on the face dataset (treated as unlabeled
 dataset): unsupervised feature extraction / dimensionality reduction
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-178
+.. GENERATED FROM PYTHON SOURCE LINES 172-186
 
-.. code-block:: default
+.. code-block:: Python
 
 
     n_components = 150
@@ -287,29 +266,13 @@ dataset): unsupervised feature extraction / dimensionality reduction
     print("Explained variance", pca.explained_variance_ratio_[:2])
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    Extracting the top 150 eigenfaces from 966 faces
-    done in 0.114s
-    Explained variance [0.19 0.15]
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 179-180
+.. GENERATED FROM PYTHON SOURCE LINES 187-188
 
 T-SNE
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-185
+.. GENERATED FROM PYTHON SOURCE LINES 188-193
 
-.. code-block:: default
+.. code-block:: Python
 
 
     tsne = manifold.TSNE(n_components=2, init='pca', random_state=0)
@@ -317,15 +280,9 @@ T-SNE
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 195-210
 
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 187-202
-
-.. code-block:: default
+.. code-block:: Python
 
 
     print("Projecting the input data on the eigenfaces orthonormal basis")
@@ -343,43 +300,13 @@ T-SNE
 
 
 
-
-
-.. rst-class:: sphx-glr-horizontal
-
-
-    *
-
-      .. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_002.png
-          :alt: ml lab face recognition
-          :class: sphx-glr-multi-img
-
-    *
-
-      .. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_003.png
-          :alt: ml lab face recognition
-          :class: sphx-glr-multi-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    Projecting the input data on the eigenfaces orthonormal basis
-
-    <seaborn.axisgrid.FacetGrid object at 0x7fe42eba3250>
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 203-204
+.. GENERATED FROM PYTHON SOURCE LINES 211-212
 
 Plot eigenfaces:
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-209
+.. GENERATED FROM PYTHON SOURCE LINES 212-217
 
-.. code-block:: default
+.. code-block:: Python
 
 
     eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
@@ -387,35 +314,25 @@ Plot eigenfaces:
 
 
 
-
-
-.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_004.png
-    :alt: eigenface 0, eigenface 1, eigenface 2, eigenface 3, eigenface 4, eigenface 5, eigenface 6, eigenface 7, eigenface 8, eigenface 9, eigenface 10, eigenface 11
-    :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 210-223
+.. GENERATED FROM PYTHON SOURCE LINES 218-231
 
 LogisticRegression with L2 penalty (with CV-based model selection)
 ------------------------------------------------------------------
 
 Our goal is to obtain a good balanced accuracy, ie, the macro average
-(`macro avg`) of classes' reccalls. In this perspective, the good practices
+(`macro avg`) of classes' recalls. In this perspective, the good practices
 are:
 
 - Scale input features using either `StandardScaler()` or `MinMaxScaler()`
   "It doesn't harm".
 - Re-balance classes' contributions `class_weight='balanced'`
 - Do not include an intercept (`fit_intercept=False`) in the model.
-  This should reduce the global accuracy `weighted avg`. But rememember that
+  This should reduce the global accuracy `weighted avg`. But remember that
   we decided to maximize the balanced accuracy.
 
-.. GENERATED FROM PYTHON SOURCE LINES 223-243
+.. GENERATED FROM PYTHON SOURCE LINES 231-251
 
-.. code-block:: default
+.. code-block:: Python
 
 
     lrl2_cv = make_pipeline(
@@ -438,50 +355,13 @@ are:
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 252-253
 
+Coefficients
 
+.. GENERATED FROM PYTHON SOURCE LINES 253-259
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 5.383s
-    Best params found by grid search:
-    {'C': 1.0}
-                       precision    recall  f1-score   support
-
-         Ariel Sharon       0.59      0.89      0.71        19
-         Colin Powell       0.91      0.83      0.87        59
-      Donald Rumsfeld       0.71      0.80      0.75        30
-        George W Bush       0.91      0.80      0.86       133
-    Gerhard Schroeder       0.70      0.78      0.74        27
-          Hugo Chavez       0.62      0.56      0.59        18
-           Tony Blair       0.71      0.83      0.77        36
-
-             accuracy                           0.80       322
-            macro avg       0.74      0.79      0.75       322
-         weighted avg       0.82      0.80      0.80       322
-
-    [[ 17   0   1   0   0   1   0]
-     [  2  49   3   3   0   0   2]
-     [  3   0  24   1   0   1   1]
-     [  7   3   4 107   5   3   4]
-     [  0   0   1   0  21   1   4]
-     [  0   2   0   3   2  10   1]
-     [  0   0   1   3   2   0  30]]
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 244-245
-
-Coeficients
-
-.. GENERATED FROM PYTHON SOURCE LINES 245-251
-
-.. code-block:: default
+.. code-block:: Python
 
 
     coefs = lrl2_cv.steps[-1][1].best_estimator_.coef_
@@ -490,17 +370,7 @@ Coeficients
 
 
 
-
-
-.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_005.png
-    :alt: Ariel Sharon, Colin Powell, Donald Rumsfeld, George W Bush, Gerhard Schroeder, Hugo Chavez, Tony Blair
-    :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 252-258
+.. GENERATED FROM PYTHON SOURCE LINES 260-266
 
 SVM (with CV-based model selection)
 -----------------------------------
@@ -509,9 +379,9 @@ Remarks:
 - RBF generally requires "large" C (>1)
 - Poly generally requires "small" C (<1)
 
-.. GENERATED FROM PYTHON SOURCE LINES 258-277
+.. GENERATED FROM PYTHON SOURCE LINES 266-285
 
-.. code-block:: default
+.. code-block:: Python
 
 
     svm_cv = make_pipeline(
@@ -533,37 +403,7 @@ Remarks:
 
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 23.788s
-    Best params found by grid search:
-    {'C': 0.1, 'kernel': 'poly'}
-                       precision    recall  f1-score   support
-
-         Ariel Sharon       0.71      0.89      0.79        19
-         Colin Powell       0.84      0.88      0.86        59
-      Donald Rumsfeld       0.76      0.87      0.81        30
-        George W Bush       0.90      0.89      0.90       133
-    Gerhard Schroeder       0.77      0.74      0.75        27
-          Hugo Chavez       0.90      0.50      0.64        18
-           Tony Blair       0.82      0.78      0.80        36
-
-             accuracy                           0.84       322
-            macro avg       0.82      0.79      0.79       322
-         weighted avg       0.85      0.84      0.84       322
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 278-291
+.. GENERATED FROM PYTHON SOURCE LINES 286-299
 
 MLP with sklearn and CV-based model selection
 ---------------------------------------------
@@ -579,9 +419,9 @@ Default parameters:
 - L2 penalty (regularization term) parameter, `alpha` default=0.0001
 - tol, default=1e-4
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-318
+.. GENERATED FROM PYTHON SOURCE LINES 299-326
 
-.. code-block:: default
+.. code-block:: Python
 
 
     mlp_param_grid = {"hidden_layer_sizes":
@@ -611,45 +451,15 @@ Default parameters:
 
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 128.638s
-    Best params found by grid search:
-    {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (100,), 'solver': 'adam'}
-                       precision    recall  f1-score   support
-
-         Ariel Sharon       0.76      0.84      0.80        19
-         Colin Powell       0.88      0.85      0.86        59
-      Donald Rumsfeld       0.68      0.77      0.72        30
-        George W Bush       0.89      0.91      0.90       133
-    Gerhard Schroeder       0.77      0.74      0.75        27
-          Hugo Chavez       1.00      0.39      0.56        18
-           Tony Blair       0.73      0.83      0.78        36
-
-             accuracy                           0.83       322
-            macro avg       0.82      0.76      0.77       322
-         weighted avg       0.84      0.83      0.83       322
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 319-322
+.. GENERATED FROM PYTHON SOURCE LINES 327-330
 
 MLP with pytorch and no model selection
 ---------------------------------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 322-368
+.. GENERATED FROM PYTHON SOURCE LINES 330-376
 
-.. code-block:: default
+.. code-block:: Python
 
 
     class SimpleMLPClassifierPytorch(nn.Module):
@@ -698,42 +508,14 @@ MLP with pytorch and no model selection
 
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 3.142s
-                       precision    recall  f1-score   support
-
-         Ariel Sharon       0.70      0.84      0.76        19
-         Colin Powell       0.92      0.75      0.82        59
-      Donald Rumsfeld       0.62      0.70      0.66        30
-        George W Bush       0.81      0.92      0.86       133
-    Gerhard Schroeder       0.71      0.56      0.63        27
-          Hugo Chavez       0.88      0.39      0.54        18
-           Tony Blair       0.78      0.78      0.78        36
-
-             accuracy                           0.79       322
-            macro avg       0.77      0.70      0.72       322
-         weighted avg       0.80      0.79      0.78       322
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 369-371
+.. GENERATED FROM PYTHON SOURCE LINES 377-379
 
 Univariate feature filtering (Anova) with Logistic-L2
 -----------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 371-395
+.. GENERATED FROM PYTHON SOURCE LINES 379-403
 
-.. code-block:: default
+.. code-block:: Python
 
 
     anova_l2lr = Pipeline([
@@ -760,44 +542,14 @@ Univariate feature filtering (Anova) with Logistic-L2
 
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 18.828s
-    Best params found by grid search:
-    {'anova__k': 1850, 'l2lr__C': 100.0}
-                       precision    recall  f1-score   support
-
-         Ariel Sharon       0.59      0.89      0.71        19
-         Colin Powell       0.89      0.83      0.86        59
-      Donald Rumsfeld       0.71      0.80      0.75        30
-        George W Bush       0.91      0.80      0.85       133
-    Gerhard Schroeder       0.72      0.78      0.75        27
-          Hugo Chavez       0.62      0.56      0.59        18
-           Tony Blair       0.71      0.81      0.75        36
-
-             accuracy                           0.80       322
-            macro avg       0.74      0.78      0.75       322
-         weighted avg       0.81      0.80      0.80       322
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 396-398
+.. GENERATED FROM PYTHON SOURCE LINES 404-406
 
 PCA with LogisticRegression with L2 regularization
 --------------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 398-418
+.. GENERATED FROM PYTHON SOURCE LINES 406-426
 
-.. code-block:: default
+.. code-block:: Python
 
 
     pca_lrl2_cv = make_pipeline(
@@ -820,50 +572,13 @@ PCA with LogisticRegression with L2 regularization
 
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 0.333s
-    Best params found by grid search:
-    {'C': 0.1}
-                       precision    recall  f1-score   support
-
-         Ariel Sharon       0.50      0.89      0.64        19
-         Colin Powell       0.85      0.78      0.81        59
-      Donald Rumsfeld       0.66      0.77      0.71        30
-        George W Bush       0.94      0.71      0.81       133
-    Gerhard Schroeder       0.61      0.74      0.67        27
-          Hugo Chavez       0.44      0.67      0.53        18
-           Tony Blair       0.69      0.75      0.72        36
-
-             accuracy                           0.74       322
-            macro avg       0.67      0.76      0.70       322
-         weighted avg       0.79      0.74      0.75       322
-
-    [[17  0  1  0  0  1  0]
-     [ 4 46  2  3  1  0  3]
-     [ 3  1 23  0  0  2  1]
-     [ 8  5  8 94  4 12  2]
-     [ 1  0  0  1 20  0  5]
-     [ 0  1  0  1  3 12  1]
-     [ 1  1  1  1  5  0 27]]
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 419-430
+.. GENERATED FROM PYTHON SOURCE LINES 427-438
 
 Basic ConvNet
 -------------
 
 Note that to simplify, do not use pipeline (scaler + CNN) here.
-But it would have been simple to do so, since pytorch is warpped in skorch
+But it would have been simple to do so, since pytorch is wrapped in skorch
 object that is compatible with sklearn.
 
 Sources:
@@ -871,9 +586,9 @@ Sources:
 - `ConvNet on MNIST <https://github.com/skorch-dev/skorch/blob/master/notebooks/MNIST.ipynb>`_
 - `NeuralNetClassifier <https://skorch.readthedocs.io/en/stable/classifier.html>`_
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-483
+.. GENERATED FROM PYTHON SOURCE LINES 438-491
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -913,7 +628,7 @@ Sources:
             lr=0.001,
             optimizer=torch.optim.Adam,
             device=device,
-            train_split=skorch.dataset.CVSplit(cv=5, stratified=True),
+            train_split=skorch.dataset.ValidSplit(cv=5, stratified=True),
             verbose=0)
 
     scaler = preprocessing.MinMaxScaler()
@@ -929,44 +644,16 @@ Sources:
 
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 39.086s
-                       precision    recall  f1-score   support
-
-         Ariel Sharon       0.79      0.79      0.79        19
-         Colin Powell       0.95      0.90      0.92        59
-      Donald Rumsfeld       0.79      0.77      0.78        30
-        George W Bush       0.88      0.95      0.91       133
-    Gerhard Schroeder       0.71      0.89      0.79        27
-          Hugo Chavez       0.78      0.39      0.52        18
-           Tony Blair       0.90      0.78      0.84        36
-
-             accuracy                           0.86       322
-            macro avg       0.83      0.78      0.79       322
-         weighted avg       0.86      0.86      0.85       322
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 484-488
+.. GENERATED FROM PYTHON SOURCE LINES 492-496
 
 ConvNet with Resnet18
 ---------------------
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 488-552
+.. GENERATED FROM PYTHON SOURCE LINES 496-560
 
-.. code-block:: default
+.. code-block:: Python
 
 
     class Resnet18(nn.Module):
@@ -978,10 +665,10 @@ ConvNet with Resnet18
             # self.model = torchvision.models.resnet18()
             self.model = torchvision.models.resnet18(pretrained=True)
 
-            # original definition of the first layer on the renset class
+            # original definition of the first layer on the resnet class
             # self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
             #                        bias=False)
-            # one channel input (greyscale):
+            # one channel input (grayscale):
             self.model.conv1 = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2,
                                          padding=3, bias=False)
 
@@ -1008,7 +695,7 @@ ConvNet with Resnet18
         optimizer__weight_decay=0.0001,  # L2 regularization
         # Shuffle training data on each epoch
         # iterator_train__shuffle=True,
-        train_split=skorch.dataset.CVSplit(cv=5, stratified=True),
+        train_split=skorch.dataset.ValidSplit(cv=5, stratified=True),
         device=device,
         verbose=0)
 
@@ -1034,62 +721,28 @@ ConvNet with Resnet18
     plt.show()
 
 
-
-.. image:: /auto_gallery/images/sphx_glr_ml_lab_face_recognition_006.png
-    :alt: ml lab face recognition
-    :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    done in 116.626s
-                       precision    recall  f1-score   support
-
-         Ariel Sharon       0.93      0.68      0.79        19
-         Colin Powell       0.93      0.93      0.93        59
-      Donald Rumsfeld       0.90      0.87      0.88        30
-        George W Bush       0.84      0.96      0.90       133
-    Gerhard Schroeder       0.80      0.74      0.77        27
-          Hugo Chavez       0.91      0.56      0.69        18
-           Tony Blair       0.94      0.81      0.87        36
-
-             accuracy                           0.87       322
-            macro avg       0.89      0.79      0.83       322
-         weighted avg       0.88      0.87      0.87       322
-
-
-
-
-
-
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 5 minutes  46.507 seconds)
+   **Total running time of the script:** (0 minutes 1.989 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_ml_lab_face_recognition.py:
 
+.. only:: html
 
-.. only :: html
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: ml_lab_face_recognition.ipynb <ml_lab_face_recognition.ipynb>`
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: ml_lab_face_recognition.py <ml_lab_face_recognition.py>`
 
-     :download:`Download Python source code: ml_lab_face_recognition.py <ml_lab_face_recognition.py>`
+    .. container:: sphx-glr-download sphx-glr-download-zip
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: ml_lab_face_recognition.ipynb <ml_lab_face_recognition.ipynb>`
+      :download:`Download zipped: ml_lab_face_recognition.zip <ml_lab_face_recognition.zip>`
 
 
 .. only:: html

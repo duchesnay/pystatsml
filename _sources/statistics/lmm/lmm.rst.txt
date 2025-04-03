@@ -59,6 +59,25 @@ Estimation of these parameters in LMMs is generally of intrinsic
 interest, because they indicate the relationships of the covariates with
 the continuous outcome variable.
 
+Example: Suppose we want to study the relationship between the height of
+individuals and their gender. We will: sample individuals in a
+population (first source of randomness), measure their height (second
+source of randomness), and consider their gender (fixed for a given
+individual). Finally, these measures are modeled in the following linear
+model:
+
+.. math::
+
+
+   \text{height}_i = \beta_0 + \beta_1 \text{gender}_i + \varepsilon_i
+
+- height: is the quantitative dependant (outcome, prediction) variable,
+- gender: is an independant factor. It is known for a given individual.
+  It is assumed that is has the same effect on all sampled individuals.
+- :math:`\varepsilon` is the noise. The sampling and measurement hazards
+  are confounded at the individual level in this random variable. It is
+  a random effect at the individual level.
+
 **Random effect** When the levels of a factor can be thought of as
 having been sampled from a sample space, such that each particular level
 is not of intrinsic interest (e.g., classrooms or clinics that are
@@ -68,6 +87,27 @@ random effects in an LMM. In contrast to fixed effects, which are
 represented by constant parameters in an LMM, random effects are
 represented by (unobserved) random variables, which are usually assumed
 to follow a normal distribution.
+
+Example: Suppose now that we want to study the same effect on a global
+scale but by randomly sampling countries (:math:`j`) and then
+individuals (:math:`i`) in these countries. The model will be the
+following:
+
+.. math::
+
+
+   \text{height}_{ij} = \beta_0 + \beta_1 \text{gender}_{ij} + u_j \text{country}_{ij} + \varepsilon_{ij}
+
+- :math:`\text{country}_{ij} =` {:math:`1` if individual :math:`i`
+  belongs to country :math:`j`, :math:`0` otherwise}, is an independant
+  random factor which has three important properties:
+
+1. has been **sampled** (third source of randomness)
+2. **is not of interest**
+3. creates **clusters** of indivuduals within the same country whose
+   heights is likely to be **correlated**. :math:`u_j` will be the
+   random effect associated to country :math:`j`. It can be modeled as a
+   random country-specific shift in height, a.k.a. a random intercept.
 
 Random intercept
 ----------------
@@ -133,15 +173,16 @@ model is:
 where, :math:`\beta_0` is the global intercept, :math:`\beta_1` is the
 slope associated with ``edu`` and :math:`\varepsilon_{ij}` is the random
 error at the individual level. Note that the classeroom, :math:`j` index
-is not taken into account by the model.
+is not taken into account by the model and could be removed from the
+equation.
 
 The general R formula is: ``y ~ x`` which in this case is
 ``score ~ edu``. This model is:
 
--  **Not sensitive** since it does not model the classroom effect (high
-   standard error).
--  **Wrong** because, residuals are not normals, and it considers
-   samples from the same classroom to be indenpendant.
+- **Not sensitive** since it does not model the classroom effect (high
+  standard error).
+- **Wrong** because, residuals are not normals, and it considers samples
+  from the same classroom to be indenpendant.
 
 .. code:: ipython3
 
@@ -208,12 +249,12 @@ The general R formula is: ``y ~ x + z`` which in this case is
 
 This model is:
 
--  **Sensitive** since it does not model the classroom effect (lower
-   standard error). But,
--  **questionable** because it considers the classroom to have a fixed
-   constant effect without any uncertainty. However, those classrooms
-   have been sampled from a larger samples of classrooms within the
-   country.
+- **Sensitive** since it does not model the classroom effect (lower
+  standard error). But,
+- **questionable** because it considers the classroom to have a fixed
+  constant effect without any uncertainty. However, those classrooms
+  have been sampled from a larger samples of classrooms within the
+  country.
 
 .. code:: ipython3
 
@@ -299,7 +340,7 @@ Explore the model
     classroom[T.c2]    6.129755
     edu                0.130717
     dtype: float64
-    MSE 0.869278 or 0.869277616553041
+    MSE 0.869278 or 0.8692776165530408
     ## Statistics:
     Intercept          24.474487
     classroom[T.c1]     8.736851
@@ -364,10 +405,10 @@ classrooms to perform statistical analysis between classroom. 1. **Level
 
 This model is:
 
--  **Correct** because the aggregated data are independent.
--  **Not sensitive** since all the within classroom association between
-   edu and is lost. Moreover, at the aggregate level, there would only
-   be three data points.
+- **Correct** because the aggregated data are independent.
+- **Not sensitive** since all the within classroom association between
+  edu and is lost. Moreover, at the aggregate level, there would only be
+  three data points.
 
 .. code:: ipython3
 
@@ -448,14 +489,14 @@ the classrooms:
 
 This model is:
 
--  **Correct** because the invidividual estimated parameters are
-   independent.
--  **sensitive** since it allows to model differents slope for each
-   classroom (see fixed interaction or random slope below). But it is
-   but **not optimally designed** since there are many models, and each
-   one does not take advantage of the information in data from other
-   classroom. This can also make the results “noisy” in that the
-   estimates from each model are not based on very much data
+- **Correct** because the invidividual estimated parameters are
+  independent.
+- **sensitive** since it allows to model differents slope for each
+  classroom (see fixed interaction or random slope below). But it is but
+  **not optimally designed** since there are many models, and each one
+  does not take advantage of the information in data from other
+  classroom. This can also make the results “noisy” in that the
+  estimates from each model are not based on very much data
 
 .. code:: ipython3
 
@@ -603,8 +644,18 @@ Plot
                                     group='classroom', df=df, model=lmm_inter)
 
 
+.. parsed-literal::
 
-.. image:: lmm_files/lmm_31_0.png
+    /home/ed203246/git/pystatsml/statistics/lmm/stat_lmm_utils.py:122: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+      group_offset = model.random_effects[group_lab][0]
+    /home/ed203246/git/pystatsml/statistics/lmm/stat_lmm_utils.py:122: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+      group_offset = model.random_effects[group_lab][0]
+    /home/ed203246/git/pystatsml/statistics/lmm/stat_lmm_utils.py:122: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+      group_offset = model.random_effects[group_lab][0]
+
+
+
+.. image:: lmm_files/lmm_31_1.png
 
 
 Random slope
@@ -616,7 +667,7 @@ shift (random intercept) but that some teachers “compensate” or
 between score and edu for teachers that amplify will be larger. In the
 contrary, it will be smaller for teachers that compensate.
 
-Model the classroom intercept and slode as a fixed effect: ANCOVA with interactions
+Model the classroom intercept and slope as a fixed effect: ANCOVA with interactions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Model the global association between ``edu`` and ``score``:
@@ -703,12 +754,12 @@ The model looks similar to the ANCOVA with interactions:
 
 but:
 
--  :math:`u^1_j` is a **random intercept** associated with classroom
-   :math:`j` following the same normal distribution for all classroom,
-   :math:`u^1_j \sim \mathcal{N}(\mathbf{0, \sigma^1})`.
--  :math:`u^\alpha_j` is a **random slope** associated with classroom
-   :math:`j` following the same normal distribution for all classroom,
-   :math:`u^\alpha_j \sim \mathcal{N}(\mathbf{0, \sigma^\alpha})`.
+- :math:`u^1_j` is a **random intercept** associated with classroom
+  :math:`j` following the same normal distribution for all classroom,
+  :math:`u^1_j \sim \mathcal{N}(\mathbf{0, \sigma^1})`.
+- :math:`u^\alpha_j` is a **random slope** associated with classroom
+  :math:`j` following the same normal distribution for all classroom,
+  :math:`u^\alpha_j \sim \mathcal{N}(\mathbf{0, \sigma^\alpha})`.
 
 Note the difference with linear model: the variances parameters
 (:math:`\sigma^1, \sigma^\alpha`) should be estimated together with
@@ -743,7 +794,7 @@ since the groups is provided by the ``groups`` argument.
     ---------------------------------------------------------
     Intercept        9.900    1.912 5.177 0.000  6.152 13.647
     edu              0.127    0.046 2.757 0.006  0.037  0.218
-    Group Var       10.760   12.279                          
+    Group Var       10.760   12.278                          
     Group x edu Cov -0.121    0.318                          
     edu Var          0.001    0.012                          
     =========================================================
@@ -752,13 +803,13 @@ since the groups is provided by the ``groups`` argument.
 
 .. parsed-literal::
 
-    /home/ed203246/anaconda3/lib/python3.8/site-packages/statsmodels/base/model.py:566: ConvergenceWarning: Maximum Likelihood optimization failed to converge. Check mle_retvals
+    /home/ed203246/git/pystatsml/.pixi/envs/default/lib/python3.13/site-packages/statsmodels/base/model.py:607: ConvergenceWarning: Maximum Likelihood optimization failed to converge. Check mle_retvals
       warnings.warn("Maximum Likelihood optimization failed to "
-    /home/ed203246/anaconda3/lib/python3.8/site-packages/statsmodels/regression/mixed_linear_model.py:2200: ConvergenceWarning: Retrying MixedLM optimization with lbfgs
+    /home/ed203246/git/pystatsml/.pixi/envs/default/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2200: ConvergenceWarning: Retrying MixedLM optimization with lbfgs
       warnings.warn(
-    /home/ed203246/anaconda3/lib/python3.8/site-packages/statsmodels/regression/mixed_linear_model.py:1634: UserWarning: Random effects covariance is singular
+    /home/ed203246/git/pystatsml/.pixi/envs/default/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:1634: UserWarning: Random effects covariance is singular
       warnings.warn(msg)
-    /home/ed203246/anaconda3/lib/python3.8/site-packages/statsmodels/regression/mixed_linear_model.py:2237: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
+    /home/ed203246/git/pystatsml/.pixi/envs/default/lib/python3.13/site-packages/statsmodels/regression/mixed_linear_model.py:2237: ConvergenceWarning: The MLE may be on the boundary of the parameter space.
       warnings.warn(msg, ConvergenceWarning)
 
 
@@ -783,7 +834,7 @@ Conclusion on modeling random effects
     3           Hierarchical  0.061318  0.120808  3.412469  0.076190
     4              LMM-Inter  0.916211  0.131193  3.453472  0.000553
     5   ANCOVA-Full (biased)  0.935869  0.129084  1.978708  0.052959
-    6      LMM-Full (biased)  0.911742  0.127269  2.756917  0.005835
+    6      LMM-Full (biased)  0.911742  0.127270  2.757142  0.005831
 
 
 **Random intercepts**
@@ -793,8 +844,9 @@ Conclusion on modeling random effects
    for classroom effect.
 2. ANCOVA-Inter is “wrong” (consider residuals to be independent) but it
    has a small error since it adjusts for classroom effect.
-3. Aggregation is ok (units average are independent) but it has a very
-   large error.
+3. Aggregation is ok (units average are independent) but it looses a lot
+   of degrees of freedom (df = 2 = 3 classroom - 1 intercept) and a lot
+   of informations.
 4. Hierarchical model is ok (unit average are independent) and it has a
    reasonable error (look at the statistic, not the RMSE).
 5. LMM-Inter (with random intercept) is ok (it models residuals
@@ -848,11 +900,11 @@ gives :
      0 & 0 & 1 \\
      0 & 0 & 1 \\
      \end{bmatrix}
-     \begin{bmatrix} \text{Rand} \\ u_{11} \\ u_{12} \\ u_{13} \end{bmatrix}
+     \begin{bmatrix} \text{Rand} \\ u_{1} \\ u_{2} \\ u_{3} \end{bmatrix}
      +
-     \begin{bmatrix}\text{Err}\\ \epsilon_1 \\ \epsilon_2 \end{bmatrix}\end{split}
+     \begin{bmatrix}\text{Err}\\ \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \epsilon_5 \\ \epsilon_6\end{bmatrix}\end{split}
 
-where :math:`\mathbf{u_1} = u_{11}, u_{12}, u_{12}` are the 3 parameters
+where :math:`\mathbf{u_1} = u_{1}, u_{2}, u_{3}` are the 3 parameters
 associated with the 3 level of the single random factor ``classroom``.
 
 This can be re-written in a more general form as:
@@ -860,7 +912,7 @@ This can be re-written in a more general form as:
 .. math::
 
 
-   \mathbf{y} = \mathbf{X}^T\mathbf{\beta} + \mathbf{Z}^T\mathbf{u} + \mathbf{\varepsilon},
+   \mathbf{y} = \mathbf{X}\mathbf{\beta} + \mathbf{Z}\mathbf{u} + \mathbf{\varepsilon},
 
 where: - :math:`\mathbf{y}` is the :math:`N \times 1` vector of the
 :math:`N` observations. - :math:`\mathbf{X}` is the :math:`N \times P`
@@ -898,7 +950,7 @@ will be encoded in the :math:`\mathbf{D}` below. However, other model
 exists: popular models are the compound symmetry and first-order
 autoregressive structure, denoted by AR(1).
 
-**Covariance structures associated with the mixed effect**
+**Covariance structures associated with the random effect**
 
 Many different covariance structures are possible for the
 :math:`\mathbf{D}` matrix. The usual prartice associate a single
@@ -1006,6 +1058,15 @@ fixed-effect parameters in :math:`\mathbf{\beta}`. For this reason, REML
 (restricted (or residual, or reduced) maximum likelihood) is often
 preferred to ML estimation.
 
+**Tests for Fixed-Effect Parameters**
+
+Quoted from [Brady et al. 2014]: “The approximate methods that apply to
+both t-tests and F-tests take into account the presence of random
+effects and correlated residuals in an LMM. Several of these approximate
+methods (e.g., the **Satterthwaite** method, or the “between-within”
+method) involve different choices for the degrees of freedom used in”
+the approximate t-tests and F-tests”.
+
 Checking model assumptions (Diagnostics)
 ----------------------------------------
 
@@ -1018,21 +1079,20 @@ to detect outliers and potentially influential observations.
 References
 ----------
 
--  Brady et al. 2014: Brady T. West, Kathleen B. Welch, Andrzej T.
-   Galecki, `Linear Mixed Models: A Practical Guide Using Statistical
-   Software (2nd
-   Edition) <http://www-personal.umich.edu/~bwest/almmussp.html>`__,
-   2014
+- Brady et al. 2014: Brady T. West, Kathleen B. Welch, Andrzej T.
+  Galecki, `Linear Mixed Models: A Practical Guide Using Statistical
+  Software (2nd
+  Edition) <http://www-personal.umich.edu/~bwest/almmussp.html>`__, 2014
 
--  Bruin 2006: `Introduction to Linear Mixed
-   Models <https://stats.idre.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models>`__,
-   UCLA, Statistical Consulting Group.
+- Bruin 2006: `Introduction to Linear Mixed
+  Models <https://stats.idre.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models>`__,
+  UCLA, Statistical Consulting Group.
 
--  `Statsmodel: Linear Mixed Effects
-   Models <https://www.statsmodels.org/stable/mixed_linear.html>`__
+- `Statsmodel: Linear Mixed Effects
+  Models <https://www.statsmodels.org/stable/mixed_linear.html>`__
 
--  `Comparing R lmer to statsmodels
-   MixedLM <https://www.statsmodels.org/stable/examples/notebooks/generated/mixed_lm_example.html>`__
+- `Comparing R lmer to statsmodels
+  MixedLM <https://www.statsmodels.org/stable/examples/notebooks/generated/mixed_lm_example.html>`__
 
--  `Statsmoels: Variance Component Analysis with nested
-   groups <https://github.com/statsmodels/statsmodels/blob/main/examples/notebooks/variance_components.ipynb>`__
+- `Statsmoels: Variance Component Analysis with nested
+  groups <https://github.com/statsmodels/statsmodels/blob/main/examples/notebooks/variance_components.ipynb>`__

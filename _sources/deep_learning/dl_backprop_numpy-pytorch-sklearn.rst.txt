@@ -1,33 +1,38 @@
 Backpropagation
 ===============
 
-Course outline:
----------------
+`Wikipedia:
+Backpropagation <https://en.wikipedia.org/wiki/Backpropagation>`__: In
+machine learning, backpropagation is a gradient estimation method
+commonly used for training a neural network to compute its parameter
+updates. Backpropagation applies gradient descent using chain rule.
 
-1. Backpropagation and chaine rule
+Sources:
 
-2. Lab: with numpy and pytorch
+- `3Blue1Brown video: But what is a neural network? \| Deep learning
+  chapter
+  1 <https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=1>`__
+- `3Blue1Brown video: Gradient descent, how neural networks learn \|
+  DL2 <https://www.youtube.com/watch?v=IHZwWFHWa-w&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=2>`__
+- `3Blue1Brown video: Backpropagation, step-by-step \|
+  DL3 <https://www.youtube.com/watch?v=Ilg3gGewQ5U&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=3>`__
+- `3Blue1Brown video: Backpropagation calculus \|
+  DL4 <https://www.youtube.com/watch?v=tIeHLnjs5U8&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=4>`__
+- `Pytorch
+  examples <https://pytorch.org/tutorials/beginner/pytorch_with_examples.html>`__
 
-.. code:: ipython3
+Backpropagation and chain rule
+------------------------------
 
-    %matplotlib inline
-
-Backpropagation and chaine rule
--------------------------------
-
-We will set up a two layer network `source pytorch
-tuto <https://pytorch.org/tutorials/beginner/pytorch_with_examples.html>`__
-:
+We will set up a two layer network:
 
 .. math::  \mathbf{Y} = \text{max}(\mathbf{X} \mathbf{W}^{(1)}, 0) \mathbf{W}^{(2)}
 
 A fully-connected ReLU network with one hidden layer and no biases,
 trained to predict y from x using Euclidean error.
 
-Chaine rule
-~~~~~~~~~~~
-
-Forward pass with **local** partial derivatives of ouput given inputs:
+**Forward pass** with **local** partial derivatives of output given
+inputs:
 
 .. raw:: latex
 
@@ -38,8 +43,9 @@ Forward pass with **local** partial derivatives of ouput given inputs:
                        & \frac{\partial z^{(1)}}{\partial x}=w^{(1)} & & \frac{\partial z^{(2)} }{\partial h^{(1)}}= w^{(2)} &
    \end{align*}
 
-Backward: compute gradient of the loss given each parameters vectors
-applying chaine rule from the loss downstream to the parameters:
+**Backward pass**: compute gradient of the loss given each parameters
+vectors applying the chain rule from the loss downstream to the
+parameters:
 
 For :math:`w^{(2)}`:
 
@@ -63,12 +69,10 @@ Recap: Vector derivatives
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Given a function :math:`z = x`w` with :math:`z` the output, :math:`x`
-the input and :math:`w` the coeficients.
+the input and :math:`w` the coefficients.
 
--  Scalar to Scalar: :math:`x \in \mathbb{R}, z \in \mathbb{R}`,
-   :math:`w \in \mathbb{R}`
-
-Regular derivative:
+**Scalar to Scalar**: :math:`x \in \mathbb{R}, z \in \mathbb{R}`,
+:math:`w \in \mathbb{R}`. Regular derivative:
 
 .. math::
 
@@ -77,10 +81,9 @@ Regular derivative:
 
 If :math:`w` changes by a small amount, how much will :math:`z` change?
 
--  Vector to Scalar: :math:`x \in \mathbb{R}^N, z \in \mathbb{R}`,
-   :math:`w \in \mathbb{R}^N`
-
-Derivative is **Gradient** of partial derivative:
+**Vector to Scalar**: :math:`x \in \mathbb{R}^N, z \in \mathbb{R}`,
+:math:`w \in \mathbb{R}^N`. The derivative is the **Gradient** of
+partial derivative:
 :math:`\frac{\partial z}{\partial w} \in \mathbb{R}^N`
 
 .. raw:: latex
@@ -98,40 +101,52 @@ Derivative is **Gradient** of partial derivative:
 For each element :math:`w_i` of :math:`w`, if it changes by a small
 amount then how much will y change?
 
--  Vector to Vector: :math:`w \in \mathbb{R}^N, z \in \mathbb{R}^M`
+**Vector to Vector**: :math:`w \in \mathbb{R}^N, z \in \mathbb{R}^M`.
+The derivative is **Jacobian** of partial derivative:
 
-Derivative is **Jacobian** of partial derivative:
-
-TO COMPLETE
+TO BE COMPLETED
 
 :math:`\frac{\partial z}{\partial w} \in \mathbb{R}^{N \times M}`
 
 Backpropagation summary
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Backpropagation algorithm in a graph: 1. Forward pass, for each node
-compute local partial derivatives of ouput given inputs 2. Backward
-pass: apply chain rule from the end to each parameters - Update
-parameter with gradient descent using the current upstream gradient and
-the current local gradient - Compute upstream gradient for the backward
-nodes
+Backpropagation algorithm in a graph:
 
-Think locally and remember that at each node: - For the loss the
-gradient is the error - At each step, the upstream gradient is obtained
-by multiplying the upstream gradient (an error) with the current
-parameters (vector of matrix). - At each step, the current local
-gradient equal the input, therfore the current update is the current
-upstream gradient time the input.
+1. **Forward pass**, for each node compute local partial derivatives of
+   output given inputs.
+2. **Backward pass**: apply chain rule from the end to each parameters.
+
+   - Update parameter with gradient descent using the current upstream
+     gradient and the current local gradient.
+   - Compute upstream gradient for the backward nodes.
+
+Think locally and remember that at each node:
+
+- For the loss the gradient is the error
+- At each step, the upstream gradient is obtained by multiplying the
+  upstream gradient (an error) with the current parameters (vector of
+  matrix).
+- At each step, the current local gradient equal the input, therefore
+  the current update is the current upstream gradient time the input.
 
 .. code:: ipython3
 
     import numpy as np
+    import sklearn.model_selection
+    
+    # Plot
     import matplotlib.pyplot as plt
     import seaborn as sns
-    import sklearn.model_selection
+    
+    # Plot parameters
+    plt.style.use('seaborn-v0_8-whitegrid')
+    fig_w, fig_h = plt.rcParams.get('figure.figsize')
+    plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
+    %matplotlib inline
 
-Lab: with numpy and pytorch
----------------------------
+Hands-on with Numpy and pytorch
+-------------------------------
 
 Load iris data set
 ~~~~~~~~~~~~~~~~~~
@@ -139,11 +154,11 @@ Load iris data set
 Goal: Predict Y = [petal_length, petal_width] = f(X = [sepal_length,
 sepal_width])
 
--  Plot data with seaborn
--  Remove setosa samples
--  Recode ‘versicolor’:1, ‘virginica’:2
--  Scale X and Y
--  Split data in train/test 50%/50%
+- Plot data with seaborn
+- Remove setosa samples
+- Recode ‘versicolor’:1, ‘virginica’:2
+- Scale X and Y
+- Split data in train/test 50%/50%
 
 .. code:: ipython3
 
@@ -166,27 +181,13 @@ sepal_width])
     
     # Split train test
     X_iris_tr, X_iris_val, Y_iris_tr, Y_iris_val, label_iris_tr, label_iris_val = \
-        sklearn.model_selection.train_test_split(X_iris, Y_iris, label_iris, train_size=0.5, stratify=label_iris)
+        sklearn.model_selection.train_test_split(X_iris, Y_iris, label_iris,
+                                                 train_size=0.5, stratify=label_iris)
 
-
-.. parsed-literal::
-
-    /home/edouard/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:5: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame.
-    Try using .loc[row_indexer,col_indexer] = value instead
-    
-    See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
-      """
-
-
-
-.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_7_1.png
-
-
-Backpropagation with numpy
+Backpropagation with Numpy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This implementation uses numpy to manually compute the forward pass,
+This implementation uses Numpy to manually compute the forward pass,
 loss, and backward pass.
 
 .. code:: ipython3
@@ -240,37 +241,18 @@ loss, and backward pass.
     
         return W1, W2, losses_tr, losses_val
     
-    W1, W2, losses_tr, losses_val = two_layer_regression_numpy_train(X=X_iris_tr, Y=Y_iris_tr, X_val=X_iris_val, Y_val=Y_iris_val,
-                                                                     lr=1e-4, nite=50)
-    plt.plot(np.arange(len(losses_tr)), losses_tr, "-b", np.arange(len(losses_val)), losses_val, "-r")
-
-
-.. parsed-literal::
-
-    0 15126.224825529907 2910.260853330454
-    10 71.5381374591153 104.97056197642135
-    20 50.756938353833334 80.02800827986354
-    30 46.546510744624236 72.85211241738614
-    40 44.41413064447564 69.31127324764276
-
-
-
-
-.. parsed-literal::
-
-    [<matplotlib.lines.Line2D at 0x7f960cf5e9b0>,
-     <matplotlib.lines.Line2D at 0x7f960cf5eb00>]
-
-
-
-
-.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_9_2.png
-
+    W1, W2, losses_tr, losses_val = \
+        two_layer_regression_numpy_train(X=X_iris_tr, Y=Y_iris_tr,
+                                         X_val=X_iris_val, Y_val=Y_iris_val,
+                                        lr=1e-4, nite=50)
+    _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
+                 np.arange(len(losses_val)), losses_val, "-r")
 
 Backpropagation with PyTorch Tensors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`source <https://pytorch.org/tutorials/beginner/pytorch_with_examples.html>`__
+`Learning PyTorch with
+Examples <https://pytorch.org/tutorials/beginner/pytorch_with_examples.html>`__
 
 Numpy is a great framework, but it cannot utilize GPUs to accelerate its
 numerical computations. For modern deep neural networks, GPUs often
@@ -352,38 +334,19 @@ network:
     
         return W1, W2, losses_tr, losses_val
     
-    W1, W2, losses_tr, losses_val = two_layer_regression_tensor_train(X=X_iris_tr, Y=Y_iris_tr, X_val=X_iris_val, Y_val=Y_iris_val,
-                                                                     lr=1e-4, nite=50)
+    W1, W2, losses_tr, losses_val = \
+        two_layer_regression_tensor_train(X=X_iris_tr, Y=Y_iris_tr, X_val=X_iris_val,
+                                          Y_val=Y_iris_val,
+                                          lr=1e-4, nite=50)
     
-    plt.plot(np.arange(len(losses_tr)), losses_tr, "-b", np.arange(len(losses_val)), losses_val, "-r")
-
-
-.. parsed-literal::
-
-    0 8086.1591796875 5429.57275390625
-    10 225.77589416503906 331.83734130859375
-    20 86.46501159667969 117.72447204589844
-    30 52.375606536865234 73.84156036376953
-    40 43.16458511352539 64.0667495727539
-
-
-
-
-.. parsed-literal::
-
-    [<matplotlib.lines.Line2D at 0x7f960033c470>,
-     <matplotlib.lines.Line2D at 0x7f960033c5c0>]
-
-
-
-
-.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_11_2.png
-
+    _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
+                 np.arange(len(losses_val)), losses_val, "-r")
 
 Backpropagation with PyTorch: Tensors and autograd
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`source <https://pytorch.org/tutorials/beginner/pytorch_with_examples.html>`__
+`Learning PyTorch with
+Examples <https://pytorch.org/tutorials/beginner/pytorch_with_examples.html>`__
 
 A fully-connected ReLU network with one hidden layer and no biases,
 trained to predict y from x by minimizing squared Euclidean distance.
@@ -397,9 +360,6 @@ Tensor holding the gradient of ``x`` with respect to some scalar value.
 
     import torch
     
-    # X=X_iris_tr; Y=Y_iris_tr; X_val=X_iris_val; Y_val=Y_iris_val
-    # del X, Y, X_val, Y_val
-    
     def two_layer_regression_autograd_train(X, Y, X_val, Y_val, lr, nite):
     
         dtype = torch.float
@@ -410,16 +370,16 @@ Tensor holding the gradient of ``x`` with respect to some scalar value.
         # H is hidden dimension; D_out is output dimension.
         N, D_in, H, D_out = X.shape[0], X.shape[1], 100, Y.shape[1]
     
-        # Setting requires_grad=False indicates that we do not need to compute gradients
-        # with respect to these Tensors during the backward pass.
+        # Setting requires_grad=False indicates that we do not need to compute 
+        # gradients with respect to these Tensors during the backward pass.
         X = torch.from_numpy(X)
         Y = torch.from_numpy(Y)
         X_val = torch.from_numpy(X_val)
         Y_val = torch.from_numpy(Y_val)
     
         # Create random Tensors for weights.
-        # Setting requires_grad=True indicates that we want to compute gradients with
-        # respect to these Tensors during the backward pass.
+        # Setting requires_grad=True indicates that we want to compute gradients
+        # with respect to these Tensors during the backward pass.
         W1 = torch.randn(D_in, H, device=device, dtype=dtype, requires_grad=True)
         W2 = torch.randn(H, D_out, device=device, dtype=dtype, requires_grad=True)
     
@@ -428,9 +388,9 @@ Tensor holding the gradient of ``x`` with respect to some scalar value.
         learning_rate = lr
         for t in range(nite):
             # Forward pass: compute predicted y using operations on Tensors; these
-            # are exactly the same operations we used to compute the forward pass using
-            # Tensors, but we do not need to keep references to intermediate values since
-            # we are not implementing the backward pass by hand.
+            # are exactly the same operations we used to compute the forward pass
+            # using Tensors, but we do not need to keep references to intermediate
+            # values since we are not implementing the backward pass by hand.
             y_pred = X.mm(W1).clamp(min=0).mm(W2)
     
             # Compute and print loss using operations on Tensors.
@@ -440,8 +400,8 @@ Tensor holding the gradient of ``x`` with respect to some scalar value.
     
             # Use autograd to compute the backward pass. This call will compute the
             # gradient of loss with respect to all Tensors with requires_grad=True.
-            # After this call w1.grad and w2.grad will be Tensors holding the gradient
-            # of the loss with respect to w1 and w2 respectively.
+            # After this call w1.grad and w2.grad will be Tensors holding the
+            # gradient of the loss with respect to w1 and w2 respectively.
             loss.backward()
     
             # Manually update weights using gradient descent. Wrap in torch.no_grad()
@@ -474,37 +434,18 @@ Tensor holding the gradient of ``x`` with respect to some scalar value.
     
         return W1, W2, losses_tr, losses_val
     
-    W1, W2, losses_tr, losses_val = two_layer_regression_autograd_train(X=X_iris_tr, Y=Y_iris_tr, X_val=X_iris_val, Y_val=Y_iris_val,
-                                                                     lr=1e-4, nite=50)
-    plt.plot(np.arange(len(losses_tr)), losses_tr, "-b", np.arange(len(losses_val)), losses_val, "-r")
-
-
-.. parsed-literal::
-
-    0 8307.1806640625 2357.994873046875
-    10 111.97289276123047 250.04209899902344
-    20 65.83244323730469 201.63694763183594
-    30 53.70908737182617 183.17051696777344
-    40 48.719329833984375 173.3616943359375
-
-
-
-
-.. parsed-literal::
-
-    [<matplotlib.lines.Line2D at 0x7f95ff2ad978>,
-     <matplotlib.lines.Line2D at 0x7f95ff2adac8>]
-
-
-
-
-.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_13_2.png
-
+    W1, W2, losses_tr, losses_val = \
+        two_layer_regression_autograd_train(X=X_iris_tr, Y=Y_iris_tr,
+                                            X_val=X_iris_val, Y_val=Y_iris_val,
+                                            lr=1e-4, nite=50)
+    _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
+                 np.arange(len(losses_val)), losses_val, "-r")
 
 Backpropagation with PyTorch: nn
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`source <https://pytorch.org/tutorials/beginner/pytorch_with_examples.html>`__
+`Learning PyTorch with
+Examples <https://pytorch.org/tutorials/beginner/pytorch_with_examples.html>`__
 
 This implementation uses the nn package from PyTorch to build the
 network. PyTorch autograd makes it easy to define computational graphs
@@ -518,8 +459,6 @@ some trainable weights.
 
     import torch
     
-    # X=X_iris_tr; Y=Y_iris_tr; X_val=X_iris_val; Y_val=Y_iris_val
-    # del X, Y, X_val, Y_val
     
     def two_layer_regression_nn_train(X, Y, X_val, Y_val, lr, nite):
     
@@ -532,10 +471,11 @@ some trainable weights.
         X_val = torch.from_numpy(X_val)
         Y_val = torch.from_numpy(Y_val)
     
-        # Use the nn package to define our model as a sequence of layers. nn.Sequential
-        # is a Module which contains other Modules, and applies them in sequence to
-        # produce its output. Each Linear Module computes output from input using a
-        # linear function, and holds internal Tensors for its weight and bias.
+        # Use the nn package to define our model as a sequence of layers.
+        # nn.Sequential is a Module which contains other Modules, and applies
+        # them in sequence to produce its output. Each Linear Module computes
+        # output from input using a linear function, and holds internal Tensors
+        # for its weight and bias.
         model = torch.nn.Sequential(
             torch.nn.Linear(D_in, H),
             torch.nn.ReLU(),
@@ -550,28 +490,28 @@ some trainable weights.
     
         learning_rate = lr
         for t in range(nite):
-            # Forward pass: compute predicted y by passing x to the model. Module objects
-            # override the __call__ operator so you can call them like functions. When
-            # doing so you pass a Tensor of input data to the Module and it produces
-            # a Tensor of output data.
+            # Forward pass: compute predicted y by passing x to the model. Module
+            # objects override the __call__ operator so you can call them like
+            # functions. When doing so you pass a Tensor of input data to the Module
+            # and it produces a Tensor of output data.
             y_pred = model(X)
     
-            # Compute and print loss. We pass Tensors containing the predicted and true
-            # values of y, and the loss function returns a Tensor containing the
+            # Compute and print loss. We pass Tensors containing the predicted and
+            # true values of y, and the loss function returns a Tensor containing the
             # loss.
             loss = loss_fn(y_pred, Y)
     
             # Zero the gradients before running the backward pass.
             model.zero_grad()
     
-            # Backward pass: compute gradient of the loss with respect to all the learnable
-            # parameters of the model. Internally, the parameters of each Module are stored
-            # in Tensors with requires_grad=True, so this call will compute gradients for
-            # all learnable parameters in the model.
+            # Backward pass: compute gradient of the loss with respect to all the
+            # learnable parameters of the model. Internally, the parameters of each
+            # Module are stored in Tensors with requires_grad=True, so this call
+            # will compute gradients for all learnable parameters in the model.
             loss.backward()
     
-            # Update the weights using gradient descent. Each parameter is a Tensor, so
-            # we can access its gradients like we did before.
+            # Update the weights using gradient descent. Each parameter is a Tensor,
+            # so we can access its gradients like we did before.
             with torch.no_grad():
                 for param in model.parameters():
                     param -= learning_rate * param.grad
@@ -586,33 +526,14 @@ some trainable weights.
     
         return model, losses_tr, losses_val
     
-    model, losses_tr, losses_val = two_layer_regression_nn_train(X=X_iris_tr, Y=Y_iris_tr, X_val=X_iris_val, Y_val=Y_iris_val,
-                                                                     lr=1e-4, nite=50)
     
-    plt.plot(np.arange(len(losses_tr)), losses_tr, "-b", np.arange(len(losses_val)), losses_val, "-r")
-
-
-.. parsed-literal::
-
-    0 82.32025146484375 91.3389892578125
-    10 50.322200775146484 63.563087463378906
-    20 40.825225830078125 57.13555145263672
-    30 37.53572082519531 55.74506378173828
-    40 36.191200256347656 55.499732971191406
-
-
-
-
-.. parsed-literal::
-
-    [<matplotlib.lines.Line2D at 0x7f95ff296668>,
-     <matplotlib.lines.Line2D at 0x7f95ff2967b8>]
-
-
-
-
-.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_15_2.png
-
+    model, losses_tr, losses_val = \
+        two_layer_regression_nn_train(X=X_iris_tr, Y=Y_iris_tr,
+                                      X_val=X_iris_val, Y_val=Y_iris_val,
+                                      lr=1e-4, nite=50)
+    
+    _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
+                 np.arange(len(losses_val)), losses_val, "-r")
 
 Backpropagation with PyTorch optim
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -628,7 +549,6 @@ including SGD+momentum, RMSProp, Adam, etc.
 
     import torch
     
-    # X=X_iris_tr; Y=Y_iris_tr; X_val=X_iris_val; Y_val=Y_iris_val
     
     def two_layer_regression_nn_optim_train(X, Y, X_val, Y_val, lr, nite):
     
@@ -652,9 +572,9 @@ including SGD+momentum, RMSProp, Adam, etc.
         losses_tr, losses_val = list(), list()
     
         # Use the optim package to define an Optimizer that will update the weights of
-        # the model for us. Here we will use Adam; the optim package contains many other
-        # optimization algoriths. The first argument to the Adam constructor tells the
-        # optimizer which Tensors it should update.
+        # the model for us. Here we will use Adam; the optim package contains many
+        # other optimization algorithm. The first argument to the Adam constructor
+        # tells the optimizer which Tensors it should update.
         learning_rate = lr
         optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
         for t in range(nite):
@@ -691,30 +611,11 @@ including SGD+momentum, RMSProp, Adam, etc.
     
         return model, losses_tr, losses_val
     
-    model, losses_tr, losses_val = two_layer_regression_nn_optim_train(X=X_iris_tr, Y=Y_iris_tr, X_val=X_iris_val, Y_val=Y_iris_val,
-                                                                     lr=1e-3, nite=50)
-    plt.plot(np.arange(len(losses_tr)), losses_tr, "-b", np.arange(len(losses_val)), losses_val, "-r")
-
-
-.. parsed-literal::
-
-    0 92.271240234375 83.96189880371094
-    10 64.25907135009766 59.872535705566406
-    20 47.6252555847168 50.228126525878906
-    30 40.33802032470703 50.60377502441406
-    40 38.19448471069336 54.03163528442383
-
-
-
-
-.. parsed-literal::
-
-    [<matplotlib.lines.Line2D at 0x7f95ff200080>,
-     <matplotlib.lines.Line2D at 0x7f95ff2001d0>]
-
-
-
-
-.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_17_2.png
-
+    
+    model, losses_tr, losses_val = \
+        two_layer_regression_nn_optim_train(X=X_iris_tr, Y=Y_iris_tr,
+                                            X_val=X_iris_val, Y_val=Y_iris_val,
+                                            lr=1e-3, nite=50)
+    _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
+                 np.arange(len(losses_val)), losses_val, "-r")
 

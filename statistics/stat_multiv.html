@@ -1,35 +1,35 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Multivariate statistics &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <title>Multivariate Statistics &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Time series in python" href="time_series.html" />
-    <link rel="prev" title="Lab: Brain volumes study" href="../auto_gallery/stat_univ_lab_brain-volume.html" />
+    <link rel="next" title="Resampling and Monte Carlo Methods" href="stat_montecarlo.html" />
+    <link rel="prev" title="Linear Mixed Models" href="lmm/lmm.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -42,22 +42,14 @@
           <div class="body" role="main">
             
   <section id="multivariate-statistics">
-<h1>Multivariate statistics<a class="headerlink" href="#multivariate-statistics" title="Permalink to this headline">¶</a></h1>
+<h1>Multivariate Statistics<a class="headerlink" href="#multivariate-statistics" title="Link to this heading">¶</a></h1>
 <p>Multivariate statistics includes all statistical techniques for
 analyzing samples made of two or more variables. The data set (a
 <span class="math notranslate nohighlight">\(N \times P\)</span> matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>) is a collection of
-<span class="math notranslate nohighlight">\(N\)</span> independent samples column <strong>vectors</strong>
-<span class="math notranslate nohighlight">\([\mathbf{x}_{1}, \ldots, \mathbf{x}_{i}, \ldots, \mathbf{x}_{N}]\)</span>
-of length <span class="math notranslate nohighlight">\(P\)</span></p>
+<span class="math notranslate nohighlight">\(N\)</span> points (or observations) with <span class="math notranslate nohighlight">\(P\)</span> variables, i.e., in a
+<span class="math notranslate nohighlight">\(P\)</span>-dimensional space:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\mathbf{X} =
-    \begin{bmatrix}
-        -\mathbf{x}_{1}^T- \\
-        \vdots \\
-        -\mathbf{x}_{i}^T- \\
-        \vdots \\
-        -\mathbf{x}_{P}^T-
-    \end{bmatrix} =
     \begin{bmatrix}
         x_{11} &amp; \cdots &amp; x_{1j} &amp; \cdots &amp; x_{1P} \\
         \vdots &amp;        &amp; \vdots &amp;        &amp; \vdots \\
@@ -72,99 +64,110 @@ of length <span class="math notranslate nohighlight">\(P\)</span></p>
         \vdots &amp;            &amp; \vdots \\
         x_{N1} &amp; \ldots     &amp; x_{NP}
     \end{bmatrix}_{N \times P}.\end{split}\]</div>
-<section id="linear-algebra">
-<h2>Linear Algebra<a class="headerlink" href="#linear-algebra" title="Permalink to this headline">¶</a></h2>
-<section id="euclidean-norm-and-distance">
-<h3>Euclidean norm and distance<a class="headerlink" href="#euclidean-norm-and-distance" title="Permalink to this headline">¶</a></h3>
-<p>The Euclidean norm of a vector <span class="math notranslate nohighlight">\(\mathbf{a} \in \mathbb{R}^P\)</span> is
-denoted</p>
+<p>,</p>
+<ul class="simple">
+<li><p>Each row <span class="math notranslate nohighlight">\(i\)</span> is a <span class="math notranslate nohighlight">\(P\)</span>-dimensional vector of the
+coordinates of the <span class="math notranslate nohighlight">\(i\)</span>’th observation or point.</p></li>
+<li><p>Each column <span class="math notranslate nohighlight">\(j\)</span> is a <span class="math notranslate nohighlight">\(N\)</span>-dimensional vector of values of
+the points for the <span class="math notranslate nohighlight">\(j\)</span>’th variable.</p></li>
+</ul>
+<section id="basic-linear-algebra">
+<h2>Basic Linear Algebra<a class="headerlink" href="#basic-linear-algebra" title="Link to this heading">¶</a></h2>
+<p><strong>The Euclidean norm</strong> of a vector <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^P\)</span>
+is denoted</p>
 <div class="math notranslate nohighlight">
-\[\|\mathbf{a}\|_2 = \sqrt{\sum_i^P {a_i}^2}\]</div>
-<p>The Euclidean distance between two vectors
-<span class="math notranslate nohighlight">\(\mathbf{a}, \mathbf{b} \in \mathbb{R}^P\)</span> is</p>
+\[\|\mathbf{x}\|_2 = \sqrt{\sum_i^P {x_i}^2}\]</div>
+<p><strong>The Euclidean distance</strong> between two point
+<span class="math notranslate nohighlight">\(\mathbf{x}, \mathbf{y} \in \mathbb{R}^P\)</span> is</p>
 <div class="math notranslate nohighlight">
-\[\|\mathbf{a}-\mathbf{b}\|_2 = \sqrt{\sum_i^P (a_i-b_i)^2}\]</div>
-</section>
-<section id="dot-product-and-projection">
-<h3>Dot product and projection<a class="headerlink" href="#dot-product-and-projection" title="Permalink to this headline">¶</a></h3>
-<p>Source:
-<a class="reference external" href="https://en.wikipedia.org/wiki/Projection_%28linear_algebra%29">Wikipedia</a></p>
-<p><strong>Algebraic definition</strong></p>
-<p>The dot product, denoted ’‘<span class="math notranslate nohighlight">\(\cdot\)</span>’’ of two <span class="math notranslate nohighlight">\(P\)</span>-dimensional
-vectors <span class="math notranslate nohighlight">\(\mathbf{a} = [a_1, a_2, ..., a_P]\)</span> and
-<span class="math notranslate nohighlight">\(\mathbf{a} = [b_1, b_2, ..., b_P]\)</span> is defined as</p>
+\[\|\mathbf{x}-\mathbf{y}\|_2 = \sqrt{\sum_i^P (x_i-y_i)^2}\]</div>
+<p><strong>The dot product</strong>, denoted ’‘<span class="math notranslate nohighlight">\(\cdot\)</span>’’ of two
+<span class="math notranslate nohighlight">\(P\)</span>-dimensional vectors <span class="math notranslate nohighlight">\(\mathbf{x} = [x_1, x_2, ..., x_P]\)</span>
+and <span class="math notranslate nohighlight">\(\mathbf{y} = [y_1, y_2, ..., y_P]\)</span> is defined as</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\mathbf{a} \cdot \mathbf{b} = \mathbf{a}^T \mathbf{b} = \sum_i a_i b_i =
+\[\begin{split}\mathbf{x} \cdot \mathbf{y} = \mathbf{x}^T \mathbf{y} = \sum_i x_i y_i =
     \begin{bmatrix}
-        a_{1} &amp; \ldots &amp;  \mathbf{a}^T  &amp; \ldots &amp; a_{P}
+        x_{1} &amp; \ldots &amp;  \mathbf{x}^T  &amp; \ldots &amp; x_{P}
     \end{bmatrix}
     \begin{bmatrix}
-        b_{1}\\
+        y_{1}\\
         \vdots \\
-        \mathbf{b}\\
+        \mathbf{y}\\
         \vdots\\
-        b_{P}
+        y_{P}
     \end{bmatrix}.\end{split}\]</div>
-<p>The Euclidean norm of a vector can be computed using the dot product, as</p>
+<p>Note that the Euclidean norm of a vector is the square root of the dot
+product of the vector with itself:</p>
 <div class="math notranslate nohighlight">
-\[\left\|\mathbf{a} \right\|_2 = {\sqrt {\mathbf{a} \cdot \mathbf{a}}}.\]</div>
-<p><strong>Geometric definition: projection</strong></p>
-<p>In Euclidean space, a Euclidean vector is a geometrical object that
-possesses both a magnitude and a direction. A vector can be pictured as
-an arrow. Its magnitude is its length, and its direction is the
-direction that the arrow points. The magnitude of a vector
-<span class="math notranslate nohighlight">\(\mathbf{a}\)</span> is denoted by <span class="math notranslate nohighlight">\(\|\mathbf{a}\|_2\)</span>. The dot
-product of two Euclidean vectors <span class="math notranslate nohighlight">\(\mathbf{a}\)</span> and
-<span class="math notranslate nohighlight">\(\mathbf{b}\)</span> is defined by</p>
+\[\left\|\mathbf{x} \right\|_2 = {\sqrt {\mathbf{x} \cdot \mathbf{x}}}.\]</div>
+<p><strong>Geometric interpretation</strong>: In Euclidean space, a Euclidean vector is
+a geometrical object that possesses both a norm (magnitude) and a
+direction. A vector can be pictured as an arrow. Its magnitude is its
+length, and its direction is the direction that the arrow points. The
+norm of a vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> is denoted by
+<span class="math notranslate nohighlight">\(\|\mathbf{x}\|_2\)</span>. The dot product of two Euclidean vectors
+<span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> is defined by</p>
 <div class="math notranslate nohighlight">
-\[\mathbf{a} \cdot \mathbf{b} = \|\mathbf{a} \|_2\ \|\mathbf{b} \|_2\cos \theta,\]</div>
-<p>where <span class="math notranslate nohighlight">\(\theta\)</span> is the angle between <span class="math notranslate nohighlight">\(\mathbf{a}\)</span> and
-<span class="math notranslate nohighlight">\(\mathbf{b}\)</span>.</p>
-<p>In particular, if <span class="math notranslate nohighlight">\(\mathbf{a}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> are
-orthogonal, then the angle between them is 90° and</p>
+\[\mathbf{x} \cdot \mathbf{y} = \|\mathbf{x} \|_2\ \|\mathbf{y} \|_2\cos \theta,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\theta\)</span> is the angle between <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and
+<span class="math notranslate nohighlight">\(\mathbf{y}\)</span>.</p>
+<p>In particular, if <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> are
+orthogonal, then the angle between them is 90° and
+<span class="math notranslate nohighlight">\(\mathbf{x} \cdot \mathbf{y} = 0.\)</span> At the other extreme, if they
+are codirectional, then the angle between them is 0° and
+<span class="math notranslate nohighlight">\(\mathbf{x} \cdot \mathbf{y} = \left\|\mathbf{x} \right\|_2\,\left\|\mathbf{y} \right\|_2\)</span>.</p>
+<p><strong>The (scalar) projection</strong> of a vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> (a point) in
+the direction of <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> is given by</p>
+<p>where <span class="math notranslate nohighlight">\(\theta\)</span> is the angle between <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and
+<span class="math notranslate nohighlight">\(\mathbf{y}\)</span>. Note that <span class="math notranslate nohighlight">\(x_{v}\)</span> is a scalar measuring the
+length of <span class="math notranslate nohighlight">\(x\)</span> projected on <span class="math notranslate nohighlight">\(v\)</span>.</p>
+<p>When we want to project on direction <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>, we only care
+about its direction. Therefore vector <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> can be
+normalized to <span class="math notranslate nohighlight">\(\|\mathbf{v}\|_2 = 1\)</span> dividing by the vector norm
+(without affecting its direction.). With <span class="math notranslate nohighlight">\(\|\mathbf{v}\|_2 = 1\)</span>
+<strong>the projection of any point</strong> <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> <strong>toward a
+direction</strong> <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> <strong>becomes an simple dot product</strong>:</p>
 <div class="math notranslate nohighlight">
-\[\mathbf{a} \cdot \mathbf{b} = 0.\]</div>
-<p>At the other extreme, if they are codirectional, then the angle between
-them is 0° and</p>
-<div class="math notranslate nohighlight">
-\[\mathbf{a} \cdot \mathbf{b} = \left\|\mathbf{a} \right\|_2\,\left\|\mathbf{b} \right\|_2\]</div>
-<p>This implies that the dot product of a vector <span class="math notranslate nohighlight">\(\mathbf{a}\)</span> by
-itself is</p>
-<div class="math notranslate nohighlight">
-\[\mathbf{a} \cdot \mathbf{a} = \left\|\mathbf{a} \right\|_2^2.\]</div>
-<p>The scalar projection (or scalar component) of a Euclidean vector
-<span class="math notranslate nohighlight">\(\mathbf{a}\)</span> in the direction of a Euclidean vector
-<span class="math notranslate nohighlight">\(\mathbf{b}\)</span> is given by</p>
-<div class="math notranslate nohighlight">
-\[a_{b} = \left\|\mathbf{a} \right\|_2\cos \theta,\]</div>
-<p>where <span class="math notranslate nohighlight">\(\theta\)</span> is the angle between <span class="math notranslate nohighlight">\(\mathbf{a}\)</span> and
-<span class="math notranslate nohighlight">\(\mathbf{b}\)</span>.</p>
-<p>In terms of the geometric definition of the dot product, this can be
-rewritten</p>
-<div class="math notranslate nohighlight">
-\[a_{b} = \frac{\mathbf{a} \cdot \mathbf{b}}{\|\mathbf{b}\|_2},\]</div>
+\[x_{v} = \mathbf{x} \cdot \mathbf{v}\]</div>
 <figure class="align-default" id="id1">
-<img alt="Projection." src="../_images/Dot_Product.png" />
+<a class="reference internal image-reference" href="../_images/Dot_Product.png"><img alt="Projection of point :math:`x` on vector :math:`v`" src="../_images/Dot_Product.png" style="width: 5cm;" />
+</a>
 <figcaption>
-<p><span class="caption-text">Projection.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">Projection of point <span class="math notranslate nohighlight">\(x\)</span> on vector <span class="math notranslate nohighlight">\(v\)</span></span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Plot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">cm</span> <span class="c1"># color map</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pystatsml.plot_utils</span>
+
+<span class="c1"># Plot parameters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
+<span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">1.</span><span class="p">)</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 
-<span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mf">4.085788532659924</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="mf">4.085788532659923</span>
 </pre></div>
 </div>
-</section>
 </section>
 <section id="mean-vector">
-<h2>Mean vector<a class="headerlink" href="#mean-vector" title="Permalink to this headline">¶</a></h2>
+<h2>Mean vector<a class="headerlink" href="#mean-vector" title="Link to this heading">¶</a></h2>
 <p>The mean (<span class="math notranslate nohighlight">\(P \times 1\)</span>) column-vector <span class="math notranslate nohighlight">\(\mathbf{\mu}\)</span> whose
 estimator is</p>
 <div class="math notranslate nohighlight">
@@ -186,15 +189,15 @@ estimator is</p>
          \end{bmatrix}.\end{split}\]</div>
 </section>
 <section id="covariance-matrix">
-<h2>Covariance matrix<a class="headerlink" href="#covariance-matrix" title="Permalink to this headline">¶</a></h2>
+<h2>Covariance matrix<a class="headerlink" href="#covariance-matrix" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>The covariance matrix <span class="math notranslate nohighlight">\(\mathbf{\Sigma_{XX}}\)</span> is a <strong>symmetric</strong>
 positive semi-definite matrix whose element in the <span class="math notranslate nohighlight">\(j, k\)</span>
 position is the covariance between the <span class="math notranslate nohighlight">\(j^{th}\)</span> and
-<span class="math notranslate nohighlight">\(k^{th}\)</span> elements of a random vector i.e. the <span class="math notranslate nohighlight">\(j^{th}\)</span>
-and <span class="math notranslate nohighlight">\(k^{th}\)</span> columns of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>.</p></li>
-<li><p>The covariance matrix generalizes the notion of covariance to
-multiple dimensions.</p></li>
+<span class="math notranslate nohighlight">\(k^{th}\)</span> elements of a random vector i.e. the <span class="math notranslate nohighlight">\(j^{th}\)</span> and
+<span class="math notranslate nohighlight">\(k^{th}\)</span> columns of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>.</p></li>
+<li><p>The covariance matrix generalizes the notion of covariance to multiple
+dimensions.</p></li>
 <li><p>The covariance matrix describe the shape of the sample distribution
 around the mean assuming an elliptical distribution:</p></li>
 </ul>
@@ -231,19 +234,7 @@ i.e. <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is replac
 \[s_{jk} = s_{kj} = \frac{1}{N-1} \mathbf{x_j}^T \mathbf{x_k} = \frac{1}{N-1} \sum_{i=1}^N x_{ij} x_{ik}\]</div>
 <p>is an estimator of the covariance between the <span class="math notranslate nohighlight">\(j^{th}\)</span> and
 <span class="math notranslate nohighlight">\(k^{th}\)</span> variables.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Avoid warnings and force inline plot</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-<span class="c1">##</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">pystatsml.plot_utils</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>  <span class="c1"># nice color</span>
-
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()</span>
 
 <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span>
@@ -284,17 +275,13 @@ i.e. <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is replac
 <span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_multiv_4_0.png" src="../_images/stat_multiv_4_0.png" />
+<img alt="../_images/stat_multiv_6_0.png" src="../_images/stat_multiv_6_0.png" />
 </section>
 <section id="correlation-matrix">
-<h2>Correlation matrix<a class="headerlink" href="#correlation-matrix" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-
-<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://python-graph-gallery.com/wp-content/uploads/mtcars.csv&#39;</span>
+<h2>Correlation matrix<a class="headerlink" href="#correlation-matrix" title="Link to this heading">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/plotly/datasets/master/mtcars.csv&#39;</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;manufacturer&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Compute the correlation matrix</span>
 <span class="n">corr</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
@@ -310,16 +297,18 @@ i.e. <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is replac
             <span class="n">square</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;shrink&quot;</span><span class="p">:</span> <span class="mf">.5</span><span class="p">})</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_multiv_6_0.png" src="../_images/stat_multiv_6_0.png" />
+<img alt="../_images/stat_multiv_8_0.png" src="../_images/stat_multiv_8_0.png" />
 <p>Re-order correlation matrix using AgglomerativeClustering</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># convert correlation to distances</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgglomerativeClustering</span>
 <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">corr</span><span class="p">))</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">AgglomerativeClustering</span>
-<span class="n">clustering</span> <span class="o">=</span> <span class="n">AgglomerativeClustering</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">linkage</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">,</span> <span class="n">affinity</span><span class="o">=</span><span class="s2">&quot;precomputed&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-<span class="n">lab</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">clustering</span> <span class="o">=</span> <span class="n">AgglomerativeClustering</span><span class="p">(</span>
+    <span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">linkage</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;precomputed&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">lab</span> <span class="o">=</span> <span class="mi">0</span>
 
-<span class="n">clusters</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">corr</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span><span class="o">==</span><span class="n">lab</span><span class="p">])</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span><span class="p">)]</span>
+<span class="n">clusters</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">corr</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span> <span class="o">==</span> <span class="n">lab</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">clusters</span><span class="p">)</span>
 
 <span class="n">reordered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">clusters</span><span class="p">)</span>
@@ -329,22 +318,22 @@ i.e. <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is replac
 <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
 <span class="c1"># Draw the heatmap with the mask and correct aspect ratio</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">square</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;shrink&quot;</span><span class="p">:</span> <span class="mf">.5</span><span class="p">})</span>
+                <span class="n">square</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;shrink&quot;</span><span class="p">:</span> <span class="mf">.5</span><span class="p">})</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;cyl&#39;</span><span class="p">,</span> <span class="s1">&#39;disp&#39;</span><span class="p">,</span> <span class="s1">&#39;hp&#39;</span><span class="p">,</span> <span class="s1">&#39;wt&#39;</span><span class="p">,</span> <span class="s1">&#39;qsec&#39;</span><span class="p">,</span> <span class="s1">&#39;vs&#39;</span><span class="p">,</span> <span class="s1">&#39;carb&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;am&#39;</span><span class="p">,</span> <span class="s1">&#39;gear&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;drat&#39;</span><span class="p">]]</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_multiv_8_1.png" src="../_images/stat_multiv_8_1.png" />
+<img alt="../_images/stat_multiv_10_1.png" src="../_images/stat_multiv_10_1.png" />
 </section>
 <section id="precision-matrix">
-<h2>Precision matrix<a class="headerlink" href="#precision-matrix" title="Permalink to this headline">¶</a></h2>
+<h2>Precision matrix<a class="headerlink" href="#precision-matrix" title="Link to this heading">¶</a></h2>
 <p>In statistics, precision is the reciprocal of the variance, and the
 precision matrix is the matrix inverse of the covariance matrix.</p>
 <p>It is related to <strong>partial correlations</strong> that measures the degree of
 association between two variables, while controlling the effect of other
 variables.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="n">Cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
                 <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
@@ -359,7 +348,7 @@ variables.</p>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# Partial correlations:&quot;</span><span class="p">)</span>
 <span class="n">Pcor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Prec</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-<span class="n">Pcor</span><span class="p">[::]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+<span class="n">Pcor</span><span class="p">[::]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">triu_indices_from</span><span class="p">(</span><span class="n">Prec</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="n">Pcor</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">Prec</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Prec</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">Prec</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
@@ -371,21 +360,21 @@ variables.</p>
 <span class="p">[[</span> <span class="mf">6.79</span> <span class="o">-</span><span class="mf">3.21</span> <span class="o">-</span><span class="mf">3.21</span>  <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">0.</span>  <span class="p">]</span>
  <span class="p">[</span><span class="o">-</span><span class="mf">3.21</span>  <span class="mf">6.79</span> <span class="o">-</span><span class="mf">3.21</span>  <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">0.</span>  <span class="p">]</span>
  <span class="p">[</span><span class="o">-</span><span class="mf">3.21</span> <span class="o">-</span><span class="mf">3.21</span>  <span class="mf">6.79</span>  <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">0.</span>  <span class="p">]</span>
- <span class="p">[</span> <span class="mf">0.</span>   <span class="o">-</span><span class="mf">0.</span>   <span class="o">-</span><span class="mf">0.</span>    <span class="mf">5.26</span> <span class="o">-</span><span class="mf">4.74</span> <span class="o">-</span><span class="mf">0.</span>  <span class="p">]</span>
+ <span class="p">[</span> <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">5.26</span> <span class="o">-</span><span class="mf">4.74</span>  <span class="mf">0.</span>  <span class="p">]</span>
  <span class="p">[</span> <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">0.</span>   <span class="o">-</span><span class="mf">4.74</span>  <span class="mf">5.26</span>  <span class="mf">0.</span>  <span class="p">]</span>
  <span class="p">[</span> <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">0.</span>    <span class="mf">1.</span>  <span class="p">]]</span>
 <span class="c1"># Partial correlations:</span>
 <span class="p">[[</span>  <span class="n">nan</span>  <span class="mf">0.47</span>  <span class="mf">0.47</span> <span class="o">-</span><span class="mf">0.</span>   <span class="o">-</span><span class="mf">0.</span>   <span class="o">-</span><span class="mf">0.</span>  <span class="p">]</span>
  <span class="p">[</span>  <span class="n">nan</span>   <span class="n">nan</span>  <span class="mf">0.47</span> <span class="o">-</span><span class="mf">0.</span>   <span class="o">-</span><span class="mf">0.</span>   <span class="o">-</span><span class="mf">0.</span>  <span class="p">]</span>
  <span class="p">[</span>  <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span> <span class="o">-</span><span class="mf">0.</span>   <span class="o">-</span><span class="mf">0.</span>   <span class="o">-</span><span class="mf">0.</span>  <span class="p">]</span>
- <span class="p">[</span>  <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span>  <span class="mf">0.9</span>   <span class="mf">0.</span>  <span class="p">]</span>
+ <span class="p">[</span>  <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span>  <span class="mf">0.9</span>  <span class="o">-</span><span class="mf">0.</span>  <span class="p">]</span>
  <span class="p">[</span>  <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span> <span class="o">-</span><span class="mf">0.</span>  <span class="p">]</span>
  <span class="p">[</span>  <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span>   <span class="n">nan</span><span class="p">]]</span>
 </pre></div>
 </div>
 </section>
 <section id="mahalanobis-distance">
-<h2>Mahalanobis distance<a class="headerlink" href="#mahalanobis-distance" title="Permalink to this headline">¶</a></h2>
+<h2>Mahalanobis distance<a class="headerlink" href="#mahalanobis-distance" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>The Mahalanobis distance is a measure of the distance between two
 points <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{\mu}\)</span> where the
@@ -406,11 +395,12 @@ dilated since they correspond to unlikely dispersion of points.</p></li>
 <p>For example</p>
 <div class="math notranslate nohighlight">
 \[D_M(\mathbf{1}) = \sqrt{\mathbf{1}^T \mathbf{\Sigma}^{-1}\mathbf{1}}.\]</div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ones</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Cov</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ones</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Cov</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">d_euc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ones</span><span class="p">,</span> <span class="n">ones</span><span class="p">))</span>
 <span class="n">d_mah</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ones</span><span class="p">,</span> <span class="n">Prec</span><span class="p">),</span> <span class="n">ones</span><span class="p">))</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Euclidean norm of ones=</span><span class="si">%.2f</span><span class="s2">. Mahalanobis norm of ones=</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">d_euc</span><span class="p">,</span> <span class="n">d_mah</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Euclidean norm of ones=</span><span class="si">%.2f</span><span class="s2">. Mahalanobis norm of ones=</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><span class="n">d_euc</span><span class="p">,</span> <span class="n">d_mah</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Euclidean</span> <span class="n">norm</span> <span class="n">of</span> <span class="n">ones</span><span class="o">=</span><span class="mf">2.45</span><span class="o">.</span> <span class="n">Mahalanobis</span> <span class="n">norm</span> <span class="n">of</span> <span class="n">ones</span><span class="o">=</span><span class="mf">1.77</span>
@@ -424,11 +414,11 @@ dispersion are contracted:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0.35714286</span> <span class="mf">0.35714286</span> <span class="mf">0.35714286</span> <span class="mf">0.52631579</span> <span class="mf">0.52631579</span> <span class="mf">1.</span>        <span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">pystatsml.plot_utils</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pystatsml.plot_utils</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
 <span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()</span>
@@ -472,9 +462,11 @@ dispersion are contracted:</p>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">6.1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
-         <span class="s1">&#39;Euclidian:   d(m, x1) = </span><span class="si">%.1f</span><span class="s1">&lt;d(m, x2) = </span><span class="si">%.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">d2_m_x1</span><span class="p">,</span> <span class="n">d2_m_x2</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+         <span class="s1">&#39;Euclidian:   d(m, x1) = </span><span class="si">%.1f</span><span class="s1">&lt;d(m, x2) = </span><span class="si">%.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">d2_m_x1</span><span class="p">,</span> <span class="n">d2_m_x2</span><span class="p">),</span>
+         <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">6.1</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span>
-         <span class="s1">&#39;Mahalanobis: d(m, x1) = </span><span class="si">%.1f</span><span class="s1">&gt;d(m, x2) = </span><span class="si">%.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dm_m_x1</span><span class="p">,</span> <span class="n">dm_m_x2</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+         <span class="s1">&#39;Mahalanobis: d(m, x1) = </span><span class="si">%.1f</span><span class="s1">&gt;d(m, x2) = </span><span class="si">%.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dm_m_x1</span><span class="p">,</span> <span class="n">dm_m_x2</span><span class="p">),</span>
+         <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Euclidian   d(m, x1) = </span><span class="si">%.2f</span><span class="s1"> &lt; d(m, x2) = </span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">d2_m_x1</span><span class="p">,</span> <span class="n">d2_m_x2</span><span class="p">))</span>
@@ -485,7 +477,7 @@ dispersion are contracted:</p>
 <span class="n">Mahalanobis</span> <span class="n">d</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span> <span class="o">=</span> <span class="mf">3.33</span> <span class="o">&gt;</span> <span class="n">d</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span> <span class="o">=</span> <span class="mf">2.11</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_multiv_15_1.png" src="../_images/stat_multiv_15_1.png" />
+<img alt="../_images/stat_multiv_17_1.png" src="../_images/stat_multiv_17_1.png" />
 <p>If the covariance matrix is the identity matrix, the Mahalanobis
 distance reduces to the Euclidean distance. If the covariance matrix is
 diagonal, then the resulting distance measure is called a normalized
@@ -501,7 +493,7 @@ component axis, it measures the number of standard deviations from
 <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> to the mean of the distribution.</p>
 </section>
 <section id="multivariate-normal-distribution">
-<h2>Multivariate normal distribution<a class="headerlink" href="#multivariate-normal-distribution" title="Permalink to this headline">¶</a></h2>
+<h2>Multivariate normal distribution<a class="headerlink" href="#multivariate-normal-distribution" title="Link to this heading">¶</a></h2>
 <p>The distribution, or probability density function (PDF) (sometimes just
 density), of a continuous random variable is a function that describes
 the relative likelihood for this random variable to take on a given
@@ -511,15 +503,16 @@ distribution, of a <span class="math notranslate nohighlight">\(P\)</span>-dimen
 <span class="math notranslate nohighlight">\(\mathbf{x} = [x_1, x_2, \ldots, x_P]^T\)</span> is</p>
 <div class="math notranslate nohighlight">
 \[\mathcal{N}(\mathbf{x}|\mathbf{\mu}, \mathbf{\Sigma}) = \frac{1}{(2\pi)^{P/2}|\mathbf{\Sigma}|^{1/2}}\exp\{-\frac{1}{2} (\mathbf{x} - \mathbf{\mu)}^T \mathbf{\Sigma}^{-1}(\mathbf{x} - \mathbf{\mu})\}.\]</div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">scipy.stats</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">multivariate_normal</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">multivariate_normal</span>
+<span class="c1">#from mpl_toolkits.mplot3d import Axes3D</span>
 
 
-<span class="k">def</span> <span class="nf">multivariate_normal_pdf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Multivariate normal probability density function over X (n_samples x n_features)&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">multivariate_normal_pdf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">sigma</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multivariate normal probability density function over X</span>
+<span class="sd">    (n_samples x n_features)&quot;&quot;&quot;</span>
     <span class="n">P</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">det</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
     <span class="n">norm_const</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(((</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="n">P</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">det</span><span class="p">))</span>
@@ -543,8 +536,7 @@ distribution, of a <span class="math notranslate nohighlight">\(P\)</span>-dimen
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">norm_scpy</span><span class="p">)</span>
 
 <span class="c1"># Plot</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">})</span>
 <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
         <span class="n">cstride</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">coolwarm</span><span class="p">,</span>
         <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span>
@@ -563,29 +555,29 @@ distribution, of a <span class="math notranslate nohighlight">\(P\)</span>-dimen
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_multiv_18_0.png" src="../_images/stat_multiv_18_0.png" />
+<img alt="../_images/stat_multiv_20_0.png" src="../_images/stat_multiv_20_0.png" />
 </section>
 <section id="exercises">
-<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">¶</a></h2>
 <section id="dot-product-and-euclidean-norm">
-<h3>Dot product and Euclidean norm<a class="headerlink" href="#dot-product-and-euclidean-norm" title="Permalink to this headline">¶</a></h3>
-<p>Given <span class="math notranslate nohighlight">\(\mathbf{a} = [2, 1]^T\)</span> and <span class="math notranslate nohighlight">\(\mathbf{b} = [1, 1]^T\)</span></p>
+<h3>Dot product and Euclidean norm<a class="headerlink" href="#dot-product-and-euclidean-norm" title="Link to this heading">¶</a></h3>
+<p>Given <span class="math notranslate nohighlight">\(\mathbf{x} = [2, 1]^T\)</span> and <span class="math notranslate nohighlight">\(\mathbf{y} = [1, 1]^T\)</span></p>
 <ol class="arabic simple">
 <li><p>Write a function <code class="docutils literal notranslate"><span class="pre">euclidean(x)</span></code> that computes the Euclidean norm of
 vector, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p></li>
-<li><p>Compute the Euclidean norm of <span class="math notranslate nohighlight">\(\mathbf{a}\)</span>.</p></li>
+<li><p>Compute the Euclidean norm of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p></li>
 <li><p>Compute the Euclidean distance of
-<span class="math notranslate nohighlight">\(\|\mathbf{a}-\mathbf{b}\|_2\)</span>.</p></li>
-<li><p>Compute the projection of <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> in the direction of
-vector <span class="math notranslate nohighlight">\(\mathbf{a}\)</span>: <span class="math notranslate nohighlight">\(b_{a}\)</span>.</p></li>
+<span class="math notranslate nohighlight">\(\|\mathbf{x}-\mathbf{y}\|_2\)</span>.</p></li>
+<li><p>Compute the projection of <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> in the direction of
+vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>: <span class="math notranslate nohighlight">\(y_{a}\)</span>.</p></li>
 <li><p>Simulate a dataset <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> of <span class="math notranslate nohighlight">\(N=100\)</span> samples of
 2-dimensional vectors.</p></li>
 <li><p>Project all samples in the direction of the vector
-<span class="math notranslate nohighlight">\(\mathbf{a}\)</span>.</p></li>
+<span class="math notranslate nohighlight">\(\mathbf{x}\)</span>.</p></li>
 </ol>
 </section>
 <section id="covariance-matrix-and-mahalanobis-norm">
-<h3>Covariance matrix and Mahalanobis norm<a class="headerlink" href="#covariance-matrix-and-mahalanobis-norm" title="Permalink to this headline">¶</a></h3>
+<h3>Covariance matrix and Mahalanobis norm<a class="headerlink" href="#covariance-matrix-and-mahalanobis-norm" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Sample a dataset <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> of <span class="math notranslate nohighlight">\(N=100\)</span> samples of
 2-dimensional vectors from the bivariate normal distribution
@@ -616,117 +608,66 @@ results in a <span class="math notranslate nohighlight">\(100 \times 2\)</span> 
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="stat_univ.html">Univariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Multivariate statistics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#linear-algebra">Linear Algebra</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mean-vector">Mean vector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#covariance-matrix">Covariance matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#correlation-matrix">Correlation matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#precision-matrix">Precision matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mahalanobis-distance">Mahalanobis distance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#multivariate-normal-distribution">Multivariate normal distribution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#exercises">Exercises</a></li>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Multivariate Statistics</a><ul>
+<li><a class="reference internal" href="#basic-linear-algebra">Basic Linear Algebra</a></li>
+<li><a class="reference internal" href="#mean-vector">Mean vector</a></li>
+<li><a class="reference internal" href="#covariance-matrix">Covariance matrix</a></li>
+<li><a class="reference internal" href="#correlation-matrix">Correlation matrix</a></li>
+<li><a class="reference internal" href="#precision-matrix">Precision matrix</a></li>
+<li><a class="reference internal" href="#mahalanobis-distance">Mahalanobis distance</a></li>
+<li><a class="reference internal" href="#multivariate-normal-distribution">Multivariate normal distribution</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a><ul>
+<li><a class="reference internal" href="#dot-product-and-euclidean-norm">Dot product and Euclidean norm</a></li>
+<li><a class="reference internal" href="#covariance-matrix-and-mahalanobis-norm">Covariance matrix and Mahalanobis norm</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="time_series.html">Time series in python</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../auto_gallery/stat_univ_lab_brain-volume.html" title="previous chapter">Lab: Brain volumes study</a></li>
-      <li>Next: <a href="time_series.html" title="next chapter">Time series in python</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/statistics/stat_multiv.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="../_sources/statistics/stat_multiv.rst.txt"

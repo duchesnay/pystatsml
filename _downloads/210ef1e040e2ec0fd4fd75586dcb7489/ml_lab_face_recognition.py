@@ -1,6 +1,6 @@
 '''
-Lab: Faces recognition using various learning models
-====================================================
+Hands-On: Faces recognition using various learning models
+=========================================================
 
 This lab is inspired by a scikit-learn lab:
 `Faces recognition example using eigenfaces and SVMs <https://scikit-learn.org/stable/auto_examples/applications/plot_face_recognition.html>`_
@@ -11,13 +11,13 @@ It uses scikit-learan and pytorch models using `skorch <https://github.com/skorc
   * skorch abstracts away the training loop, making a lot of boilerplate code obsolete.
     A simple `net.fit(X, y)` is enough.
 
-Note that more sofisticated models can be used,
+Note that more sophisticated models can be used,
 `see <https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78>`_
 for a overview.
 
 Models:
 
-- Eigenfaces unsupervized exploratory analysis.
+- Eigenfaces unsupervised exploratory analysis.
 - `LogisticRegression <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html>`_ with L2 regularization (includes model selection with 5CV`_
 - `SVM-RBF <https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_  (includes model selection with 5CV.
 - `MLP using sklearn <https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html>`_ using sklearn (includes model selection with 5CV)
@@ -33,10 +33,18 @@ Pipelines:
 
 import numpy as np
 from time import time
-import matplotlib.pyplot as plt
 import pandas as pd
+
+# Plot
+import matplotlib.pyplot as plt
 import seaborn as sns
 
+# Plot parameters
+plt.style.use('seaborn-v0_8-whitegrid')
+fig_w, fig_h = plt.rcParams.get('figure.figsize')
+plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
+
+# ML
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
@@ -211,14 +219,14 @@ plot_gallery(eigenfaces, eigenface_titles, h, w)
 # ------------------------------------------------------------------
 #
 # Our goal is to obtain a good balanced accuracy, ie, the macro average
-# (`macro avg`) of classes' reccalls. In this perspective, the good practices
+# (`macro avg`) of classes' recalls. In this perspective, the good practices
 # are:
 #
 # - Scale input features using either `StandardScaler()` or `MinMaxScaler()`
 #   "It doesn't harm".
 # - Re-balance classes' contributions `class_weight='balanced'`
 # - Do not include an intercept (`fit_intercept=False`) in the model.
-#   This should reduce the global accuracy `weighted avg`. But rememember that
+#   This should reduce the global accuracy `weighted avg`. But remember that
 #   we decided to maximize the balanced accuracy.
 
 lrl2_cv = make_pipeline(
@@ -241,7 +249,7 @@ print(confusion_matrix(y_test, y_pred, labels=range(n_classes)))
 
 
 # %%
-# Coeficients
+# Coefficients
 
 coefs = lrl2_cv.steps[-1][1].best_estimator_.coef_
 coefs = coefs.reshape(-1, h, w)
@@ -420,7 +428,7 @@ print(confusion_matrix(y_test, y_pred, labels=range(n_classes)))
 # -------------
 #
 # Note that to simplify, do not use pipeline (scaler + CNN) here.
-# But it would have been simple to do so, since pytorch is warpped in skorch
+# But it would have been simple to do so, since pytorch is wrapped in skorch
 # object that is compatible with sklearn.
 #
 # Sources:
@@ -465,7 +473,7 @@ cnn = NeuralNetClassifier(
         lr=0.001,
         optimizer=torch.optim.Adam,
         device=device,
-        train_split=skorch.dataset.CVSplit(cv=5, stratified=True),
+        train_split=skorch.dataset.ValidSplit(cv=5, stratified=True),
         verbose=0)
 
 scaler = preprocessing.MinMaxScaler()
@@ -495,10 +503,10 @@ class Resnet18(nn.Module):
         # self.model = torchvision.models.resnet18()
         self.model = torchvision.models.resnet18(pretrained=True)
 
-        # original definition of the first layer on the renset class
+        # original definition of the first layer on the resnet class
         # self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
         #                        bias=False)
-        # one channel input (greyscale):
+        # one channel input (grayscale):
         self.model.conv1 = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2,
                                      padding=3, bias=False)
 
@@ -525,7 +533,7 @@ resnet = NeuralNetClassifier(
     optimizer__weight_decay=0.0001,  # L2 regularization
     # Shuffle training data on each epoch
     # iterator_train__shuffle=True,
-    train_split=skorch.dataset.CVSplit(cv=5, stratified=True),
+    train_split=skorch.dataset.ValidSplit(cv=5, stratified=True),
     device=device,
     verbose=0)
 

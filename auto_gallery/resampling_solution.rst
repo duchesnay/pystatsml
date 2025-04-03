@@ -10,8 +10,8 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_gallery_resampling_solution.py>`
-        to download the full example code
+        :ref:`Go to the end <sphx_glr_download_auto_gallery_resampling_solution.py>`
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -29,11 +29,9 @@ Created on Wed Jan 18 10:40:44 2017
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    ACC:0.80(P=0.010); SPC:0.78(P=0.010); SEN:0.82(P=0.010)
+    ACC:0.79(P=0.010); SPC:0.76(P=0.010); SEN:0.82(P=0.010)
 
 
 
@@ -42,7 +40,7 @@ Created on Wed Jan 18 10:40:44 2017
 
 |
 
-.. code-block:: default
+.. code-block:: Python
 
 
     """
@@ -94,28 +92,26 @@ Created on Wed Jan 18 10:40:44 2017
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.068 seconds)
+   **Total running time of the script:** (0 minutes 1.492 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_resampling_solution.py:
 
+.. only:: html
 
-.. only :: html
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: resampling_solution.ipynb <resampling_solution.ipynb>`
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: resampling_solution.py <resampling_solution.py>`
 
-     :download:`Download Python source code: resampling_solution.py <resampling_solution.py>`
+    .. container:: sphx-glr-download sphx-glr-download-zip
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: resampling_solution.ipynb <resampling_solution.ipynb>`
+      :download:`Download zipped: resampling_solution.zip <resampling_solution.zip>`
 
 
 .. only:: html

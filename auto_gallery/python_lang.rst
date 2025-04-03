@@ -10,15 +10,15 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_gallery_python_lang.py>`
-        to download the full example code
+        :ref:`Go to the end <sphx_glr_download_auto_gallery_python_lang.py>`
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
 .. _sphx_glr_auto_gallery_python_lang.py:
 
 
-**Source** Kevin Markham https://github.com/justmarkham/python-reference
+Source  `Kevin Markham <https://github.com/justmarkham/python-reference>`_
 
 .. GENERATED FROM PYTHON SOURCE LINES 8-11
 
@@ -26,29 +26,117 @@ Import libraries
 ----------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-32
+.. GENERATED FROM PYTHON SOURCE LINES 13-14
 
-.. code-block:: default
+'generic import' of math module
+
+.. GENERATED FROM PYTHON SOURCE LINES 14-18
+
+.. code-block:: Python
 
 
-    # 'generic import' of math module
     import math
     math.sqrt(25)
 
-    # import a function
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    5.0
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
+
+import a function
+
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
+
+.. code-block:: Python
+
+
     from math import sqrt
     sqrt(25)    # no longer have to reference the module
 
-    # import multiple functions at once
-    from math import cos, floor
 
-    # import all functions in a module (generally discouraged)
-    # from os import *
 
-    # define an alias
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    5.0
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
+
+import multiple functions at once
+
+.. GENERATED FROM PYTHON SOURCE LINES 26-29
+
+.. code-block:: Python
+
+
+    from math import sqrt, exp
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 30-35
+
+import all functions in a module (strongly discouraged)
+
+::
+
+from os import *
+
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
+
+define an alias
+
+.. GENERATED FROM PYTHON SOURCE LINES 39-44
+
+.. code-block:: Python
+
+
+    import nltk
     import numpy as np
+    np.sqrt(9)
 
-    # show all functions in math module
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    np.float64(3.0)
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
+
+show all functions in math module
+
+.. GENERATED FROM PYTHON SOURCE LINES 46-49
+
+.. code-block:: Python
+
+
     content = dir(math)
 
 
@@ -58,18 +146,21 @@ Import libraries
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-36
+.. GENERATED FROM PYTHON SOURCE LINES 50-53
 
 Basic operations
 ----------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-64
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
-.. code-block:: default
+Numbers
+
+.. GENERATED FROM PYTHON SOURCE LINES 56-68
+
+.. code-block:: Python
 
 
-    # Numbers
     10 + 4          # add (returns 14)
     10 - 4          # subtract (returns 6)
     10 * 4          # multiply (returns 40)
@@ -77,19 +168,61 @@ Basic operations
     10 / 4          # divide (returns 2 because both types are 'int')
     10 / float(4)   # divide (returns 2.5)
     5 % 4           # modulo (returns 1) - also known as the remainder
-
     10 / 4          # true division (returns 2.5)
     10 // 4         # floor division (returns 2)
 
 
-    # Boolean operations
-    # comparisons (these return True)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    2
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 69-72
+
+Boolean operations
+
+comparisons (these return True)
+
+.. GENERATED FROM PYTHON SOURCE LINES 72-78
+
+.. code-block:: Python
+
+
     5 > 3
     5 >= 3
     5 != 3
     5 == 5
 
-    # boolean operations (these return True)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    True
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 79-80
+
+Boolean operations (these return True)
+
+.. GENERATED FROM PYTHON SOURCE LINES 80-87
+
+.. code-block:: Python
+
+
     5 > 3 and 6 > 3
     5 > 3 or 5 < 3
     not False
@@ -102,7 +235,55 @@ Basic operations
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
+ .. code-block:: none
+
+
+    True
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 88-92
+
+Data types
+----------
+
+Determine the type of an object
+
+.. GENERATED FROM PYTHON SOURCE LINES 92-99
+
+.. code-block:: Python
+
+
+    type(2)         # returns 'int'
+    type(2.0)       # returns 'float'
+    type('two')     # returns 'str'
+    type(True)      # returns 'bool'
+    type(None)      # returns 'NoneType'
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 100-101
+
+Check if an object is of a given type
+
+.. GENERATED FROM PYTHON SOURCE LINES 101-105
+
+.. code-block:: Python
+
+
+    isinstance(2.0, int)            # returns False
+    isinstance(2.0, (int, float))   # returns True
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
@@ -111,41 +292,69 @@ Basic operations
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-68
+.. GENERATED FROM PYTHON SOURCE LINES 106-107
 
-Data types
-----------
+Convert an object to a given type
 
+.. GENERATED FROM PYTHON SOURCE LINES 107-112
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-98
-
-.. code-block:: default
+.. code-block:: Python
 
 
-    # determine the type of an object
-    type(2)         # returns 'int'
-    type(2.0)       # returns 'float'
-    type('two')     # returns 'str'
-    type(True)      # returns 'bool'
-    type(None)      # returns 'NoneType'
-
-    # check if an object is of a given type
-    isinstance(2.0, int)            # returns False
-    isinstance(2.0, (int, float))   # returns True
-
-    # convert an object to a given type
     float(2)
     int(2.9)
     str(2.9)
 
-    # zero, None, and empty containers are converted to False
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    '2.9'
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 113-114
+
+zero, None, and empty containers are converted to False
+
+.. GENERATED FROM PYTHON SOURCE LINES 114-121
+
+.. code-block:: Python
+
+
     bool(0)
     bool(None)
     bool('')    # empty string
     bool([])    # empty list
     bool({})    # empty dictionary
 
-    # non-empty containers and non-zeros are converted to True
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    False
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 122-123
+
+Non-empty containers and non-zeros are converted to True
+
+.. GENERATED FROM PYTHON SOURCE LINES 123-129
+
+.. code-block:: Python
+
+
     bool(2)
     bool('two')
     bool([2])
@@ -157,8 +366,6 @@ Data types
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -166,7 +373,7 @@ Data types
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-105
+.. GENERATED FROM PYTHON SOURCE LINES 130-140
 
 Lists
 ~~~~~
@@ -175,84 +382,283 @@ Different objects categorized along a certain ordered sequence, lists
 are ordered, iterable, mutable (adding or removing objects changes the
 list size), can contain multiple data types.
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-181
+Creation
 
-.. code-block:: default
+Empty list (two ways)
+
+.. GENERATED FROM PYTHON SOURCE LINES 140-144
+
+.. code-block:: Python
 
 
-
-    # create an empty list (two ways)
     empty_list = []
     empty_list = list()
 
-    # create a list
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 145-146
+
+List with values
+
+.. GENERATED FROM PYTHON SOURCE LINES 146-149
+
+.. code-block:: Python
+
+
     simpsons = ['homer', 'marge', 'bart']
 
-    # examine a list
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 150-151
+
+Examine a list
+
+.. GENERATED FROM PYTHON SOURCE LINES 151-155
+
+.. code-block:: Python
+
+
     simpsons[0]     # print element 0 ('homer')
     len(simpsons)   # returns the length (3)
 
-    # modify a list (does not return the list)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    3
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 156-159
+
+Modify a list (does not return the list)
+
+Append
+
+.. GENERATED FROM PYTHON SOURCE LINES 159-164
+
+.. code-block:: Python
+
+
     simpsons.append('lisa')                 # append element to end
     simpsons.extend(['itchy', 'scratchy'])  # append multiple elements to end
-    simpsons.insert(0, 'maggie')            # insert element at index 0 (shifts everything right)
-    simpsons.remove('bart')                 # searches for first instance and removes it
+    # insert element at index 0 (shifts everything right)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 165-166
+
+Insert
+
+.. GENERATED FROM PYTHON SOURCE LINES 166-170
+
+.. code-block:: Python
+
+
+    simpsons.insert(0, 'maggie')
+    # searches for first instance and removes it
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 171-172
+
+Remove
+
+.. GENERATED FROM PYTHON SOURCE LINES 172-179
+
+.. code-block:: Python
+
+
+    simpsons.remove('bart')
     simpsons.pop(0)                         # removes element 0 and returns it
-    del simpsons[0]                         # removes element 0 (does not return it)
+    # removes element 0 (does not return it)
+    del simpsons[0]
     simpsons[0] = 'krusty'                  # replace element 0
 
-    # concatenate lists (slower than 'extend' method)
-    neighbors = simpsons + ['ned','rod','todd']
 
-    # find elements in a list
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 180-181
+
+Concatenate lists (slower than 'extend' method)
+
+.. GENERATED FROM PYTHON SOURCE LINES 181-184
+
+.. code-block:: Python
+
+
+    neighbors = simpsons + ['ned', 'rod', 'todd']
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 185-186
+
+Replicate
+
+.. GENERATED FROM PYTHON SOURCE LINES 186-189
+
+.. code-block:: Python
+
+
+    rep = ["a"] * 2 + ["b"] * 3
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 190-191
+
+Find elements in a list
+
+.. GENERATED FROM PYTHON SOURCE LINES 191-196
+
+.. code-block:: Python
+
+
     'lisa' in simpsons
     simpsons.count('lisa')      # counts the number of instances
     simpsons.index('itchy')     # returns index of first instance
 
-    # list slicing [start:end:stride]
-    weekdays = ['mon','tues','wed','thurs','fri']
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    2
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 197-198
+
+List slicing (selection) ``[start:end:stride]``
+
+.. GENERATED FROM PYTHON SOURCE LINES 198-207
+
+.. code-block:: Python
+
+
+    weekdays = ['mon', 'tues', 'wed', 'thurs', 'fri']
     weekdays[0]         # element 0
     weekdays[0:3]       # elements 0, 1, 2
     weekdays[:3]        # elements 0, 1, 2
     weekdays[3:]        # elements 3, 4
     weekdays[-1]        # last element (element 4)
     weekdays[::2]       # every 2nd element (0, 2, 4)
-    weekdays[::-1]      # backwards (4, 3, 2, 1, 0)
 
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    ['mon', 'wed', 'fri']
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 208-209
+
+Reverse list
+
+.. GENERATED FROM PYTHON SOURCE LINES 209-214
+
+.. code-block:: Python
+
+
+    weekdays[::-1]      # backwards (4, 3, 2, 1, 0)
     # alternative method for returning the list backwards
     list(reversed(weekdays))
 
-    # sort a list in place (modifies but does not return the list)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    ['fri', 'thurs', 'wed', 'tues', 'mon']
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 215-218
+
+Sort list
+
+Sort a list in place (modifies but does not return the list)
+
+.. GENERATED FROM PYTHON SOURCE LINES 218-223
+
+.. code-block:: Python
+
+
     simpsons.sort()
     simpsons.sort(reverse=True)     # sort in reverse
     simpsons.sort(key=len)          # sort by a key
 
-    # return a sorted list (but does not modify the original list)
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 224-225
+
+Return a sorted list (but does not modify the original list)
+
+.. GENERATED FROM PYTHON SOURCE LINES 225-231
+
+.. code-block:: Python
+
+
     sorted(simpsons)
     sorted(simpsons, reverse=True)
     sorted(simpsons, key=len)
-
-    # create a second reference to the same list
-    num = [1, 2, 3]
-    same_num = num
-    same_num[0] = 0         # modifies both 'num' and 'same_num'
-
-    # copy a list (three ways)
-    new_num = num.copy()
-    new_num = num[:]
-    new_num = list(num)
-
-    # examine objects
-    id(num) == id(same_num) # returns True
-    id(num) == id(new_num)  # returns False
-    num is same_num         # returns True
-    num is new_num          # returns False
-    num == same_num         # returns True
-    num == new_num          # returns True (their contents are equivalent)
-
-    # conatenate +, replicate *
-    [1, 2, 3] + [4, 5, 6]
-    ["a"] * 2 + ["b"] * 3
 
 
 
@@ -261,16 +667,14 @@ list size), can contain multiple data types.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    ['a', 'a', 'b', 'b', 'b']
+    ['lisa', 'itchy', 'krusty', 'scratchy']
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-188
+.. GENERATED FROM PYTHON SOURCE LINES 232-238
 
 Tuples
 ~~~~~~
@@ -279,15 +683,16 @@ Like lists, but their size cannot change: ordered, iterable, immutable,
 can contain multiple data types
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-213
+.. GENERATED FROM PYTHON SOURCE LINES 238-264
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # create a tuple
     digits = (0, 1, 'two')          # create a tuple directly
     digits = tuple([0, 1, 'two'])   # create a tuple from a list
-    zero = (0,)                     # trailing comma is required to indicate it's a tuple
+    # trailing comma is required to indicate it's a tuple
+    zero = (0,)
 
     # examine a tuple
     digits[2]           # returns 'two'
@@ -315,7 +720,7 @@ can contain multiple data types
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-219
+.. GENERATED FROM PYTHON SOURCE LINES 265-270
 
 Strings
 ~~~~~~~
@@ -323,9 +728,9 @@ Strings
 A sequence of characters, they are iterable, immutable
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-274
+.. GENERATED FROM PYTHON SOURCE LINES 270-314
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # create a string
@@ -346,10 +751,10 @@ A sequence of characters, they are iterable, immutable
     s.upper()           # returns 'I LIKE YOU'
     s.startswith('I')   # returns True
     s.endswith('you')   # returns True
-    s.isdigit()         # returns False (returns True if every character in the string is a digit)
-    s.find('like')      # returns index of first occurrence (2), but doesn't support regex
+    s.isdigit()         # returns False (True if every character is a digit)
+    s.find('like')      # returns index of first occurrence
     s.find('hate')      # returns -1 since not found
-    s.replace('like','love')    # replaces all instances of 'like' with 'love'
+    s.replace('like', 'love')    # replaces all instances of 'like' with 'love'
 
     # split a string into a list of substrings separated by a delimiter
     s.split(' ')        # returns ['I','like','you']
@@ -358,7 +763,7 @@ A sequence of characters, they are iterable, immutable
     s2.split(',')       # returns ['a',' an',' the']
 
     # join a list of strings into one string using a delimiter
-    stooges = ['larry','curly','moe']
+    stooges = ['larry', 'curly', 'moe']
     ' '.join(stooges)   # returns 'larry curly moe'
 
     # concatenate strings
@@ -371,48 +776,41 @@ A sequence of characters, they are iterable, immutable
     s5 = '  ham and cheese  '
     s5.strip()          # returns 'ham and cheese'
 
-    # string substitutions: all of these return 'raining cats and dogs'
-    'raining %s and %s' % ('cats','dogs')                       # old way
-    'raining {} and {}'.format('cats','dogs')                   # new way
-    'raining {arg1} and {arg2}'.format(arg1='cats',arg2='dogs') # named arguments
-
-    # string formatting
-    # more examples: http://mkaz.com/2012/10/10/python-string-format/
-    'pi is {:.2f}'.format(3.14159)      # returns 'pi is 3.14'
-
-
-
 
 
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
 
-    'pi is 3.14'
+    'ham and cheese'
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-277
+.. GENERATED FROM PYTHON SOURCE LINES 315-316
 
-Strings 2/2
-~~~~~~~~~~~
+Strings formatting
 
-.. GENERATED FROM PYTHON SOURCE LINES 279-281
+.. GENERATED FROM PYTHON SOURCE LINES 316-331
 
-Normal strings allow for escaped characters
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 281-284
-
-.. code-block:: default
+.. code-block:: Python
 
 
-    print('first line\nsecond line')
+    # string substitutions: all of these return 'raining cats and dogs'
+    'raining %s and %s' % ('cats', 'dogs')                       # old way
+    'raining {} and {}'.format('cats', 'dogs')                   # new way
+    'raining {arg1} and {arg2}'.format(arg1='cats', arg2='dogs')  # named arguments
+
+    # String formatting
+    # See: https://realpython.com/python-formatted-output/
+    # Old method
+    print('6 %s' % 'bananas')
+    print('%d %s cost $%.1f' % (6, 'bananas', 3.14159))
+
+    # Format method positional arguments
+    print('{0} {1} cost ${2:.1f}'.format(6, 'bananas', 3.14159))
 
 
 
@@ -420,27 +818,62 @@ Normal strings allow for escaped characters
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
+ .. code-block:: none
+
+    6 bananas
+    6 bananas cost $3.1
+    6 bananas cost $3.1
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 332-333
+
+`Strings encoding <https://towardsdatascience.com/byte-string-unicode-string-raw-string-a-guide-to-all-strings-in-python-684c4c4960ba>`_
+
+.. GENERATED FROM PYTHON SOURCE LINES 335-337
+
+Normal strings allow for escaped characters. The default strings use unicode string (u string)
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 337-342
+
+.. code-block:: Python
+
+
+    print('first line\nsecond line')  # or
+    print(u'first line\nsecond line')
+    print('first line\nsecond line' == u'first line\nsecond line')
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
     first line
     second line
+    first line
+    second line
+    True
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 285-287
+.. GENERATED FROM PYTHON SOURCE LINES 343-345
 
-raw strings treat backslashes as literal characters
+Raw strings treat backslashes as literal characters
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-290
+.. GENERATED FROM PYTHON SOURCE LINES 345-349
 
-.. code-block:: default
+.. code-block:: Python
 
 
     print(r'first line\nfirst line')
+    print('first line\nsecond line' == r'first line\nsecond line')
 
 
 
@@ -448,27 +881,26 @@ raw strings treat backslashes as literal characters
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     first line\nfirst line
+    False
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-293
+.. GENERATED FROM PYTHON SOURCE LINES 350-352
 
 Sequence of bytes are not strings, should be decoded before some operations
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-299
+.. GENERATED FROM PYTHON SOURCE LINES 352-358
 
-.. code-block:: default
+.. code-block:: Python
+
 
     s = b'first line\nsecond line'
     print(s)
-
     print(s.decode('utf-8').split())
 
 
@@ -478,8 +910,6 @@ Sequence of bytes are not strings, should be decoded before some operations
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     b'first line\nsecond line'
@@ -488,11 +918,12 @@ Sequence of bytes are not strings, should be decoded before some operations
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 300-309
+.. GENERATED FROM PYTHON SOURCE LINES 359-369
 
 Dictionaries
 ~~~~~~~~~~~~
 
+**Dictionary is the must-known data structure**.
 Dictionaries are structures which can contain multiple data types, and
 is ordered with key-value pairs: for each (unique) key, the dictionary
 outputs one value. Keys can be strings, numbers, or tuples, while the
@@ -500,58 +931,29 @@ corresponding values can be any Python object. Dictionaries are:
 unordered, iterable, mutable
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 309-359
+.. GENERATED FROM PYTHON SOURCE LINES 371-372
 
-.. code-block:: default
+Creation
+
+.. GENERATED FROM PYTHON SOURCE LINES 372-389
+
+.. code-block:: Python
 
 
-    # create an empty dictionary (two ways)
+    # Empty dictionary (two ways)
     empty_dict = {}
     empty_dict = dict()
 
-    # create a dictionary (two ways)
-    family = {'dad':'homer', 'mom':'marge', 'size':6}
-    family = dict(dad='homer', mom='marge', size=6)
+    simpsons_roles_dict = {'Homer': 'father', 'Marge': 'mother',
+                           'Bart': 'son', 'Lisa': 'daughter', 'Maggie': 'daughter'}
 
-    # convert a list of tuples into a dictionary
-    list_of_tuples = [('dad','homer'), ('mom','marge'), ('size', 6)]
-    family = dict(list_of_tuples)
+    simpsons_roles_dict = dict(Homer='father', Marge='mother',
+                               Bart='son', Lisa='daughter', Maggie='daughter')
 
-    # examine a dictionary
-    family['dad']       # returns 'homer'
-    len(family)         # returns 3
-    family.keys()       # returns list: ['dad', 'mom', 'size']
-    family.values()     # returns list: ['homer', 'marge', 6]
-    family.items()      # returns list of tuples:
-                        #   [('dad', 'homer'), ('mom', 'marge'), ('size', 6)]
-    'mom' in family     # returns True
-    'marge' in family   # returns False (only checks keys)
+    simpsons_roles_dict = dict([('Homer', 'father'), ('Marge', 'mother'),
+                                ('Bart', 'son'), ('Lisa', 'daughter'), ('Maggie', 'daughter')])
 
-    # modify a dictionary (does not return the dictionary)
-    family['cat'] = 'snowball'              # add a new entry
-    family['cat'] = 'snowball ii'           # edit an existing entry
-    del family['cat']                       # delete an entry
-    family['kids'] = ['bart', 'lisa']       # value can be a list
-    family.pop('dad')                       # removes an entry and returns the value ('homer')
-    family.update({'baby':'maggie', 'grandpa':'abe'})   # add multiple entries
-
-    # accessing values more safely with 'get'
-    family['mom']                       # returns 'marge'
-    family.get('mom')                   # same thing
-    try:
-        family['grandma']               # throws an error
-    except  KeyError as e:
-        print("Error", e)
-
-    family.get('grandma')               # returns None
-    family.get('grandma', 'not found')  # returns 'not found' (the default)
-
-    # accessing a list element within a dictionary
-    family['kids'][0]                   # returns 'bart'
-    family['kids'].remove('lisa')       # removes 'lisa'
-
-    # string substitution using a dictionary
-    'youngest child is %(baby)s' % family   # returns 'youngest child is maggie'
+    print(simpsons_roles_dict)
 
 
 
@@ -560,17 +962,154 @@ unordered, iterable, mutable
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
+ .. code-block:: none
+
+    {'Homer': 'father', 'Marge': 'mother', 'Bart': 'son', 'Lisa': 'daughter', 'Maggie': 'daughter'}
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 390-391
+
+Access
+
+.. GENERATED FROM PYTHON SOURCE LINES 391-414
+
+.. code-block:: Python
+
+
+    # examine a dictionary
+    simpsons_roles_dict['Homer']   # 'father'
+    len(simpsons_roles_dict)       # 5
+    simpsons_roles_dict.keys()     # list: ['Homer', 'Marge', ...]
+    simpsons_roles_dict.values()   # list:['father', 'mother', ...]
+    simpsons_roles_dict.items()    # list of tuples: [('Homer', 'father') ...]
+    'Homer' in simpsons_roles_dict  # returns True
+    'John' in simpsons_roles_dict  # returns False (only checks keys)
+
+    # accessing values more safely with 'get'
+    simpsons_roles_dict['Homer']                       # returns 'father'
+    simpsons_roles_dict.get('Homer')                   # same thing
+
+    try:
+        simpsons_roles_dict['John']               # throws an error
+    except KeyError as e:
+        print("Error", e)
+
+    simpsons_roles_dict.get('John')               # None
+    # returns 'not found' (the default)
+    simpsons_roles_dict.get('John', 'not found')
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
-    Error 'grandma'
+    Error 'John'
 
-    'youngest child is maggie'
+    'not found'
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 360-367
+.. GENERATED FROM PYTHON SOURCE LINES 415-416
+
+Modify a dictionary (does not return the dictionary)
+
+.. GENERATED FROM PYTHON SOURCE LINES 416-427
+
+.. code-block:: Python
+
+
+    simpsons_roles_dict['Snowball'] = 'dog'              # add a new entry
+    simpsons_roles_dict['Snowball'] = 'cat'              # add a new entry
+    simpsons_roles_dict['Snoop'] = 'dog'                 # edit an existing entry
+    del simpsons_roles_dict['Snowball']                  # delete an entry
+
+    simpsons_roles_dict.pop('Snoop')  # removes and returns ('dog')
+    simpsons_roles_dict.update(
+        {'Mona': 'grandma', 'Abraham': 'grandpa'})  # add multiple entries
+    print(simpsons_roles_dict)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    {'Homer': 'father', 'Marge': 'mother', 'Bart': 'son', 'Lisa': 'daughter', 'Maggie': 'daughter', 'Mona': 'grandma', 'Abraham': 'grandpa'}
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 428-429
+
+Intersecting two dictionaries
+
+.. GENERATED FROM PYTHON SOURCE LINES 429-444
+
+.. code-block:: Python
+
+
+    simpsons_ages_dict = {'Homer': 45, 'Marge': 43,
+                          'Bart': 11, 'Lisa': 10, 'Maggie': 1}
+
+    print(simpsons_roles_dict.keys() & simpsons_ages_dict.keys())
+
+    inter = simpsons_roles_dict.keys() & simpsons_ages_dict.keys()
+
+    l = list()
+
+    for n in inter:
+        l.append([n, simpsons_ages_dict[n], simpsons_roles_dict[n]])
+    
+    [[n, simpsons_ages_dict[n], simpsons_roles_dict[n]] for n in inter]
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    {'Maggie', 'Marge', 'Homer', 'Lisa', 'Bart'}
+
+    [['Maggie', 1, 'daughter'], ['Marge', 43, 'mother'], ['Homer', 45, 'father'], ['Lisa', 10, 'daughter'], ['Bart', 11, 'son']]
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 445-447
+
+String substitution using a dictionary: syntax ``%(key)format``, where ``format``
+is the formatting character e.g. ``s`` for string.
+
+.. GENERATED FROM PYTHON SOURCE LINES 447-451
+
+.. code-block:: Python
+
+
+    print('Homer is the %(Homer)s of the family' % simpsons_roles_dict)
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Homer is the father of the family
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 452-459
 
 Sets
 ~~~~
@@ -580,9 +1119,13 @@ They are: unordered, iterable, mutable, can contain multiple data types
 made up of unique elements (strings, numbers, or tuples)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 367-404
+.. GENERATED FROM PYTHON SOURCE LINES 461-462
 
-.. code-block:: default
+Creation
+
+.. GENERATED FROM PYTHON SOURCE LINES 462-470
+
+.. code-block:: Python
 
 
     # create an empty set
@@ -592,30 +1135,67 @@ made up of unique elements (strings, numbers, or tuples)
     languages = {'python', 'r', 'java'}         # create a set directly
     snakes = set(['cobra', 'viper', 'python'])  # create a set from a list
 
-    # examine a set
-    len(languages)              # returns 3
-    'python' in languages       # returns True
 
-    # set operations
-    languages & snakes          # returns intersection: {'python'}
-    languages | snakes          # returns union: {'cobra', 'r', 'java', 'viper', 'python'}
-    languages - snakes          # returns set difference: {'r', 'java'}
-    snakes - languages          # returns set difference: {'cobra', 'viper'}
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 471-472
+
+Examine a set
+
+.. GENERATED FROM PYTHON SOURCE LINES 472-475
+
+.. code-block:: Python
+
+    len(languages)              # 3
+    'python' in languages       # True
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    True
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 476-477
+
+Set operations
+
+.. GENERATED FROM PYTHON SOURCE LINES 477-504
+
+.. code-block:: Python
+
+
+    languages & snakes          # intersection: {'python'}
+    languages | snakes          # union: {'cobra', 'r', 'java', 'viper', 'python'}
+    languages - snakes          # set difference: {'r', 'java'}
+    snakes - languages          # set difference: {'cobra', 'viper'}
 
     # modify a set (does not return the set)
     languages.add('sql')        # add a new element
-    languages.add('r')          # try to add an existing element (ignored, no error)
+    # try to add an existing element (ignored, no error)
+    languages.add('r')
     languages.remove('java')    # remove an element
 
     try:
-        languages.remove('c')       # try to remove a non-existing element (throws an error)
-    except  KeyError as e:
+        languages.remove('c')   # remove a non-existing element: throws an error
+    except KeyError as e:
         print("Error", e)
 
-    languages.discard('c')      # removes an element if present, but ignored otherwise
+    # removes an element if present, but ignored otherwise
+    languages.discard('c')
     languages.pop()             # removes and returns an arbitrary element
     languages.clear()           # removes all elements
-    languages.update('go', 'spark') # add multiple elements (can also pass a list or set)
+    languages.update('go', 'spark')  # add multiple elements (list or set)
 
     # get a sorted list of unique elements from a list
     sorted(set([9, 0, 2, 1, 0]))    # returns [0, 1, 2, 9]
@@ -627,8 +1207,6 @@ made up of unique elements (strings, numbers, or tuples)
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Error 'c'
@@ -637,21 +1215,29 @@ made up of unique elements (strings, numbers, or tuples)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 405-409
+.. GENERATED FROM PYTHON SOURCE LINES 505-508
 
-Iterators
-~~~~~~~~~
-
-Cartesian product
-
-.. GENERATED FROM PYTHON SOURCE LINES 409-414
-
-.. code-block:: default
+Execution control statements
+----------------------------
 
 
-    import itertools
+.. GENERATED FROM PYTHON SOURCE LINES 510-512
 
-    print([[x, y] for x, y in itertools.product(['a', 'b', 'c'], [1, 2])])
+Conditional statements
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. GENERATED FROM PYTHON SOURCE LINES 514-515
+
+if statement
+
+.. GENERATED FROM PYTHON SOURCE LINES 515-520
+
+.. code-block:: Python
+
+
+    x = 3
+    if x > 0:
+        print('positive')
 
 
 
@@ -659,43 +1245,74 @@ Cartesian product
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    [['a', 1], ['a', 2], ['b', 1], ['b', 2], ['c', 1], ['c', 2]]
+    positive
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 415-418
+.. GENERATED FROM PYTHON SOURCE LINES 521-522
 
-Execution control statements
-----------------------------
+if/else statement
 
+.. GENERATED FROM PYTHON SOURCE LINES 522-528
 
-.. GENERATED FROM PYTHON SOURCE LINES 420-422
-
-Conditional statements
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. GENERATED FROM PYTHON SOURCE LINES 422-450
-
-.. code-block:: default
+.. code-block:: Python
 
 
-    x = 3
-    # if statement
-    if x > 0:
-        print('positive')
-
-    # if/else statement
     if x > 0:
         print('positive')
     else:
         print('zero or negative')
 
-    # if/elif/else statement
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    positive
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 529-530
+
+Single-line if/else statement, known as a 'ternary operator'
+
+.. GENERATED FROM PYTHON SOURCE LINES 530-534
+
+.. code-block:: Python
+
+
+    sign = 'positive' if x > 0 else 'zero or negative'
+    print(sign)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    positive
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 535-536
+
+if/elif/else statement
+
+.. GENERATED FROM PYTHON SOURCE LINES 536-545
+
+.. code-block:: Python
+
+
     if x > 0:
         print('positive')
     elif x == 0:
@@ -703,13 +1320,6 @@ Conditional statements
     else:
         print('negative')
 
-    # single-line if statement (sometimes discouraged)
-    if x > 0: print('positive')
-
-    # single-line if/else statement (sometimes discouraged)
-    # known as a 'ternary operator'
-    sign = 'positive' if x > 0 else 'zero or negative'
-
 
 
 
@@ -717,19 +1327,14 @@ Conditional statements
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     positive
-    positive
-    positive
-    positive
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 451-458
+.. GENERATED FROM PYTHON SOURCE LINES 546-553
 
 Loops
 ~~~~~
@@ -739,26 +1344,99 @@ conditions are met. This can include iterating through all values in an
 object, go through a range of values, etc
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 458-479
+.. GENERATED FROM PYTHON SOURCE LINES 553-560
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # range returns a list of integers
-    range(0, 3)     # returns [0, 1, 2]: includes first value but excludes second value
+    # returns [0, 1, 2]: includes first value but excludes second value
+    range(0, 3)
     range(3)        # same thing: starting at zero is the default
     range(0, 5, 2)  # returns [0, 2, 4]: third argument specifies the 'stride'
 
-    # for loop
-    fruits = ['apple', 'banana', 'cherry']
-    for i in range(len(fruits)):
-        print(fruits[i].upper())
 
-    # alternative for loop (recommended style)
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    range(0, 5, 2)
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 561-562
+
+Iterate on list values
+
+.. GENERATED FROM PYTHON SOURCE LINES 562-567
+
+.. code-block:: Python
+
+
+    fruits = ['Apple', 'Banana', 'cherry']
     for fruit in fruits:
         print(fruit.upper())
 
-    # use range when iterating over a large sequence to avoid actually creating the integer list in memory
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    APPLE
+    BANANA
+    CHERRY
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 568-569
+
+Iterate with index
+
+.. GENERATED FROM PYTHON SOURCE LINES 569-573
+
+.. code-block:: Python
+
+
+    for i in range(len(fruits)):
+        print(fruits[i].lower())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    apple
+    banana
+    cherry
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 574-575
+
+Iterate with index and values: ``enumerate``
+
+.. GENERATED FROM PYTHON SOURCE LINES 575-585
+
+.. code-block:: Python
+
+
+    for i, val in enumerate(fruits):
+        print(i, val.upper())
+
+    # Use range when iterating over a large sequence to avoid actually
+    # creating the integer list in memory
     v = 0
     for i in range(10 ** 6):
         v += 1
@@ -767,24 +1445,18 @@ object, go through a range of values, etc
 
 
 
-
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
-    APPLE
-    BANANA
-    CHERRY
-    APPLE
-    BANANA
-    CHERRY
+    0 APPLE
+    1 BANANA
+    2 CHERRY
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 480-490
+.. GENERATED FROM PYTHON SOURCE LINES 586-598
 
 List comprehensions, iterators, etc.
 ------------------------------------
@@ -792,36 +1464,103 @@ List comprehensions, iterators, etc.
 List comprehensions
 ~~~~~~~~~~~~~~~~~~~
 
-Process which affects whole lists without iterating through loops. For
-more:
-http://python-3-patterns-idioms-test.readthedocs.io/en/latest/Comprehensions.html
+`List comprehensions <http://python-3-patterns-idioms-test.readthedocs.io/en/latest/Comprehensions.html>`_
+provides an elegant syntax for the most common processing pattern:
+
+1. iterate over a list,
+2. apply some operation
+3. store the result in a new list
+
+.. GENERATED FROM PYTHON SOURCE LINES 600-601
+
+Classical iteration over a list
+
+.. GENERATED FROM PYTHON SOURCE LINES 601-607
+
+.. code-block:: Python
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 490-541
-
-.. code-block:: default
-
-
-    # for loop to create a list of cubes
     nums = [1, 2, 3, 4, 5]
     cubes = []
     for num in nums:
-        cubes.append(num**3)
+        cubes.append(num ** 3)
 
-    # equivalent list comprehension
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 608-609
+
+Equivalent list comprehension
+
+.. GENERATED FROM PYTHON SOURCE LINES 609-612
+
+.. code-block:: Python
+
+
     cubes = [num**3 for num in nums]    # [1, 8, 27, 64, 125]
 
-    # for loop to create a list of cubes of even numbers
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 613-615
+
+Classical iteration over a list with **if condition**:
+create a list of cubes of even numbers
+
+.. GENERATED FROM PYTHON SOURCE LINES 615-621
+
+.. code-block:: Python
+
+
     cubes_of_even = []
     for num in nums:
         if num % 2 == 0:
             cubes_of_even.append(num**3)
 
-    # equivalent list comprehension
-    # syntax: [expression for variable in iterable if condition]
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 622-624
+
+Equivalent list comprehension with **if condition**
+syntax: ``[expression for variable in iterable if condition]``
+
+.. GENERATED FROM PYTHON SOURCE LINES 624-627
+
+.. code-block:: Python
+
+
     cubes_of_even = [num**3 for num in nums if num % 2 == 0]    # [8, 64]
 
-    # for loop to cube even numbers and square odd numbers
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 628-630
+
+Classical iteration over a list with **if else condition**:
+for loop to cube even numbers and square odd numbers
+
+.. GENERATED FROM PYTHON SOURCE LINES 630-638
+
+.. code-block:: Python
+
+
     cubes_and_squares = []
     for num in nums:
         if num % 2 == 0:
@@ -829,49 +1568,228 @@ http://python-3-patterns-idioms-test.readthedocs.io/en/latest/Comprehensions.htm
         else:
             cubes_and_squares.append(num**2)
 
-    # equivalent list comprehension (using a ternary expression)
-    # syntax: [true_condition if condition else false_condition for variable in iterable]
-    cubes_and_squares = [num**3 if num % 2 == 0 else num**2 for num in nums]    # [1, 8, 9, 64, 25]
 
-    # for loop to flatten a 2d-matrix
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 639-642
+
+Equivalent list comprehension (using a ternary expression)
+for loop to cube even numbers and square odd numbers
+syntax: ``[true_condition if condition else false_condition for variable in iterable]``
+
+.. GENERATED FROM PYTHON SOURCE LINES 642-646
+
+.. code-block:: Python
+
+
+    cubes_and_squares = [num**3 if num % 2 == 0 else num**2 for num in nums]
+    print(cubes_and_squares)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    [1, 8, 9, 64, 25]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 647-648
+
+Nested loops: flatten a 2d-matrix
+
+.. GENERATED FROM PYTHON SOURCE LINES 648-655
+
+.. code-block:: Python
+
+
     matrix = [[1, 2], [3, 4]]
     items = []
     for row in matrix:
         for item in row:
             items.append(item)
 
-    # equivalent list comprehension
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 656-657
+
+Equivalent list comprehension with Nested loops
+
+.. GENERATED FROM PYTHON SOURCE LINES 657-663
+
+.. code-block:: Python
+
+
     items = [item for row in matrix
-                  for item in row] # [1, 2, 3, 4]
+             for item in row]
 
-    # set comprehension
+    print(items)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    [1, 2, 3, 4]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 664-666
+
+Set comprehension
+~~~~~~~~~~~~~~~~~
+
+.. GENERATED FROM PYTHON SOURCE LINES 666-671
+
+.. code-block:: Python
+
+
     fruits = ['apple', 'banana', 'cherry']
-    unique_lengths = {len(fruit) for fruit in fruits}   # {5, 6}
-
-    # dictionary comprehension
-    fruit_lengths = {fruit:len(fruit) for fruit in fruits} # {'apple': 5, 'banana': 6, 'cherry': 6}
+    unique_lengths = {len(fruit) for fruit in fruits}
+    print(unique_lengths)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    {5, 6}
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 542-543
+.. GENERATED FROM PYTHON SOURCE LINES 672-674
 
-Exercise: upper-case names and add 1 year to all simpsons
+Dictionary comprehension
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. GENERATED FROM PYTHON SOURCE LINES 543-550
+.. GENERATED FROM PYTHON SOURCE LINES 676-677
 
-.. code-block:: default
+Create a dictionary from a list
+
+.. GENERATED FROM PYTHON SOURCE LINES 677-681
+
+.. code-block:: Python
 
 
-    simpsons = {'Homer': 45, 'Marge': 45, 'Bart': 10, 'Lisa': 10}
+    fruit_lengths = {fruit: len(fruit) for fruit in fruits}
+    print(fruit_lengths)
 
-    simpsons_older = {k.upper(): v + 1 for k, v in simpsons.items()}
-    print(simpsons_older)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    {'apple': 5, 'banana': 6, 'cherry': 6}
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 682-683
+
+Iterate over keys and values. Increase age of each subject:
+
+.. GENERATED FROM PYTHON SOURCE LINES 683-687
+
+.. code-block:: Python
+
+
+    simpsons_ages_ = {key: val + 1 for key, val in simpsons_ages_dict.items()}
+    print(simpsons_ages_)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    {'Homer': 46, 'Marge': 44, 'Bart': 12, 'Lisa': 11, 'Maggie': 2}
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 688-690
+
+Combine two dictionaries sharing key. Example, a function that joins two dictionaries
+(intersecting keys) into a dictionary of lists
+
+.. GENERATED FROM PYTHON SOURCE LINES 690-696
+
+.. code-block:: Python
+
+
+    simpsons_info_dict = {name: [simpsons_roles_dict[name], simpsons_ages_dict[name]]
+                          for name in simpsons_roles_dict.keys() &
+                          simpsons_ages_dict.keys()}
+    print(simpsons_info_dict)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    {'Maggie': ['daughter', 1], 'Marge': ['mother', 43], 'Homer': ['father', 45], 'Lisa': ['daughter', 10], 'Bart': ['son', 11]}
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 697-699
+
+Iterators ``itertools`` package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. GENERATED FROM PYTHON SOURCE LINES 699-702
+
+.. code-block:: Python
+
+
+    import itertools
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 703-704
+
+Example: Cartesian product
+
+.. GENERATED FROM PYTHON SOURCE LINES 704-708
+
+.. code-block:: Python
+
+
+    print([[x, y] for x, y in itertools.product(['a', 'b', 'c'], [1, 2])])
 
 
 
@@ -880,25 +1798,22 @@ Exercise: upper-case names and add 1 year to all simpsons
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    {'HOMER': 46, 'MARGE': 46, 'BART': 11, 'LISA': 11}
+    [['a', 1], ['a', 2], ['b', 1], ['b', 2], ['c', 1], ['c', 2]]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 551-554
+.. GENERATED FROM PYTHON SOURCE LINES 709-712
 
-Exercice: count words in a sentence
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example, use loop, dictionary and set to count words in a sentence
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 554-590
+.. GENERATED FROM PYTHON SOURCE LINES 712-732
 
-.. code-block:: default
-
+.. code-block:: Python
 
 
     quote = """Tick-tow
@@ -906,34 +1821,19 @@ Exercice: count words in a sentence
     but if too large they cause us to stumble and to trip
     """
 
-    count = {word: 0 for word in set(quote.split())}
-    for word in quote.split():
+    words = quote.split()
+    len(words)
+
+    count = {word: 0 for word in set(words)}
+
+    for word in words:
         count[word] += 1
+        # count[word] = count[word] + 1
 
-    # iterate through two things at once (using tuple unpacking)
-    family = {'dad': 'homer', 'mom': 'marge', 'size': 6}
-    for key, value in family.items():
-        print(key, value)
+    print(count)
 
-    # use enumerate if you need to access the index value within the loop
-    for index, fruit in enumerate(fruits):
-        print(index, fruit)
-
-    # for/else loop
-    for fruit in fruits:
-        if fruit == 'banana':
-            print("Found the banana!")
-            break   # exit the loop and skip the 'else' block
-        else:
-            # this block executes ONLY if the for loop completes without hitting
-            # 'break'
-            print("Can't find the banana")
-
-    # while loop
-    count = 0
-    while count < 5:
-        print("This will print 5 times")
-        count += 1      # equivalent to 'count = count + 1'
+    import numpy as np
+    freq_veq = np.array(list(count.values())) / len(words)
 
 
 
@@ -941,36 +1841,22 @@ Exercice: count words in a sentence
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    dad homer
-    mom marge
-    size 6
-    0 apple
-    1 banana
-    2 cherry
-    Can't find the banana
-    Found the banana!
-    This will print 5 times
-    This will print 5 times
-    This will print 5 times
-    This will print 5 times
-    This will print 5 times
+    {'they': 2, 'but': 1, 'too': 2, 'gall': 1, 'to': 2, 'small': 1, 'incomes': 1, 'shoes;': 1, 'if': 2, 'our': 2, 'pinch': 1, 'are': 1, 'like': 1, 'stumble': 1, 'Tick-tow': 1, 'us': 2, 'large': 1, 'and': 2, 'trip': 1, 'cause': 1}
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 591-594
+.. GENERATED FROM PYTHON SOURCE LINES 733-736
 
 Exceptions handling
 ~~~~~~~~~~~~~~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 594-606
+.. GENERATED FROM PYTHON SOURCE LINES 736-748
 
-.. code-block:: default
+.. code-block:: Python
 
 
     dct = dict(a=[1, 2], b=[4, 5])
@@ -990,8 +1876,6 @@ Exceptions handling
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Key c is missing. Add it with empty value
@@ -1000,7 +1884,7 @@ Exceptions handling
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 607-613
+.. GENERATED FROM PYTHON SOURCE LINES 749-755
 
 Functions
 ---------
@@ -1009,104 +1893,402 @@ Functions are sets of instructions launched when called upon, they can
 have multiple input values and a return value
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 613-675
+.. GENERATED FROM PYTHON SOURCE LINES 757-758
 
-.. code-block:: default
+Function with no arguments and no return values
+
+.. GENERATED FROM PYTHON SOURCE LINES 758-767
+
+.. code-block:: Python
 
 
-    # define a function with no arguments and no return values
+
     def print_text():
         print('this is text')
+
 
     # call the function
     print_text()
 
-    # define a function with one argument and no return values
-    def print_this(x):
-        print(x)
-
-    # call the function
-    print_this(3)       # prints 3
-    n = print_this(3)   # prints 3, but doesn't assign 3 to n
-                        # because the function has no return statement
-
-    def add(a, b):
-        return a + b
-
-    add(2, 3)
-
-    add("deux", "trois")
-
-    add(["deux", "trois"], [2, 3])
-
-    # define a function with one argument and one return value
-    def square_this(x):
-        return x ** 2
-
-    # include an optional docstring to describe the effect of a function
-    def square_this(x):
-        """Return the square of a number."""
-        return x ** 2
-
-    # call the function
-    square_this(3)          # prints 9
-    var = square_this(3)    # assigns 9 to var, but does not print 9
-
-    # default arguments
-    def power_this(x, power=2):
-        return x ** power
-
-    power_this(2)    # 4
-    power_this(2, 3) # 8
-
-    # use 'pass' as a placeholder if you haven't written the function body
-    def stub():
-        pass
-
-    # return two values from a single function
-    def min_max(nums):
-        return min(nums), max(nums)
-
-    # return values can be assigned to a single variable as a tuple
-    nums = [1, 2, 3]
-    min_max_num = min_max(nums)         # min_max_num = (1, 3)
-
-    # return values can be assigned into multiple variables using tuple unpacking
-    min_num, max_num = min_max(nums)    # min_num = 1, max_num = 3
-
-
 
 
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
     this is text
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 768-769
+
+Function with one argument and no return values
+
+.. GENERATED FROM PYTHON SOURCE LINES 769-780
+
+.. code-block:: Python
+
+
+    def print_this(x):
+        print(x)
+
+
+    # call the function
+    print_this(3)       # prints 3
+    n = print_this(3)   # prints 3, but doesn't assign 3 to n
+    # because the function has no return statement
+    print(n)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
     3
     3
+    None
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 676-679
+.. GENERATED FROM PYTHON SOURCE LINES 781-788
+
+**Dynamic typing**
+
+Important remarque: **Python is a dynamically typed language**, meaning
+that the Python interpreter does type checking at runtime (as opposed to compiled
+language that are statically typed). As a consequence, the function behavior, decided,
+at execution time, will be different and specific to parameters type.
+Python function are polymorphic.
+
+.. GENERATED FROM PYTHON SOURCE LINES 788-796
+
+.. code-block:: Python
+
+
+
+    def add(a, b):
+        return a + b
+
+
+    print(add(2, 3), add("deux", "trois"), add(["deux", "trois"], [2, 3]))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    5 deuxtrois ['deux', 'trois', 2, 3]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 797-798
+
+**Default arguments**
+
+.. GENERATED FROM PYTHON SOURCE LINES 798-806
+
+.. code-block:: Python
+
+
+
+    def power_this(x, power=2):
+        return x ** power
+
+
+    print(power_this(2), power_this(2, 3))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    4 8
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 807-809
+
+**Docstring** to describe the effect of a function
+IDE, ipython (type: ?power_this) to provide function documentation.
+
+.. GENERATED FROM PYTHON SOURCE LINES 809-821
+
+.. code-block:: Python
+
+
+
+    def power_this(x, power=2):
+        """Return the power of a number.
+
+        Args:
+            x (float): the number
+            power (int, optional): the power. Defaults to 2.
+        """
+        return x ** power
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 822-823
+
+**Return several values** as tuple
+
+.. GENERATED FROM PYTHON SOURCE LINES 823-835
+
+.. code-block:: Python
+
+
+    def min_max(nums):
+        return min(nums), max(nums)
+
+
+    # return values can be assigned to a single variable as a tuple
+    min_max_num = min_max([1, 2, 3])         # min_max_num = (1, 3)
+
+    # return values can be assigned into multiple variables using tuple unpacking
+    min_num, max_num = min_max([1, 2, 3])    # min_num = 1, max_num = 3
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 836-844
+
+Reference and copy
+~~~~~~~~~~~~~~~~~~
+
+`References <https://levelup.gitconnected.com/understanding-reference-and-copy-in-python-c681341a0cd8>`_ are used to access objects in memory, here lists.
+A single object may have multiple references. Modifying the content of the one reference
+will change the content of all other references.
+
+Modify a a reference of a list
+
+.. GENERATED FROM PYTHON SOURCE LINES 844-850
+
+.. code-block:: Python
+
+
+    num = [1, 2, 3]
+    same_num = num   # create a second reference to the same list
+    same_num[0] = 0  # modifies both 'num' and 'same_num'
+    print(num, same_num)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    [0, 2, 3] [0, 2, 3]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 851-855
+
+Copies are references to different objects.
+Modifying the content of the one reference, will not affect the others.
+
+Modify a copy of a list
+
+.. GENERATED FROM PYTHON SOURCE LINES 855-862
+
+.. code-block:: Python
+
+
+    new_num = num.copy()
+    new_num = num[:]
+    new_num = list(num)
+    new_num[0] = -1  # modifies 'new_num' but not 'num'
+    print(num, new_num)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    [0, 2, 3] [-1, 2, 3]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 863-864
+
+Examine objects
+
+.. GENERATED FROM PYTHON SOURCE LINES 864-872
+
+.. code-block:: Python
+
+
+    id(num) == id(same_num)  # returns True
+    id(num) == id(new_num)  # returns False
+    num is same_num         # returns True
+    num is new_num          # returns False
+    num == same_num         # returns True
+    num == new_num          # returns True (their contents are equivalent)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    False
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 873-875
+
+Functions' arguments are references to objects.
+Thus functions can modify their arguments with possible side effect.
+
+.. GENERATED FROM PYTHON SOURCE LINES 875-884
+
+.. code-block:: Python
+
+ 
+    def change(x, index, newval):
+        x[index] = newval
+
+    l = [0, 1, 2]
+    change(x=l, index=1, newval=33)
+    print(l)
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    [0, 33, 2]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 885-891
+
+Example: function, and dictionary comprehension
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example of a function ``join_dict_to_table(dict1, dict2)`` joining two dictionaries
+(intersecting keys) into a table, i.e., a list of tuples, where the first column
+is the key, the second and third columns are the values of the dictionaries.
+
+.. GENERATED FROM PYTHON SOURCE LINES 891-907
+
+.. code-block:: Python
+
+
+
+    simpsons_ages_dict = {'Homer': 45, 'Marge': 43, 'Bart': 11, 'Lisa': 10}
+    simpsons_roles_dict = {'Homer': 'father', 'Marge': 'mother', 'Bart': 'son',
+                           'Maggie': 'daughter'}
+
+    def join_dict_to_table(dict1, dict2):
+        table = [[key] + [dict1[key], dict2[key]]
+                 for key in dict1.keys() & dict2.keys()]
+        return table
+
+    print("Roles:", simpsons_roles_dict)
+    print("Ages:", simpsons_ages_dict)
+    print("Join:", join_dict_to_table(simpsons_roles_dict, 
+                                      simpsons_ages_dict))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Roles: {'Homer': 'father', 'Marge': 'mother', 'Bart': 'son', 'Maggie': 'daughter'}
+    Ages: {'Homer': 45, 'Marge': 43, 'Bart': 11, 'Lisa': 10}
+    Join: [['Marge', 'mother', 43], ['Bart', 'son', 11], ['Homer', 'father', 45]]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 908-913
 
 Regular expression
 ------------------
+Regular Expression (RE, or RegEx) allow to search and patterns in strings.
+See `this page <https://www.programiz.com/python-programming/regex>`_ for the syntax
+of the RE patterns.
 
+.. GENERATED FROM PYTHON SOURCE LINES 913-916
 
-.. GENERATED FROM PYTHON SOURCE LINES 679-685
-
-.. code-block:: default
+.. code-block:: Python
 
 
     import re
 
-    # 1. Compile regular expression with a patetrn
-    regex = re.compile("^.+(sub-.+)_(ses-.+)_(mod-.+)")
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 917-929
+
+**Usual patterns**
+
+- ``.`` period symbol matches any single character (except newline '\n').
+- pattern``+`` plus symbol matches one or more occurrences of the pattern.
+- ``[]`` square brackets specifies a set of characters you wish to match
+- ``[abc]`` matches a, b or c
+- ``[a-c]`` matches a to z
+- ``[0-9]`` matches 0 to 9
+- ``[a-zA-Z0-9]+`` matches words, at least one alphanumeric character (digits and alphabets)
+- ``[\w]+`` matches words, at least one alphanumeric character including underscore.
+- ``\s`` Matches where a string contains any whitespace character, equivalent to [ \t\n\r\f\v].
+- ``[^\s]`` Caret ``^`` symbol (the start of a square-bracket) inverts the pattern selection .
+
+.. GENERATED FROM PYTHON SOURCE LINES 929-933
+
+.. code-block:: Python
+
+
+    # regex = re.compile("^.+(firstname:.+)_(lastname:.+)_(mod-.+)")
+    # regex = re.compile("(firstname:.+)_(lastname:.+)_(mod-.+)")
 
 
 
@@ -1115,64 +2297,16 @@ Regular expression
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 686-689
+.. GENERATED FROM PYTHON SOURCE LINES 934-936
 
-2. Match compiled RE on string
+**Compile** (``re.compile(string)``) regular expression with a pattern that
+captures the pattern ``firstname:<subject_id>_lastname:<session_id>``
 
-Capture the pattern ```anyprefixsub-<subj id>_ses-<session id>_<modality>```
+.. GENERATED FROM PYTHON SOURCE LINES 936-938
 
-.. GENERATED FROM PYTHON SOURCE LINES 689-693
+.. code-block:: Python
 
-.. code-block:: default
-
-
-    strings = ["abcsub-033_ses-01_mod-mri", "defsub-044_ses-01_mod-mri", "ghisub-055_ses-02_mod-ctscan"]
-    print([regex.findall(s)[0] for s in strings])
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    [('sub-033', 'ses-01', 'mod-mri'), ('sub-044', 'ses-01', 'mod-mri'), ('sub-055', 'ses-02', 'mod-ctscan')]
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 694-707
-
-Match methods on compiled regular expression
-
-+------------------+----------------------------------------------------------------------------+
-| Method/Attribute | Purpose                                                                    |
-+==================+============================================================================+
-| match(string)    | Determine if the RE matches at the beginning of the string.                |
-+------------------+----------------------------------------------------------------------------+
-| search(string)   | Scan through a string, looking for any location where this RE matches.     |
-+------------------+----------------------------------------------------------------------------+
-| findall(string)  | Find all substrings where the RE matches, and returns them as a list.      |
-+------------------+----------------------------------------------------------------------------+
-| finditer(string) | Find all substrings where the RE matches, and returns them as an iterator. |
-+------------------+----------------------------------------------------------------------------+
-
-.. GENERATED FROM PYTHON SOURCE LINES 709-710
-
-2. Replace compiled RE on string
-
-.. GENERATED FROM PYTHON SOURCE LINES 710-716
-
-.. code-block:: default
-
-
-    regex = re.compile("(sub-[^_]+)") # match (sub-...)_
-    print([regex.sub("SUB-", s) for s in strings])
-
-    regex.sub("SUB-", "toto")
+    pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
 
 
 
@@ -1180,26 +2314,29 @@ Match methods on compiled regular expression
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    ['abcSUB-_ses-01_mod-mri', 'defSUB-_ses-01_mod-mri', 'ghiSUB-_ses-02_mod-ctscan']
-
-    'toto'
-
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:936: SyntaxWarning: invalid escape sequence '\w'
+      pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 717-718
-
-Remove all non-alphanumeric characters in a string
-
-.. GENERATED FROM PYTHON SOURCE LINES 718-721
-
-.. code-block:: default
 
 
-    re.sub('[^0-9a-zA-Z]+', '', 'h^&ell`.,|o w]{+orld')
+.. GENERATED FROM PYTHON SOURCE LINES 939-941
+
+**Match** (``re.match(string)``) to be used in test, loop, etc.
+Determine if the RE matches **at the beginning** of the string.
+
+.. GENERATED FROM PYTHON SOURCE LINES 941-948
+
+.. code-block:: Python
+
+
+    yes_ = True if pattern.match("firstname:John_lastname:Doe") else False
+    no_ = True if pattern.match("blahbla_firstname:John_lastname:Doe") else False
+    no2_ = True if pattern.match("OUPS-John_lastname:Doe") else False
+    print(yes_, no_, no2_)
+
 
 
 
@@ -1207,30 +2344,211 @@ Remove all non-alphanumeric characters in a string
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
+ .. code-block:: none
+
+    True False False
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 949-951
+
+**Match** (``re.search(string)``) to be used in test, loop, etc.
+Determine if the RE matches **at any location** in the string.
+
+.. GENERATED FROM PYTHON SOURCE LINES 951-958
+
+.. code-block:: Python
+
+
+    yes_ = True if pattern.search("firstname:John_lastname:Doe") else False
+    yes2_ = True if pattern.search(
+        "blahbla_firstname:John_lastname:Doe") else False
+    no_ = True if pattern.search("OUPS-John_lastname:Doe") else False
+    print(yes_, yes2_, no_)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
-
-    'helloworld'
-
+    True True False
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 722-725
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 959-961
+
+**Find** (``re.findall(string)``) all substrings where the RE matches,
+and returns them as a list.
+
+.. GENERATED FROM PYTHON SOURCE LINES 961-973
+
+.. code-block:: Python
+
+
+    # Find the whole pattern within the string
+    pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
+    print(pattern.findall("firstname:John_lastname:Doe blah blah"))
+
+    # Find words
+    print(re.compile("[a-zA-Z0-9]+").findall("firstname:John_lastname:Doe"))
+
+    # Find words with including underscore
+    print(re.compile("[\w]+").findall("firstname:John_lastname:Doe"))
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:963: SyntaxWarning: invalid escape sequence '\w'
+      pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:970: SyntaxWarning: invalid escape sequence '\w'
+      print(re.compile("[\w]+").findall("firstname:John_lastname:Doe"))
+    ['firstname:John_lastname:Doe']
+    ['firstname', 'John', 'lastname', 'Doe']
+    ['firstname', 'John_lastname', 'Doe']
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 974-977
+
+Extract specific parts of the RE: use parenthesis ``(part of pattern to be matched)``
+Extract John and Doe, such as John is suffixed with firstname:
+and Doe is suffixed with lastname: 
+
+.. GENERATED FROM PYTHON SOURCE LINES 977-982
+
+.. code-block:: Python
+
+
+    pattern = re.compile("firstname:([\w]+)_lastname:([\w]+)")
+    print(pattern.findall("firstname:John_lastname:Doe \
+        firstname:Bart_lastname:Simpson"))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:978: SyntaxWarning: invalid escape sequence '\w'
+      pattern = re.compile("firstname:([\w]+)_lastname:([\w]+)")
+    [('John', 'Doe'), ('Bart', 'Simpson')]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 983-987
+
+**Split** (``re.split(string)``) splits the string where there is a match and
+returns a list of strings where the splits have occurred. Example, match
+any non alphanumeric character (digits and alphabets) ``[^a-zA-Z0-9]`` to split
+the string.
+
+.. GENERATED FROM PYTHON SOURCE LINES 987-991
+
+.. code-block:: Python
+
+
+    print(re.compile("[^a-zA-Z0-9]").split("firstname:John_lastname:Doe"))
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    ['firstname', 'John', 'lastname', 'Doe']
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 992-994
+
+**Substitute** (``re.sub(pattern, replace, string)``) returns a string where
+matched occurrences are replaced with the content of replace variable.
+
+.. GENERATED FROM PYTHON SOURCE LINES 994-998
+
+.. code-block:: Python
+
+
+    print(re.sub('\s', "_", "Sentence with white      space"))
+    print(re.sub('\s+', "_", "Sentence with white      space"))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:995: SyntaxWarning: invalid escape sequence '\s'
+      print(re.sub('\s', "_", "Sentence with white      space"))
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:996: SyntaxWarning: invalid escape sequence '\s'
+      print(re.sub('\s+', "_", "Sentence with white      space"))
+    Sentence_with_white______space
+    Sentence_with_white_space
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 999-1000
+
+Remove all non-alphanumeric characters and space in a string
+
+.. GENERATED FROM PYTHON SOURCE LINES 1000-1003
+
+.. code-block:: Python
+
+
+    re.sub('[^0-9a-zA-Z\s]+', '', 'H^&ell`.,|o W]{+orld')
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:1001: SyntaxWarning: invalid escape sequence '\s'
+      re.sub('[^0-9a-zA-Z\s]+', '', 'H^&ell`.,|o W]{+orld')
+
+    'Hello World'
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1004-1007
 
 System programming
 ------------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 728-731
+.. GENERATED FROM PYTHON SOURCE LINES 1009-1011
 
 Operating system interfaces (os)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. GENERATED FROM PYTHON SOURCE LINES 1011-1014
 
-.. GENERATED FROM PYTHON SOURCE LINES 731-734
-
-.. code-block:: default
+.. code-block:: Python
 
 
     import os
@@ -1242,14 +2560,14 @@ Operating system interfaces (os)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 735-737
+.. GENERATED FROM PYTHON SOURCE LINES 1015-1016
 
-Current working directory
+Get/set current working directory
 
+.. GENERATED FROM PYTHON SOURCE LINES 1016-1025
 
-.. GENERATED FROM PYTHON SOURCE LINES 737-745
+.. code-block:: Python
 
-.. code-block:: default
 
 
     # Get the current working directory
@@ -1265,8 +2583,6 @@ Current working directory
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     /home/ed203246/git/pystatsml/python_lang
@@ -1274,35 +2590,39 @@ Current working directory
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 746-748
+.. GENERATED FROM PYTHON SOURCE LINES 1026-1027
 
 Temporary directory
 
+.. GENERATED FROM PYTHON SOURCE LINES 1027-1032
 
-.. GENERATED FROM PYTHON SOURCE LINES 748-753
-
-.. code-block:: default
+.. code-block:: Python
 
 
     import tempfile
-
     tmpdir = tempfile.gettempdir()
+    print(tmpdir)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /tmp
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 754-756
+
+.. GENERATED FROM PYTHON SOURCE LINES 1033-1034
 
 Join paths
 
+.. GENERATED FROM PYTHON SOURCE LINES 1034-1037
 
-.. GENERATED FROM PYTHON SOURCE LINES 756-760
-
-.. code-block:: default
+.. code-block:: Python
 
 
     mytmpdir = os.path.join(tmpdir, "foobar")
@@ -1314,14 +2634,13 @@ Join paths
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 761-762
+.. GENERATED FROM PYTHON SOURCE LINES 1038-1039
 
 Create a directory
 
-.. GENERATED FROM PYTHON SOURCE LINES 762-768
+.. GENERATED FROM PYTHON SOURCE LINES 1039-1045
 
-.. code-block:: default
+.. code-block:: Python
 
 
     os.makedirs(os.path.join(tmpdir, "foobar", "plop", "toto"), exist_ok=True)
@@ -1335,77 +2654,32 @@ Create a directory
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    ['plop']
+    ['myfile.txt', 'plop']
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 769-772
+.. GENERATED FROM PYTHON SOURCE LINES 1046-1048
 
 File input/output
 ~~~~~~~~~~~~~~~~~
 
+.. GENERATED FROM PYTHON SOURCE LINES 1048-1053
 
-.. GENERATED FROM PYTHON SOURCE LINES 772-817
-
-.. code-block:: default
+.. code-block:: Python
 
 
     filename = os.path.join(mytmpdir, "myfile.txt")
     print(filename)
-
-    # Write
     lines = ["Dans python tout est bon", "Enfin, presque"]
-
-    ## write line by line
-    fd = open(filename, "w")
-    fd.write(lines[0] + "\n")
-    fd.write(lines[1]+ "\n")
-    fd.close()
-
-    ## use a context manager to automatically close your file
-    with open(filename, 'w') as f:
-        for line in lines:
-            f.write(line + '\n')
-
-    # Read
-    ## read one line at a time (entire file does not have to fit into memory)
-    f = open(filename, "r")
-    f.readline()    # one string per line (including newlines)
-    f.readline()    # next line
-    f.close()
-
-    ## read one line at a time (entire file does not have to fit into memory)
-    f = open(filename, 'r')
-    f.readline()    # one string per line (including newlines)
-    f.readline()    # next line
-    f.close()
-
-    ## read the whole file at once, return a list of lines
-    f = open(filename, 'r')
-    f.readlines()   # one list, each line is one string
-    f.close()
-
-    ## use list comprehension to duplicate readlines without reading entire file at once
-    f = open(filename, 'r')
-    [line for line in f]
-    f.close()
-
-    ## use a context manager to automatically close your file
-    with open(filename, 'r') as f:
-        lines = [line for line in f]
 
 
 
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -1414,22 +2688,97 @@ File input/output
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 818-821
+.. GENERATED FROM PYTHON SOURCE LINES 1054-1055
+
+Write line by line
+
+.. GENERATED FROM PYTHON SOURCE LINES 1055-1061
+
+.. code-block:: Python
+
+
+    fd = open(filename, "w")
+    fd.write(lines[0] + "\n")
+    fd.write(lines[1] + "\n")
+    fd.close()
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1062-1063
+
+Context manager to automatically close your file
+
+.. GENERATED FROM PYTHON SOURCE LINES 1063-1068
+
+.. code-block:: Python
+
+
+    with open(filename, 'w') as f:
+        for line in lines:
+            f.write(line + '\n')
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1069-1071
+
+Read
+read one line at a time (entire file does not have to fit into memory)
+
+.. GENERATED FROM PYTHON SOURCE LINES 1071-1091
+
+.. code-block:: Python
+
+
+    f = open(filename, "r")
+    f.readline()    # one string per line (including newlines)
+    f.readline()    # next line
+    f.close()
+
+    # read the whole file at once, return a list of lines
+    f = open(filename, 'r')
+    f.readlines()   # one list, each line is one string
+    f.close()
+
+    # use list comprehension to duplicate readlines without reading entire file at once
+    f = open(filename, 'r')
+    [line for line in f]
+    f.close()
+
+    # use a context manager to automatically close your file
+    with open(filename, 'r') as f:
+        lines = [line for line in f]
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1092-1095
 
 Explore, list directories
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 823-825
+.. GENERATED FROM PYTHON SOURCE LINES 1097-1098
 
-Walk
+Walk through directories and subdirectories ``os.walk(dir)``
 
+.. GENERATED FROM PYTHON SOURCE LINES 1098-1105
 
-.. GENERATED FROM PYTHON SOURCE LINES 825-833
+.. code-block:: Python
 
-.. code-block:: default
-
-    import os
 
     WD = os.path.join(tmpdir, "foobar")
 
@@ -1443,8 +2792,6 @@ Walk
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     /tmp/foobar ['plop'] ['myfile.txt']
@@ -1454,26 +2801,49 @@ Walk
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 834-835
+.. GENERATED FROM PYTHON SOURCE LINES 1106-1107
 
-glob, basename and file extension
+Search for a file using a wildcard ``glob.glob(dir)``
 
-.. GENERATED FROM PYTHON SOURCE LINES 835-849
+.. GENERATED FROM PYTHON SOURCE LINES 1107-1112
 
-.. code-block:: default
+.. code-block:: Python
 
 
-    import tempfile
     import glob
-
-    tmpdir = tempfile.gettempdir()
-
     filenames = glob.glob(os.path.join(tmpdir, "*", "*.txt"))
     print(filenames)
 
-    # take basename then remove extension
-    basenames = [os.path.splitext(os.path.basename(f))[0] for f in filenames]
-    print(basenames)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    ['/tmp/foobar/myfile.txt', '/tmp/plop2/myfile.txt']
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1113-1114
+
+Manipulating file names, basename and extension
+
+.. GENERATED FROM PYTHON SOURCE LINES 1114-1125
+
+.. code-block:: Python
+
+
+    def split_filename_inparts(filename):
+        dirname_ = os.path.dirname(filename)
+        filename_noext_, ext_ = os.path.splitext(filename)
+        basename_ = os.path.basename(filename_noext_)
+        return dirname_, basename_, ext_
+
+
+    print(filenames[0], "=>", split_filename_inparts(filenames[0]))
 
 
 
@@ -1482,45 +2852,104 @@ glob, basename and file extension
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    ['/tmp/foobar/myfile.txt']
-    ['myfile']
+    /tmp/foobar/myfile.txt => ('/tmp/foobar', 'myfile', '.txt')
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 850-852
+.. GENERATED FROM PYTHON SOURCE LINES 1126-1127
 
-shutil - High-level file operations
+File operations: (recursive) copy, move, test if exists: ``shutil`` package
 
+.. GENERATED FROM PYTHON SOURCE LINES 1127-1130
 
-.. GENERATED FROM PYTHON SOURCE LINES 852-876
-
-.. code-block:: default
+.. code-block:: Python
 
 
     import shutil
 
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1131-1132
+
+Copy
+
+.. GENERATED FROM PYTHON SOURCE LINES 1132-1138
+
+.. code-block:: Python
+
+
     src = os.path.join(tmpdir, "foobar",  "myfile.txt")
     dst = os.path.join(tmpdir, "foobar",  "plop", "myfile.txt")
+    shutil.copy(src, dst)
     print("copy %s to %s" % (src, dst))
 
-    shutil.copy(src, dst)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    copy /tmp/foobar/myfile.txt to /tmp/foobar/plop/myfile.txt
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1139-1140
+
+Test if file exists ?
+
+.. GENERATED FROM PYTHON SOURCE LINES 1140-1143
+
+.. code-block:: Python
+
 
     print("File %s exists ?" % dst, os.path.exists(dst))
 
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    File /tmp/foobar/plop/myfile.txt exists ? True
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1144-1145
+
+Recursive copy,deletion and move
+
+.. GENERATED FROM PYTHON SOURCE LINES 1145-1163
+
+.. code-block:: Python
+
+
     src = os.path.join(tmpdir, "foobar",  "plop")
     dst = os.path.join(tmpdir, "plop2")
-    print("copy tree %s under %s" % (src, dst))
 
     try:
-        shutil.copytree(src, dst)
-
+        print("Copy tree %s under %s" % (src, dst))
+        # Note that by default (dirs_exist_ok=True), meaning that copy will fail
+        # if destination exists.
+        shutil.copytree(src, dst, dirs_exist_ok=True)
+    
+        print("Delete tree %s" % dst)
         shutil.rmtree(dst)
 
+        print("Move tree %s under %s" % (src, dst))
         shutil.move(src, dst)
     except (FileExistsError, FileNotFoundError) as e:
         pass
@@ -1531,44 +2960,101 @@ shutil - High-level file operations
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    copy /tmp/foobar/myfile.txt to /tmp/foobar/plop/myfile.txt
-    File /tmp/foobar/plop/myfile.txt exists ? True
-    copy tree /tmp/foobar/plop under /tmp/plop2
+    Copy tree /tmp/foobar/plop under /tmp/plop2
+    Delete tree /tmp/plop2
+    Move tree /tmp/foobar/plop under /tmp/plop2
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 877-885
+.. GENERATED FROM PYTHON SOURCE LINES 1164-1168
 
 Command execution with subprocess
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- For more advanced use cases, the underlying Popen interface can be used directly.
+For more advanced use cases, the underlying Popen interface can be used directly.
+
+.. GENERATED FROM PYTHON SOURCE LINES 1168-1171
+
+.. code-block:: Python
+
+
+    import subprocess
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1172-1178
+
+``subprocess.run([command, args*])``
+
 - Run the command described by args.
 - Wait for command to complete
 - return a CompletedProcess instance.
 - Does not capture stdout or stderr by default. To do so, pass PIPE for the stdout and/or stderr arguments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 885-901
+.. GENERATED FROM PYTHON SOURCE LINES 1178-1182
 
-.. code-block:: default
+.. code-block:: Python
 
 
-    import subprocess
-
-    # doesn't capture output
     p = subprocess.run(["ls", "-l"])
     print(p.returncode)
 
-    # Run through the shell.
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    0
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1183-1184
+
+Run through the shell
+
+.. GENERATED FROM PYTHON SOURCE LINES 1184-1187
+
+.. code-block:: Python
+
+
     subprocess.run("ls -l", shell=True)
 
-    # Capture output
-    out = subprocess.run(["ls", "-a", "/"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    CompletedProcess(args='ls -l', returncode=0)
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1188-1189
+
+Capture output
+
+.. GENERATED FROM PYTHON SOURCE LINES 1189-1196
+
+.. code-block:: Python
+
+
+    out = subprocess.run(
+        ["ls", "-a", "/"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     # out.stdout is a sequence of bytes that should be decoded into a utf-8 string
     print(out.stdout.decode('utf-8').split("\n")[:5])
 
@@ -1579,41 +3065,32 @@ Command execution with subprocess
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    0
-    ['.', '..', 'bin', 'boot', 'cdrom']
+    ['.', '..', 'bin', 'bin.usr-is-merged', 'boot']
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 902-952
+.. GENERATED FROM PYTHON SOURCE LINES 1197-1244
 
 Multiprocessing and multithreading
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   **Process**
+`Difference between multiprocessing and multithreading <https://techdifferences.com/difference-between-multiprocessing-and-multithreading.html>`_
+is essential to perform efficient parallel processing on multi-cores computers.
 
-   A process is a name given to a program instance that has been loaded into memory
+   **Multiprocessing**
+
+   A process is  a program instance that has been loaded into memory
    and managed by the operating system.
-
    Process = address space + execution context (thread of control)
 
-   Process address space (segments):
-
-   - Code.
-   - Data (static/global).
-   - Heap (dynamic memory allocation).
-   - Stack.
-
-   Execution context:
-
-   - Data registers.
-   - Stack pointer (SP).
-   - Program counter (PC).
-   - Working Registers.
+   - Process address space is made of (memory) segments for (i) code,
+     (ii) data (static/global), (iii) heap (dynamic memory allocation),
+     and the execution stack (functions' execution context).
+   - Execution context consists of (i) data registers, (ii) Stack Pointer (SP),
+     (iii) Program Counter (PC), and (iv) working Registers.
 
    OS Scheduling of processes: context switching (ie. save/load Execution context)
 
@@ -1622,106 +3099,219 @@ Multiprocessing and multithreading
    - Context switching expensive.
    - (potentially) complex data sharing (not necessary true).
    - Cooperating processes - no need for memory protection (separate address spaces).
-   - Relevant for parrallel computation with memory allocation.
+   - Relevant for parallel computation with memory allocation.
 
-   **Threads**
+   **Multithreading**
 
    - Threads share the same address space (Data registers): access to code, heap and (global) data.
    - Separate execution stack, PC and Working Registers.
 
    Pros/cons
 
-   - Faster context switching only SP, PC and Working Registers.
+   - **Faster context switching** only SP, PC and Working Registers.
    - Can exploit fine-grain concurrency
    - Simple data sharing through the shared address space.
-   - Precautions have to be taken or two threads will write to the same memory at the same time. This is what the **global interpreter lock (GIL)** is for.
+   - **But most of concurrent memory operations are serialized (blocked)
+     by the global interpreter lock (GIL)**.
+     The GIL prevents two threads writing to the same memory at the same time.
    - Relevant for GUI, I/O (Network, disk) concurrent operation
 
    **In Python**
 
-   - The ``threading`` module uses threads.
-   - The ``multiprocessing`` module uses processes.
+   - **As long the GIL exists favor multiprocessing over multithreading**
+   - Multithreading rely on ``threading`` module.
+   - Multiprocessing rely on ``multiprocessing`` module.
 
-.. GENERATED FROM PYTHON SOURCE LINES 954-956
+.. GENERATED FROM PYTHON SOURCE LINES 1247-1253
 
-Multithreading
+**Example: Random forest**
 
+Random forest are the obtained by Majority vote of decision tree on estimated 
+on bootstrapped samples.
 
-.. GENERATED FROM PYTHON SOURCE LINES 956-985
+Toy dataset
 
-.. code-block:: default
+.. GENERATED FROM PYTHON SOURCE LINES 1253-1268
+
+.. code-block:: Python
 
 
     import time
-    import threading
+    import numpy as np
+    from sklearn.datasets import make_classification
+    from sklearn.model_selection import train_test_split
+    from sklearn.tree import DecisionTreeClassifier
+    from sklearn.metrics import balanced_accuracy_score
 
-    def list_append(count, sign=1, out_list=None):
-        if out_list is None:
-            out_list = list()
-        for i in range(count):
-            out_list.append(sign * i)
-            sum(out_list) # do some computation
-        return out_list
+    # Toy dataset
+    X, y = make_classification(n_features=1000, n_samples=5000, n_informative=20,
+                               random_state=1, n_clusters_per_class=3)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8,
+                                                        random_state=42)
 
-    size = 10000   # Number of numbers to add
 
-    out_list = list() # result is a simple list
-    thread1 = threading.Thread(target=list_append, args=(size, 1, out_list, ))
-    thread2 = threading.Thread(target=list_append, args=(size, -1, out_list, ))
 
-    startime = time.time()
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1269-1272
+
+Random forest algorithm:
+(i) In parallel, fit decision trees on bootstrapped data samples. Make predictions.
+(ii) Majority vote on predictions
+
+.. GENERATED FROM PYTHON SOURCE LINES 1274-1275
+
+1. In parallel, fit decision trees on bootstrapped data sample. Make predictions.
+
+.. GENERATED FROM PYTHON SOURCE LINES 1275-1286
+
+.. code-block:: Python
+
+
+    def boot_decision_tree(X_train, X_test, y_train, predictions_list=None):
+        N = X_train.shape[0]
+        boot_idx = np.random.choice(np.arange(N), size=N, replace=True)
+        clf = DecisionTreeClassifier(random_state=0)
+        clf.fit(X_train[boot_idx], y_train[boot_idx])
+        y_pred = clf.predict(X_test)
+        if predictions_list is not None:
+            predictions_list.append(y_pred)
+        return y_pred
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1287-1288
+
+Independent runs of decision tree, see variability of predictions
+
+.. GENERATED FROM PYTHON SOURCE LINES 1288-1293
+
+.. code-block:: Python
+
+
+    for i in range(5):
+        y_test_boot = boot_decision_tree(X_train, X_test, y_train)
+        print("%.2f" % balanced_accuracy_score(y_test, y_test_boot))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    0.63
+    0.68
+    0.63
+    0.63
+    0.67
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1294-1295
+
+2. Majority vote on predictions
+
+.. GENERATED FROM PYTHON SOURCE LINES 1295-1305
+
+.. code-block:: Python
+
+
+    def vote(predictions):
+        maj = np.apply_along_axis(
+            lambda x: np.argmax(np.bincount(x)),
+            axis=1,
+            arr=predictions
+        )
+        return maj
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1306-1309
+
+**Sequential execution**
+
+Sequentially fit decision tree on bootstrapped samples, then apply majority vote
+
+.. GENERATED FROM PYTHON SOURCE LINES 1309-1319
+
+.. code-block:: Python
+
+
+    nboot = 2
+    start = time.time()
+    y_test_boot = np.dstack([boot_decision_tree(X_train, X_test, y_train)
+                             for i in range(nboot)]).squeeze()
+    y_test_vote = vote(y_test_boot)
+    print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
+    print("Sequential execution, elapsed time:", time.time() - start)
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Balanced Accuracy: 0.63
+    Sequential execution, elapsed time: 1.3796963691711426
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1320-1323
+
+**Multithreading**
+
+Concurrent (parallel) execution of the function with two threads.
+
+.. GENERATED FROM PYTHON SOURCE LINES 1323-1348
+
+.. code-block:: Python
+
+
+    from threading import Thread
+
+    predictions_list = list()
+    thread1 = Thread(target=boot_decision_tree,
+                     args=(X_train, X_test, y_train, predictions_list))
+    thread2 = Thread(target=boot_decision_tree,
+                     args=(X_train, X_test, y_train, predictions_list))
+
     # Will execute both in parallel
+    start = time.time()
     thread1.start()
     thread2.start()
+
     # Joins threads back to the parent process
     thread1.join()
     thread2.join()
-    print("Threading ellapsed time ", time.time() - startime)
 
-    print(out_list[:10])
+    # Vote on concatenated predictions
+    y_test_boot = np.dstack(predictions_list).squeeze()
+    y_test_vote = vote(y_test_boot)
+    print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
+    print("Concurrent execution with threads, elapsed time:", time.time() - start)
 
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    Threading ellapsed time  0.6789593696594238
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 986-988
-
-Multiprocessing
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 988-1006
-
-.. code-block:: default
-
-
-    import multiprocessing
-
-    # Sharing requires specific mecanism
-    out_list1 = multiprocessing.Manager().list()
-    p1 = multiprocessing.Process(target=list_append, args=(size, 1, None))
-    out_list2 = multiprocessing.Manager().list()
-    p2 = multiprocessing.Process(target=list_append, args=(size, -1, None))
-
-    startime = time.time()
-    p1.start()
-    p2.start()
-    p1.join()
-    p2.join()
-    print("Multiprocessing ellapsed time ", time.time() - startime)
-
-    # print(out_list[:10]) is not availlable
 
 
 
@@ -1729,50 +3319,125 @@ Multiprocessing
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    Multiprocessing ellapsed time  0.19075894355773926
+    Balanced Accuracy: 0.62
+    Concurrent execution with threads, elapsed time: 0.7034385204315186
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1007-1013
+.. GENERATED FROM PYTHON SOURCE LINES 1349-1364
 
-Sharing object between process with Managers
+**Multiprocessing**
 
+Concurrent (parallel) execution of the function with
+processes (jobs) executed in different address (memory) space.
+`Process-based parallelism <https://docs.python.org/3/library/multiprocessing.html>`_
+
+
+``Process()`` for parallel execution and ``Manager()`` for data sharing
+
+**Sharing data between process with Managers**
+Therefore, sharing data requires specific mechanism using  .
 Managers provide a way to create data which can be shared between
 different processes, including sharing over a network between processes
 running on different machines. A manager object controls a server process
 which manages shared objects.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1013-1037
+.. GENERATED FROM PYTHON SOURCE LINES 1364-1388
 
-.. code-block:: default
+.. code-block:: Python
 
 
-    import multiprocessing
-    import time
+    from multiprocessing import Process, Manager
 
-    size = int(size / 100)   # Number of numbers to add
+    predictions_list = Manager().list()
+    p1 = Process(target=boot_decision_tree,
+                 args=(X_train, X_test, y_train, predictions_list))
+    p2 = Process(target=boot_decision_tree,
+                 args=(X_train, X_test, y_train, predictions_list))
 
-    # Sharing requires specific mecanism
-    out_list = multiprocessing.Manager().list()
-    p1 = multiprocessing.Process(target=list_append, args=(size, 1, out_list))
-    p2 = multiprocessing.Process(target=list_append, args=(size, -1, out_list))
-
-    startime = time.time()
-
+    # Will execute both in parallel
+    start = time.time()
     p1.start()
     p2.start()
 
+    # Joins processes back to the parent process
     p1.join()
     p2.join()
 
-    print(out_list[:10])
+    # Vote on concatenated predictions
+    y_test_boot = np.dstack(predictions_list).squeeze()
+    y_test_vote = vote(y_test_boot)
+    print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
+    print("Concurrent execution with processes, elapsed time:", time.time() - start)
 
-    print("Multiprocessing with shared object ellapsed time ", time.time() - startime)
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Balanced Accuracy: 0.64
+    Concurrent execution with processes, elapsed time: 0.6105175018310547
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1389-1407
+
+``Pool()`` of **workers (processes or Jobs)** for concurrent (parallel) execution of multiples
+tasks.
+Pool can be used when *N* independent tasks need to be executed in parallel, when there are
+more tasks than cores on the computer.
+
+1. Initialize a `Pool(), map(), apply_async(), <https://superfastpython.com/multiprocessing-pool-map-multiple-arguments/>`_
+   of *P* workers (Process, or Jobs), where *P* < number of cores in the computer.
+   Use `cpu_count` to get the number of logical cores in the current system, 
+   See: `Number of CPUs and Cores in Python <https://superfastpython.com/number-of-cpus-python/>`_.
+2. Map *N* tasks to the *P* workers, here we use the function 
+   `Pool.apply_async() <https://superfastpython.com/multiprocessing-pool-apply_async/>`_ that runs the
+   jobs asynchronously. Asynchronous means that calling `pool.apply_async` does not block the execution
+   of the caller that carry on, i.e., it returns immediately with a `AsyncResult` object for the task.
+
+that the caller (than runs the sub-processes) is not blocked by the 
+to the process pool does not block, allowing the caller that issued the task to carry on.#
+3. Wait for all jobs to complete `pool.join()`
+4. Collect the results
+
+.. GENERATED FROM PYTHON SOURCE LINES 1407-1435
+
+.. code-block:: Python
+
+
+    from multiprocessing import Pool, cpu_count
+    # Numbers of logical cores in the current system.
+    # Rule of thumb: Divide by 2 to get nb of physical cores
+    njobs = int(cpu_count() / 2) 
+    start = time.time()
+    ntasks = 12
+  
+    pool = Pool(njobs)
+    # Run multiple tasks each with multiple arguments
+    async_results = [pool.apply_async(boot_decision_tree,
+                                      args=(X_train, X_test, y_train))
+                     for i in range(ntasks)]
+
+    # Close the process pool & wait for all jobs to complete
+    pool.close()
+    pool.join()
+
+    # Collect the results
+    y_test_boot = np.dstack([ar.get() for ar in async_results]).squeeze()
+
+    # Vote on concatenated predictions
+
+    y_test_vote = vote(y_test_boot)
+    print("Balanced Accuracy: %.2f" % balanced_accuracy_score(y_test, y_test_vote))
+    print("Concurrent execution with processes, elapsed time:", time.time() - start)
 
 
 
@@ -1781,17 +3446,15 @@ which manages shared objects.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    [0, 1, 2, 3, 4, 5, 0, 6, -1, 7]
-    Multiprocessing with shared object ellapsed time  0.3832252025604248
+    Balanced Accuracy: 0.64
+    Concurrent execution with processes, elapsed time: 1.761357069015503
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1038-1085
+.. GENERATED FROM PYTHON SOURCE LINES 1436-1483
 
 Scripts and argument parsing
 -----------------------------
@@ -1841,15 +3504,15 @@ Example, the word count script ::
            df = pd.DataFrame([[k, count[k]] for k in count], columns=["word", "count"])
            df.to_csv(options.output, index=False)
 
-.. GENERATED FROM PYTHON SOURCE LINES 1087-1090
+.. GENERATED FROM PYTHON SOURCE LINES 1485-1488
 
 Networking
 ----------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1090-1093
+.. GENERATED FROM PYTHON SOURCE LINES 1488-1491
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # TODO
@@ -1861,19 +3524,22 @@ Networking
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1094-1097
+.. GENERATED FROM PYTHON SOURCE LINES 1492-1494
 
 FTP
 ~~~
 
+.. GENERATED FROM PYTHON SOURCE LINES 1497-1498
 
-.. GENERATED FROM PYTHON SOURCE LINES 1097-1116
+FTP with ``ftplib``
 
-.. code-block:: default
+.. GENERATED FROM PYTHON SOURCE LINES 1498-1511
+
+.. code-block:: Python
 
 
-    # Full FTP features with ftplib
     import ftplib
+
     ftp = ftplib.FTP("ftp.cea.fr")
     ftp.login()
     ftp.cwd('/pub/unati/people/educhesnay/pystatml')
@@ -1884,8 +3550,33 @@ FTP
     fd.close()
     ftp.quit()
 
-    # File download urllib
-    import urllib.request
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    -rwxrwxr-x    1 ftp      ftp          3019 Oct 16  2019 README.md
+    -rwxrwxr-x    1 ftp      ftp      10672252 Dec 18  2020 StatisticsMachineLearningPython.pdf
+    -rwxrwxr-x    1 ftp      ftp       9676120 Nov 12  2020 StatisticsMachineLearningPythonDraft.pdf
+    -rwxrwxr-x    1 ftp      ftp       9798485 Jul 08  2020 StatisticsMachineLearningPythonDraft_202007.pdf
+
+    '221 Goodbye.'
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1512-1513
+
+FTP file download with ``urllib``
+
+.. GENERATED FROM PYTHON SOURCE LINES 1513-1519
+
+.. code-block:: Python
+
+
+    import urllib
     ftp_url = 'ftp://ftp.cea.fr/pub/unati/people/educhesnay/pystatml/README.md'
     urllib.request.urlretrieve(ftp_url, os.path.join(tmpdir, "README2.md"))
 
@@ -1896,28 +3587,22 @@ FTP
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
-    -rw-r--r--    1 ftp      ftp          3019 Oct 16  2019 README.md
-    -rw-r--r--    1 ftp      ftp      10672252 Dec 18 10:13 StatisticsMachineLearningPython.pdf
-    -rw-r--r--    1 ftp      ftp       9676120 Nov 12  2020 StatisticsMachineLearningPythonDraft.pdf
-    -rw-r--r--    1 ftp      ftp       9798485 Jul 08  2020 StatisticsMachineLearningPythonDraft_202007.pdf
 
-    ('/tmp/README2.md', <email.message.Message object at 0x7f88eefd5580>)
+    ('/tmp/README2.md', <email.message.Message object at 0x733805637390>)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1117-1120
+.. GENERATED FROM PYTHON SOURCE LINES 1520-1523
 
 HTTP
 ~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1120-1123
+.. GENERATED FROM PYTHON SOURCE LINES 1523-1526
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # TODO
@@ -1929,15 +3614,15 @@ HTTP
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1124-1127
+.. GENERATED FROM PYTHON SOURCE LINES 1527-1530
 
 Sockets
 ~~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1127-1130
+.. GENERATED FROM PYTHON SOURCE LINES 1530-1533
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # TODO
@@ -1949,15 +3634,15 @@ Sockets
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1131-1134
+.. GENERATED FROM PYTHON SOURCE LINES 1534-1537
 
 xmlrpc
 ~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1134-1137
+.. GENERATED FROM PYTHON SOURCE LINES 1537-1541
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # TODO
@@ -1969,67 +3654,8 @@ xmlrpc
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1138-1149
 
-Modules and packages
---------------------
-
-A module is a Python file.
-A package is a directory which MUST contain a special file called ``__init__.py``
-
-To import, extend variable `PYTHONPATH`::
-
-     export PYTHONPATH=path_to_parent_python_module:${PYTHONPATH}
-
-Or
-
-.. GENERATED FROM PYTHON SOURCE LINES 1149-1154
-
-.. code-block:: default
-
-
-    import sys
-    sys.path.append("path_to_parent_python_module")
-
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 1155-1158
-
-The ``__init__.py`` file can be empty. But you can set which modules the
-package exports as the API, while keeping other modules internal,
-by overriding the __all__ variable, like so:
-
-.. GENERATED FROM PYTHON SOURCE LINES 1161-1176
-
-``parentmodule/__init__.py`` file::
-
-    from . import submodule1
-    from . import submodule2
-
-    from .submodule3 import function1
-    from .submodule3 import function2
-
-    __all__ = ["submodule1", "submodule2",
-               "function1", "function2"]
-
-User can import::
-
-    import parentmodule.submodule1
-    import parentmodule.function1
-
-.. GENERATED FROM PYTHON SOURCE LINES 1178-1181
-
-Python Unit Testing
-
-TODO
-
-.. GENERATED FROM PYTHON SOURCE LINES 1184-1207
+.. GENERATED FROM PYTHON SOURCE LINES 1542-1565
 
 Object Oriented Programming (OOP)
 ---------------------------------
@@ -2047,7 +3673,7 @@ Object Oriented Programming (OOP)
 -  An **object** is a specific instance of a class.
 
 -  **Inheritance**: OOP allows classes to inherit commonly used state
-   and behaviour from other classes. Reduce code duplication
+   and behavior from other classes. Reduce code duplication
 
 -  **Polymorphism**: (usually obtained through polymorphism) calling
    code is agnostic as to whether an object belongs to a parent class or
@@ -2055,12 +3681,10 @@ Object Oriented Programming (OOP)
    called on 2 objects of 2 different classes will behave differently.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1207-1247
+.. GENERATED FROM PYTHON SOURCE LINES 1565-1590
 
-.. code-block:: default
+.. code-block:: Python
 
-
-    import math
 
 
     class Shape2D:
@@ -2087,6 +3711,63 @@ Object Oriented Programming (OOP)
             return math.pi * self.radius ** 2
 
 
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1591-1592
+
+Object creation
+
+.. GENERATED FROM PYTHON SOURCE LINES 1592-1595
+
+.. code-block:: Python
+
+
+    square = Square(2)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1596-1597
+
+Call a method of the object
+
+.. GENERATED FROM PYTHON SOURCE LINES 1597-1600
+
+.. code-block:: Python
+
+
+    square.area()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    4
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1601-1602
+
+More sophisticated use
+
+.. GENERATED FROM PYTHON SOURCE LINES 1602-1615
+
+.. code-block:: Python
+
+
     shapes = [Square(2), Disk(3)]
 
     # Polymorphism
@@ -2105,8 +3786,6 @@ Object Oriented Programming (OOP)
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     [4, 28.274333882308138]
@@ -2115,7 +3794,7 @@ Object Oriented Programming (OOP)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1248-1260
+.. GENERATED FROM PYTHON SOURCE LINES 1616-1628
 
 Style guide for Python programming
 ----------------------------------
@@ -2130,7 +3809,7 @@ See `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`_
 - Function and Variable Names: ``lower_case_with_underscores``
 - Class Names: ``CapitalizedWords`` (aka: ``CamelCase``)
 
-.. GENERATED FROM PYTHON SOURCE LINES 1263-1275
+.. GENERATED FROM PYTHON SOURCE LINES 1631-1643
 
 Documenting
 -----------
@@ -2145,9 +3824,9 @@ Documenting = comments + docstrings (Python documentation string)
 
 Docstrings for functions (same for classes and methods):
 
-.. GENERATED FROM PYTHON SOURCE LINES 1275-1301
+.. GENERATED FROM PYTHON SOURCE LINES 1643-1670
 
-.. code-block:: default
+.. code-block:: Python
 
 
     def my_function(a, b=2):
@@ -2173,6 +3852,7 @@ Docstrings for functions (same for classes and methods):
         # Add a with b (this is a comment)
         return a + b
 
+
     print(help(my_function))
 
 
@@ -2181,26 +3861,24 @@ Docstrings for functions (same for classes and methods):
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     Help on function my_function in module __main__:
 
     my_function(a, b=2)
         This function ...
-    
+
         Parameters
         ----------
         a : float
             First operand.
         b : float, optional
             Second operand. The default is 2.
-    
+
         Returns
         -------
         Sum of operands.
-    
+
         Example
         -------
         >>> my_function(3)
@@ -2211,7 +3889,7 @@ Docstrings for functions (same for classes and methods):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1302-1313
+.. GENERATED FROM PYTHON SOURCE LINES 1671-1682
 
 Docstrings for scripts:
 
@@ -2225,25 +3903,282 @@ At the begining of a script add a pream::
        Some description
        """
 
-.. GENERATED FROM PYTHON SOURCE LINES 1315-1318
+.. GENERATED FROM PYTHON SOURCE LINES 1685-1690
+
+Modules and packages
+--------------------
+
+Python `packages and modules <https://docs.python.org/3/tutorial/modules.html>`_
+structure python code into modular "libraries" to be shared.
+
+.. GENERATED FROM PYTHON SOURCE LINES 1692-1697
+
+Package
+~~~~~~~
+
+Packages are a way of structuring Python’s module namespace by using “dotted module names”.
+A package is a directory (here, ``stat_pkg``) containing a ``__init__.py`` file.
+
+.. GENERATED FROM PYTHON SOURCE LINES 1699-1709
+
+Example, ``package``
+::
+
+    stat_pkg/
+    ├── __init__.py
+    └── datasets_mod.py
+
+The ``__init__.py`` can be empty.
+Or it can be used to define the package API, i.e., the modules (``*.py`` files)
+that are exported and those that remain internal.
+
+.. GENERATED FROM PYTHON SOURCE LINES 1711-1719
+
+Example, file ``stat_pkg/__init__.py``
+::
+
+    # 1) import function for modules in the packages
+    from .module import make_regression
+
+    # 2) Make them visible in the package
+    __all__ = ["make_regression"]
+
+.. GENERATED FROM PYTHON SOURCE LINES 1722-1733
+
+Module
+~~~~~~
+
+A module is a python file.
+Example, ``stat_pkg/datasets_mod.py``
+::
+
+    import numpy as np
+    def make_regression(n_samples=10, n_features=2, add_intercept=False):
+        ...
+        return X, y, coef
+
+.. GENERATED FROM PYTHON SOURCE LINES 1736-1738
+
+Usage
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1738-1744
+
+.. code-block:: Python
+
+
+    import stat_pkg as pkg
+
+    X, y, coef = pkg.make_regression()
+    print(X.shape)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    (10, 2)
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1745-1765
+
+The search path
+~~~~~~~~~~~~~~~
+
+With a directive like ``import stat_pkg``, Python will searches for
+
+- a module, file named ``stat_pkg.py`` or,
+- a package, directory named ``stat_pkg`` containing a ``stat_pkg/__init__.py`` file.
+
+Python will search in a list of directories given by the variable
+``sys.path``. This variable is initialized from these locations:
+
+ - The directory containing the input script (or the current directory when no file is specified).
+ - **``PYTHONPATH``** (a list of directory names, with the same syntax as the shell variable ``PATH``).
+
+In our case, to be able to import ``stat_pkg``, the parent directory of ``stat_pkg``
+must be in ``sys.path``.
+You can modify ``PYTHONPATH`` by any method, or access it via ``sys`` package, example:
+::
+    import sys
+    sys.path.append("/home/ed203246/git/pystatsml/python_lang")
+
+.. GENERATED FROM PYTHON SOURCE LINES 1767-1778
+
+Unit testing
+------------
+
+When developing a library (e.g., a python package) that is bound to evolve and being corrected, we want to ensure that:
+(i) The code correctly implements some expected functionalities;
+(ii) the modifications and additions don't break those functionalities; 
+
+Unit testing is a framework to asses to those two points. See sources:
+
+- `Unit testing reference doc <https://docs.python.org/3/library/unittest.html>`_
+- `Getting Started With Testing in Python <https://realpython.com/python-testing/>`_
+
+.. GENERATED FROM PYTHON SOURCE LINES 1780-1815
+
+unittest: test your code
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+1) Write unit tests (test cases)
+
+In a directory usually called ``tests`` create a `test case <https://docs.python.org/3/library/unittest.html#unittest.TestCase>`_, i.e., a python file 
+``test_datasets_mod.py`` (general syntax is ``test_<mymodule>.py``) that will execute some
+functionalities of the module and test if the output are as expected. 
+`test_datasets_mod.py` file contains specific directives:
+
+- ``import unittest``,
+- ``class TestDatasets(unittest.TestCase)``, the test case class. The general syntax is ``class Test<MyModule>(unittest.TestCase)``
+- ``def test_make_regression(self)``, test a function of an element of the module. The general syntax is ``test_<my function>(self)``
+- ``self.assertTrue(np.allclose(X.shape, (10, 4)))``, test a specific functionality. The general syntax is ``self.assert<True|Equal|...>(<some boolean expression>)``
+- ``unittest.main()``, where tests should be executed.
+
+Example:
+
+::
+
+    import unittest
+    import numpy as np
+    from stat_pkg import make_regression
+
+    class TestDatasets(unittest.TestCase):
+
+        def test_make_regression(self):
+            X, y, coefs = make_regression(n_samples=10, n_features=3,
+                                          add_intercept=True)     
+            self.assertTrue(np.allclose(X.shape, (10, 4)))
+            self.assertTrue(np.allclose(y.shape, (10, )))
+            self.assertTrue(np.allclose(coefs.shape, (4, )))
+
+    if __name__ == '__main__':
+        unittest.main()
+
+.. GENERATED FROM PYTHON SOURCE LINES 1817-1843
+
+2) Run the tests  (test runner)
+
+The `test runner <https://wiki.python.org/moin/PythonTestingToolsTaxonomy>`_ 
+orchestrates the execution of tests and provides the outcome to the user.
+Many `test runners <https://blog.kortar.org/?p=370>`_ are available.
+
+`unittest <https://docs.python.org/3/library/unittest.html>`_ is the first unit test framework,
+it comes with Python standard library.
+It employs an object-oriented approach, grouping tests into classes known as test cases, 
+each containing distinct methods representing individual tests.
+
+Unitest generally requires that tests are organized as importable modules,
+`see details <https://docs.python.org/3/library/unittest.html#command-line-interface>`_.
+Here, we do not introduce this complexity: we directly execute a test file that isn’t importable
+as a module.
+
+::
+
+    python tests/test_datasets_mod.py
+
+`Unittest test discovery <https://docs.python.org/3/library/unittest.html#unittest-test-discovery>`_:
+(``-m unittest discover``) within (``-s``) ``tests`` directory, with verbose (``-v``) outputs.
+
+::
+
+   python -m unittest discover -v -s tests
+
+.. GENERATED FROM PYTHON SOURCE LINES 1845-1908
+
+Doctest: add unit tests in docstring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`Doctest <https://docs.python.org/3/library/doctest.html>`_ is an inbuilt test framework that comes bundled with Python by default.
+The doctest module searches for code fragments that resemble interactive Python sessions and runs those sessions to confirm they operate as shown.
+It promotes `Test-driven (TDD) methodology <https://medium.com/@muirujackson/python-test-driven-development-6235c479baa2>`_.
+
+1) Add doc test in the docstrings, 
+see `python stat_pkg/supervised_models.py <https://github.com/duchesnay/pystatsml/blob/master/python_lang/stat_pkg/supervised_models.py>`_:
+
+::
+
+    class LinearRegression:
+        """Ordinary least squares Linear Regression.
+        ...
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from stat_pkg import LinearRegression
+        >>> X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]])
+        >>> # y = 1 * x_0 + 2 * x_1 + 3
+        >>> y = np.dot(X, np.array([1, 2])) + 3
+        >>> reg = LinearRegression().fit(X, y)
+        >>> reg.coef_
+        array([3., 1., 2.0])
+        >>> reg.predict(np.array([[3, 5]]))
+        array([16.])
+        """
+    def __init__(self, fit_intercept=True):
+        self.fit_intercept = fit_intercept
+    ...
+
+2) Add the call to doctest module ad the end of the python file:
+
+::
+
+    if __name__ == "__main__":
+        import doctest
+        doctest.testmod()     
+
+3) Run doc tests:
+
+::
+
+    python stat_pkg/supervised_models.py
+
+Test failed with the output:
+
+::
+
+    **********************************************************************
+    File ".../supervised_models.py", line 36, in __main__.LinearRegression
+    Failed example:
+        reg.coef_
+    Expected:
+        array([3., 1., 2.0])
+    Got:
+        array([3., 1., 2.])
+    **********************************************************************
+    1 items had failures:
+       1 of   7 in __main__.LinearRegression
+    ***Test Failed*** 1 failures.
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1910-1912
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 1916-1919
 
 Exercises
 ---------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1321-1330
+.. GENERATED FROM PYTHON SOURCE LINES 1922-1931
 
 Exercise 1: functions
 ~~~~~~~~~~~~~~~~~~~~~
 
-Create a function that acts as a simple calulator If the operation is
-not specified, default to addition If the operation is misspecified,
-return an prompt message Ex: ``calc(4,5,"multiply")`` returns 20 Ex:
+Create a function that acts as a simple calculator taking three parameters:
+the two operand and the operation in "+", "-", and "*". As default use "+".
+If the operation is misspecified, return a error message Ex: ``calc(4,5,"*")`` returns 20 Ex:
 ``calc(3,5)`` returns 8 Ex: ``calc(1, 2, "something")`` returns error
 message
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1333-1344
+.. GENERATED FROM PYTHON SOURCE LINES 1934-1945
 
 Exercise 2: functions + list + loop
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2257,7 +4192,7 @@ Remove all duplicate values (adjacent or not) Ex: ``[1, 2, 2, 3, 2]``
 returns ``[1, 2, 3]``
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1347-1362
+.. GENERATED FROM PYTHON SOURCE LINES 1948-1963
 
 Exercise 3: File I/O
 ~~~~~~~~~~~~~~~~~~~~
@@ -2275,7 +4210,7 @@ Use:
 - regular expression
 - argparse (https://docs.python.org/3/howto/argparse.html)
 
-.. GENERATED FROM PYTHON SOURCE LINES 1365-1384
+.. GENERATED FROM PYTHON SOURCE LINES 1966-1985
 
 Exercise 4: OOP
 ~~~~~~~~~~~~~~~
@@ -2300,28 +4235,26 @@ Exercise 4: OOP
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.741 seconds)
+   **Total running time of the script:** (0 minutes 9.373 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_python_lang.py:
 
+.. only:: html
 
-.. only :: html
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: python_lang.ipynb <python_lang.ipynb>`
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: python_lang.py <python_lang.py>`
 
-     :download:`Download Python source code: python_lang.py <python_lang.py>`
+    .. container:: sphx-glr-download sphx-glr-download-zip
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: python_lang.ipynb <python_lang.ipynb>`
+      :download:`Download zipped: python_lang.zip <python_lang.zip>`
 
 
 .. only:: html

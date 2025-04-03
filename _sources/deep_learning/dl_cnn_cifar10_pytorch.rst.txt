@@ -1,204 +1,170 @@
-Convolutional neural network
-============================
+Convolutional Neural Networks (CNNs)
+====================================
 
-Outline
--------
+.. figure:: ./figures/cnn.png
+   :alt: Principles of CNNs
+   :width: 15cm
 
-2. Architecures
-3. Train and test functions
-4. CNN models
-5. MNIST
-6. CIFAR-10
+   Principles of CNNs
 
 Sources:
 
-Deep learning - `cs231n.stanford.edu <http://cs231n.stanford.edu/>`__
+- `3Blue1Brown video: Convolutions in Image
+  Processing <https://www.youtube.com/watch?v=8rrHTtUzyZA&list=PLZHQObOWTQDMp_VZelDYjka8tnXNpXhzJ>`__
+- `far1din video: Convolutional Neural Networks from
+  Scratch <https://www.youtube.com/watch?v=jDe5BAsT2-Y>`__
+- `What is a Convolutional Neural
+  Network? <https://poloclub.github.io/cnn-explainer/>`__.
+- CNN `Stanford
+  cs231n <http://cs231n.github.io/convolutional-networks/>`__
+- Deep learning `Stanford cs231n <http://cs231n.stanford.edu/>`__
+- Pytorch
 
-CNN - `Stanford
-cs231n <http://cs231n.github.io/convolutional-networks/>`__
+  - `WWW tutorials <https://pytorch.org/tutorials/>`__
+  - `github tutorials <https://github.com/pytorch/tutorials>`__
+  - `github examples <https://github.com/pytorch/examples>`__
 
-Pytorch - `WWW tutorials <https://pytorch.org/tutorials/>`__ - `github
-tutorials <https://github.com/pytorch/tutorials>`__ - `github
-examples <https://github.com/pytorch/examples>`__
+- MNIST and pytorch:
 
-MNIST and pytorch: - `MNIST
-nextjournal.com/gkoehler/pytorch-mnist <https://nextjournal.com/gkoehler/pytorch-mnist>`__
-- `MNIST
-github/pytorch/examples <https://github.com/pytorch/examples/tree/master/mnist>`__
-- `MNIST
-kaggle <https://www.kaggle.com/sdelecourt/cnn-with-pytorch-for-mnist>`__
+  - `MNIST
+    nextjournal.com/gkoehler/pytorch-mnist <https://nextjournal.com/gkoehler/pytorch-mnist>`__
+  - `MNIST
+    github/pytorch/examples <https://github.com/pytorch/examples/tree/master/mnist>`__
+  - `MNIST
+    kaggle <https://www.kaggle.com/sdelecourt/cnn-with-pytorch-for-mnist>`__
 
-Architectures
--------------
+Introduction to CNNs
+--------------------
 
-Sources:
+CNNs are deep learning architectures designed for processing grid-like
+data such as images. Inspired by the biological visual cortex, they
+learn hierarchical feature representations, making them effective for
+tasks like image classification, object detection, and segmentation.
 
--  `cv-tricks.com <https://cv-tricks.com/cnn/understand-resnet-alexnet-vgg-inception>`__
--  [zhenye-na.github.io(]https://zhenye-na.github.io/2018/12/01/cnn-deep-leearning-ai-week2.html)
+Key Principles of CNNs:
 
-LeNet
-~~~~~
+- **Convolutional Layers** are the core building block of a CNN, which
+  applies a convolution operation to the input, passing the result to
+  the next layer: it perform feature extraction using learnable filters
+  (kernels), allowing CNNs to detect local patterns such as edges and
+  textures.
 
-The first Convolutional Networks were developed by Yann LeCun in 1990’s.
+- **Activation Functions** introduce non-linearity into the model,
+  enabling the network to learn complex patterns. ReLU (Rectified Linear
+  Unit) is the most commonly used activation function, improving
+  training speed and mitigating vanishing gradients. Possible function
+  are Tanh or Sigmoid and most commonly used the **ReLu(Rectified Linear
+  Unit** function. ReLu accelerate the training because the derivative
+  of sigmoid becomes very small in the saturating region and therefore
+  the updates to the weights almost vanish. This is called **vanishing
+  gradient problem**..
+
+- **Pooling Layers** reduces the spatial dimensions (height and width)
+  of the input feature maps by downsampling the input feature maps
+  summarizing the presence of features in patches of the feature map.
+  Max pooling and average pooling are the most common functions.
+
+- **Fully Connected Layers** flatten extracted features and connects to
+  a classifier, typically a softmax layer for classification tasks.
+
+- **Dropout**: reduces the over-fitting by using a Dropout layer after
+  every FC layer. Dropout layer has a probability,(p), associated with
+  it and is applied at every neuron of the response map separately. It
+  randomly switches off the activation with the probability p.
+
+- **Batch Normalization** normalizes the inputs of each layer to have a
+  mean of zero and a variance of one, which improve network stability.
+  This normalization is performed for each mini-batch during training.
+
+CNN Architectures: Evolution from LeNet to ResNet
+-------------------------------------------------
+
+LeNet-5 (1998)
+~~~~~~~~~~~~~~
+
+First successful CNN for handwritten digit recognition.
 
 .. figure:: ./figures/LeNet_Original_Image.jpg
    :alt: LeNet
 
    LeNet
 
-AlexNet
-~~~~~~~
+AlexNet (2012)
+~~~~~~~~~~~~~~
 
-(2012, Alex Krizhevsky, Ilya Sutskever and Geoff Hinton)
+Revolutionized deep learning by winning the ImageNet competition.
+Introduced ReLU activation, dropout, and GPU acceleration. Featured
+Convolutional Layers stacked on top of each other (previously it was
+common to only have a single CONV layer always immediately followed by a
+POOL layer).
 
-.. figure:: ./figures/alexnet.png
-   :alt: AlexNet
+|AlexNet| |AlexNet architecture|
 
-   AlexNet
+VGG (2014)
+~~~~~~~~~~
 
-.. figure:: ./figures/alexnet_param_tab.png
-   :alt: AlexNet architecture
+Introduced a simple yet deep architecture with 3×3 convolutions.
 
-   AlexNet architecture
+|VGGNet| |VGGNet architecture|
 
--  Deeper, bigger,
--  Featured Convolutional Layers stacked on top of each other
-   (previously it was common to only have a single CONV layer always
-   immediately followed by a POOL layer).
--  **ReLu(Rectified Linear Unit)** for the non-linear part, instead of a
-   Tanh or Sigmoid.
+GoogLeNet (Inception) (2014)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The advantage of the ReLu over sigmoid is that it trains much faster
-than the latter because the derivative of sigmoid becomes very small in
-the saturating region and therefore the updates to the weights almost
-vanish. This is called **vanishing gradient problem**.
+Introduced the **Inception module**, using multiple kernel sizes in
+parallel.
 
--  **Dropout**: reduces the over-fitting by using a Dropout layer after
-   every FC layer. Dropout layer has a probability,(p), associated with
-   it and is applied at every neuron of the response map separately. It
-   randomly switches off the activation with the probability p. 
+ResNet (2015)
+~~~~~~~~~~~~~
 
-.. figure:: ./figures/dropout.png
-   :alt: Dropout
-
-   Dropout
-
-Why does DropOut work?
-
-The idea behind the dropout is similar to the model ensembles. Due to
-the dropout layer, different sets of neurons which are switched off,
-represent a different architecture and all these different architectures
-are trained in parallel with weight given to each subset and the
-summation of weights being one. For n neurons attached to DropOut, the
-number of subset architectures formed is 2^n. So it amounts to
-prediction being averaged over these ensembles of models. This provides
-a structured model regularization which helps in avoiding the
-over-fitting. Another view of DropOut being helpful is that since
-neurons are randomly chosen, they tend to avoid developing
-co-adaptations among themselves thereby enabling them to develop
-meaningful features, independent of others.
-
--  **Data augmentation** is carried out to reduce over-fitting. This
-   Data augmentation includes mirroring and cropping the images to
-   increase the variation in the training data-set.
-
-**GoogLeNet**. (Szegedy et al. from Google 2014) was a Convolutional
-Network . Its main contribution was the development of an
-
--  **Inception Module** that dramatically reduced the number of
-   parameters in the network (4M, compared to AlexNet with 60M).
-
-.. figure:: ./figures/inception_block.png
-   :alt: Inception Module
-   :width: 15cm
-
-   Inception Module
-
--  There are also several followup versions to the GoogLeNet, most
-   recently Inception-v4.
-
-**VGGNet**. (Karen Simonyan and Andrew Zisserman 2014)
-
-.. figure:: ./figures/vgg.png
-   :alt: VGGNet
-   :width: 15cm
-
-   VGGNet
-
-.. figure:: ./figures/vgg_param_tab.png
-   :alt: VGGNet architecture
-   :width: 15cm
-
-   VGGNet architecture
-
--  16 CONV/FC layers and, appealingly, features an extremely homogeneous
-   architecture.
-
--  Only performs 3x3 convolutions and 2x2 pooling from the beginning to
-   the end. Replace large kernel-sized filters(11 and 5 in the first and
-   second convolutional layer, respectively) with multiple 3X3
-   kernel-sized filters one after another.
-
-With a given receptive field(the effective area size of input image on
-which output depends), multiple stacked smaller size kernel is better
-than the one with a larger size kernel because multiple non-linear
-layers increases the depth of the network which enables it to learn more
-complex features, and that too at a lower cost. For example, three 3X3
-filters on top of each other with stride 1 ha a receptive size of 7, but
-the number of parameters involved is 3*(9^2) in comparison to 49^2
-parameters of kernels with a size of 7.
-
--  Lot more memory and parameters (140M)
-
-**ResNet**. (Kaiming He et al. 2015)
-
-Resnet block variants
-(`Source <http://torch.ch/blog/2016/02/04/resnets.html>`__):
+Introduced **skip connections**, allowing training of very deep
+networks.
 
 .. figure:: ./figures/resnets_modelvariants.png
    :alt: ResNet block
-   :width: 15cm
+   :width: 10cm
 
    ResNet block
 
-.. figure:: ./figures/resnet18.png
-   :alt: ResNet 18
-   :width: 15cm
+|ResNet 18| |ResNet 18 architecture|
 
-   ResNet 18
+Architectures general guidelines
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: ./figures/resnet_param_tab.png
-   :alt: ResNet 18 architecture
-   :width: 15cm
+- ConvNets stack CONV,POOL,FC layers
+- Trend towards smaller filters and deeper architectures: stack 3x3,
+  instead of 5x5
+- Trend towards getting rid of POOL/FC layers (just CONV)
+- Historically architectures looked like [(CONV-RELU) x N POOL?] x M
+  (FC-RELU) x K, SOFTMAX where N is usually up to ~5, M is large, 0 <= K
+  <= 2.
+- But recent advances such as ResNet/GoogLeNet have challenged this
+  paradigm
 
-   ResNet 18 architecture
+Conclusion and Further Topics
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  Skip connections
--  Batch normalization.
--  State of the art CNN models and are the default choice (as of May 10,
-   2016). In particular, also see more
--  Recent developments that tweak the original architecture from Kaiming
-   He et al. Identity Mappings in Deep Residual Networks (published
-   March 2016).
+- **Recent architectures:** EfficientNet, Vision Transformers (ViTs),
+  MobileNet for edge devices.
+- **Advanced topics:** Transfer learning, object detection (YOLO, Faster
+  R-CNN), segmentation (U-Net).
+- **Hands-on implementation:** Implement CNNs using TensorFlow/PyTorch
+  for real-world applications.
 
-`Models in
-pytorch <https://github.com/pytorch/vision/tree/master/torchvision/models>`__
+.. |AlexNet| image:: ./figures/alexnet.png
+   :width: 7cm
+.. |AlexNet architecture| image:: ./figures/alexnet_param_tab.png
+   :width: 7cm
+.. |VGGNet| image:: ./figures/vgg.png
+   :width: 7cm
+.. |VGGNet architecture| image:: ./figures/vgg_param_tab.png
+   :width: 7cm
+.. |ResNet 18| image:: ./figures/resnet18.png
+   :width: 7cm
+.. |ResNet 18 architecture| image:: ./figures/resnet_param_tab.png
+   :width: 10cm
 
-Architecures general guidelines
--------------------------------
-
--  ConvNets stack CONV,POOL,FC layers
--  Trend towards smaller filters and deeper architectures: stack 3x3,
-   instead of 5x5
--  Trend towards getting rid of POOL/FC layers (just CONV)
--  Historically architectures looked like [(CONV-RELU) x N POOL?] x M
-   (FC-RELU) x K, SOFTMAX where N is usually up to ~5, M is large, 0 <=
-   K <= 2.
--  but recent advances such as ResNet/GoogLeNet have challenged this
-   paradigm
-
-Train function
---------------
+Training function
+-----------------
 
 .. code:: ipython3
 
@@ -206,6 +172,9 @@ Train function
     
     import os
     import numpy as np
+    from pathlib import Path
+    
+    # ML
     import torch
     import torch.nn as nn
     import torch.optim as optim
@@ -213,114 +182,41 @@ Train function
     import torchvision
     import torchvision.transforms as transforms
     from torchvision import models
-    #
-    from pathlib import Path
-    import matplotlib.pyplot as plt
-    
     # Device configuration
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    device = 'cpu' # Force CPU
+    # device = 'cpu' # Force CPU
+    # print(device)
+    
+    # Plot
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    
+    # Plot parameters
+    plt.style.use('seaborn-v0_8-whitegrid')
+    fig_w, fig_h = plt.rcParams.get('figure.figsize')
+    plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
+    %matplotlib inline
+
+See
+`train_val_model <https://github.com/duchesnay/pystatsml/blob/master/lib/pystatsml/dl_utils.py>`__
+function.
 
 .. code:: ipython3
 
-    # %load train_val_model.py
-    import numpy as np
-    import torch
-    import time
-    import copy
-    
-    
-    def train_val_model(model, criterion, optimizer, dataloaders, num_epochs=25,
-            scheduler=None, log_interval=None):
-        since = time.time()
-    
-        best_model_wts = copy.deepcopy(model.state_dict())
-        best_acc = 0.0
-    
-        # Store losses and accuracies accross epochs
-        losses, accuracies = dict(train=[], val=[]), dict(train=[], val=[])
-        
-        for epoch in range(num_epochs):
-            if log_interval is not None and epoch % log_interval == 0:
-                print('Epoch {}/{}'.format(epoch, num_epochs - 1))
-                print('-' * 10)
-    
-            # Each epoch has a training and validation phase
-            for phase in ['train', 'val']:
-                if phase == 'train':
-                    model.train()  # Set model to training mode
-                else:
-                    model.eval()   # Set model to evaluate mode
-    
-                running_loss = 0.0
-                running_corrects = 0
-    
-                # Iterate over data.
-                nsamples = 0
-                for inputs, labels in dataloaders[phase]:
-                    inputs = inputs.to(device)
-                    labels = labels.to(device)
-                    nsamples += inputs.shape[0]
-    
-                    # zero the parameter gradients
-                    optimizer.zero_grad()
-    
-                    # forward
-                    # track history if only in train
-                    with torch.set_grad_enabled(phase == 'train'):
-                        outputs = model(inputs)
-                        _, preds = torch.max(outputs, 1)
-                        loss = criterion(outputs, labels)
-    
-                        # backward + optimize only if in training phase
-                        if phase == 'train':
-                            loss.backward()
-                            optimizer.step()
-    
-                    # statistics
-                    running_loss += loss.item() * inputs.size(0)
-                    running_corrects += torch.sum(preds == labels.data)
-    
-                if scheduler is not None and phase == 'train':
-                    scheduler.step()
-                
-                #nsamples = dataloaders[phase].dataset.data.shape[0]
-                epoch_loss = running_loss / nsamples
-                epoch_acc = running_corrects.double() / nsamples
-    
-                losses[phase].append(epoch_loss)
-                accuracies[phase].append(epoch_acc)
-                if log_interval is not None and epoch % log_interval == 0:
-                    print('{} Loss: {:.4f} Acc: {:.2f}%'.format(
-                        phase, epoch_loss, 100 * epoch_acc))
-    
-                # deep copy the model
-                if phase == 'val' and epoch_acc > best_acc:
-                    best_acc = epoch_acc
-                    best_model_wts = copy.deepcopy(model.state_dict())
-            if log_interval is not None and epoch % log_interval == 0:
-                print()
-    
-        time_elapsed = time.time() - since
-        print('Training complete in {:.0f}m {:.0f}s'.format(
-            time_elapsed // 60, time_elapsed % 60))
-        print('Best val Acc: {:.2f}%'.format(100 * best_acc))
-    
-        # load best model weights
-        model.load_state_dict(best_model_wts)
-        
-        return model, losses, accuracies
+    from pystatsml.dl_utils import train_val_model
 
-
-CNN models
-----------
+CNN in PyTorch
+--------------
 
 LeNet-5
 ~~~~~~~
 
 Here we implement LeNet-5 with relu activation. Sources:
-`(1) <https://github.com/bollakarthikeya/LeNet-5-PyTorch/blob/master/lenet5_cpu.py>`__,
-`(2) <https://www.kaggle.com/usingtc/lenet-with-pytorch>`__.
+
+- `Github:
+  LeNet-5-PyTorch <https://github.com/bollakarthikeya/LeNet-5-PyTorch/blob/master/lenet5_cpu.py>`__,
+- `Kaggle: lenet with
+  pytorch <https://www.kaggle.com/usingtc/lenet-with-pytorch>`__.
 
 .. code:: ipython3
 
@@ -351,7 +247,8 @@ Here we implement LeNet-5 with relu activation. Sources:
             x = F.max_pool2d(F.relu(self.conv1(x)), 2) # same shape / 2
             x = F.max_pool2d(F.relu(self.conv2(x)), 2) # -4 / 2
             if self.debug:
-                print("### DEBUG: Shape of last convnet=", x.shape[1:], ". FC size=", np.prod(x.shape[1:]))
+                print("### DEBUG: Shape of last convnet=",
+                      x.shape[1:], ". FC size=", np.prod(x.shape[1:]))
             x = x.view(-1, self.layers[3])            
             x = F.relu(self.fc1(x))
             x = F.relu(self.fc2(x))
@@ -375,16 +272,16 @@ VGGNet like: conv-relu blocks
             self.debug = debug
     
             # Conv block 1
-            self.conv11 = nn.Conv2d(in_channels=layers[0], out_channels=layers[1], kernel_size=3,
-                                    stride=1, padding=0, bias=True)
-            self.conv12 = nn.Conv2d(in_channels=layers[1], out_channels=layers[1], kernel_size=3,
-                                    stride=1, padding=0, bias=True)
+            self.conv11 = nn.Conv2d(in_channels=layers[0],out_channels=layers[1],
+                                    kernel_size=3, stride=1, padding=0, bias=True)
+            self.conv12 = nn.Conv2d(in_channels=layers[1], out_channels=layers[1],
+                                    kernel_size=3, stride=1, padding=0, bias=True)
     
             # Conv block 2
-            self.conv21 = nn.Conv2d(in_channels=layers[1], out_channels=layers[2], kernel_size=3,
-                                    stride=1, padding=0, bias=True)
-            self.conv22 = nn.Conv2d(in_channels=layers[2], out_channels=layers[2], kernel_size=3,
-                                    stride=1, padding=1, bias=True)
+            self.conv21 = nn.Conv2d(in_channels=layers[1], out_channels=layers[2],
+                                    kernel_size=3, stride=1, padding=0, bias=True)
+            self.conv22 = nn.Conv2d(in_channels=layers[2], out_channels=layers[2],
+                                    kernel_size=3, stride=1, padding=1, bias=True)
     
             # Fully connected layer
             self.fc1   = nn.Linear(layers[3], layers[4])
@@ -401,7 +298,8 @@ VGGNet like: conv-relu blocks
             x = F.max_pool2d(x, 2)
         
             if self.debug:
-                print("### DEBUG: Shape of last convnet=", x.shape[1:], ". FC size=", np.prod(x.shape[1:]))
+                print("### DEBUG: Shape of last convnet=", x.shape[1:],
+                      ". FC size=", np.prod(x.shape[1:]))
             x = x.view(-1, self.layers[3])
             x = F.relu(self.fc1(x))
             x = F.relu(self.fc2(x))
@@ -409,8 +307,8 @@ VGGNet like: conv-relu blocks
             
             return F.log_softmax(x, dim=1)
 
-ResNet-like Model:
-~~~~~~~~~~~~~~~~~~
+ResNet-like Model
+~~~~~~~~~~~~~~~~~
 
 Stack multiple resnet blocks
 
@@ -494,65 +392,59 @@ Stack multiple resnet blocks
             #return out
 
 ResNet9
+~~~~~~~
 
--  `DAWNBench on
-   cifar10 <https://dawn.cs.stanford.edu/benchmark/index.html#cifar10>`__
+Sources:
 
--  `ResNet9: train to 94% CIFAR10 accuracy in 100
-   seconds <https://lambdalabs.com/blog/resnet9-train-to-94-cifar10-accuracy-in-100-seconds/>`__
+- `DAWNBench on
+  cifar10 <https://dawn.cs.stanford.edu/benchmark/index.html#cifar10>`__
+- `ResNet9: train to 94% CIFAR10 accuracy in 100
+  seconds <https://lambdalabs.com/blog/resnet9-train-to-94-cifar10-accuracy-in-100-seconds/>`__
 
-MNIST digit classification
---------------------------
+Classification: MNIST digits
+----------------------------
+
+`MNIST
+Loader <https://github.com/duchesnay/pystatsml/blob/master/lib/pystatsml/datasets.py>`__
 
 .. code:: ipython3
 
-    from pathlib import Path
-    from torchvision import datasets, transforms
-    import os
+    from pystatsml.datasets import load_mnist_pytorch
     
-    WD = os.path.join(Path.home(), "data", "pystatml", "dl_mnist_pytorch")
-    os.makedirs(WD, exist_ok=True)
-    os.chdir(WD)
-    print("Working dir is:", os.getcwd())
-    os.makedirs("data", exist_ok=True)
-    os.makedirs("models", exist_ok=True)
+    dataloaders, WD = load_mnist_pytorch(
+        batch_size_train=64, batch_size_test=10000)
+    os.makedirs(os.path.join(WD, "models"), exist_ok=True)
     
-    
-    def load_mnist(batch_size_train, batch_size_test):
-        
-        train_loader = torch.utils.data.DataLoader(
-            datasets.MNIST('data', train=True, download=True,
-                           transform=transforms.Compose([
-                               transforms.ToTensor(),
-                               transforms.Normalize((0.1307,), (0.3081,))
-                           ])),
-            batch_size=batch_size_train, shuffle=True)
-        
-        test_loader = torch.utils.data.DataLoader(
-            datasets.MNIST('data', train=False, transform=transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Normalize((0.1307,), (0.3081,))
-            ])),
-            batch_size=batch_size_test, shuffle=True)
-        return train_loader, test_loader
-    
-    train_loader, val_loader = load_mnist(64, 1000)
-    
-    dataloaders = dict(train=train_loader, val=val_loader)
-                       
     # Info about the dataset
-    data_shape = dataloaders["train"].dataset.data.shape[1:]
-    D_in = np.prod(data_shape)
-    D_out = len(dataloaders["train"].dataset.targets)
-    print("Datasets shape", {x: dataloaders[x].dataset.data.shape for x in ['train', 'val']})
-    print("N input features", D_in, "N output", D_out)
+    D_in = np.prod(dataloaders["train"].dataset.data.shape[1:])
+    D_out = len(dataloaders["train"].dataset.targets.unique())
+    print("Datasets shapes:", {
+          x: dataloaders[x].dataset.data.shape for x in ['train', 'test']})
+    print("N input features:", D_in, "Output classes:", D_out)
 
 
 .. parsed-literal::
 
-    Working dir is: /home/ed203246/data/pystatml/dl_mnist_pytorch
-    Datasets shape {'train': torch.Size([60000, 28, 28]), 'val': torch.Size([10000, 28, 28])}
-    N input features 784 N output 60000
+    /home/ed203246/data/pystatml/dl_mnist_pytorch
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Cell In[12], line 8
+          5 os.makedirs(os.path.join(WD, "models"), exist_ok=True)
+          7 # Info about the dataset
+    ----> 8 D_in = np.prod(dataloaders["train"].dataset.data.shape[1:])
+          9 D_out = len(dataloaders["train"].dataset.targets.unique())
+         10 print("Datasets shapes:", {
+         11       x: dataloaders[x].dataset.data.shape for x in ['train', 'test']})
+
+
+    NameError: name 'np' is not defined
 
 
 LeNet
@@ -563,7 +455,8 @@ Dry run in debug mode to get the shape of the last convnet layer.
 .. code:: ipython3
 
     model = LeNet5((1, 6, 16, 1, 120, 84, 10), debug=True)
-    batch_idx, (data_example, target_example) = next(enumerate(train_loader))
+    batch_idx, (data_example, target_example) = next(
+        enumerate(dataloaders["train"]))
     print(model)
     _ = model(data_example)
 
@@ -592,10 +485,12 @@ Set First FC layer to 400
     for parameter in model.parameters():
         print(parameter.shape)
     
-    print("Total number of parameters =", np.sum([np.prod(parameter.shape) for parameter in model.parameters()]))
+    print("Total number of parameters =", np.sum([np.prod(parameter.shape) for
+                                                  parameter in model.parameters()]))
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=5, log_interval=2)
+    model, losses, accuracies = train_val_model(model, criterion, optimizer,
+                                                dataloaders,
+                                                num_epochs=5, log_interval=2)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -615,25 +510,25 @@ Set First FC layer to 400
     Total number of parameters = 61706
     Epoch 0/4
     ----------
-    train Loss: 0.7807 Acc: 75.65%
-    val Loss: 0.1586 Acc: 94.96%
+    train Loss: 0.8882 Acc: 72.55%
+    val Loss: 0.1889 Acc: 94.00%
     
     Epoch 2/4
     ----------
-    train Loss: 0.0875 Acc: 97.33%
-    val Loss: 0.0776 Acc: 97.47%
+    train Loss: 0.0865 Acc: 97.30%
+    val Loss: 0.0592 Acc: 98.07%
     
     Epoch 4/4
     ----------
-    train Loss: 0.0592 Acc: 98.16%
-    val Loss: 0.0533 Acc: 98.30%
+    train Loss: 0.0578 Acc: 98.22%
+    val Loss: 0.0496 Acc: 98.45%
     
-    Training complete in 1m 29s
-    Best val Acc: 98.30%
+    Training complete in 0m 55s
+    Best val Acc: 98.45%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_17_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_19_1.png
 
 
 MiniVGGNet
@@ -673,10 +568,13 @@ Set First FC layer to 800
     for parameter in model.parameters():
         print(parameter.shape)
     
-    print("Total number of parameters =", np.sum([np.prod(parameter.shape) for parameter in model.parameters()]))
+    print("Total number of parameters =",
+          np.sum([np.prod(parameter.shape)
+                  for parameter in model.parameters()]))
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=5, log_interval=2)
+    model, losses, accuracies = train_val_model(model, criterion, optimizer,
+                                                dataloaders,
+                                                num_epochs=5, log_interval=2)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -700,25 +598,25 @@ Set First FC layer to 800
     Total number of parameters = 123502
     Epoch 0/4
     ----------
-    train Loss: 1.4180 Acc: 48.27%
-    val Loss: 0.2277 Acc: 92.68%
+    train Loss: 1.2111 Acc: 58.85%
+    val Loss: 0.1599 Acc: 94.67%
     
     Epoch 2/4
     ----------
-    train Loss: 0.0838 Acc: 97.41%
-    val Loss: 0.0587 Acc: 98.14%
+    train Loss: 0.0781 Acc: 97.58%
+    val Loss: 0.0696 Acc: 97.75%
     
     Epoch 4/4
     ----------
-    train Loss: 0.0495 Acc: 98.43%
-    val Loss: 0.0407 Acc: 98.63%
+    train Loss: 0.0493 Acc: 98.48%
+    val Loss: 0.0420 Acc: 98.62%
     
-    Training complete in 3m 10s
-    Best val Acc: 98.63%
+    Training complete in 2m 9s
+    Best val Acc: 98.62%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_21_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_23_1.png
 
 
 Reduce the size of training dataset
@@ -729,7 +627,7 @@ minibatche for size\ ``16``.
 
 .. code:: ipython3
 
-    train_loader, val_loader = load_mnist(16, 1000)
+    train_loader, val_loader = dataloaders["train"], dataloaders["test"]
     
     train_size = 10 * 16
     
@@ -737,32 +635,37 @@ minibatche for size\ ``16``.
     targets = train_loader.dataset.targets.numpy()
     nclasses = len(set(targets))
     
-    indices = np.concatenate([np.random.choice(np.where(targets == lab)[0], int(train_size / nclasses),replace=False) 
-        for lab in set(targets)])
+    indices = np.concatenate([np.random.choice(np.where(targets == lab)[0],
+                                               int(train_size / nclasses),
+                                               replace=False)
+                              for lab in set(targets)])
     np.random.shuffle(indices)
     
     train_loader = torch.utils.data.DataLoader(train_loader.dataset, batch_size=16,
-        sampler=torch.utils.data.SubsetRandomSampler(indices))
+                            sampler=torch.utils.data.SubsetRandomSampler(indices))
     
     # Check train subsampling
-    train_labels = np.concatenate([labels.numpy() for inputs, labels in train_loader])
-    print("Train size=", len(train_labels), " Train label count=", {lab:np.sum(train_labels == lab) for lab in set(train_labels)})
+    train_labels = np.concatenate([labels.numpy()
+                                  for inputs, labels in train_loader])
+    print("Train size=", len(train_labels), " Train label count=",
+          {lab: np.sum(train_labels == lab) for lab in set(train_labels)})
     print("Batch sizes=", [inputs.size(0) for inputs, labels in train_loader])
     
     # Put together train and val
     dataloaders = dict(train=train_loader, val=val_loader)
-                       
+    
     # Info about the dataset
     data_shape = dataloaders["train"].dataset.data.shape[1:]
     D_in = np.prod(data_shape)
     D_out = len(dataloaders["train"].dataset.targets.unique())
-    print("Datasets shape", {x: dataloaders[x].dataset.data.shape for x in ['train', 'val']})
+    print("Datasets shape", {x: dataloaders[x].dataset.data.shape
+                             for x in ['train', 'val']})
     print("N input features", D_in, "N output", D_out)
 
 
 .. parsed-literal::
 
-    Train size= 160  Train label count= {0: 16, 1: 16, 2: 16, 3: 16, 4: 16, 5: 16, 6: 16, 7: 16, 8: 16, 9: 16}
+    Train size= 160  Train label count= {np.int64(0): np.int64(16), np.int64(1): np.int64(16), np.int64(2): np.int64(16), np.int64(3): np.int64(16), np.int64(4): np.int64(16), np.int64(5): np.int64(16), np.int64(6): np.int64(16), np.int64(7): np.int64(16), np.int64(8): np.int64(16), np.int64(9): np.int64(16)}
     Batch sizes= [16, 16, 16, 16, 16, 16, 16, 16, 16, 16]
     Datasets shape {'train': torch.Size([60000, 28, 28]), 'val': torch.Size([10000, 28, 28])}
     N input features 784 N output 10
@@ -776,8 +679,9 @@ LeNet5
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
     criterion = nn.NLLLoss()
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=100, log_interval=20)
+    model, losses, accuracies = train_val_model(model, criterion, optimizer,
+                                                dataloaders,
+                                                num_epochs=100, log_interval=20)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -786,35 +690,35 @@ LeNet5
 
     Epoch 0/99
     ----------
-    train Loss: 2.3086 Acc: 11.88%
-    val Loss: 2.3068 Acc: 14.12%
+    train Loss: 2.3072 Acc: 7.50%
+    val Loss: 2.3001 Acc: 8.89%
     
     Epoch 20/99
     ----------
-    train Loss: 0.8060 Acc: 76.25%
-    val Loss: 0.8522 Acc: 72.84%
+    train Loss: 0.4810 Acc: 83.75%
+    val Loss: 0.7552 Acc: 72.66%
     
     Epoch 40/99
     ----------
-    train Loss: 0.0596 Acc: 99.38%
-    val Loss: 0.6188 Acc: 82.67%
+    train Loss: 0.1285 Acc: 95.62%
+    val Loss: 0.6663 Acc: 81.72%
     
     Epoch 60/99
     ----------
-    train Loss: 0.0072 Acc: 100.00%
-    val Loss: 0.6888 Acc: 83.08%
+    train Loss: 0.0065 Acc: 100.00%
+    val Loss: 0.6982 Acc: 84.26%
     
     Epoch 80/99
     ----------
-    train Loss: 0.0033 Acc: 100.00%
-    val Loss: 0.7546 Acc: 82.96%
+    train Loss: 0.0032 Acc: 100.00%
+    val Loss: 0.7571 Acc: 84.26%
     
-    Training complete in 3m 10s
-    Best val Acc: 83.46%
+    Training complete in 1m 37s
+    Best val Acc: 84.34%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_25_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_27_1.png
 
 
 MiniVGGNet
@@ -825,8 +729,9 @@ MiniVGGNet
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
     criterion = nn.NLLLoss()
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=100, log_interval=20)
+    model, losses, accuracies = train_val_model(model, criterion, optimizer,
+                                                dataloaders,
+                                                num_epochs=100, log_interval=20)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -835,110 +740,62 @@ MiniVGGNet
 
     Epoch 0/99
     ----------
-    train Loss: 2.3040 Acc: 10.00%
-    val Loss: 2.3025 Acc: 10.32%
+    train Loss: 2.3048 Acc: 10.00%
+    val Loss: 2.3026 Acc: 10.28%
     
     Epoch 20/99
     ----------
-    train Loss: 2.2963 Acc: 10.00%
-    val Loss: 2.2969 Acc: 10.35%
+    train Loss: 2.2865 Acc: 26.25%
+    val Loss: 2.2861 Acc: 23.22%
     
     Epoch 40/99
     ----------
-    train Loss: 2.1158 Acc: 37.50%
-    val Loss: 2.0764 Acc: 38.06%
+    train Loss: 0.3847 Acc: 85.00%
+    val Loss: 0.8042 Acc: 75.76%
     
     Epoch 60/99
     ----------
-    train Loss: 0.0875 Acc: 97.50%
-    val Loss: 0.7315 Acc: 80.50%
+    train Loss: 0.0047 Acc: 100.00%
+    val Loss: 0.8659 Acc: 83.57%
     
     Epoch 80/99
     ----------
-    train Loss: 0.0023 Acc: 100.00%
-    val Loss: 1.0397 Acc: 81.69%
+    train Loss: 0.0013 Acc: 100.00%
+    val Loss: 1.0183 Acc: 83.39%
     
-    Training complete in 5m 38s
-    Best val Acc: 82.02%
+    Training complete in 4m 39s
+    Best val Acc: 84.01%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_27_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_29_1.png
 
 
-CIFAR-10 dataset
-----------------
+Classification: CIFAR-10 dataset with 10 classes
+------------------------------------------------
 
-`Source Yunjey Choi <https://github.com/yunjey/pytorch-tutorial>`__
+The CIFAR-10 dataset consists of 60000 32x32 colour images in 10
+classes, with 6000 images per class.
+
+`Source Yunjey Choi Github pytorch
+tutorial <https://github.com/yunjey/pytorch-tutorial>`__
+
+Load CIFAR-10 dataset `CIFAR-10
+Loader <https://github.com/duchesnay/pystatsml/blob/master/lib/pystatsml/datasets.py>`__
 
 .. code:: ipython3
 
-    from pathlib import Path
-    WD = os.path.join(Path.home(), "data", "pystatml", "dl_cifar10_pytorch")
-    os.makedirs(WD, exist_ok=True)
-    os.chdir(WD)
-    print("Working dir is:", os.getcwd())
-    os.makedirs("data", exist_ok=True)
-    os.makedirs("models", exist_ok=True)
+    from pystatsml.datasets import load_cifar10_pytorch
     
-    import numpy as np
-    import torch
-    import torch.nn as nn
-    import torchvision
-    import torchvision.transforms as transforms
+    dataloaders, _ = load_cifar10_pytorch(
+        batch_size_train=100, batch_size_test=100)
     
-    
-    # Device configuration
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    
-    # Hyper-parameters
-    num_epochs = 5
-    learning_rate = 0.001
-    
-    # Image preprocessing modules
-    transform = transforms.Compose([
-        transforms.Pad(4),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomCrop(32),
-        transforms.ToTensor()])
-    
-    # CIFAR-10 dataset
-    train_dataset = torchvision.datasets.CIFAR10(root='data/',
-                                                 train=True, 
-                                                 transform=transform,
-                                                 download=True)
-    
-    val_dataset = torchvision.datasets.CIFAR10(root='data/',
-                                                train=False, 
-                                                transform=transforms.ToTensor())
-    
-    # Data loader
-    train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
-                                               batch_size=100, 
-                                               shuffle=True)
-    
-    val_loader = torch.utils.data.DataLoader(dataset=val_dataset,
-                                              batch_size=100, 
-                                              shuffle=False)
-    
-    # Put together train and val
-    dataloaders = dict(train=train_loader, val=val_loader)
-                       
     # Info about the dataset
-    data_shape = dataloaders["train"].dataset.data.shape[1:]
-    D_in = np.prod(data_shape)
+    D_in = np.prod(dataloaders["train"].dataset.data.shape[1:])
     D_out = len(set(dataloaders["train"].dataset.targets))
-    print("Datasets shape:", {x: dataloaders[x].dataset.data.shape for x in ['train', 'val']})
+    print("Datasets shape:", {
+          x: dataloaders[x].dataset.data.shape for x in dataloaders.keys()})
     print("N input features:", D_in, "N output:", D_out)
-
-
-.. parsed-literal::
-
-    Working dir is: /home/ed203246/data/pystatml/dl_cifar10_pytorch
-    Files already downloaded and verified
-    Datasets shape: {'train': (50000, 32, 32, 3), 'val': (10000, 32, 32, 3)}
-    N input features: 3072 N output: 10
-
 
 LeNet
 ~~~~~
@@ -977,10 +834,13 @@ SGD with momentum ``lr=0.001, momentum=0.5``
     for parameter in model.parameters():
         print(parameter.shape)
     
-    print("Total number of parameters =", np.sum([np.prod(parameter.shape) for parameter in model.parameters()]))
+    print("Total number of parameters =",
+          np.sum([np.prod(parameter.shape)
+                  for parameter in model.parameters()]))
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=25, log_interval=5)
+    model, losses, accuracies = train_val_model(model, criterion, optimizer,
+                                                dataloaders,
+                                                num_epochs=25, log_interval=5)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -1000,35 +860,35 @@ SGD with momentum ``lr=0.001, momentum=0.5``
     Total number of parameters = 83126
     Epoch 0/24
     ----------
-    train Loss: 2.3041 Acc: 10.00%
-    val Loss: 2.3033 Acc: 10.00%
+    train Loss: 2.3037 Acc: 10.06%
+    val Loss: 2.3032 Acc: 10.05%
     
     Epoch 5/24
     ----------
-    train Loss: 2.2991 Acc: 11.18%
-    val Loss: 2.2983 Acc: 11.00%
+    train Loss: 2.3005 Acc: 10.72%
+    val Loss: 2.2998 Acc: 10.61%
     
     Epoch 10/24
     ----------
-    train Loss: 2.2860 Acc: 10.36%
-    val Loss: 2.2823 Acc: 10.60%
+    train Loss: 2.2931 Acc: 11.90%
+    val Loss: 2.2903 Acc: 11.27%
     
     Epoch 15/24
     ----------
-    train Loss: 2.1759 Acc: 18.83%
-    val Loss: 2.1351 Acc: 20.74%
+    train Loss: 2.2355 Acc: 16.46%
+    val Loss: 2.2134 Acc: 17.75%
     
     Epoch 20/24
     ----------
-    train Loss: 2.0159 Acc: 25.35%
-    val Loss: 1.9878 Acc: 26.90%
+    train Loss: 2.1804 Acc: 19.07%
+    val Loss: 2.1579 Acc: 20.26%
     
-    Training complete in 7m 26s
-    Best val Acc: 28.98%
+    Training complete in 5m 13s
+    Best val Acc: 23.19%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_34_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_37_1.png
 
 
 Increase learning rate and momentum ``lr=0.01, momentum=0.9``
@@ -1039,8 +899,9 @@ Increase learning rate and momentum ``lr=0.01, momentum=0.9``
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     criterion = nn.NLLLoss()
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=25, log_interval=5)
+    model, losses, accuracies = train_val_model(model, criterion, optimizer,
+                                                dataloaders,
+                                                num_epochs=25, log_interval=5)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -1049,35 +910,35 @@ Increase learning rate and momentum ``lr=0.01, momentum=0.9``
 
     Epoch 0/24
     ----------
-    train Loss: 2.0963 Acc: 21.65%
-    val Loss: 1.8211 Acc: 33.49%
+    train Loss: 2.1798 Acc: 17.53%
+    val Loss: 1.9141 Acc: 31.27%
     
     Epoch 5/24
     ----------
-    train Loss: 1.3500 Acc: 51.34%
-    val Loss: 1.2278 Acc: 56.40%
+    train Loss: 1.3804 Acc: 49.93%
+    val Loss: 1.3098 Acc: 53.23%
     
     Epoch 10/24
     ----------
-    train Loss: 1.1569 Acc: 58.79%
-    val Loss: 1.0933 Acc: 60.95%
+    train Loss: 1.2019 Acc: 56.79%
+    val Loss: 1.0886 Acc: 60.91%
     
     Epoch 15/24
     ----------
-    train Loss: 1.0724 Acc: 62.12%
-    val Loss: 0.9863 Acc: 65.34%
+    train Loss: 1.1043 Acc: 60.61%
+    val Loss: 1.0321 Acc: 63.26%
     
     Epoch 20/24
     ----------
-    train Loss: 1.0131 Acc: 64.41%
-    val Loss: 0.9720 Acc: 66.14%
+    train Loss: 1.0569 Acc: 62.31%
+    val Loss: 0.9942 Acc: 65.55%
     
-    Training complete in 7m 17s
-    Best val Acc: 67.87%
+    Training complete in 5m 15s
+    Best val Acc: 67.18%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_36_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_39_1.png
 
 
 Adaptative learning rate: Adam
@@ -1088,8 +949,9 @@ Adaptative learning rate: Adam
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.NLLLoss()
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=25, log_interval=5)
+    model, losses, accuracies = train_val_model(model, criterion, optimizer,
+                                                dataloaders,
+                                                num_epochs=25, log_interval=5)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -1098,35 +960,35 @@ Adaptative learning rate: Adam
 
     Epoch 0/24
     ----------
-    train Loss: 1.8411 Acc: 30.21%
-    val Loss: 1.5768 Acc: 41.22%
+    train Loss: 1.8866 Acc: 29.71%
+    val Loss: 1.6111 Acc: 40.21%
     
     Epoch 5/24
     ----------
-    train Loss: 1.3185 Acc: 52.17%
-    val Loss: 1.2181 Acc: 55.71%
+    train Loss: 1.3877 Acc: 49.62%
+    val Loss: 1.3016 Acc: 53.23%
     
     Epoch 10/24
     ----------
-    train Loss: 1.1724 Acc: 57.89%
-    val Loss: 1.1244 Acc: 59.17%
+    train Loss: 1.2274 Acc: 55.93%
+    val Loss: 1.1575 Acc: 58.78%
     
     Epoch 15/24
     ----------
-    train Loss: 1.0987 Acc: 60.98%
-    val Loss: 1.0153 Acc: 63.82%
+    train Loss: 1.1399 Acc: 59.28%
+    val Loss: 1.0712 Acc: 61.84%
     
     Epoch 20/24
     ----------
-    train Loss: 1.0355 Acc: 63.01%
-    val Loss: 0.9901 Acc: 64.90%
+    train Loss: 1.0806 Acc: 61.62%
+    val Loss: 1.0334 Acc: 62.69%
     
-    Training complete in 7m 30s
-    Best val Acc: 66.88%
+    Training complete in 5m 25s
+    Best val Acc: 65.14%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_38_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_41_1.png
 
 
 MiniVGGNet
@@ -1163,8 +1025,9 @@ SGD with large momentum and learning rate
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     criterion = nn.NLLLoss()
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=25, log_interval=5)
+    model, losses, accuracies = train_val_model(model, criterion, optimizer,
+                                                dataloaders,
+                                                num_epochs=25, log_interval=5)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -1173,35 +1036,35 @@ SGD with large momentum and learning rate
 
     Epoch 0/24
     ----------
-    train Loss: 2.3027 Acc: 10.14%
-    val Loss: 2.3010 Acc: 10.00%
+    train Loss: 2.2581 Acc: 13.96%
+    val Loss: 2.0322 Acc: 25.49%
     
     Epoch 5/24
     ----------
-    train Loss: 1.4829 Acc: 46.08%
-    val Loss: 1.3860 Acc: 50.39%
+    train Loss: 1.4107 Acc: 48.84%
+    val Loss: 1.3065 Acc: 52.92%
     
     Epoch 10/24
     ----------
-    train Loss: 1.0899 Acc: 61.43%
-    val Loss: 1.0121 Acc: 64.59%
+    train Loss: 1.0621 Acc: 62.12%
+    val Loss: 1.0013 Acc: 64.64%
     
     Epoch 15/24
     ----------
-    train Loss: 0.8825 Acc: 69.02%
-    val Loss: 0.7788 Acc: 72.73%
+    train Loss: 0.8828 Acc: 68.70%
+    val Loss: 0.8078 Acc: 72.08%
     
     Epoch 20/24
     ----------
-    train Loss: 0.7805 Acc: 72.73%
-    val Loss: 0.7222 Acc: 74.72%
+    train Loss: 0.7830 Acc: 72.52%
+    val Loss: 0.7273 Acc: 74.83%
     
-    Training complete in 15m 19s
-    Best val Acc: 76.62%
+    Training complete in 11m 44s
+    Best val Acc: 75.50%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_43_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_46_1.png
 
 
 Adam
@@ -1212,8 +1075,9 @@ Adam
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.NLLLoss()
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=25, log_interval=5)
+    model, losses, accuracies = \
+        train_val_model(model, criterion, optimizer, dataloaders,
+                        num_epochs=25, log_interval=5)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -1222,35 +1086,35 @@ Adam
 
     Epoch 0/24
     ----------
-    train Loss: 1.8591 Acc: 30.74%
-    val Loss: 1.5424 Acc: 43.46%
+    train Loss: 1.8556 Acc: 30.40%
+    val Loss: 1.5847 Acc: 40.66%
     
     Epoch 5/24
     ----------
-    train Loss: 1.1562 Acc: 58.46%
-    val Loss: 1.0811 Acc: 61.87%
+    train Loss: 1.2417 Acc: 55.39%
+    val Loss: 1.0908 Acc: 61.45%
     
     Epoch 10/24
     ----------
-    train Loss: 0.9630 Acc: 65.69%
-    val Loss: 0.8669 Acc: 68.94%
+    train Loss: 1.0203 Acc: 63.66%
+    val Loss: 0.9503 Acc: 66.19%
     
     Epoch 15/24
     ----------
-    train Loss: 0.8634 Acc: 69.38%
-    val Loss: 0.7933 Acc: 72.33%
+    train Loss: 0.9051 Acc: 67.98%
+    val Loss: 0.8536 Acc: 70.10%
     
     Epoch 20/24
     ----------
-    train Loss: 0.8033 Acc: 71.75%
-    val Loss: 0.7737 Acc: 73.57%
+    train Loss: 0.8273 Acc: 70.74%
+    val Loss: 0.7942 Acc: 72.55%
     
-    Training complete in 15m 37s
-    Best val Acc: 74.86%
+    Training complete in 11m 60s
+    Best val Acc: 74.00%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_45_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_48_1.png
 
 
 ResNet
@@ -1258,12 +1122,14 @@ ResNet
 
 .. code:: ipython3
 
-    model = ResNet(ResidualBlock, [2, 2, 2], num_classes=D_out).to(device) # 195738 parameters
+    model = ResNet(ResidualBlock, [2, 2, 2], num_classes=D_out).to(device)
+    # 195738 parameters
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.NLLLoss()
     
-    model, losses, accuracies = train_val_model(model, criterion, optimizer, dataloaders,
-                           num_epochs=25, log_interval=5)
+    model, losses, accuracies = \
+        train_val_model(model, criterion, optimizer, dataloaders,
+                        num_epochs=25, log_interval=5)
     
     _ = plt.plot(losses['train'], '-b', losses['val'], '--r')
 
@@ -1272,34 +1138,313 @@ ResNet
 
     Epoch 0/24
     ----------
-    train Loss: 1.4169 Acc: 48.11%
-    val Loss: 1.5213 Acc: 48.08%
+    train Loss: 1.4107 Acc: 48.21%
+    val Loss: 1.2645 Acc: 54.80%
     
     Epoch 5/24
     ----------
-    train Loss: 0.6279 Acc: 78.09%
-    val Loss: 0.6652 Acc: 77.49%
+    train Loss: 0.6440 Acc: 77.60%
+    val Loss: 0.8178 Acc: 72.40%
     
     Epoch 10/24
     ----------
-    train Loss: 0.4772 Acc: 83.57%
-    val Loss: 0.5314 Acc: 82.09%
+    train Loss: 0.4914 Acc: 82.89%
+    val Loss: 0.6432 Acc: 78.16%
     
     Epoch 15/24
     ----------
-    train Loss: 0.4010 Acc: 86.09%
-    val Loss: 0.6457 Acc: 79.03%
+    train Loss: 0.4024 Acc: 86.27%
+    val Loss: 0.5026 Acc: 83.43%
     
     Epoch 20/24
     ----------
-    train Loss: 0.3435 Acc: 88.07%
-    val Loss: 0.4887 Acc: 84.34%
+    train Loss: 0.3496 Acc: 87.86%
+    val Loss: 0.5282 Acc: 82.18%
     
-    Training complete in 103m 30s
-    Best val Acc: 85.66%
+    Training complete in 58m 9s
+    Best val Acc: 85.61%
 
 
 
-.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_47_1.png
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_50_1.png
 
 
+
+
+Segmentation with U-Net
+-----------------------
+
+Source `Segmentation
+Models <https://github.com/qubvel-org/segmentation_models.pytorch>`__:
+
+U-Net is a fully convolutional neural network architecture designed for
+semantic image segmentation. It consists of two main parts:
+
+- An encoder (downsampling path) that extracts increasingly abstract
+  features
+- A decoder (upsampling path) that gradually recovers spatial details
+
+The key is the use of skip connections between corresponding encoder and
+decoder layers. These connections allow the decoder to access
+fine-grained details from earlier encoder layers, which helps produce
+more precise segmentation masks.
+
+The skip connections work by concatenating feature maps from the encoder
+directly into the decoder at corresponding resolutions. This helps
+preserve important spatial information that would otherwise be lost
+during the encoding process.
+
+Example: Image Segmentation with U-Net using PyTorch
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Below is an example of how to implement image segmentation using the
+U-Net architecture with PyTorch on a real dataset. We will use the
+Oxford-IIIT Pet Dataset for this example.
+
+Step1: Load the Dataset
+
+We will use the Oxford-IIIT Pet Dataset, which can be downloaded from
+`here <https://www.robots.ox.ac.uk/~vgg/data/pets/>`__. For simplicity,
+we will assume the dataset is already downloaded and structured as
+follows:
+
+Step 2: Define the U-Net Model
+
+Here is the implementation of the U-Net model in PyTorch:
+
+.. code:: ipython3
+
+    import torch
+    import torch.nn as nn
+    
+    
+    class UNet(nn.Module):
+        def __init__(self, in_channels, out_channels):
+            super(UNet, self).__init__()
+    
+            def conv_block(in_channels, out_channels):
+                return nn.Sequential(
+                    nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+                    nn.ReLU(inplace=True),
+                    nn.Conv2d(out_channels, out_channels,
+                              kernel_size=3, padding=1),
+                    nn.ReLU(inplace=True)
+                )
+    
+            def up_conv(in_channels, out_channels):
+                return nn.ConvTranspose2d(in_channels, out_channels, kernel_size=2,
+                                          stride=2)
+    
+            self.enc1 = conv_block(in_channels, 64)
+            self.enc2 = conv_block(64, 128)
+            self.enc3 = conv_block(128, 256)
+            self.enc4 = conv_block(256, 512)
+    
+            self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+    
+            self.bottleneck = conv_block(512, 1024)
+    
+            self.upconv4 = up_conv(1024, 512)
+            self.dec4 = conv_block(1024, 512)
+            self.upconv3 = up_conv(512, 256)
+            self.dec3 = conv_block(512, 256)
+            self.upconv2 = up_conv(256, 128)
+            self.dec2 = conv_block(256, 128)
+            self.upconv1 = up_conv(128, 64)
+            self.dec1 = conv_block(128, 64)
+    
+            self.conv_final = nn.Conv2d(64, out_channels, kernel_size=1)
+    
+        def forward(self, x):
+            enc1 = self.enc1(x)
+            enc2 = self.enc2(self.pool(enc1))
+            enc3 = self.enc3(self.pool(enc2))
+            enc4 = self.enc4(self.pool(enc3))
+    
+            bottleneck = self.bottleneck(self.pool(enc4))
+    
+            dec4 = self.upconv4(bottleneck)
+            dec4 = torch.cat((dec4, enc4), dim=1)
+            dec4 = self.dec4(dec4)
+            dec3 = self.upconv3(dec4)
+            dec3 = torch.cat((dec3, enc3), dim=1)
+            dec3 = self.dec3(dec3)
+            dec2 = self.upconv2(dec3)
+            dec2 = torch.cat((dec2, enc2), dim=1)
+            dec2 = self.dec2(dec2)
+            dec1 = self.upconv1(dec2)
+            dec1 = torch.cat((dec1, enc1), dim=1)
+            dec1 = self.dec1(dec1)
+    
+            return self.conv_final(dec1)
+
+Step 3: Load and Preprocess the Dataset
+
+We use the torchvision library to load and preprocess the dataset:
+
+.. code:: ipython3
+
+    from torchvision import transforms
+    from torch.utils.data import DataLoader, Dataset
+    from PIL import Image
+    import os
+    import os.path
+    from pathlib import Path
+    
+    # Directory
+    DIR = os.path.join(Path.home(), "data", "pystatml", "dl_Oxford-IIITPet")
+    # <Directory>/images: input images
+    # <Directory>/annotations: corresponding masks
+    
+    
+    class PetDataset(Dataset):
+        def __init__(self, image_dir, mask_dir, transform=None):
+            self.image_dir = image_dir
+            self.mask_dir = mask_dir
+            self.transform = transform
+            self.image_filenames = os.listdir(image_dir)
+    
+        def __len__(self):
+            return len(self.image_filenames)
+    
+        def __getitem__(self, idx):
+            img_path = os.path.join(self.image_dir, self.image_filenames[idx])
+            mask_path = os.path.join(self.mask_dir,
+                                self.image_filenames[idx].replace('.jpg', '.png'))
+            image = Image.open(img_path).convert('RGB')
+            mask = Image.open(mask_path).convert('L')
+    
+            if self.transform:
+                image = self.transform(image)
+                mask = self.transform(mask)
+    
+            return image, mask
+    
+    
+    transform = transforms.Compose([
+        transforms.Resize((128, 128)),
+        transforms.ToTensor()
+    ])
+    
+    dataset = PetDataset(os.path.join(DIR, 'images'),
+                         os.path.join(DIR, 'annotations'), transform=transform)
+    dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
+
+Step 4: Train the U-Net Model
+
+Finally, we will train the U-Net model:
+
+.. code:: ipython3
+
+    import torch.optim as optim
+    
+    model = UNet(in_channels=3, out_channels=1)
+    criterion = nn.BCEWithLogitsLoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    
+    def train(model, dataloader, criterion, optimizer, num_epochs=1):
+        model.train()
+        for epoch in range(num_epochs):
+            for images, masks in dataloader:
+                optimizer.zero_grad()
+                outputs = model(images)
+                loss = criterion(outputs, masks)
+                loss.backward()
+                optimizer.step()
+            print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+    
+    # Do not executer (takes 2H)
+    # train(model, dataloader, criterion, optimizer)
+
+
+
+.. parsed-literal::
+
+    Epoch [1/10], Loss: 0.0414
+    Epoch [2/10], Loss: 0.0438
+    Epoch [3/10], Loss: 0.0430
+    Epoch [4/10], Loss: 0.0402
+    Epoch [5/10], Loss: 0.0449
+    Epoch [6/10], Loss: 0.0430
+    Epoch [7/10], Loss: 0.0438
+    Epoch [8/10], Loss: 0.0433
+    Epoch [9/10], Loss: 0.0440
+    Epoch [10/10], Loss: 0.0453
+
+
+`Save the model and reload the
+model <https://pytorch.org/tutorials/beginner/saving_loading_models.html>`__
+
+.. code:: ipython3
+
+    model_dirname = os.path.join(DIR, "models")
+    model_filename = os.path.join(model_dirname, "unet.pt")
+    os.makedirs(model_dirname, exist_ok=True)
+    
+    torch.save(model.state_dict(), model_filename)
+    model_ = UNet(in_channels=3, out_channels=1)
+    model_.load_state_dict(torch.load(model_filename, weights_only=True))
+    _ = model_.eval()
+
+Visualize the results
+
+.. code:: ipython3
+
+    # Visualize the results
+    def visualize_results(model, dataloader, num_images=3):
+        model.eval()
+        images, masks = next(iter(dataloader))
+        with torch.no_grad():
+            outputs = model(images)
+            outputs = torch.sigmoid(outputs)
+            outputs = outputs.cpu().numpy()
+    
+        images = images.cpu().numpy()
+        masks = masks.cpu().numpy()
+    
+        fig, axes = plt.subplots(num_images, 3, figsize=(10, 10))
+        for i in range(num_images):
+            axes[i, 0].imshow(np.transpose(images[i], (1, 2, 0)))
+            axes[i, 0].set_title('Input Image')
+            axes[i, 0].axis('off')
+    
+            axes[i, 1].imshow(masks[i].squeeze(), cmap='gray')
+            axes[i, 1].set_title('Ground Truth Mask')
+            axes[i, 1].axis('off')
+    
+            axes[i, 2].imshow(outputs[i].squeeze(), cmap='gray')
+            axes[i, 2].set_title('Predicted Mask')
+            axes[i, 2].axis('off')
+    
+        plt.tight_layout()
+        plt.show()
+    
+    visualize_results(model, dataloader)
+
+
+
+.. image:: dl_cnn_cifar10_pytorch_files/dl_cnn_cifar10_pytorch_61_0.png
+
+
+U-Net: Training Image Segmentation Models in PyTorch
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`A simple pytorch implementation of U-net <https://github.com/clemkoa/u-net>`__
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- `The
+  model <https://github.com/clemkoa/u-net/blob/master/unet/unet.py>`__
+- `Train with predefined dataset and
+  dataloader <https://github.com/clemkoa/u-net/blob/master/train.py>`__
+
+`PyTorch - Lung Segmentation using pretrained U-net <https://www.kaggle.com/code/vatsalmavani/pytorch-lung-segmentation-using-pretrained-u-net>`__
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- UNet architecture with pre-trained ResNet34 from
+  `segmentation_models.pytorch <https://github.com/qubvel/segmentation_models.pytorch>`__
+  library which has many inbuilt segmentation architectures with
+  different backbones.
+- Identify “Pneumothorax” or a collapsed lung from chest x-rays.
+- Data Augmentation
+- Train-val Dataset and DataLoader
+- User defined Loss

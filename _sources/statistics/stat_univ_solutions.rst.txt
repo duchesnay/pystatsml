@@ -4,21 +4,21 @@ Univariate statistics solutions
 Estimator of main statistical measures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--  Generate 2 random samples :math:`x \sim N(1.78, 0.1)`,
-   :math:`y \sim N(1.66, 0.1)` both of size 10.
+- Generate 2 random samples :math:`x \sim N(1.78, 0.1)`,
+  :math:`y \sim N(1.66, 0.1)` both of size 10.
 
--  Compute xbar :math:`\bar{x}, \sigma_x, \sigma_{xy}` using only
-   ``np.sum()`` operation. Explore ``np.`` module to find out the numpy
-   functions that does the same computations and compare them (using
-   ``assert``) with your previous results.
+- Compute xbar :math:`\bar{x}, \sigma_x, \sigma_{xy}` using only
+  ``np.sum()`` operation. Explore ``np.`` module to find out the numpy
+  functions that does the same computations and compare them (using
+  ``assert``) with your previous results.
 
 
 One sample t-test
 ~~~~~~~~~~~~~~~~~
 
--  Given the following samples, test whether its true mean is 1.75.
-   Warning, when computing the std or the variance set ddof=1. The
-   default value 0, leads to the biased estimator of the variance.
+- Given the following samples, test whether its true mean is 1.75.
+  Warning, when computing the std or the variance set ddof=1. The
+  default value 0, leads to the biased estimator of the variance.
 
 .. code:: ipython3
 
@@ -37,19 +37,19 @@ One sample t-test
      1.91792128 1.83674347 1.71305256 1.814256  ]
 
 
--  Compute the t-value (tval)
+- Compute the t-value (tval)
 
--  Plot the T(n-1) distribution for 100 tvalues values within [0, 10].
-   Draw P(T(n-1)>tval) ie. color the surface defined by x values larger
-   than tval below the T(n-1). Using the code.
+- Plot the T(n-1) distribution for 100 tvalues values within [0, 10].
+  Draw P(T(n-1)>tval) ie. color the surface defined by x values larger
+  than tval below the T(n-1). Using the code.
 
--  Compute the p-value: P(T(n-1)>tval).
+- Compute the p-value: P(T(n-1)>tval).
 
--  The p-value is one-sided: a two-sided test would test P(T(n-1) >
-   tval) and P(T(n-1) < -tval). What would be the two sided p-value ?
+- The p-value is one-sided: a two-sided test would test P(T(n-1) > tval)
+  and P(T(n-1) < -tval). What would be the two sided p-value ?
 
--  Compare the two-sided p-value with the one obtained by
-   stats.ttest_1samp using ``assert np.allclose(arr1, arr2)``
+- Compare the two-sided p-value with the one obtained by
+  stats.ttest_1samp using ``assert np.allclose(arr1, arr2)``
 
 .. code:: ipython3
 
@@ -85,7 +85,7 @@ One sample t-test
 
 .. parsed-literal::
 
-    <matplotlib.legend.Legend at 0x7f85d5f97790>
+    <matplotlib.legend.Legend at 0x79328de8b380>
 
 
 
@@ -144,15 +144,15 @@ Conclusion ?
 
 .. parsed-literal::
 
-    (0.09031781366853263, 0.21647524185521977)
-    (0.18573328444909917, 0.010504176115208836)
+    PearsonRResult(statistic=np.float64(0.09031781366853263), pvalue=np.float64(0.2164752418551908))
+    PearsonRResult(statistic=np.float64(0.18573328444909917), pvalue=np.float64(0.010504176115207604))
 
 
 
 
 .. parsed-literal::
 
-    [<matplotlib.lines.Line2D at 0x7f85d42e74d0>]
+    [<matplotlib.lines.Line2D at 0x793283cb4a50>]
 
 
 
@@ -168,36 +168,36 @@ Considering the salary and the experience of the salary table.
 
 Compute:
 
--  Estimate the model paramters :math:`\beta, \beta_0` using scipy
-   ``stats.linregress(x,y)``
+- Estimate the model paramters :math:`\beta, \beta_0` using scipy
+  ``stats.linregress(x,y)``
 
--  Compute the predicted values :math:`\hat{y}`
+- Compute the predicted values :math:`\hat{y}`
 
 Compute:
 
--  :math:`\bar{y}`: ``y_mu``
+- :math:`\bar{y}`: ``y_mu``
 
--  :math:`SS_\text{tot}`: ``ss_tot``
+- :math:`SS_\text{tot}`: ``ss_tot``
 
--  :math:`SS_\text{reg}`: ``ss_reg``
+- :math:`SS_\text{reg}`: ``ss_reg``
 
--  :math:`SS_\text{res}`: ``ss_res``
+- :math:`SS_\text{res}`: ``ss_res``
 
--  Check partition of variance formula based on sum of squares by using
-   ``assert np.allclose(val1, val2, atol=1e-05)``
+- Check partition of variance formula based on sum of squares by using
+  ``assert np.allclose(val1, val2, atol=1e-05)``
 
--  Compute :math:`R^2` and compare it with the ``r_value`` above
+- Compute :math:`R^2` and compare it with the ``r_value`` above
 
--  Compute the :math:`F` score
+- Compute the :math:`F` score
 
--  Compute the :math:`p`-value:
+- Compute the :math:`p`-value:
 
--  Plot the :math:`F(1, n)` distribution for 100 :math:`f` values within
-   :math:`[10, 25]`. Draw :math:`P(F(1, n) > F)`, i.e. color the surface
-   defined by the :math:`x` values larger than :math:`F` below the
-   :math:`F(1, n)`.
+- Plot the :math:`F(1, n)` distribution for 100 :math:`f` values within
+  :math:`[10, 25]`. Draw :math:`P(F(1, n) > F)`, i.e. color the surface
+  defined by the :math:`x` values larger than :math:`F` below the
+  :math:`F(1, n)`.
 
--  :math:`P(F(1, n) > F)` is the :math:`p`-value, compute it.
+- :math:`P(F(1, n) > F)` is the :math:`p`-value, compute it.
 
 .. code:: ipython3
 
@@ -286,7 +286,7 @@ Compute:
     
     import sklearn.feature_selection
     #sklearn.feature_selection.f_regression??
-    sklearn.feature_selection.f_regression(x.reshape((n, 1)), y)
+    # sklearn.feature_selection.f_regression(x.reshape((n, 1)), y)
 
 
 .. parsed-literal::
@@ -305,8 +305,8 @@ Compute:
     Dep. Variable:                 salary   R-squared:                       0.290
     Model:                            OLS   Adj. R-squared:                  0.274
     Method:                 Least Squares   F-statistic:                     18.01
-    Date:                Fri, 08 Jan 2021   Prob (F-statistic):           0.000112
-    Time:                        14:12:45   Log-Likelihood:                -445.98
+    Date:                Thu, 03 Apr 2025   Prob (F-statistic):           0.000112
+    Time:                        13:00:38   Log-Likelihood:                -445.98
     No. Observations:                  46   AIC:                             896.0
     Df Residuals:                      44   BIC:                             899.6
     Df Model:                           1                                         
@@ -327,32 +327,8 @@ Compute:
     [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 
 
-::
 
-
-    ---------------------------------------------------------------------------
-
-    AttributeError                            Traceback (most recent call last)
-
-    <ipython-input-5-508b55ecf4f4> in <module>
-         84 import sklearn.feature_selection
-         85 #sklearn.feature_selection.f_regression??
-    ---> 86 sklearn.feature_selection.f_regression(x.reshape((n, 1)), y)
-    
-
-    ~/anaconda3/lib/python3.7/site-packages/pandas/core/generic.py in __getattr__(self, name)
-       5137             if self._info_axis._can_hold_identifiers_and_holds_name(name):
-       5138                 return self[name]
-    -> 5139             return object.__getattribute__(self, name)
-       5140 
-       5141     def __setattr__(self, name: str, value) -> None:
-
-
-    AttributeError: 'Series' object has no attribute 'reshape'
-
-
-
-.. image:: stat_univ_solutions_files/stat_univ_solutions_11_4.png
+.. image:: stat_univ_solutions_files/stat_univ_solutions_11_3.png
 
 
 Multiple regression
@@ -382,9 +358,21 @@ Considering the simulated data used below:
     y = np.dot(X, betastar) + e
     
     # Estimate the parameters
-    Xpinv = scipy.linalg.pinv2(X)
+    Xpinv = scipy.linalg.pinv(X)
     betahat = np.dot(Xpinv, y)
     print("Estimated beta:\n", betahat)
+
+
+.. parsed-literal::
+
+    [[ 1.         -0.1382643   0.64768854  1.52302986]
+     [ 1.         -0.23413696  1.57921282  0.76743473]
+     [ 1.          0.54256004 -0.46341769 -0.46572975]
+     [ 1.         -1.91328024 -1.72491783 -0.56228753]
+     [ 1.          0.31424733 -0.90802408 -1.4123037 ]]
+    Estimated beta:
+     [10.14742501  0.57938106  0.51654653  0.17862194]
+
 
 .. code:: ipython3
 
@@ -403,6 +391,13 @@ Considering the simulated data used below:
     mse = np.sum((y - yhat) ** 2) / N
     print("MSE =", mse)
 
+
+.. parsed-literal::
+
+    (4, 50)
+    MSE = 1.013038927938958
+
+
 Two sample t-test (maths)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -416,19 +411,19 @@ Given the following two sample, test whether their means are equals.
                        1.60,  1.79,  1.73,  1.62,  1.77])
    grp = np.array(["M"] * 10 + ["F"] * 10)
 
--  Compute the means/std-dev per groups.
+- Compute the means/std-dev per groups.
 
--  Compute the :math:`t`-value (standard two sample t-test with equal
-   variances).
+- Compute the :math:`t`-value (standard two sample t-test with equal
+  variances).
 
--  Compute the :math:`p`-value.
+- Compute the :math:`p`-value.
 
--  The :math:`p`-value is one-sided: a two-sided test would test
-   ``P(T > tval)`` and ``P(T < -tval)``. What would the two sided
-   :math:`p`-value be?
+- The :math:`p`-value is one-sided: a two-sided test would test
+  ``P(T > tval)`` and ``P(T < -tval)``. What would the two sided
+  :math:`p`-value be?
 
--  Compare the two-sided :math:`p`-value with the one obtained by
-   ``stats.ttest_ind`` using ``assert np.allclose(arr1, arr2)``.
+- Compare the two-sided :math:`p`-value with the one obtained by
+  ``stats.ttest_ind`` using ``assert np.allclose(arr1, arr2)``.
 
 .. code:: ipython3
 
@@ -470,6 +465,12 @@ Equal variances t-test
     
     assert np.allclose((tval, pval2sided),
                        stats.ttest_ind(x, y, equal_var=True))
+
+
+.. parsed-literal::
+
+    tval=3.55, pval=0.0001
+
 
 Unequal variance (Welch) t-test
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -528,6 +529,19 @@ Unequal variance (Welch) t-test
                  color='b')
 
 
+
+
+
+.. parsed-literal::
+
+    <ErrorbarContainer object of 3 artists>
+
+
+
+
+.. image:: stat_univ_solutions_files/stat_univ_solutions_21_1.png
+
+
 Two sample t-test and random permutation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -542,13 +556,13 @@ Where the noise :math:`\varepsilon \sim N(1, 1)` and
 :math:`g \in \{0, 1\}` is a group indicator variable with 50 ones and 50
 zeros.
 
--  Write a function ``tstat(y, g)`` that compute the two samples t-test
-   of y splited in two groups defined by g.
+- Write a function ``tstat(y, g)`` that compute the two samples t-test
+  of y splited in two groups defined by g.
 
--  Sample the t-statistic distribution under the null hypothesis using
-   random permutations.
+- Sample the t-statistic distribution under the null hypothesis using
+  random permutations.
 
--  Assess the p-value.
+- Assess the p-value.
 
 .. code:: ipython3
 
@@ -580,6 +594,12 @@ zeros.
     
     pval = np.sum(perms >= perms[0]) / len(perms)
     print(pval)
+
+
+.. parsed-literal::
+
+    9.999000099990002e-05
+
 
 Two sample t-test (application)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -626,6 +646,30 @@ Risk Factors Associated with Low Infant Birth Weight:
                           df.bwt[df.smoke == "n"]))
 
 
+
+.. parsed-literal::
+
+                   bwt
+    smoke             
+    n      3055.695652
+    y      2771.918919
+                  bwt
+    smoke            
+    n      752.656607
+    y      659.634867
+    TtestResult(statistic=np.float64(-2.652893303213649), pvalue=np.float64(0.008666726371019074), df=np.float64(187.0))
+
+
+.. parsed-literal::
+
+    /tmp/ipykernel_217042/1860827555.py:19: FutureWarning: Use "auto" to set automatic grayscale colors. From v0.14.0, "gray" will default to matplotlib's definition.
+      ax = sns.swarmplot(x="smoke", y="bwt", data=df,
+
+
+
+.. image:: stat_univ_solutions_files/stat_univ_solutions_25_2.png
+
+
 Univariate associations (developpement)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -657,10 +701,10 @@ ANOVA
 
 Perform an ANOVA dataset described bellow
 
--  Compute between and within variances
--  Compute :math:`F`-value: ``fval``
--  Compare the :math:`p`-value with the one obtained by
-   ``stats.f_oneway`` using ``assert np.allclose(arr1, arr2)``
+- Compute between and within variances
+- Compute :math:`F`-value: ``fval``
+- Compare the :math:`p`-value with the one obtained by
+  ``stats.f_oneway`` using ``assert np.allclose(arr1, arr2)``
 
 .. code:: ipython3
 
@@ -703,7 +747,5 @@ Perform an ANOVA dataset described bellow
     
     assert np.allclose((fval, pval),
                        stats.f_oneway(y[label == 0], y[label == 1], y[label == 2]))
-
-
 
 

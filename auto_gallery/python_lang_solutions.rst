@@ -10,8 +10,8 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_gallery_python_lang_solutions.py>`
-        to download the full example code
+        :ref:`Go to the end <sphx_glr_download_auto_gallery_python_lang_solutions.py>`
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -36,7 +36,7 @@ message
 
 .. GENERATED FROM PYTHON SOURCE LINES 18-46
 
-.. code-block:: default
+.. code-block:: Python
 
 
     def calc(a, b, op='add'):
@@ -72,8 +72,6 @@ message
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     valid operations are add and sub
@@ -98,7 +96,7 @@ returns ``[1, 2, 3]``
 
 .. GENERATED FROM PYTHON SOURCE LINES 58-87
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -135,8 +133,6 @@ returns ``[1, 2, 3]``
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -162,9 +158,9 @@ Use:
 - regular expression
 - argparse (https://docs.python.org/3/howto/argparse.html)
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-174
+.. GENERATED FROM PYTHON SOURCE LINES 103-179
 
-.. code-block:: default
+.. code-block:: Python
 
 
 
@@ -208,16 +204,21 @@ Use:
     fd.write(bsd_4clause)
     fd.close()
 
+
     fd = open(tmpfilename, "r")
 
     count = dict()
-    for line in fd:
+    count = {}
+
+    for line in fd:    
         line = line.lower()
         for word in line.split():
             if not word in count:
                 count[word] = 1
             else:
                 count[word] += 1
+
+    fd.close()
 
     print(count)
 
@@ -243,8 +244,6 @@ Use:
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     {'copyright': 3, '(c)': 1, '<year>,': 1, '<copyright': 3, 'holder>': 3, 'all': 2, 'rights': 1, 'reserved.': 1, 'redistribution': 1, 'and': 7, 'use': 3, 'in': 6, 'source': 2, 'binary': 2, 'forms,': 1, 'with': 2, 'or': 10, 'without': 2, 'modification,': 1, 'are': 3, 'permitted': 1, 'provided': 3, 'that': 1, 'the': 15, 'following': 4, 'conditions': 3, 'met:': 1, '1.': 1, 'redistributions': 2, 'of': 14, 'code': 1, 'must': 3, 'retain': 1, 'above': 2, 'notice,': 2, 'this': 7, 'list': 2, 'disclaimer.': 1, '2.': 1, 'form': 1, 'reproduce': 1, 'disclaimer': 1, 'documentation': 1, 'and/or': 1, 'other': 1, 'materials': 2, 'distribution.': 1, '3.': 1, 'advertising': 1, 'mentioning': 1, 'features': 1, 'software': 4, 'display': 1, 'acknowledgement:': 1, 'product': 1, 'includes': 1, 'developed': 1, 'by': 2, '<organization>.': 1, '4.': 1, 'neither': 1, 'name': 1, '<organization>': 1, 'nor': 1, 'names': 1, 'its': 1, 'contributors': 1, 'may': 1, 'be': 2, 'used': 1, 'to': 1, 'endorse': 1, 'promote': 1, 'products': 1, 'derived': 1, 'from': 1, 'specific': 1, 'prior': 1, 'written': 1, 'permission.': 1, 'is': 1, "''as": 1, "is''": 1, 'any': 4, 'express': 1, 'implied': 2, 'warranties,': 1, 'including,': 1, 'but': 2, 'not': 2, 'limited': 2, 'to,': 2, 'warranties': 1, 'merchantability': 1, 'fitness': 1, 'for': 2, 'a': 1, 'particular': 1, 'purpose': 1, 'disclaimed.': 1, 'no': 1, 'event': 1, 'shall': 1, 'liable': 1, 'direct,': 1, 'indirect,': 1, 'incidental,': 1, 'special,': 1, 'exemplary,': 1, 'consequential': 1, 'damages': 1, '(including,': 1, 'procurement': 1, 'substitute': 1, 'goods': 1, 'services;': 1, 'loss': 1, 'use,': 1, 'data,': 1, 'profits;': 1, 'business': 1, 'interruption)': 1, 'however': 1, 'caused': 1, 'on': 1, 'theory': 1, 'liability,': 2, 'whether': 1, 'contract,': 1, 'strict': 1, 'tort': 1, '(including': 1, 'negligence': 1, 'otherwise)': 1, 'arising': 1, 'way': 1, 'out': 1, 'software,': 1, 'even': 1, 'if': 1, 'advised': 1, 'possibility': 1, 'such': 1, 'damage.': 1}
@@ -253,7 +252,7 @@ Use:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-194
+.. GENERATED FROM PYTHON SOURCE LINES 180-199
 
 Exercise 4: OOP
 ~~~~~~~~~~~~~~~
@@ -275,9 +274,9 @@ Exercise 4: OOP
 
 5. Compute the average salary
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-228
+.. GENERATED FROM PYTHON SOURCE LINES 199-233
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import pandas as pd
@@ -319,8 +318,6 @@ Exercise 4: OOP
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -331,28 +328,26 @@ Exercise 4: OOP
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.179 seconds)
+   **Total running time of the script:** (0 minutes 0.182 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_python_lang_solutions.py:
 
+.. only:: html
 
-.. only :: html
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
+      :download:`Download Jupyter notebook: python_lang_solutions.ipynb <python_lang_solutions.ipynb>`
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: python_lang_solutions.py <python_lang_solutions.py>`
 
-     :download:`Download Python source code: python_lang_solutions.py <python_lang_solutions.py>`
+    .. container:: sphx-glr-download sphx-glr-download-zip
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: python_lang_solutions.ipynb <python_lang_solutions.ipynb>`
+      :download:`Download zipped: python_lang_solutions.zip <python_lang_solutions.zip>`
 
 
 .. only:: html

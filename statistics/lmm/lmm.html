@@ -1,35 +1,35 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Linear Mixed Models &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
+    <title>Linear Mixed Models &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
           href="../../_static/opensearch.xml"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Multivariate statistics" href="../stat_multiv.html" />
-    <link rel="prev" title="Lab: Brain volumes study" href="../../auto_gallery/stat_univ_lab_brain-volume.html" />
+    <link rel="next" title="Multivariate Statistics" href="../stat_multiv.html" />
+    <link rel="prev" title="Hands-On: Brain volumes study" href="../../auto_gallery/stat_univ_lab_brain-volume.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -42,14 +42,14 @@
           <div class="body" role="main">
             
   <section id="linear-mixed-models">
-<h1>Linear Mixed Models<a class="headerlink" href="#linear-mixed-models" title="Permalink to this headline">¶</a></h1>
+<h1>Linear Mixed Models<a class="headerlink" href="#linear-mixed-models" title="Link to this heading">¶</a></h1>
 <p><strong>Acknowledgements</strong>: Firstly, it’s right to pay thanks to the blogs and
 sources I have used in writing this tutorial. Many parts of the text are
 quoted from the brillant book from Brady T. West, Kathleen B. Welch and
 Andrzej T. Galecki, see [Brady et al. 2014] in the references section
 below.</p>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p><em>Quoted from [Brady et al. 2014]</em>:A linear mixed model (LMM) is a
 parametric linear model for <strong>clustered, longitudinal, or
 repeated-measures</strong> data that quantifies the relationships between a
@@ -63,7 +63,7 @@ for an entire population, random effects are specific to clusters or
 subjects within a population. LMM is closely related with hierarchical
 linear model (HLM).</p>
 <section id="clustered-structured-datasets">
-<h3>Clustered/structured datasets<a class="headerlink" href="#clustered-structured-datasets" title="Permalink to this headline">¶</a></h3>
+<h3>Clustered/structured datasets<a class="headerlink" href="#clustered-structured-datasets" title="Link to this heading">¶</a></h3>
 <p><em>Quoted from [Bruin 2006]</em>: Random effects, are used when there is non
 independence in the data, such as arises from a hierarchical structure
 with clustered data. For example, students could be sampled from within
@@ -85,7 +85,7 @@ measured repeatedly over time or under different conditions.</p></li>
 </ol>
 </section>
 <section id="mixed-effects-fixed-random-effects">
-<h3>Mixed effects = fixed + random effects<a class="headerlink" href="#mixed-effects-fixed-random-effects" title="Permalink to this headline">¶</a></h3>
+<h3>Mixed effects = fixed + random effects<a class="headerlink" href="#mixed-effects-fixed-random-effects" title="Link to this heading">¶</a></h3>
 <p><strong>Fixed effects</strong> may be associated with continuous covariates, such as
 weight, baseline test score, or socioeconomic status, which take on
 values from a continuous (or sometimes a multivalued ordinal) range, or
@@ -95,6 +95,22 @@ continuous covariates or the levels of categorical factors in an LMM.
 Estimation of these parameters in LMMs is generally of intrinsic
 interest, because they indicate the relationships of the covariates with
 the continuous outcome variable.</p>
+<p>Example: Suppose we want to study the relationship between the height of
+individuals and their gender. We will: sample individuals in a
+population (first source of randomness), measure their height (second
+source of randomness), and consider their gender (fixed for a given
+individual). Finally, these measures are modeled in the following linear
+model:</p>
+<div class="math notranslate nohighlight">
+\[\text{height}_i = \beta_0 + \beta_1 \text{gender}_i + \varepsilon_i\]</div>
+<ul class="simple">
+<li><p>height: is the quantitative dependant (outcome, prediction) variable,</p></li>
+<li><p>gender: is an independant factor. It is known for a given individual.
+It is assumed that is has the same effect on all sampled individuals.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\varepsilon\)</span> is the noise. The sampling and measurement hazards
+are confounded at the individual level in this random variable. It is
+a random effect at the individual level.</p></li>
+</ul>
 <p><strong>Random effect</strong> When the levels of a factor can be thought of as
 having been sampled from a sample space, such that each particular level
 is not of intrinsic interest (e.g., classrooms or clinics that are
@@ -104,10 +120,29 @@ random effects in an LMM. In contrast to fixed effects, which are
 represented by constant parameters in an LMM, random effects are
 represented by (unobserved) random variables, which are usually assumed
 to follow a normal distribution.</p>
+<p>Example: Suppose now that we want to study the same effect on a global
+scale but by randomly sampling countries (<span class="math notranslate nohighlight">\(j\)</span>) and then
+individuals (<span class="math notranslate nohighlight">\(i\)</span>) in these countries. The model will be the
+following:</p>
+<div class="math notranslate nohighlight">
+\[\text{height}_{ij} = \beta_0 + \beta_1 \text{gender}_{ij} + u_j \text{country}_{ij} + \varepsilon_{ij}\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\text{country}_{ij} =\)</span> {<span class="math notranslate nohighlight">\(1\)</span> if individual <span class="math notranslate nohighlight">\(i\)</span>
+belongs to country <span class="math notranslate nohighlight">\(j\)</span>, <span class="math notranslate nohighlight">\(0\)</span> otherwise}, is an independant
+random factor which has three important properties:</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>has been <strong>sampled</strong> (third source of randomness)</p></li>
+<li><p><strong>is not of interest</strong></p></li>
+<li><p>creates <strong>clusters</strong> of indivuduals within the same country whose
+heights is likely to be <strong>correlated</strong>. <span class="math notranslate nohighlight">\(u_j\)</span> will be the
+random effect associated to country <span class="math notranslate nohighlight">\(j\)</span>. It can be modeled as a
+random country-specific shift in height, a.k.a. a random intercept.</p></li>
+</ol>
 </section>
 </section>
 <section id="random-intercept">
-<h2>Random intercept<a class="headerlink" href="#random-intercept" title="Permalink to this headline">¶</a></h2>
+<h2>Random intercept<a class="headerlink" href="#random-intercept" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">score_parentedu_byclass</span></code> dataset measure a <code class="docutils literal notranslate"><span class="pre">score</span></code> obtained by
 60 students, indexed by <span class="math notranslate nohighlight">\(i\)</span>, within 3 <code class="docutils literal notranslate"><span class="pre">classroom</span></code> (with
 different teacher), indexed by <span class="math notranslate nohighlight">\(j\)</span>, given the education level
@@ -119,18 +154,18 @@ classroom or teacher effect. There is an <strong>intercept</strong> for each
 classroom. But this effect is not known given a student (unlike the age
 or the sex), it is a consequence of a random sampling of the classrooms.
 It is called a <strong>random intercept</strong>.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
-<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
 
-<span class="kn">from</span> <span class="nn">stat_lmm_utils</span> <span class="kn">import</span> <span class="n">rmse_coef_tstat_pval</span>
-<span class="kn">from</span> <span class="nn">stat_lmm_utils</span> <span class="kn">import</span> <span class="n">plot_lm_diagnosis</span>
-<span class="kn">from</span> <span class="nn">stat_lmm_utils</span> <span class="kn">import</span> <span class="n">plot_ancova_oneslope_grpintercept</span>
-<span class="kn">from</span> <span class="nn">stat_lmm_utils</span> <span class="kn">import</span> <span class="n">plot_lmm_oneslope_randintercept</span>
-<span class="kn">from</span> <span class="nn">stat_lmm_utils</span> <span class="kn">import</span> <span class="n">plot_ancova_fullmodel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stat_lmm_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rmse_coef_tstat_pval</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stat_lmm_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_lm_diagnosis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stat_lmm_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_ancova_oneslope_grpintercept</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stat_lmm_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_lmm_oneslope_randintercept</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">stat_lmm_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_ancova_fullmodel</span>
 
 <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Model&quot;</span><span class="p">,</span> <span class="s2">&quot;RMSE&quot;</span><span class="p">,</span> <span class="s2">&quot;Coef&quot;</span><span class="p">,</span> <span class="s2">&quot;Stat&quot;</span><span class="p">,</span> <span class="s2">&quot;Pval&quot;</span><span class="p">])</span>
 
@@ -149,7 +184,7 @@ It is called a <strong>random intercept</strong>.</p>
 </div>
 <img alt="../../_images/lmm_2_1.png" src="../../_images/lmm_2_1.png" />
 <section id="global-fixed-effect">
-<h3>Global fixed effect<a class="headerlink" href="#global-fixed-effect" title="Permalink to this headline">¶</a></h3>
+<h3>Global fixed effect<a class="headerlink" href="#global-fixed-effect" title="Link to this heading">¶</a></h3>
 <p><strong>Global effect</strong> regresses the the independant variable <span class="math notranslate nohighlight">\(y=\)</span>
 <code class="docutils literal notranslate"><span class="pre">score</span></code> on the dependant variable <span class="math notranslate nohighlight">\(x=\)</span> <code class="docutils literal notranslate"><span class="pre">edu</span></code> without
 considering the any classroom effect. For each individual <span class="math notranslate nohighlight">\(i\)</span> the
@@ -159,14 +194,15 @@ model is:</p>
 <p>where, <span class="math notranslate nohighlight">\(\beta_0\)</span> is the global intercept, <span class="math notranslate nohighlight">\(\beta_1\)</span> is the
 slope associated with <code class="docutils literal notranslate"><span class="pre">edu</span></code> and <span class="math notranslate nohighlight">\(\varepsilon_{ij}\)</span> is the random
 error at the individual level. Note that the classeroom, <span class="math notranslate nohighlight">\(j\)</span> index
-is not taken into account by the model.</p>
+is not taken into account by the model and could be removed from the
+equation.</p>
 <p>The general R formula is: <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">~</span> <span class="pre">x</span></code> which in this case is
 <code class="docutils literal notranslate"><span class="pre">score</span> <span class="pre">~</span> <span class="pre">edu</span></code>. This model is:</p>
 <ul class="simple">
 <li><p><strong>Not sensitive</strong> since it does not model the classroom effect (high
 standard error).</p></li>
-<li><p><strong>Wrong</strong> because, residuals are not normals, and it considers
-samples from the same classroom to be indenpendant.</p></li>
+<li><p><strong>Wrong</strong> because, residuals are not normals, and it considers samples
+from the same classroom to be indenpendant.</p></li>
 </ul>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lm_glob</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;score ~ edu&#39;</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 
@@ -200,7 +236,7 @@ prediction.</p>
 <img alt="../../_images/lmm_8_0.png" src="../../_images/lmm_8_0.png" />
 </section>
 <section id="model-a-classroom-intercept-as-a-fixed-effect-ancova">
-<h3>Model a classroom intercept as a fixed effect: ANCOVA<a class="headerlink" href="#model-a-classroom-intercept-as-a-fixed-effect-ancova" title="Permalink to this headline">¶</a></h3>
+<h3>Model a classroom intercept as a fixed effect: ANCOVA<a class="headerlink" href="#model-a-classroom-intercept-as-a-fixed-effect-ancova" title="Link to this heading">¶</a></h3>
 <p>Remember ANCOVA = ANOVA with covariates. Model the classroom <span class="math notranslate nohighlight">\(z=\)</span>
 <code class="docutils literal notranslate"><span class="pre">classroom</span></code> (as a fixed effect), ie a vertical shift for each
 classroom. The slope is the same for all classrooms. For each individual
@@ -290,7 +326,7 @@ country.</p></li>
 <span class="n">classroom</span><span class="p">[</span><span class="n">T</span><span class="o">.</span><span class="n">c2</span><span class="p">]</span>    <span class="mf">6.129755</span>
 <span class="n">edu</span>                <span class="mf">0.130717</span>
 <span class="n">dtype</span><span class="p">:</span> <span class="n">float64</span>
-<span class="n">MSE</span> <span class="mf">0.869278</span> <span class="ow">or</span> <span class="mf">0.869277616553041</span>
+<span class="n">MSE</span> <span class="mf">0.869278</span> <span class="ow">or</span> <span class="mf">0.8692776165530408</span>
 <span class="c1">## Statistics:</span>
 <span class="n">Intercept</span>          <span class="mf">24.474487</span>
 <span class="n">classroom</span><span class="p">[</span><span class="n">T</span><span class="o">.</span><span class="n">c1</span><span class="p">]</span>     <span class="mf">8.736851</span>
@@ -326,7 +362,7 @@ independant. Measures between top level units are independant.</p>
 One simple approach is to aggregate.</p>
 </section>
 <section id="aggregation-of-data-into-independent-units">
-<h3>Aggregation of data into independent units<a class="headerlink" href="#aggregation-of-data-into-independent-units" title="Permalink to this headline">¶</a></h3>
+<h3>Aggregation of data into independent units<a class="headerlink" href="#aggregation-of-data-into-independent-units" title="Link to this heading">¶</a></h3>
 <p>Aggregation of measure at classroom level: average all values within
 classrooms to perform statistical analysis between classroom. 1. <strong>Level
 1 (within unit)</strong>: Average by classrom:</p>
@@ -345,8 +381,8 @@ a averaged <code class="docutils literal notranslate"><span class="pre">edu</spa
 <ul class="simple">
 <li><p><strong>Correct</strong> because the aggregated data are independent.</p></li>
 <li><p><strong>Not sensitive</strong> since all the within classroom association between
-edu and is lost. Moreover, at the aggregate level, there would only
-be three data points.</p></li>
+edu and is lost. Moreover, at the aggregate level, there would only be
+three data points.</p></li>
 </ul>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">agregate</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;classroom&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 <span class="n">lm_agregate</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s1">&#39;score ~ edu&#39;</span><span class="p">,</span> <span class="n">agregate</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
@@ -388,7 +424,7 @@ be three data points.</p></li>
 <img alt="../../_images/lmm_21_1.png" src="../../_images/lmm_21_1.png" />
 </section>
 <section id="hierarchical-multilevel-modeling">
-<h3>Hierarchical/multilevel modeling<a class="headerlink" href="#hierarchical-multilevel-modeling" title="Permalink to this headline">¶</a></h3>
+<h3>Hierarchical/multilevel modeling<a class="headerlink" href="#hierarchical-multilevel-modeling" title="Link to this heading">¶</a></h3>
 <p>Another approach to hierarchical data is analyzing data from one unit at
 a time. Thus, we run three separate linear regressions - one for each
 classroom in the sample leading to three estimated parameters of the
@@ -414,9 +450,9 @@ the classrooms:</p>
 <li><p><strong>Correct</strong> because the invidividual estimated parameters are
 independent.</p></li>
 <li><p><strong>sensitive</strong> since it allows to model differents slope for each
-classroom (see fixed interaction or random slope below). But it is
-but <strong>not optimally designed</strong> since there are many models, and each
-one does not take advantage of the information in data from other
+classroom (see fixed interaction or random slope below). But it is but
+<strong>not optimally designed</strong> since there are many models, and each one
+does not take advantage of the information in data from other
 classroom. This can also make the results “noisy” in that the
 estimates from each model are not based on very much data</p></li>
 </ul>
@@ -468,7 +504,7 @@ estimates from each model are not based on very much data</p></li>
 <img alt="../../_images/lmm_25_0.png" src="../../_images/lmm_25_0.png" />
 </section>
 <section id="model-the-classroom-random-intercept-linear-mixed-model">
-<h3>Model the classroom random intercept: linear mixed model<a class="headerlink" href="#model-the-classroom-random-intercept-linear-mixed-model" title="Permalink to this headline">¶</a></h3>
+<h3>Model the classroom random intercept: linear mixed model<a class="headerlink" href="#model-the-classroom-random-intercept-linear-mixed-model" title="Link to this heading">¶</a></h3>
 <p>Linear mixed models (also called multilevel models) can be thought of as
 a trade off between these two alternatives. The individual regressions
 has many estimates and lots of data, but is noisy. The aggregate is less
@@ -539,18 +575,24 @@ factor <code class="docutils literal notranslate"><span class="pre">|classroom</
                                 <span class="n">group</span><span class="o">=</span><span class="s1">&#39;classroom&#39;</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">lmm_inter</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../../_images/lmm_31_0.png" src="../../_images/lmm_31_0.png" />
+<pre class="literal-block">/home/ed203246/git/pystatsml/statistics/lmm/stat_lmm_utils.py:122: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use <cite>ser.iloc[pos]</cite>
+  group_offset = model.random_effects[group_lab][0]
+/home/ed203246/git/pystatsml/statistics/lmm/stat_lmm_utils.py:122: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use <cite>ser.iloc[pos]</cite>
+  group_offset = model.random_effects[group_lab][0]
+/home/ed203246/git/pystatsml/statistics/lmm/stat_lmm_utils.py:122: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use <cite>ser.iloc[pos]</cite>
+  group_offset = model.random_effects[group_lab][0]</pre>
+<img alt="../../_images/lmm_31_1.png" src="../../_images/lmm_31_1.png" />
 </section>
 </section>
 <section id="random-slope">
-<h2>Random slope<a class="headerlink" href="#random-slope" title="Permalink to this headline">¶</a></h2>
+<h2>Random slope<a class="headerlink" href="#random-slope" title="Link to this heading">¶</a></h2>
 <p>Now suppose that the classroom random effect is not just a vertical
 shift (random intercept) but that some teachers “compensate” or
 “amplify” educational disparity. The slope of the linear relation
 between score and edu for teachers that amplify will be larger. In the
 contrary, it will be smaller for teachers that compensate.</p>
-<section id="model-the-classroom-intercept-and-slode-as-a-fixed-effect-ancova-with-interactions">
-<h3>Model the classroom intercept and slode as a fixed effect: ANCOVA with interactions<a class="headerlink" href="#model-the-classroom-intercept-and-slode-as-a-fixed-effect-ancova-with-interactions" title="Permalink to this headline">¶</a></h3>
+<section id="model-the-classroom-intercept-and-slope-as-a-fixed-effect-ancova-with-interactions">
+<h3>Model the classroom intercept and slope as a fixed effect: ANCOVA with interactions<a class="headerlink" href="#model-the-classroom-intercept-and-slope-as-a-fixed-effect-ancova-with-interactions" title="Link to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Model the global association between <code class="docutils literal notranslate"><span class="pre">edu</span></code> and <code class="docutils literal notranslate"><span class="pre">score</span></code>:
 <span class="math notranslate nohighlight">\(y_{ij} = \beta_0 + \beta_1 x_{ij}\)</span>, in R: <code class="docutils literal notranslate"><span class="pre">score</span> <span class="pre">~</span> <span class="pre">edu</span></code>.</p></li>
@@ -617,7 +659,7 @@ model’s prediction that account different slopes.</p>
 <img alt="../../_images/lmm_36_1.png" src="../../_images/lmm_36_1.png" />
 </section>
 <section id="model-the-classroom-random-intercept-and-slope-with-lmm">
-<h3>Model the classroom random intercept and slope with LMM<a class="headerlink" href="#model-the-classroom-random-intercept-and-slope-with-lmm" title="Permalink to this headline">¶</a></h3>
+<h3>Model the classroom random intercept and slope with LMM<a class="headerlink" href="#model-the-classroom-random-intercept-and-slope-with-lmm" title="Link to this heading">¶</a></h3>
 <p>The model looks similar to the ANCOVA with interactions:</p>
 <div class="math notranslate nohighlight">
 \[y_{ij} = \beta_0 + \beta_1 x_{ij} + u^1_j z_{ij} + u^\alpha_j z_{ij} x_{ij} + \varepsilon_{ij},\]</div>
@@ -658,19 +700,19 @@ since the groups is provided by the <code class="docutils literal notranslate"><
 <span class="o">---------------------------------------------------------</span>
 <span class="n">Intercept</span>        <span class="mf">9.900</span>    <span class="mf">1.912</span> <span class="mf">5.177</span> <span class="mf">0.000</span>  <span class="mf">6.152</span> <span class="mf">13.647</span>
 <span class="n">edu</span>              <span class="mf">0.127</span>    <span class="mf">0.046</span> <span class="mf">2.757</span> <span class="mf">0.006</span>  <span class="mf">0.037</span>  <span class="mf">0.218</span>
-<span class="n">Group</span> <span class="n">Var</span>       <span class="mf">10.760</span>   <span class="mf">12.279</span>
+<span class="n">Group</span> <span class="n">Var</span>       <span class="mf">10.760</span>   <span class="mf">12.278</span>
 <span class="n">Group</span> <span class="n">x</span> <span class="n">edu</span> <span class="n">Cov</span> <span class="o">-</span><span class="mf">0.121</span>    <span class="mf">0.318</span>
 <span class="n">edu</span> <span class="n">Var</span>          <span class="mf">0.001</span>    <span class="mf">0.012</span>
 <span class="o">=========================================================</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">base</span><span class="o">/</span><span class="n">model</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">566</span><span class="p">:</span> <span class="n">ConvergenceWarning</span><span class="p">:</span> <span class="n">Maximum</span> <span class="n">Likelihood</span> <span class="n">optimization</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">converge</span><span class="o">.</span> <span class="n">Check</span> <span class="n">mle_retvals</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">pystatsml</span><span class="o">/.</span><span class="n">pixi</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.13</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">base</span><span class="o">/</span><span class="n">model</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">607</span><span class="p">:</span> <span class="n">ConvergenceWarning</span><span class="p">:</span> <span class="n">Maximum</span> <span class="n">Likelihood</span> <span class="n">optimization</span> <span class="n">failed</span> <span class="n">to</span> <span class="n">converge</span><span class="o">.</span> <span class="n">Check</span> <span class="n">mle_retvals</span>
   <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Maximum Likelihood optimization failed to &quot;</span>
-<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">regression</span><span class="o">/</span><span class="n">mixed_linear_model</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">2200</span><span class="p">:</span> <span class="n">ConvergenceWarning</span><span class="p">:</span> <span class="n">Retrying</span> <span class="n">MixedLM</span> <span class="n">optimization</span> <span class="k">with</span> <span class="n">lbfgs</span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">pystatsml</span><span class="o">/.</span><span class="n">pixi</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.13</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">regression</span><span class="o">/</span><span class="n">mixed_linear_model</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">2200</span><span class="p">:</span> <span class="n">ConvergenceWarning</span><span class="p">:</span> <span class="n">Retrying</span> <span class="n">MixedLM</span> <span class="n">optimization</span> <span class="k">with</span> <span class="n">lbfgs</span>
   <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">regression</span><span class="o">/</span><span class="n">mixed_linear_model</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">1634</span><span class="p">:</span> <span class="ne">UserWarning</span><span class="p">:</span> <span class="n">Random</span> <span class="n">effects</span> <span class="n">covariance</span> <span class="ow">is</span> <span class="n">singular</span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">pystatsml</span><span class="o">/.</span><span class="n">pixi</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.13</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">regression</span><span class="o">/</span><span class="n">mixed_linear_model</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">1634</span><span class="p">:</span> <span class="ne">UserWarning</span><span class="p">:</span> <span class="n">Random</span> <span class="n">effects</span> <span class="n">covariance</span> <span class="ow">is</span> <span class="n">singular</span>
   <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">regression</span><span class="o">/</span><span class="n">mixed_linear_model</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">2237</span><span class="p">:</span> <span class="n">ConvergenceWarning</span><span class="p">:</span> <span class="n">The</span> <span class="n">MLE</span> <span class="n">may</span> <span class="n">be</span> <span class="n">on</span> <span class="n">the</span> <span class="n">boundary</span> <span class="n">of</span> <span class="n">the</span> <span class="n">parameter</span> <span class="n">space</span><span class="o">.</span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">pystatsml</span><span class="o">/.</span><span class="n">pixi</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.13</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">statsmodels</span><span class="o">/</span><span class="n">regression</span><span class="o">/</span><span class="n">mixed_linear_model</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">2237</span><span class="p">:</span> <span class="n">ConvergenceWarning</span><span class="p">:</span> <span class="n">The</span> <span class="n">MLE</span> <span class="n">may</span> <span class="n">be</span> <span class="n">on</span> <span class="n">the</span> <span class="n">boundary</span> <span class="n">of</span> <span class="n">the</span> <span class="n">parameter</span> <span class="n">space</span><span class="o">.</span>
   <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">ConvergenceWarning</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -680,7 +722,7 @@ we should considere to remove random slopes.</p>
 </section>
 </section>
 <section id="conclusion-on-modeling-random-effects">
-<h2>Conclusion on modeling random effects<a class="headerlink" href="#conclusion-on-modeling-random-effects" title="Permalink to this headline">¶</a></h2>
+<h2>Conclusion on modeling random effects<a class="headerlink" href="#conclusion-on-modeling-random-effects" title="Link to this heading">¶</a></h2>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -691,7 +733,7 @@ we should considere to remove random slopes.</p>
 <span class="mi">3</span>           <span class="n">Hierarchical</span>  <span class="mf">0.061318</span>  <span class="mf">0.120808</span>  <span class="mf">3.412469</span>  <span class="mf">0.076190</span>
 <span class="mi">4</span>              <span class="n">LMM</span><span class="o">-</span><span class="n">Inter</span>  <span class="mf">0.916211</span>  <span class="mf">0.131193</span>  <span class="mf">3.453472</span>  <span class="mf">0.000553</span>
 <span class="mi">5</span>   <span class="n">ANCOVA</span><span class="o">-</span><span class="n">Full</span> <span class="p">(</span><span class="n">biased</span><span class="p">)</span>  <span class="mf">0.935869</span>  <span class="mf">0.129084</span>  <span class="mf">1.978708</span>  <span class="mf">0.052959</span>
-<span class="mi">6</span>      <span class="n">LMM</span><span class="o">-</span><span class="n">Full</span> <span class="p">(</span><span class="n">biased</span><span class="p">)</span>  <span class="mf">0.911742</span>  <span class="mf">0.127269</span>  <span class="mf">2.756917</span>  <span class="mf">0.005835</span>
+<span class="mi">6</span>      <span class="n">LMM</span><span class="o">-</span><span class="n">Full</span> <span class="p">(</span><span class="n">biased</span><span class="p">)</span>  <span class="mf">0.911742</span>  <span class="mf">0.127270</span>  <span class="mf">2.757142</span>  <span class="mf">0.005831</span>
 </pre></div>
 </div>
 <p><strong>Random intercepts</strong></p>
@@ -701,8 +743,9 @@ large error (RMSE, Root Mean Square Error) since it does not adjust
 for classroom effect.</p></li>
 <li><p>ANCOVA-Inter is “wrong” (consider residuals to be independent) but it
 has a small error since it adjusts for classroom effect.</p></li>
-<li><p>Aggregation is ok (units average are independent) but it has a very
-large error.</p></li>
+<li><p>Aggregation is ok (units average are independent) but it looses a lot
+of degrees of freedom (df = 2 = 3 classroom - 1 intercept) and a lot
+of informations.</p></li>
 <li><p>Hierarchical model is ok (unit average are independent) and it has a
 reasonable error (look at the statistic, not the RMSE).</p></li>
 <li><p>LMM-Inter (with random intercept) is ok (it models residuals
@@ -720,7 +763,7 @@ classroom) do not significantly improve the fit of the model (see
 errors).</p>
 </section>
 <section id="theory-of-linear-mixed-models">
-<h2>Theory of Linear Mixed Models<a class="headerlink" href="#theory-of-linear-mixed-models" title="Permalink to this headline">¶</a></h2>
+<h2>Theory of Linear Mixed Models<a class="headerlink" href="#theory-of-linear-mixed-models" title="Link to this heading">¶</a></h2>
 <p>If we consider only 6 samples (<span class="math notranslate nohighlight">\(i \in \{1, 6\}\)</span>, two sample for
 each classroom <span class="math notranslate nohighlight">\(j \in\)</span> {c0, c1, c2}) and the random intercept
 model. Stacking the 6 observations, the equation
@@ -751,14 +794,14 @@ gives :</p>
   0 &amp; 0 &amp; 1 \\
   0 &amp; 0 &amp; 1 \\
   \end{bmatrix}
-  \begin{bmatrix} \text{Rand} \\ u_{11} \\ u_{12} \\ u_{13} \end{bmatrix}
+  \begin{bmatrix} \text{Rand} \\ u_{1} \\ u_{2} \\ u_{3} \end{bmatrix}
   +
-  \begin{bmatrix}\text{Err}\\ \epsilon_1 \\ \epsilon_2 \end{bmatrix}\end{split}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mathbf{u_1} = u_{11}, u_{12}, u_{12}\)</span> are the 3 parameters
+  \begin{bmatrix}\text{Err}\\ \epsilon_1 \\ \epsilon_2 \\ \epsilon_3 \\ \epsilon_4 \\ \epsilon_5 \\ \epsilon_6\end{bmatrix}\end{split}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{u_1} = u_{1}, u_{2}, u_{3}\)</span> are the 3 parameters
 associated with the 3 level of the single random factor <code class="docutils literal notranslate"><span class="pre">classroom</span></code>.</p>
 <p>This can be re-written in a more general form as:</p>
 <div class="math notranslate nohighlight">
-\[\mathbf{y} = \mathbf{X}^T\mathbf{\beta} + \mathbf{Z}^T\mathbf{u} + \mathbf{\varepsilon},\]</div>
+\[\mathbf{y} = \mathbf{X}\mathbf{\beta} + \mathbf{Z}\mathbf{u} + \mathbf{\varepsilon},\]</div>
 <p>where: - <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> is the <span class="math notranslate nohighlight">\(N \times 1\)</span> vector of the
 <span class="math notranslate nohighlight">\(N\)</span> observations. - <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is the <span class="math notranslate nohighlight">\(N \times P\)</span>
 design matrix, which represents the known values of the <span class="math notranslate nohighlight">\(P\)</span>
@@ -792,7 +835,7 @@ correlation between observation within unit stem from mixed effects, and
 will be encoded in the <span class="math notranslate nohighlight">\(\mathbf{D}\)</span> below. However, other model
 exists: popular models are the compound symmetry and first-order
 autoregressive structure, denoted by AR(1).</p>
-<p><strong>Covariance structures associated with the mixed effect</strong></p>
+<p><strong>Covariance structures associated with the random effect</strong></p>
 <p>Many different covariance structures are possible for the
 <span class="math notranslate nohighlight">\(\mathbf{D}\)</span> matrix. The usual prartice associate a single
 variance parameter (a scalar, <span class="math notranslate nohighlight">\(\sigma_k\)</span>) to each random-effects
@@ -849,22 +892,28 @@ the loss of degrees of freedom that results from estimating the
 fixed-effect parameters in <span class="math notranslate nohighlight">\(\mathbf{\beta}\)</span>. For this reason, REML
 (restricted (or residual, or reduced) maximum likelihood) is often
 preferred to ML estimation.</p>
+<p><strong>Tests for Fixed-Effect Parameters</strong></p>
+<p>Quoted from [Brady et al. 2014]: “The approximate methods that apply to
+both t-tests and F-tests take into account the presence of random
+effects and correlated residuals in an LMM. Several of these approximate
+methods (e.g., the <strong>Satterthwaite</strong> method, or the “between-within”
+method) involve different choices for the degrees of freedom used in”
+the approximate t-tests and F-tests”.</p>
 </section>
 <section id="checking-model-assumptions-diagnostics">
-<h2>Checking model assumptions (Diagnostics)<a class="headerlink" href="#checking-model-assumptions-diagnostics" title="Permalink to this headline">¶</a></h2>
+<h2>Checking model assumptions (Diagnostics)<a class="headerlink" href="#checking-model-assumptions-diagnostics" title="Link to this heading">¶</a></h2>
 <p>Residuals plotted against predicted values represents a random pattern
 or not.</p>
 <p>These residual vs. fitted plots are used to verify model assumptions and
 to detect outliers and potentially influential observations.</p>
 </section>
 <section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Brady et al. 2014: Brady T. West, Kathleen B. Welch, Andrzej T.
 Galecki, <a class="reference external" href="http://www-personal.umich.edu/~bwest/almmussp.html">Linear Mixed Models: A Practical Guide Using Statistical
 Software (2nd
-Edition)</a>,
-2014</p></li>
+Edition)</a>, 2014</p></li>
 <li><p>Bruin 2006: <a class="reference external" href="https://stats.idre.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models">Introduction to Linear Mixed
 Models</a>,
 UCLA, Statistical Consulting Group.</p></li>
@@ -883,117 +932,76 @@ groups</a></p></li>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Statistics and Machine Learning in Python</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html">Import libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#data-types">Data types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#system-programming">System programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#networking">Networking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#documenting">Documenting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/python_lang.html#exercises">Exercises</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../stat_univ.html">Univariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Linear Mixed Models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#random-intercept">Random intercept</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#random-slope">Random slope</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#conclusion-on-modeling-random-effects">Conclusion on modeling random effects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#theory-of-linear-mixed-models">Theory of Linear Mixed Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#checking-model-assumptions-diagnostics">Checking model assumptions (Diagnostics)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+  <div>
+    <h3><a href="../../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Linear Mixed Models</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li><a class="reference internal" href="#clustered-structured-datasets">Clustered/structured datasets</a></li>
+<li><a class="reference internal" href="#mixed-effects-fixed-random-effects">Mixed effects = fixed + random effects</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../stat_multiv.html">Multivariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../time_series.html">Time series in python</a></li>
+<li><a class="reference internal" href="#random-intercept">Random intercept</a><ul>
+<li><a class="reference internal" href="#global-fixed-effect">Global fixed effect</a></li>
+<li><a class="reference internal" href="#model-a-classroom-intercept-as-a-fixed-effect-ancova">Model a classroom intercept as a fixed effect: ANCOVA</a></li>
+<li><a class="reference internal" href="#aggregation-of-data-into-independent-units">Aggregation of data into independent units</a></li>
+<li><a class="reference internal" href="#hierarchical-multilevel-modeling">Hierarchical/multilevel modeling</a></li>
+<li><a class="reference internal" href="#model-the-classroom-random-intercept-linear-mixed-model">Model the classroom random intercept: linear mixed model</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../machine_learning/clustering.html">Clustering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/ml_resampling.html">Resampling methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../optimization/optim_gradient_descent.html">Gradient descent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
+</li>
+<li><a class="reference internal" href="#random-slope">Random slope</a><ul>
+<li><a class="reference internal" href="#model-the-classroom-intercept-and-slope-as-a-fixed-effect-ancova-with-interactions">Model the classroom intercept and slope as a fixed effect: ANCOVA with interactions</a></li>
+<li><a class="reference internal" href="#model-the-classroom-random-intercept-and-slope-with-lmm">Model the classroom random intercept and slope with LMM</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</li>
+<li><a class="reference internal" href="#conclusion-on-modeling-random-effects">Conclusion on modeling random effects</a></li>
+<li><a class="reference internal" href="#theory-of-linear-mixed-models">Theory of Linear Mixed Models</a></li>
+<li><a class="reference internal" href="#checking-model-assumptions-diagnostics">Checking model assumptions (Diagnostics)</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../../auto_gallery/stat_univ_lab_brain-volume.html" title="previous chapter">Lab: Brain volumes study</a></li>
-      <li>Next: <a href="../stat_multiv.html" title="next chapter">Multivariate statistics</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/statistics/lmm/lmm.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="../../_sources/statistics/lmm/lmm.rst.txt"

@@ -1,33 +1,33 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Univariate statistics solutions &#8212; Statistics and Machine Learning in Python 0.5 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+    <title>Univariate statistics solutions &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Statistics and Machine Learning in Python 0.5 documentation"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
           href="../_static/opensearch.xml"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -40,9 +40,9 @@
           <div class="body" role="main">
             
   <section id="univariate-statistics-solutions">
-<h1>Univariate statistics solutions<a class="headerlink" href="#univariate-statistics-solutions" title="Permalink to this headline">¶</a></h1>
+<h1>Univariate statistics solutions<a class="headerlink" href="#univariate-statistics-solutions" title="Link to this heading">¶</a></h1>
 <section id="estimator-of-main-statistical-measures">
-<h2>Estimator of main statistical measures<a class="headerlink" href="#estimator-of-main-statistical-measures" title="Permalink to this headline">¶</a></h2>
+<h2>Estimator of main statistical measures<a class="headerlink" href="#estimator-of-main-statistical-measures" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Generate 2 random samples <span class="math notranslate nohighlight">\(x \sim N(1.78, 0.1)\)</span>,
 <span class="math notranslate nohighlight">\(y \sim N(1.66, 0.1)\)</span> both of size 10.</p></li>
@@ -53,14 +53,14 @@ functions that does the same computations and compare them (using
 </ul>
 </section>
 <section id="one-sample-t-test">
-<h2>One sample t-test<a class="headerlink" href="#one-sample-t-test" title="Permalink to this headline">¶</a></h2>
+<h2>One sample t-test<a class="headerlink" href="#one-sample-t-test" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Given the following samples, test whether its true mean is 1.75.
 Warning, when computing the std or the variance set ddof=1. The
 default value 0, leads to the biased estimator of the variance.</p></li>
 </ul>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># make the example reproducible</span>
 
 <span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
@@ -78,12 +78,12 @@ default value 0, leads to the biased estimator of the variance.</p></li>
 Draw P(T(n-1)&gt;tval) ie. color the surface defined by x values larger
 than tval below the T(n-1). Using the code.</p></li>
 <li><p>Compute the p-value: P(T(n-1)&gt;tval).</p></li>
-<li><p>The p-value is one-sided: a two-sided test would test P(T(n-1) &gt;
-tval) and P(T(n-1) &lt; -tval). What would be the two sided p-value ?</p></li>
+<li><p>The p-value is one-sided: a two-sided test would test P(T(n-1) &gt; tval)
+and P(T(n-1) &lt; -tval). What would be the two sided p-value ?</p></li>
 <li><p>Compare the two-sided p-value with the one obtained by
 stats.ttest_1samp using <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">np.allclose(arr1,</span> <span class="pre">arr2)</span></code></p></li>
 </ul>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 
 <span class="n">xbar</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">xmu</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1.75</span>
@@ -109,13 +109,13 @@ stats.ttest_1samp using <code class="docutils literal notranslate"><span class="
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">2.3970974188695773</span> <span class="mf">0.020044104794361296</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span> <span class="n">at</span> <span class="mh">0x7f85d5f97790</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span> <span class="n">at</span> <span class="mh">0x79328de8b380</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <img alt="../_images/stat_univ_solutions_6_2.png" src="../_images/stat_univ_solutions_6_2.png" />
 </section>
 <section id="simple-linear-regression-and-correlation-application">
-<h2>Simple linear regression and correlation (application)<a class="headerlink" href="#simple-linear-regression-and-correlation-application" title="Permalink to this headline">¶</a></h2>
+<h2>Simple linear regression and correlation (application)<a class="headerlink" href="#simple-linear-regression-and-correlation-application" title="Link to this heading">¶</a></h2>
 <p>Load the dataset: birthwt Risk Factors Associated with Low Infant Birth
 Weight at
 <a class="reference external" href="https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv">https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv</a></p>
@@ -128,9 +128,9 @@ using the correlation test and linear regeression.</p></li>
 weight by birth weight.</p></li>
 </ol>
 <p>Conclusion ?</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 
 <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv&#39;</span>
@@ -153,17 +153,17 @@ weight by birth weight.</p></li>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">bwt</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">lwt</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">0.09031781366853263</span><span class="p">,</span> <span class="mf">0.21647524185521977</span><span class="p">)</span>
-<span class="p">(</span><span class="mf">0.18573328444909917</span><span class="p">,</span> <span class="mf">0.010504176115208836</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PearsonRResult</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.09031781366853263</span><span class="p">),</span> <span class="n">pvalue</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.2164752418551908</span><span class="p">))</span>
+<span class="n">PearsonRResult</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.18573328444909917</span><span class="p">),</span> <span class="n">pvalue</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.010504176115207604</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x7f85d42e74d0</span><span class="o">&gt;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span> <span class="n">at</span> <span class="mh">0x793283cb4a50</span><span class="o">&gt;</span><span class="p">]</span>
 </pre></div>
 </div>
 <img alt="../_images/stat_univ_solutions_9_2.png" src="../_images/stat_univ_solutions_9_2.png" />
 </section>
 <section id="simple-linear-regression-maths">
-<h2>Simple linear regression (maths)<a class="headerlink" href="#simple-linear-regression-maths" title="Permalink to this headline">¶</a></h2>
+<h2>Simple linear regression (maths)<a class="headerlink" href="#simple-linear-regression-maths" title="Link to this heading">¶</a></h2>
 <p>Considering the salary and the experience of the salary table.
 <code class="docutils literal notranslate"><span class="pre">https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv</span></code></p>
 <p>Compute:</p>
@@ -189,10 +189,10 @@ defined by the <span class="math notranslate nohighlight">\(x\)</span> values la
 <span class="math notranslate nohighlight">\(F(1, n)\)</span>.</p></li>
 <li><p><span class="math notranslate nohighlight">\(P(F(1, n) &gt; F)\)</span> is the <span class="math notranslate nohighlight">\(p\)</span>-value, compute it.</p></li>
 </ul>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 
 <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/duchesnay/pystatsml/raw/master/datasets/salary_table.csv&#39;</span>
@@ -265,16 +265,16 @@ defined by the <span class="math notranslate nohighlight">\(x\)</span> values la
 
 <span class="c1">## With statmodels</span>
 
-<span class="kn">from</span> <span class="nn">statsmodels.formula.api</span> <span class="kn">import</span> <span class="n">ols</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">ols</span><span class="p">(</span><span class="s1">&#39;salary ~ experience&#39;</span><span class="p">,</span> <span class="n">salary</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
 
 <span class="c1">## With sklearn</span>
 
-<span class="kn">import</span> <span class="nn">sklearn.feature_selection</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.feature_selection</span>
 <span class="c1">#sklearn.feature_selection.f_regression??</span>
-<span class="n">sklearn</span><span class="o">.</span><span class="n">feature_selection</span><span class="o">.</span><span class="n">f_regression</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">y</span><span class="p">)</span>
+<span class="c1"># sklearn.feature_selection.f_regression(x.reshape((n, 1)), y)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y</span><span class="o">=</span><span class="mf">491.486913</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">13584.043803</span>  <span class="n">r</span><span class="p">:</span><span class="mf">0.538886</span><span class="p">,</span> <span class="n">r</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span><span class="mf">0.290398</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">value</span><span class="p">:</span><span class="mf">0.000112</span><span class="p">,</span> <span class="n">std_err</span><span class="p">:</span><span class="mf">115.823381</span>
@@ -286,8 +286,8 @@ defined by the <span class="math notranslate nohighlight">\(x\)</span> values la
 <span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                 <span class="n">salary</span>   <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                       <span class="mf">0.290</span>
 <span class="n">Model</span><span class="p">:</span>                            <span class="n">OLS</span>   <span class="n">Adj</span><span class="o">.</span> <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                  <span class="mf">0.274</span>
 <span class="n">Method</span><span class="p">:</span>                 <span class="n">Least</span> <span class="n">Squares</span>   <span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">:</span>                     <span class="mf">18.01</span>
-<span class="n">Date</span><span class="p">:</span>                <span class="n">Fri</span><span class="p">,</span> <span class="mi">08</span> <span class="n">Jan</span> <span class="mi">2021</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000112</span>
-<span class="n">Time</span><span class="p">:</span>                        <span class="mi">14</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mi">45</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">445.98</span>
+<span class="n">Date</span><span class="p">:</span>                <span class="n">Thu</span><span class="p">,</span> <span class="mi">03</span> <span class="n">Apr</span> <span class="mi">2025</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000112</span>
+<span class="n">Time</span><span class="p">:</span>                        <span class="mi">13</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">38</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">445.98</span>
 <span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                  <span class="mi">46</span>   <span class="n">AIC</span><span class="p">:</span>                             <span class="mf">896.0</span>
 <span class="n">Df</span> <span class="n">Residuals</span><span class="p">:</span>                      <span class="mi">44</span>   <span class="n">BIC</span><span class="p">:</span>                             <span class="mf">899.6</span>
 <span class="n">Df</span> <span class="n">Model</span><span class="p">:</span>                           <span class="mi">1</span>
@@ -308,38 +308,17 @@ defined by the <span class="math notranslate nohighlight">\(x\)</span> values la
 <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">Standard</span> <span class="n">Errors</span> <span class="n">assume</span> <span class="n">that</span> <span class="n">the</span> <span class="n">covariance</span> <span class="n">matrix</span> <span class="n">of</span> <span class="n">the</span> <span class="n">errors</span> <span class="ow">is</span> <span class="n">correctly</span> <span class="n">specified</span><span class="o">.</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---------------------------------------------------------------------------</span>
-
-<span class="ne">AttributeError</span>                            <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
-
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">5</span><span class="o">-</span><span class="mi">508</span><span class="n">b55ecf4f4</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-     <span class="mi">84</span> <span class="kn">import</span> <span class="nn">sklearn.feature_selection</span>
-     <span class="mi">85</span> <span class="c1">#sklearn.feature_selection.f_regression??</span>
-<span class="o">---&gt;</span> <span class="mi">86</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">feature_selection</span><span class="o">.</span><span class="n">f_regression</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">y</span><span class="p">)</span>
-
-
-<span class="o">~/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.7</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">pandas</span><span class="o">/</span><span class="n">core</span><span class="o">/</span><span class="n">generic</span><span class="o">.</span><span class="n">py</span> <span class="ow">in</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-   <span class="mi">5137</span>             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info_axis</span><span class="o">.</span><span class="n">_can_hold_identifiers_and_holds_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-   <span class="mi">5138</span>                 <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-<span class="o">-&gt;</span> <span class="mi">5139</span>             <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-   <span class="mi">5140</span>
-   <span class="mi">5141</span>     <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-
-
-<span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">&#39;Series&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;reshape&#39;</span>
-</pre></div>
-</div>
-<img alt="../_images/stat_univ_solutions_11_4.png" src="../_images/stat_univ_solutions_11_4.png" />
+<img alt="../_images/stat_univ_solutions_11_3.png" src="../_images/stat_univ_solutions_11_3.png" />
 </section>
 <section id="multiple-regression">
-<h2>Multiple regression<a class="headerlink" href="#multiple-regression" title="Permalink to this headline">¶</a></h2>
+<h2>Multiple regression<a class="headerlink" href="#multiple-regression" title="Link to this heading">¶</a></h2>
 <p>Considering the simulated data used below:</p>
 <ol class="arabic simple">
 <li><p>What are the dimensions of <span class="math notranslate nohighlight">\(\mathrm{pinv}(X)\)</span>?</p></li>
 <li><p>Compute the MSE between the predicted values and the true values.</p></li>
 </ol>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># make the example reproducible</span>
 
 <span class="c1"># Dataset</span>
@@ -354,9 +333,18 @@ defined by the <span class="math notranslate nohighlight">\(x\)</span> values la
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">betastar</span><span class="p">)</span> <span class="o">+</span> <span class="n">e</span>
 
 <span class="c1"># Estimate the parameters</span>
-<span class="n">Xpinv</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv2</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Xpinv</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="n">betahat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Xpinv</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimated beta:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">betahat</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span> <span class="mf">1.</span>         <span class="o">-</span><span class="mf">0.1382643</span>   <span class="mf">0.64768854</span>  <span class="mf">1.52302986</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">1.</span>         <span class="o">-</span><span class="mf">0.23413696</span>  <span class="mf">1.57921282</span>  <span class="mf">0.76743473</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">1.</span>          <span class="mf">0.54256004</span> <span class="o">-</span><span class="mf">0.46341769</span> <span class="o">-</span><span class="mf">0.46572975</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">1.</span>         <span class="o">-</span><span class="mf">1.91328024</span> <span class="o">-</span><span class="mf">1.72491783</span> <span class="o">-</span><span class="mf">0.56228753</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">1.</span>          <span class="mf">0.31424733</span> <span class="o">-</span><span class="mf">0.90802408</span> <span class="o">-</span><span class="mf">1.4123037</span> <span class="p">]]</span>
+<span class="n">Estimated</span> <span class="n">beta</span><span class="p">:</span>
+ <span class="p">[</span><span class="mf">10.14742501</span>  <span class="mf">0.57938106</span>  <span class="mf">0.51654653</span>  <span class="mf">0.17862194</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. What are the dimensions of pinv$(X)$ ?</span>
@@ -375,9 +363,13 @@ defined by the <span class="math notranslate nohighlight">\(x\)</span> values la
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MSE =&quot;</span><span class="p">,</span> <span class="n">mse</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">MSE</span> <span class="o">=</span> <span class="mf">1.013038927938958</span>
+</pre></div>
+</div>
 </section>
 <section id="two-sample-t-test-maths">
-<h2>Two sample t-test (maths)<a class="headerlink" href="#two-sample-t-test-maths" title="Permalink to this headline">¶</a></h2>
+<h2>Two sample t-test (maths)<a class="headerlink" href="#two-sample-t-test-maths" title="Link to this heading">¶</a></h2>
 <p>Given the following two sample, test whether their means are equals.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">height</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mf">1.83</span><span class="p">,</span>  <span class="mf">1.83</span><span class="p">,</span>  <span class="mf">1.73</span><span class="p">,</span>  <span class="mf">1.82</span><span class="p">,</span>  <span class="mf">1.83</span><span class="p">,</span>
                     <span class="mf">1.73</span><span class="p">,</span><span class="mf">1.99</span><span class="p">,</span>  <span class="mf">1.85</span><span class="p">,</span>  <span class="mf">1.68</span><span class="p">,</span>  <span class="mf">1.87</span><span class="p">,</span>
@@ -412,7 +404,7 @@ variances).</p></li>
 </pre></div>
 </div>
 <section id="equal-variances-t-test">
-<h3>Equal variances t-test<a class="headerlink" href="#equal-variances-t-test" title="Permalink to this headline">¶</a></h3>
+<h3>Equal variances t-test<a class="headerlink" href="#equal-variances-t-test" title="Link to this heading">¶</a></h3>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># se</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">xvar</span> <span class="o">*</span> <span class="p">(</span><span class="n">nx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">yvar</span> <span class="o">*</span> <span class="p">(</span><span class="n">ny</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">+</span> <span class="n">ny</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
 <span class="n">se</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">nx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">ny</span><span class="p">)</span>
@@ -428,22 +420,25 @@ variances).</p></li>
 <span class="n">pval2sided</span> <span class="o">=</span> <span class="n">pval</span> <span class="o">*</span> <span class="mi">2</span>
 
 <span class="c1"># With scipy</span>
-<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
 
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">((</span><span class="n">tval</span><span class="p">,</span> <span class="n">pval2sided</span><span class="p">),</span>
                    <span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tval</span><span class="o">=</span><span class="mf">3.55</span><span class="p">,</span> <span class="n">pval</span><span class="o">=</span><span class="mf">0.0001</span>
+</pre></div>
+</div>
 </section>
 <section id="unequal-variance-welch-t-test">
-<h3>Unequal variance (Welch) t-test<a class="headerlink" href="#unequal-variance-welch-t-test" title="Permalink to this headline">¶</a></h3>
+<h3>Unequal variance (Welch) t-test<a class="headerlink" href="#unequal-variance-welch-t-test" title="Link to this heading">¶</a></h3>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">xvar</span> <span class="o">/</span> <span class="n">nx</span> <span class="o">+</span> <span class="n">yvar</span> <span class="o">/</span> <span class="n">ny</span><span class="p">)</span>
 
 <span class="n">tval</span> <span class="o">=</span> <span class="p">(</span><span class="n">xbar</span> <span class="o">-</span> <span class="n">ybar</span><span class="p">)</span> <span class="o">/</span> <span class="n">se</span>
 
 <span class="c1"># Use the following function to approximate the df needed for the p-value</span>
 
-<span class="k">def</span> <span class="nf">unequal_var_ttest_df</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">unequal_var_ttest_df</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">n2</span><span class="p">):</span>
     <span class="n">vn1</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">/</span> <span class="n">n1</span>
     <span class="n">vn2</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">/</span> <span class="n">n2</span>
     <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">vn1</span> <span class="o">+</span> <span class="n">vn2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">vn1</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">n1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">vn2</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">n2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
@@ -489,10 +484,14 @@ variances).</p></li>
              <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">ErrorbarContainer</span> <span class="nb">object</span> <span class="n">of</span> <span class="mi">3</span> <span class="n">artists</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_univ_solutions_21_1.png" src="../_images/stat_univ_solutions_21_1.png" />
 </section>
 </section>
 <section id="two-sample-t-test-and-random-permutation">
-<h2>Two sample t-test and random permutation<a class="headerlink" href="#two-sample-t-test-and-random-permutation" title="Permalink to this headline">¶</a></h2>
+<h2>Two sample t-test and random permutation<a class="headerlink" href="#two-sample-t-test-and-random-permutation" title="Link to this heading">¶</a></h2>
 <p>Generate 100 samples following the model:</p>
 <div class="math notranslate nohighlight">
 \[y = g + \varepsilon\]</div>
@@ -506,7 +505,7 @@ of y splited in two groups defined by g.</p></li>
 random permutations.</p></li>
 <li><p>Assess the p-value.</p></li>
 </ul>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="c1"># Model data</span>
@@ -515,7 +514,7 @@ random permutations.</p></li>
 
 <span class="n">y</span> <span class="o">=</span> <span class="n">g</span> <span class="o">+</span> <span class="n">eps</span>
 
-<span class="k">def</span> <span class="nf">tstat</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tstat</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
     <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">g</span> <span class="o">==</span> <span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">g</span><span class="p">)]</span>
     <span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="k">for</span> <span class="n">vals</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">]</span>
     <span class="n">sse</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">vals</span> <span class="o">-</span> <span class="n">means</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">vals</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ys</span><span class="p">)]</span>
@@ -536,9 +535,12 @@ random permutations.</p></li>
 <span class="nb">print</span><span class="p">(</span><span class="n">pval</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">9.999000099990002e-05</span>
+</pre></div>
+</div>
 </section>
 <section id="two-sample-t-test-application">
-<h2>Two sample t-test (application)<a class="headerlink" href="#two-sample-t-test-application" title="Permalink to this headline">¶</a></h2>
+<h2>Two sample t-test (application)<a class="headerlink" href="#two-sample-t-test-application" title="Link to this heading">¶</a></h2>
 <p>Risk Factors Associated with Low Infant Birth Weight:</p>
 <p><code class="docutils literal notranslate"><span class="pre">https://github.com/duchesnay/pystatsml/raw/master/datasets/birthwt.csv</span></code></p>
 <ol class="arabic simple">
@@ -563,20 +565,36 @@ random permutations.</p></li>
 <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;smoke&#39;</span> <span class="p">,</span> <span class="s1">&#39;bwt&#39;</span><span class="p">]]</span> <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;smoke&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
 
 
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
 
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;smoke&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bwt&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">inner</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">swarmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;smoke&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bwt&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
                     <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">bwt</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">smoke</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">],</span>
                       <span class="n">df</span><span class="o">.</span><span class="n">bwt</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">smoke</span> <span class="o">==</span> <span class="s2">&quot;n&quot;</span><span class="p">]))</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>               <span class="n">bwt</span>
+<span class="n">smoke</span>
+<span class="n">n</span>      <span class="mf">3055.695652</span>
+<span class="n">y</span>      <span class="mf">2771.918919</span>
+              <span class="n">bwt</span>
+<span class="n">smoke</span>
+<span class="n">n</span>      <span class="mf">752.656607</span>
+<span class="n">y</span>      <span class="mf">659.634867</span>
+<span class="n">TtestResult</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="o">-</span><span class="mf">2.652893303213649</span><span class="p">),</span> <span class="n">pvalue</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.008666726371019074</span><span class="p">),</span> <span class="n">df</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">187.0</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_217042</span><span class="o">/</span><span class="mf">1860827555.</span><span class="n">py</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span> <span class="ne">FutureWarning</span><span class="p">:</span> <span class="n">Use</span> <span class="s2">&quot;auto&quot;</span> <span class="n">to</span> <span class="nb">set</span> <span class="n">automatic</span> <span class="n">grayscale</span> <span class="n">colors</span><span class="o">.</span> <span class="n">From</span> <span class="n">v0</span><span class="mf">.14.0</span><span class="p">,</span> <span class="s2">&quot;gray&quot;</span> <span class="n">will</span> <span class="n">default</span> <span class="n">to</span> <span class="n">matplotlib</span><span class="s1">&#39;s definition.</span>
+  <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">swarmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;smoke&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;bwt&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_univ_solutions_25_2.png" src="../_images/stat_univ_solutions_25_2.png" />
 </section>
 <section id="univariate-associations-developpement">
-<h2>Univariate associations (developpement)<a class="headerlink" href="#univariate-associations-developpement" title="Permalink to this headline">¶</a></h2>
+<h2>Univariate associations (developpement)<a class="headerlink" href="#univariate-associations-developpement" title="Link to this heading">¶</a></h2>
 <p>Write a function <code class="docutils literal notranslate"><span class="pre">univar_stat(df,</span> <span class="pre">target,</span> <span class="pre">variables)</span></code> that computes
 the parametric statistics and <span class="math notranslate nohighlight">\(p\)</span>-values between the <code class="docutils literal notranslate"><span class="pre">target</span></code>
 variable (provided as as string) and all <code class="docutils literal notranslate"><span class="pre">variables</span></code> (provided as a
@@ -589,7 +607,7 @@ The function returns a DataFrame with four columns: <code class="docutils litera
 with target being <code class="docutils literal notranslate"><span class="pre">S</span></code>: salaries for IT staff in a corporation.</p>
 </section>
 <section id="multiple-comparisons">
-<h2>Multiple comparisons<a class="headerlink" href="#multiple-comparisons" title="Permalink to this headline">¶</a></h2>
+<h2>Multiple comparisons<a class="headerlink" href="#multiple-comparisons" title="Link to this heading">¶</a></h2>
 <p>This exercise has 2 goals: apply you knowledge of statistics using
 vectorized numpy operations. Given the dataset provided for multiple
 comparisons, compute the two-sample <span class="math notranslate nohighlight">\(t\)</span>-test (assuming equal
@@ -598,7 +616,7 @@ groups defined by <code class="docutils literal notranslate"><span class="pre">g
 size <code class="docutils literal notranslate"><span class="pre">n_features</span></code>: one for the <span class="math notranslate nohighlight">\(t\)</span>-values and one for the
 <span class="math notranslate nohighlight">\(p\)</span>-values.</p>
 <section id="anova">
-<h3>ANOVA<a class="headerlink" href="#anova" title="Permalink to this headline">¶</a></h3>
+<h3>ANOVA<a class="headerlink" href="#anova" title="Link to this heading">¶</a></h3>
 <p>Perform an ANOVA dataset described bellow</p>
 <ul class="simple">
 <li><p>Compute between and within variances</p></li>
@@ -606,7 +624,7 @@ size <code class="docutils literal notranslate"><span class="pre">n_features</sp
 <li><p>Compare the <span class="math notranslate nohighlight">\(p\)</span>-value with the one obtained by
 <code class="docutils literal notranslate"><span class="pre">stats.f_oneway</span></code> using <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">np.allclose(arr1,</span> <span class="pre">arr2)</span></code></p></li>
 </ul>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># dataset</span>
 <span class="n">mu_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>    <span class="c1"># means of 3 samples</span>
@@ -621,7 +639,7 @@ size <code class="docutils literal notranslate"><span class="pre">n_features</sp
     <span class="n">y</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu_k</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">sd_k</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">n_k</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
 
 <span class="c1"># estimate parameters</span>
 <span class="n">ybar_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -655,105 +673,71 @@ size <code class="docutils literal notranslate"><span class="pre">n_features</sp
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Statistics and Machine Learning in Python</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/python_ecosystem.html">Python ecosystem for data-science</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html">Introduction to Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../introduction/machine_learning.html#data-analysis-methodology">Data analysis methodology</a></li>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Univariate statistics solutions</a><ul>
+<li><a class="reference internal" href="#estimator-of-main-statistical-measures">Estimator of main statistical measures</a></li>
+<li><a class="reference internal" href="#one-sample-t-test">One sample t-test</a></li>
+<li><a class="reference internal" href="#simple-linear-regression-and-correlation-application">Simple linear regression and correlation (application)</a></li>
+<li><a class="reference internal" href="#simple-linear-regression-maths">Simple linear regression (maths)</a></li>
+<li><a class="reference internal" href="#multiple-regression">Multiple regression</a></li>
+<li><a class="reference internal" href="#two-sample-t-test-maths">Two sample t-test (maths)</a><ul>
+<li><a class="reference internal" href="#equal-variances-t-test">Equal variances t-test</a></li>
+<li><a class="reference internal" href="#unequal-variance-welch-t-test">Unequal variance (Welch) t-test</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html">Import libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#basic-operations">Basic operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#data-types">Data types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#execution-control-statements">Execution control statements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#list-comprehensions-iterators-etc">List comprehensions, iterators, etc.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#functions">Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#regular-expression">Regular expression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#system-programming">System programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#scripts-and-argument-parsing">Scripts and argument parsing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#networking">Networking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#modules-and-packages">Modules and packages</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#object-oriented-programming-oop">Object Oriented Programming (OOP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#style-guide-for-python-programming">Style guide for Python programming</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#documenting">Documenting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/python_lang.html#exercises">Exercises</a></li>
+</li>
+<li><a class="reference internal" href="#two-sample-t-test-and-random-permutation">Two sample t-test and random permutation</a></li>
+<li><a class="reference internal" href="#two-sample-t-test-application">Two sample t-test (application)</a></li>
+<li><a class="reference internal" href="#univariate-associations-developpement">Univariate associations (developpement)</a></li>
+<li><a class="reference internal" href="#multiple-comparisons">Multiple comparisons</a><ul>
+<li><a class="reference internal" href="#anova">ANOVA</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_numpy.html">Numpy: arrays and matrices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/scipy_pandas.html">Pandas: data manipulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scientific_python/scipy_matplotlib.html">Data visualization: matplotlib &amp; seaborn</a></li>
+</li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="stat_univ.html">Univariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/stat_univ_lab_brain-volume.html">Lab: Brain volumes study</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stat_multiv.html">Multivariate statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="time_series.html">Time series in python</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/decomposition.html">Linear dimension reduction and feature extraction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/manifold.html">Manifold learning: non-linear dimension reduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/clustering.html">Clustering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_regression.html">Linear models for regression problems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/linear_classification.html">Linear models for classification problems</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_supervized_nonlinear.html">Non-linear models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_resampling.html">Resampling methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../machine_learning/ensemble_learning.html">Ensemble learning: bagging, boosting and stacking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../optimization/optim_gradient_descent.html">Gradient descent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_gallery/ml_lab_face_recognition.html">Lab: Faces recognition using various learning models</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_backprop_numpy-pytorch-sklearn.html">Backpropagation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_mlp_mnist_pytorch.html">Multilayer Perceptron (MLP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_cnn_cifar10_pytorch.html">Convolutional neural network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deep_learning/dl_transfer-learning_cifar10-ants-bees_pytorch.html">Transfer Learning Tutorial</a></li>
+</li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/statistics/stat_univ_solutions.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="../_sources/statistics/stat_univ_solutions.rst.txt"
