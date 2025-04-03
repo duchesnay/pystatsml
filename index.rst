@@ -108,7 +108,7 @@ Supervised Learning
     ml_supervised/linear_classification.rst
     auto_gallery/kernel_svm.rst
     auto_gallery/ensemble_learning.rst
-    auto_gallery/ml_lab_face_recognition.rst
+
 
 ==================
 Resampling methods 
