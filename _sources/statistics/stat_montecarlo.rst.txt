@@ -1,0 +1,499 @@
+Resampling and Monte Carlo Methods
+==================================
+
+Sources:
+
+- `Scipy Resampling and Monte Carlo
+  Methods <https://docs.scipy.org/doc/scipy/tutorial/stats/resampling.html>`__
+
+.. code:: ipython3
+
+    # Manipulate data
+    import numpy as np
+    import pandas as pd
+    
+    # Statistics
+    import scipy.stats
+    import statsmodels.api as sm
+    #import statsmodels.stats.api as sms
+    import statsmodels.formula.api as smf
+    from statsmodels.stats.stattools import jarque_bera
+    
+    # Plot
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import pystatsml.plot_utils
+    
+    # Plot parameters
+    plt.style.use('seaborn-v0_8-whitegrid')
+    fig_w, fig_h = plt.rcParams.get('figure.figsize')
+    plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
+    %matplotlib inline
+
+Monte-Carlo simulation of Random Walk Process
+---------------------------------------------
+
+One-dimensional random walk (Brownian motion)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+More information: `Random Walks, Central Limit
+Theorem <https://www.youtube.com/watch?v=BUJCF900I0A>`__
+
+At each step :math:`i` the process moves with +1 or -1 with equal
+probability, ie, :math:`X_i \in \{+1, -1\}` with
+:math:`P(X_i=+1)=P(X_i=-1)=1/2`. Steps :math:`X_i`\ ’s are i.i.d..
+
+Let :math:`S_n = \sum^n_i X_i`, or :math:`S_i` (at time :math:`i`) is
+:math:`S_i = S_{i-1} + X_i`
+
+Realizations of random walks obtained by Monte Carlo simulation Plot Few
+random walks (trajectories), ie, :math:`S_n` for :math:`n=0` to
+:math:`200`
+
+.. code:: ipython3
+
+    np.random.seed(seed=42)  # make the example reproducible
+    
+    n = 200 # trajectory depth
+    nsamp = 50000 #nb of trajectories
+    
+    # X: each row (axis 0) contains one trajectory axis 1
+    #Xn = np.array([np.random.choice(a=[-1, +1], size=n,
+    #                                replace=True, p=np.ones(2) / 2)
+    #               for i in range(nsamp)])
+    
+    Xn = np.array([np.random.choice(a=np.array([-1, +1]), size=n,
+                                    replace=True, p=np.ones(2)/2)
+                   for i in range(nsamp)])
+    
+    # Sum of random walks (trajectories)
+    Sn = Xn.sum(axis=1)
+    
+    print("True Stat. Mean={:.03f}, Sd={:.02f}".\
+        format(0, np.sqrt(n) * 1))
+    
+    print("Est. Stat. Mean={:.03f}, Sd={:.02f}".\
+        format(Sn.mean(), Sn.std()))
+    
+
+
+
+.. parsed-literal::
+
+    True Stat. Mean=0.000, Sd=14.14
+    Est. Stat. Mean=0.010, Sd=14.09
+
+
+Plot cumulative sum of 100 random walks (trajectories)
+
+.. code:: ipython3
+
+    Sn_traj = Xn[:100, :].cumsum(axis=1)
+    _ = pd.DataFrame(Sn_traj.T).plot(legend=False)
+
+
+
+.. image:: stat_montecarlo_files/stat_montecarlo_5_0.png
+
+
+Distribution of :math:`S_n` vs :math:`\mathcal{N}(0, \sqrt(n))`
+
+.. code:: ipython3
+
+    x_low, x_high = Sn.mean()-3*Sn.std(), Sn.mean()+3*Sn.std()
+    h_ = plt.hist(Sn, range=(x_low, x_high), density=True, bins=43, fill=False,
+                 label="Histogram")
+    
+    x_range = np.linspace(x_low, x_high, 30)
+    prob_x_range = scipy.stats.norm.pdf(x_range, loc=Sn.mean(), scale=Sn.std())
+    plt.plot(x_range, prob_x_range, 'r-', label="PDF: P(X)")
+    _ = plt.legend()
+    #print(h_)
+
+
+
+.. image:: stat_montecarlo_files/stat_montecarlo_7_0.png
+
+
+Permutation Tests
+-----------------
+
+`Permutation test <https://en.wikipedia.org/wiki/Permutation_test>`__:
+
+- The test involves two or more samples assuming that values can be
+  **randomly permuted** under the **null hypothesis**.
+- The test is **Resampling procedure to estimate the distribution of a
+  parameter or any statistic under the null hypothesis**, i.e.,
+  calculated on the permuted data. This parameter or any statistic is
+  called the **estimator**.
+- **Statistical inference** is conducted by computing the proportion of
+  permuted values of the estimator that are “more extreme” than the true
+  one, providing an estimation of the *p-value*.
+- Permutation tests are a subset of non-parametric statistics, useful
+  when the distribution of the estimator (under H0) is unknown or
+  requires complicated formulas.
+
+Permutation test procedure
+
+.. figure:: images/stat_random_permutations.png
+   :alt: Bootstrapping procedure
+
+   Bootstrapping procedure
+
+1. Estimate the observed parameter or statistic
+   :math:`\hat{\theta} = S(X)` on the initial dataset :math:`X` of size
+   :math:`N`. We call it the observed statistic.
+2. Generate :math:`R` samples (called randomized samples)
+   :math:`[X_1, \ldots X_r, \ldots X_R]` from the initial dataset by
+   permutation of the values between the two samples.
+3. Distribution of the estimator under HO: For each random sample
+   :math:`r`, compute the estimator :math:`\hat{\theta}_r = S(X_r)`. The
+   set of :math:`\{\hat{\theta}_r\}` provides an estimate the
+   distribution of :math:`P(\theta | H0)` (under the null hypothesis).
+4. Compute statistics of the estimator under the null hypothesis using
+   randomized estimates :math:`\hat{\theta}_r`\ ’s:
+
+- Mean (under :math:`H0`):
+
+  .. math::
+
+
+     \bar{\theta}_R = \frac{1}{r}\sum_{r=1}^R \hat{\theta}_r
+
+- Standard Error :math:`\hat{SE}_{\theta_R}` (under :math:`H0`):
+
+  .. math::
+
+
+     \hat{SE}_{\theta_R} = \sqrt{\frac{1}{R-1}\sum_{r=1}^K (\bar{\theta}_R - \hat{\theta}_r)^2}
+
+- Compute p-value using the distribution (under :math:`H0`):
+
+  - One-sided p-value:
+
+    .. math::
+
+
+       P(\theta \ge \hat{\theta} | H0) \approx \frac{\mathbf{card}(\hat{\theta}_r \ge \hat{\theta})}{R}
+
+  - Two-sided p-value:
+
+    .. math::
+
+
+       P(\theta \le \hat{\theta}~\text{or}~\theta \ge \hat{\theta} | H0) \approx \frac{\mathbf{card}(\hat{\theta}_r \le \hat{\theta}) + \mathbf{card}(\hat{\theta}_r \ge \hat{\theta})}{R}
+
+.. code:: ipython3
+
+    def randomize(x, estimator, n_perms=1000):
+        """_summary_
+    
+        Parameters
+        ----------
+        x : array
+            the datasets
+        estimator : callable
+            the estimator function taking x as argument returning the estimator value
+            (scalar) 
+        n_perms : int, optional
+            the number of permutation, by default 1000
+            
+        Return
+        ------
+        Observed estimate
+        Mean of randomized estimates
+        Standard Error of randomized estimates
+        Two-sided p-value
+        Randomized distribution estimates (density_values, bins)
+        """
+           
+        # 1. Estimate the observed parameter or statistic
+        theta = estimator(x)
+    
+        # 2. Permuted samples
+        # Randomly pick the sign with the function:
+        # np.random.choice([-1, 1], size=len(x), replace=True)
+    
+        x_R = [np.random.choice([-1, 1], size=len(x), replace=True) * x
+            for boot_i in range(n_perms)]
+    
+        # 3. Distribution of the parameter or statistic under H0
+    
+        thetas_R = np.array([estimator(x_r) for x_r in x_R])
+        theta_density_R, bins = np.histogram(thetas_R, bins=50, density=True)
+        dx = np.diff(bins)
+    
+        # 4. Randomized Statistics
+    
+        # Mean of randomized estimates
+        theta_mean_R = np.mean(thetas_R)
+    
+        # Standard Error of randomized estimates
+        theta_se_R = np.sqrt(1 / (n_perms - 1) * 
+                             np.sum((theta_mean_R - thetas_R) ** 2))
+    
+        # 4. Compute two-sided p-value using the distribution under H0:
+    
+        extream_vals = (thetas_R <= -np.abs(theta)) | (thetas_R >= np.abs(theta))
+        pval = np.sum(extream_vals) / n_perms
+        # We could use:
+        # (np.sum(thetas_R <= -np.abs(theta)) + \
+        #  np.sum(thetas_R >=  np.abs(theta))) / n_perms
+        
+        return theta, theta_mean_R, theta_se_R, pval, (theta_density_R, bins)
+
+Example, we load the monthly revenue figures of for 100 stores before
+and after a marketing campaigns. We compute the difference
+(:math:`x_i = x_i^\text{after} - x_i^\text{before}`) for each store
+:math:`i`. Under the null hypothesis, i.e., no effect of the campaigns,
+:math:`x_i^\text{after}` and :math:`x_i^\text{before}` could be
+permuted, which is equivalent to randomly switch the sign of
+:math:`x_i`. Here we will focus on the sample mean
+:math:`\hat{\theta} = S(X) = 1/n\sum_i x_i` as statistic of interest.
+
+.. code:: ipython3
+
+    df = pd.read_csv("../datasets/Monthly Revenue (in thousands).csv")
+    # Reshape Keep only the 30 first samples
+    df = df.pivot(index='store_id', columns='time', values='revenue')[:30]
+    df.after -= 3 # force to smaller effect size
+
+.. code:: ipython3
+
+    x = df.after - df.before
+    
+    plt.hist(x, fill=False)
+    plt.axvline(x=0, color="b", label=r'No effect: 0')
+    plt.axvline(x=x.mean(), color="r", ls='-', label=r'$\bar{x}=%.2f$' % x.mean())
+    plt.legend()
+    _ = plt.title(r'Distribution of the sales changes $x_i = x_i^\text{after} - \
+        x_i^\text{before}$')
+
+
+
+.. image:: stat_montecarlo_files/stat_montecarlo_12_0.png
+
+
+.. code:: ipython3
+
+    np.random.seed(15) # set the seed for reproducible results
+    
+    theta, theta_mean_R, theta_se_R, pval, (theta_density_R, bins) = \
+        randomize(x=x, estimator=np.mean, n_perms=10000)
+    
+    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".\
+        format(theta, theta_mean_R, pval, theta_se_R))
+
+
+.. parsed-literal::
+
+    Estimate: 2.26, Mean(Estimate|HO): -0.0103, p-val: 2.430000e-02, SE: 1.018
+
+
+Plot
+
+.. code:: ipython3
+
+    pystatsml.plot_utils.plot_pvalue_under_h0(stat_vals=bins[1:], stat_probs=theta_density_R,
+                         stat_obs=theta,  stat_h0=0, bar_width=np.diff(bins),
+                         thresh_low=-np.abs(theta), thresh_high=np.abs(theta))
+    _ = plt.title(r'Randomized distribution of the estimator $\hat{\theta}_b$ (sample mean)')
+
+
+
+.. image:: stat_montecarlo_files/stat_montecarlo_15_0.png
+
+
+Similar procedure can be conducted with many statistic e.g., the
+t-statistic (same results):
+
+.. code:: ipython3
+
+    def ttstat(x):
+        return (np.mean(x) - 0) / np.std(x, ddof=1) * np.sqrt(len(x))
+    
+    
+    np.random.seed(15) # set the seed for reproducible results
+    theta, theta_mean_R, theta_se_R, pval, (theta_density_R, bins) = \
+        randomize(x=x, estimator=ttstat, n_perms=10000)
+    
+    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".\
+        format(theta, theta_mean_R, pval, theta_se_R))
+
+
+.. parsed-literal::
+
+    Estimate: 2.36, Mean(Estimate|HO): -0.0106, p-val: 2.430000e-02, SE: 1.025
+
+
+Or the median:
+
+.. code:: ipython3
+
+    np.random.seed(15) # set the seed for reproducible results
+    theta, theta_mean_R, theta_se_R, pval, (theta_density_R, bins) = \
+        randomize(x=x, estimator=np.median, n_perms=10000)
+    
+    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".\
+        format(theta, theta_mean_R, pval, theta_se_R))
+
+
+.. parsed-literal::
+
+    Estimate: 1.85, Mean(Estimate|HO): -0.0144, p-val: 9.370000e-02, SE: 1.066
+
+
+
+
+Bootstrapping
+-------------
+
+`Bootstrapping <https://en.wikipedia.org/wiki/Bootstrapping_(statistics)>`__:
+
+- **Resampling procedure** to estimate the distribution of a statistic
+  or parameter of interest, called the estimator.
+- Derive estimates of **variability for estimator** (bias, standard
+  error, confidence intervals, etc.).
+- **Statistical inference** is conducted by looking the `confidence
+  interval <https://www.researchgate.net/publication/296473825_Bootstrap_Confidence_Intervals_for_Noise_Indicators>`__
+  **(CI) contains the null hypothesis**.
+- Nonparametric approach statistical inference, useful when model
+  assumptions is in doubt, unknown or requires complicated formulas.
+- **Bootstrapping with replacement** has favorable performances (`Efron
+  1979 <https://projecteuclid.org/journals/annals-of-statistics/volume-7/issue-1/Bootstrap-Methods-Another-Look-at-the-Jackknife/10.1214/aos/1176344552.full>`__,
+  and
+  `1986 <https://projecteuclid.org/download/pdf_1/euclid.ss/1177013815>`__)
+  compared to prior methods like the jackknife that sample without
+  replacement
+- **Regularize models** by fitting several models on bootstrap samples
+  and averaging their predictions (see Baging and random-forest). See
+  machine learning chapter.
+
+Note that compared to random permutation, bootstrapping sample the
+distribution under the **alternative hypothesis**, it doesn’t consider
+the distribution under the null hypothesis. A great advantage of
+bootstrap is its **simplicity of the procedure**:
+
+.. figure:: images/stat_bootstrapping.png
+   :alt: Bootstrapping procedure
+
+   Bootstrapping procedure
+
+1. Compute the estimator :math:`\hat{\theta} = S(X)` on the initial
+   dataset :math:`X` of size :math:`N`.
+2. Generate :math:`B` samples (called bootstrap samples)
+   :math:`[X_1, \ldots X_b, \ldots X_B]` from the initial dataset by
+   randomly drawing **with replacement** :math:`N` observations.
+3. For each sample :math:`b` compute the estimator
+   :math:`\hat{\theta}_b = S(X_b)`, which provides the bootstrap
+   distribution :math:`P_{\theta_B}` of the estimator.
+4. Compute statistics of the estimator on bootstrap estimates
+   :math:`\hat{\theta}_b`\ ’s:
+
+- Bootstrap estimate (of the parameters):
+
+  .. math::
+
+
+     \bar{\theta}_B = \frac{1}{B}\sum_{b=1}^B \hat{\theta}_b
+
+- Bias = bootstrap estimate - estimate:
+
+  .. math::
+
+
+     \hat{b}_{\theta_B} = \bar{\theta}_B - \hat{\theta}
+
+- Standard error :math:`\hat{S}_{\theta_B}`:
+
+  .. math::
+
+
+     \hat{S}_{\theta_B} = \sqrt{\frac{1}{B-1}\sum_{b=1}^B (\bar{\theta}_B - \hat{\theta}_b)^2}
+
+- Confidence interval using the estimated bootstrapped distribution of
+  the estimator:
+
+  .. math::
+
+
+     CI_{95\%}=[\hat{\theta}_1=Q(2.5\%), \hat{\theta}_2=Q(97.5\%)]~\text{i.e., the 2.5\%, 97.5\% quantiles estimators out of the}~\hat{\theta}_b's
+
+Application using the monthly revenue of 100 stores before and after a
+marketing campaigns, using the difference
+(:math:`x_i = x_i^\text{after} - x_i^\text{before}`) for each store
+:math:`i`. If the average difference :math:`\bar{x}=1/n \sum_i x_i` is
+positive (resp. negative), then the marketing campaigns will be
+considered as efficient (resp. detrimental). We will use bootstrapping
+to compute the confidence interval (CI) and see if 0 in comprised in the
+CI.
+
+.. code:: ipython3
+
+    x = df.after - df.before
+    S = np.mean
+    
+    # 1. Model parameters
+    theta_hat = S(x)
+    
+    np.random.seed(15) # set the seed for reproducible results
+    B = 1000 # Number of bootstrap
+    
+    # 2. Bootstrapped samples
+    
+    x_B = [np.random.choice(x, size=len(x), replace=True) for boot_i in range(B)]
+    
+    # 3. Bootstrap estimates and distribution
+    
+    theta_hats_B = np.array([S(x_b) for x_b in x_B])
+    theta_density_B, bins = np.histogram(theta_hats_B, bins=50, density=True)
+    dx = np.diff(bins)
+    
+    # 4. Bootstrap Statistics
+    
+    # Bootstrap estimate
+    theta_bar_B = np.mean(theta_hats_B)
+    
+    # Bias = bootstrap estimate - estimate
+    bias_hat_B = theta_bar_B - theta_hat
+    
+    # Standard Error
+    se_hat_B = np.sqrt(1 / (B - 1) * np.sum((theta_bar_B - theta_hats_B) ** 2))
+    
+    # Confidence interval using the estimated bootstrapped distribution of estimator
+    
+    ci95 = np.quantile(a=theta_hats_B, q=[0.025, 0.975])
+    
+    print(
+        "Est.: {:.2f}, Boot Est.: {:.2f}, bias: {:e},\
+         Boot SE: {:.2f}, CI: [{:.5f}, {:.5f}]"\
+        .format(theta_hat, theta_bar_B, bias_hat_B, se_hat_B, ci95[0], ci95[1]))
+
+
+.. parsed-literal::
+
+    Est.: 2.26, Boot Est.: 2.19, bias: -7.201946e-02,     Boot SE: 0.95, CI: [0.45256, 4.08465]
+
+
+Conclusion: Zero is outside the CI, moreover :math:`\bar{X}` is
+positive. Thus we can conclude the marketing campaign produced a
+significant increase of the sales.
+
+Plot
+
+.. code:: ipython3
+
+    plt.bar(bins[1:], theta_density_B, width=dx, fill=False, label=r'$P_{\theta_B}$')
+    plt.axvline(x=theta_hat, color='r', ls='--', lw=2, label=r'$\hat{\theta}$ (Obs. Stat.)')
+    plt.axvline(x=theta_bar_B, color="b", ls='-', label=r'$\bar{\theta}_B$')
+    plt.axvline(x=ci95[0], color="b", ls='--', label=r'$CI_{95\%}$')
+    plt.axvline(x=ci95[1], color="b", ls='--')
+    plt.axvline(x=0, color="k", lw=2, label=r'No effect: 0')
+    plt.legend()
+    _ = plt.title(r'Bootstrap distribution of the estimator $\hat{\theta}_b$ (sample mean)')
+
+
+
+
+.. image:: stat_montecarlo_files/stat_montecarlo_25_0.png
+

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Linear Dimensionality Reduction and Feature Extraction &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Manifold learning: non-linear dimension reduction" href="manifold_learning.html" />
+    <link rel="prev" title="Overfitting and Regularization" href="../ml_overview/overfitting.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="linear-dimensionality-reduction-and-feature-extraction">
+<h1>Linear Dimensionality Reduction and Feature Extraction<a class="headerlink" href="#linear-dimensionality-reduction-and-feature-extraction" title="Link to this heading">¶</a></h1>
+<p>In machine learning and statistics, dimensionality reduction or
+dimension reduction is the process of reducing the number of features
+under consideration, and can be divided into feature selection (not
+addressed here) and feature extraction.</p>
+<p>Feature extraction starts from an initial set of measured data and
+builds derived values (features) intended to be informative and
+non-redundant, facilitating the subsequent learning and generalization
+steps, and in some cases leading to better human interpretations.
+Feature extraction is related to dimensionality reduction.</p>
+<p>Keys aspect of linear dimension reduction (or matrix
+decomposition/factorization):</p>
+<ul class="simple">
+<li><p>Find new axes (components) that best describe the variance or
+structure of the data.</p></li>
+<li><p>Exploit the covariance <span class="math notranslate nohighlight">\(\mathbf{\Sigma_{XX}}\)</span> between the input
+features.</p></li>
+<li><p>Dimension reduction is obtained by a rotation (linear transformation)
+in the input space.</p></li>
+<li><p>SVD or PCA find orthogonal directions of maximum variance.</p></li>
+</ul>
+<p>The input matrix <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, of dimension <span class="math notranslate nohighlight">\(N \times P\)</span>, is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+x_{11} &amp; \ldots     &amp;     x_{1P}\\
+       &amp;            &amp;      \\
+\vdots &amp; \mathbf{X} &amp; \vdots\\
+       &amp;            &amp;      \\
+x_{N1} &amp; \ldots     &amp;     x_{NP}
+\end{bmatrix}\end{split}\]</div>
+<p>where the rows represent the samples and columns represent the
+variables. The goal is to learn a transformation that extracts a few
+relevant features.</p>
+<section id="singular-value-decomposition-and-matrix-factorization">
+<h2>Singular value decomposition and matrix factorization<a class="headerlink" href="#singular-value-decomposition-and-matrix-factorization" title="Link to this heading">¶</a></h2>
+<p>Sources: <a class="reference external" href="https://scikit-learn.org/stable/modules/decomposition.html">Matrix factorization problems with
+scikit-learn</a></p>
+<section id="matrix-factorization-principles">
+<h3>Matrix factorization principles<a class="headerlink" href="#matrix-factorization-principles" title="Link to this heading">¶</a></h3>
+<p>Decompose the data matrix <span class="math notranslate nohighlight">\(\mathbf{X}_{N \times P}\)</span> into a product
+of a mixing matrix <span class="math notranslate nohighlight">\(\mathbf{U}_{N \times K}\)</span> and a dictionary
+matrix <span class="math notranslate nohighlight">\(\mathbf{V}_{P \times K}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{X} = \mathbf{U} \mathbf{V}^{T},\]</div>
+<p>If we consider only a subset of components
+<span class="math notranslate nohighlight">\(K&lt;rank(\mathbf{X}) &lt; \min(P, N-1)\)</span> , <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is
+approximated by a matrix <span class="math notranslate nohighlight">\(\hat{\mathbf{X}}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{X} \approx \hat{\mathbf{X}} = \mathbf{U} \mathbf{V}^{T},\]</div>
+<p>Each line of <span class="math notranslate nohighlight">\(\mathbf{x_i}\)</span> is a linear combination (mixing
+<span class="math notranslate nohighlight">\(\mathbf{u_i}\)</span>) of dictionary items <span class="math notranslate nohighlight">\(\mathbf{V}\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(N\)</span> <span class="math notranslate nohighlight">\(P\)</span>-dimensional data points lie in a space whose
+dimension is less than <span class="math notranslate nohighlight">\(N-1\)</span> (2 dots lie on a line, 3 on a plane,
+etc.).</p>
+<figure class="align-default" id="id1">
+<img alt="Matrix factorization" src="../_images/svd_mixing_dict.png" />
+<figcaption>
+<p><span class="caption-text">Matrix factorization</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="singular-value-decomposition-svd-principles">
+<h3>Singular value decomposition (SVD) principles<a class="headerlink" href="#singular-value-decomposition-svd-principles" title="Link to this heading">¶</a></h3>
+<p>Singular-value decomposition (SVD) factorises the data matrix
+<span class="math notranslate nohighlight">\(\mathbf{X}_{N \times P}\)</span> into a product:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{X} = \mathbf{U}\mathbf{D}\mathbf{V}^{T},\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+x_{11} &amp;            &amp; x_{1P}\\
+       &amp;            &amp;       \\
+       &amp; \mathbf{X} &amp;       \\
+       &amp;            &amp;       \\
+x_{N1} &amp;            &amp; x_{NP}
+\end{bmatrix} =
+\begin{bmatrix}
+u_{11} &amp;            &amp; u_{1K}\\
+       &amp;            &amp;       \\
+       &amp; \mathbf{U} &amp;       \\
+       &amp;            &amp;       \\
+u_{N1} &amp;            &amp; u_{NK}
+\end{bmatrix}
+\begin{bmatrix}
+d_{1}&amp;            &amp; 0\\
+     &amp; \mathbf{D} &amp;\\
+ 0   &amp;            &amp; d_{K}
+\end{bmatrix}
+\begin{bmatrix}
+v_{11}&amp;              &amp; v_{1P}\\
+      &amp; \mathbf{V}^T &amp;       \\
+v_{K1}&amp;              &amp; v_{KP}
+\end{bmatrix}.\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\mathbf{U}\)</span>: <strong>right-singular</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathbf{V} = [\mathbf{v}_1,\cdots , \mathbf{v}_K]\)</span> is a
+<span class="math notranslate nohighlight">\(P \times K\)</span> orthogonal matrix.</p></li>
+<li><p>It is a <strong>dictionary</strong> of patterns to be combined (according to the
+mixing coefficients) to reconstruct the original samples.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{V}\)</span> perfoms the initial <strong>rotations</strong> (<strong>projection</strong>)
+along the <span class="math notranslate nohighlight">\(K=\min(N, P)\)</span> <strong>principal component directions</strong>,
+also called <strong>loadings</strong>.</p></li>
+<li><p>Each <span class="math notranslate nohighlight">\(\mathbf{v}_j\)</span> performs the linear combination of the
+variables that has maximum sample variance, subject to being
+uncorrelated with the previous <span class="math notranslate nohighlight">\(\mathbf{v}_{j-1}\)</span>.</p></li>
+</ul>
+<p><span class="math notranslate nohighlight">\(\mathbf{D}\)</span>: <strong>singular values</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathbf{D}\)</span> is a <span class="math notranslate nohighlight">\(K \times K\)</span> diagonal matrix made of the
+singular values of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> with
+<span class="math notranslate nohighlight">\(d_1 \geq d_2 \geq \cdots \geq d_K \geq 0\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{D}\)</span> scale the projection along the coordinate axes by
+<span class="math notranslate nohighlight">\(d_1, d_2, \cdots, d_K\)</span>.</p></li>
+<li><p>Singular values are the square roots of the eigenvalues of
+<span class="math notranslate nohighlight">\(\mathbf{X}^{T}\mathbf{X}\)</span>.</p></li>
+</ul>
+<p><span class="math notranslate nohighlight">\(\mathbf{V}\)</span>: <strong>left-singular vectors</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathbf{U} = [\mathbf{u}_1, \cdots , \mathbf{u}_K]\)</span> is an
+<span class="math notranslate nohighlight">\(N \times K\)</span> orthogonal matrix.</p></li>
+<li><p>Each row <span class="math notranslate nohighlight">\(\mathbf{v_i}\)</span> provides the <strong>mixing coefficients</strong> of
+dictionary items to reconstruct the sample <span class="math notranslate nohighlight">\(\mathbf{x_i}\)</span></p></li>
+<li><p>It may be understood as the coordinates on the new orthogonal basis
+(obtained after the initial rotation) called <strong>principal components</strong>
+in the PCA.</p></li>
+</ul>
+</section>
+<section id="svd-for-variables-transformation">
+<h3>SVD for variables transformation<a class="headerlink" href="#svd-for-variables-transformation" title="Link to this heading">¶</a></h3>
+<p><span class="math notranslate nohighlight">\(\mathbf{V}\)</span> transforms correlated variables (<span class="math notranslate nohighlight">\(\mathbf{X}\)</span>)
+into a set of uncorrelated ones (<span class="math notranslate nohighlight">\(\mathbf{U}\mathbf{D}\)</span>) that
+better expose the various relationships among the original data items.</p>
+<p>At the same time, SVD is a method for identifying and ordering the
+dimensions along which data points exhibit the most variation.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="c1"># Plot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pystatsml.plot_utils</span>
+
+<span class="c1"># Plot parameters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
+<span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># dataset</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">experience</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+<span class="n">salary</span> <span class="o">=</span> <span class="mi">1500</span> <span class="o">+</span> <span class="n">experience</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">experience</span><span class="p">,</span> <span class="n">salary</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># PCA using SVD</span>
+<span class="n">X</span> <span class="o">-=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Centering is required</span>
+<span class="n">U</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">Vh</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># U : Unitary matrix having left singular vectors as columns.</span>
+<span class="c1">#     Of shape (n_samples,n_samples) or (n_samples,n_comps), depending on</span>
+<span class="c1">#     full_matrices.</span>
+<span class="c1">#</span>
+<span class="c1"># s : The singular values, sorted in non-increasing order. Of shape (n_comps,),</span>
+<span class="c1">#     with n_comps = min(n_samples, n_features).</span>
+<span class="c1">#</span>
+<span class="c1"># Vh: Unitary matrix having right singular vectors as rows.</span>
+<span class="c1">#     Of shape (n_features, n_features) or (n_comps, n_features) depending</span>
+<span class="c1"># on full_matrices.</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">U</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">U</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;U: Rotated and scaled data&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+
+<span class="c1"># Project data</span>
+<span class="n">PC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Vh</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">PC</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">PC</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;XV: Rotated data&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;PC1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;PC2&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Vh</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">Vh</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dy</span><span class="o">=</span><span class="n">Vh</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">head_width</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+              <span class="n">head_length</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">Vh</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">Vh</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span><span class="s1">&#39;v</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+             <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;X: original data (v1, v2:PC dir.)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;experience&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;salary&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Ignoring</span> <span class="n">fixed</span> <span class="n">y</span> <span class="n">limits</span> <span class="n">to</span> <span class="n">fulfill</span> <span class="n">fixed</span> <span class="n">data</span> <span class="n">aspect</span> <span class="k">with</span> <span class="n">adjustable</span> <span class="n">data</span> <span class="n">limits</span><span class="o">.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_dimensionality_reduction_2_2.png" src="../_images/linear_dimensionality_reduction_2_2.png" />
+</section>
+</section>
+<section id="principal-components-analysis-pca">
+<h2>Principal components analysis (PCA)<a class="headerlink" href="#principal-components-analysis-pca" title="Link to this heading">¶</a></h2>
+<p>Sources:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">PCA with
+scikit-learn</a></p></li>
+<li><p>C. M. Bishop <em>Pattern Recognition and Machine Learning</em>, Springer,
+2006</p></li>
+<li><p><a class="reference external" href="http://alexhwilliams.info/itsneuronalblog/2016/03/27/pca/">Everything you did and didn’t know about
+PCA</a></p></li>
+<li><p><a class="reference external" href="http://sebastianraschka.com/Articles/2015_pca_in_3_steps.html">Principal Component Analysis in 3 Simple
+Steps</a></p></li>
+</ul>
+<section id="principles">
+<h3>Principles<a class="headerlink" href="#principles" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p>Principal components analysis is the main method used for linear
+dimension reduction.</p></li>
+<li><p>The idea of principal component analysis is to find the <span class="math notranslate nohighlight">\(K\)</span>
+<strong>principal components directions</strong> (called the <strong>loadings</strong>)
+<span class="math notranslate nohighlight">\(\mathbf{V}_{K\times P}\)</span> that capture the variation in the data
+as much as possible.</p></li>
+<li><p>It converts a set of <span class="math notranslate nohighlight">\(N\)</span> <span class="math notranslate nohighlight">\(P\)</span>-dimensional observations
+<span class="math notranslate nohighlight">\(\mathbf{N}_{N\times P}\)</span> of possibly correlated variables into a
+set of <span class="math notranslate nohighlight">\(N\)</span> <span class="math notranslate nohighlight">\(K\)</span>-dimensional samples
+<span class="math notranslate nohighlight">\(\mathbf{C}_{N\times K}\)</span>, where the <span class="math notranslate nohighlight">\(K &lt; P\)</span>. The new
+variables are linearly uncorrelated. The columns of
+<span class="math notranslate nohighlight">\(\mathbf{C}_{N\times K}\)</span> are called the <strong>principal
+components</strong>.</p></li>
+<li><p>The dimension reduction is obtained by using only <span class="math notranslate nohighlight">\(K &lt; P\)</span>
+components that exploit correlation (covariance) among the original
+variables.</p></li>
+<li><p>PCA is mathematically defined as an orthogonal linear transformation
+<span class="math notranslate nohighlight">\(\mathbf{V}_{K\times P}\)</span> that transforms the data to a new
+coordinate system such that the greatest variance by some projection
+of the data comes to lie on the first coordinate (called the first
+principal component), the second greatest variance on the second
+coordinate, and so on.</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{C}_{N\times K} = \mathbf{X}_{N \times P} \mathbf{V}_{P \times K}\]</div>
+</li>
+<li><p>PCA can be thought of as fitting a <span class="math notranslate nohighlight">\(P\)</span>-dimensional ellipsoid to
+the data, where each axis of the ellipsoid represents a principal
+component. If some axis of the ellipse is small, then the variance
+along that axis is also small, and by omitting that axis and its
+corresponding principal component from our representation of the
+dataset, we lose only a commensurately small amount of information.</p></li>
+<li><p>Finding the <span class="math notranslate nohighlight">\(K\)</span> largest axes of the ellipse will permit to
+project the data onto a space having dimensionality <span class="math notranslate nohighlight">\(K &lt; P\)</span>
+while maximizing the variance of the projected data.</p></li>
+</ul>
+</section>
+<section id="dataset-preprocessing">
+<h3>Dataset preprocessing<a class="headerlink" href="#dataset-preprocessing" title="Link to this heading">¶</a></h3>
+<section id="centering">
+<h4>Centering<a class="headerlink" href="#centering" title="Link to this heading">¶</a></h4>
+<p>Consider a data matrix, <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> , with column-wise zero
+empirical mean (the sample mean of each column has been shifted to
+zero), ie. <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is replaced by
+<span class="math notranslate nohighlight">\(\mathbf{X} - \mathbf{1}\bar{\mathbf{x}}^T\)</span>.</p>
+</section>
+<section id="standardizing">
+<h4>Standardizing<a class="headerlink" href="#standardizing" title="Link to this heading">¶</a></h4>
+<p>Optionally, standardize the columns, i.e., scale them by their
+standard-deviation. Without standardization, a variable with a high
+variance will capture most of the effect of the PCA. The principal
+direction will be aligned with this variable. Standardization will,
+however, raise noise variables to the save level as informative
+variables.</p>
+<p>The covariance matrix of centered standardized data is the correlation
+matrix.</p>
+</section>
+</section>
+<section id="eigendecomposition-of-the-data-covariance-matrix">
+<h3>Eigendecomposition of the data covariance matrix<a class="headerlink" href="#eigendecomposition-of-the-data-covariance-matrix" title="Link to this heading">¶</a></h3>
+<p>To begin with, consider the projection onto a one-dimensional space
+(<span class="math notranslate nohighlight">\(K = 1\)</span>). We can define the direction of this space using a
+<span class="math notranslate nohighlight">\(P\)</span>-dimensional vector <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>, which for convenience
+(and without loss of generality) we shall choose to be a unit vector so
+that <span class="math notranslate nohighlight">\(\|\mathbf{v}\|_2 = 1\)</span> (note that we are only interested in
+the direction defined by <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>, not in the magnitude of
+<span class="math notranslate nohighlight">\(\mathbf{v}\)</span> itself). PCA consists of two mains steps:</p>
+<p><strong>Projection in the directions that capture the greatest variance</strong></p>
+<p>Each <span class="math notranslate nohighlight">\(P\)</span>-dimensional data point <span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span> is then
+projected onto <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>, where the coordinate (in the
+coordinate system of <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>) is a scalar value, namely
+<span class="math notranslate nohighlight">\(\mathbf{x}_i^T \mathbf{v}\)</span>. I.e., we want to find the vector
+<span class="math notranslate nohighlight">\(\mathbf{v}\)</span> that maximizes these coordinates along
+<span class="math notranslate nohighlight">\(\mathbf{v}\)</span>, which we will see corresponds to maximizing the
+variance of the projected data. This is equivalently expressed as</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{v} = \arg \max_{\|\mathbf{v}\|=1}\frac{1}{N}\sum_i \left(\mathbf{x}_i^T \mathbf{v}\right)^2.\]</div>
+<p>We can write this in matrix form as</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{v} = \arg \max_{\|\mathbf{v}\|=1} \frac{1}{N} \|\mathbf{X} \mathbf{v}\|^2 = \frac{1}{N} \mathbf{v}^T \mathbf{X}^T \mathbf{X} \mathbf{v} = \mathbf{v}^T\mathbf{S_{XX}}\mathbf{v},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{S_{XX}}\)</span> is a biased estiamte of the covariance
+matrix of the data, i.e.</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{S_{XX}} = \frac{1}{N} \mathbf{X}^T\mathbf{X}.\]</div>
+<p>We now maximize the projected variance
+<span class="math notranslate nohighlight">\(\mathbf{v}^T \mathbf{S_{XX}} \mathbf{v}\)</span> with respect to
+<span class="math notranslate nohighlight">\(\mathbf{v}\)</span>. Clearly, this has to be a constrained maximization
+to prevent <span class="math notranslate nohighlight">\(\|\mathbf{v}_2\| \rightarrow \infty\)</span>. The appropriate
+constraint comes from the normalization condition
+<span class="math notranslate nohighlight">\(\|\mathbf{v}\|_2 \equiv \|\mathbf{v}\|_2^2 = \mathbf{v}^T \mathbf{v} = 1\)</span>.
+To enforce this constraint, we introduce a <a class="reference external" href="https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/constrained-optimization/a/lagrange-multipliers-single-constraint">Lagrange
+multiplier</a>
+that we shall denote by <span class="math notranslate nohighlight">\(\lambda\)</span>, and then make an unconstrained
+maximization of</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{v}^T\mathbf{S_{XX}} \mathbf{v} - \lambda (\mathbf{v}^T \mathbf{v} - 1).\]</div>
+<p>By setting the gradient with respect to <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> equal to
+zero, we see that this quantity has a stationary point when</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{S_{XX}} \mathbf{v} = \lambda \mathbf{v}.\]</div>
+<p>We note that <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> is an eigenvector of
+<span class="math notranslate nohighlight">\(\mathbf{S_{XX}}\)</span>.</p>
+<p>If we left-multiply the above equation by <span class="math notranslate nohighlight">\(\mathbf{v}^T\)</span> and make
+use of <span class="math notranslate nohighlight">\(\mathbf{v}^T \mathbf{v} = 1\)</span>, we see that the variance is
+given by</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{v}^T \mathbf{S_{XX}} \mathbf{v} = \lambda,\]</div>
+<p>and so the variance will be at a maximum when <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> is
+equal to the eigenvector corresponding to the largest eigenvalue,
+<span class="math notranslate nohighlight">\(\lambda\)</span>. This eigenvector is known as the first principal
+component.</p>
+<p>We can define additional principal components in an incremental fashion
+by choosing each new direction to be that which maximizes the projected
+variance amongst all possible directions that are orthogonal to those
+already considered. If we consider the general case of a
+<span class="math notranslate nohighlight">\(K\)</span>-dimensional projection space, the optimal linear projection
+for which the variance of the projected data is maximized is now defined
+by the <span class="math notranslate nohighlight">\(K\)</span> eigenvectors,
+<span class="math notranslate nohighlight">\(\mathbf{v_1}, \ldots , \mathbf{v_K}\)</span>, of the data covariance
+matrix <span class="math notranslate nohighlight">\(\mathbf{S_{XX}}\)</span> that corresponds to the <span class="math notranslate nohighlight">\(K\)</span> largest
+eigenvalues,
+<span class="math notranslate nohighlight">\(\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_K\)</span>.</p>
+<section id="back-to-svd">
+<h4>Back to SVD<a class="headerlink" href="#back-to-svd" title="Link to this heading">¶</a></h4>
+<p>The sample covariance matrix of <strong>centered data</strong> <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> is
+given by</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{S_{XX}} = \frac{1}{N-1}\mathbf{X}^T\mathbf{X}.\]</div>
+<p>We rewrite <span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span> using the SVD decomposition of
+<span class="math notranslate nohighlight">\(\mathbf{X}\)</span> as</p>
+<p>Considering only the <span class="math notranslate nohighlight">\(k^{th}\)</span> right-singular vectors
+<span class="math notranslate nohighlight">\(\mathbf{v}_k\)</span> associated to the singular value <span class="math notranslate nohighlight">\(d_k\)</span></p>
+<div class="math notranslate nohighlight">
+\[\mathbf{v_k}^T\mathbf{S_{XX}}\mathbf{v_k} = \frac{1}{N-1}d_k^2,\]</div>
+<p>It turns out that if you have done the singular value decomposition then
+you already have the Eigenvalue decomposition for
+<span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span>. Where - The eigenvectors of
+<span class="math notranslate nohighlight">\(\mathbf{S_{XX}}\)</span> are equivalent to the right singular vectors,
+<span class="math notranslate nohighlight">\(\mathbf{V}\)</span>, of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>. - The eigenvalues,
+<span class="math notranslate nohighlight">\(\lambda_k\)</span>, of <span class="math notranslate nohighlight">\(\mathbf{S_{XX}}\)</span>, i.e. the variances of the
+components, are equal to <span class="math notranslate nohighlight">\(\frac{1}{N-1}\)</span> times the squared
+singular values, <span class="math notranslate nohighlight">\(d_k\)</span>.</p>
+<p>Moreover computing PCA with SVD do not require to form the matrix
+<span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span>, so computing the SVD is now the standard
+way to calculate a principal components analysis from a data matrix,
+unless only a handful of components are required.</p>
+</section>
+<section id="pca-outputs">
+<h4>PCA outputs<a class="headerlink" href="#pca-outputs" title="Link to this heading">¶</a></h4>
+<p>The SVD or the eigendecomposition of the data covariance matrix provides
+three main quantities:</p>
+<ol class="arabic simple">
+<li><p><strong>Principal component directions</strong> or <strong>loadings</strong> are the
+<strong>eigenvectors</strong> of <span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span>. The
+<span class="math notranslate nohighlight">\(\mathbf{V}_{K \times P}\)</span> or the <strong>right-singular vectors</strong> of
+an SVD of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> are called principal component
+directions of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>. They are generally computed using
+the SVD of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>.</p></li>
+<li><p><strong>Principal components</strong> is the <span class="math notranslate nohighlight">\({N\times K}\)</span> matrix
+<span class="math notranslate nohighlight">\(\mathbf{C}\)</span> which is obtained by projecting <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>
+onto the principal components directions, i.e.</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\mathbf{C}_{N\times K} = \mathbf{X}_{N \times P} \mathbf{V}_{P \times K}.\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\mathbf{X} = \mathbf{UDV}^T\)</span> and <span class="math notranslate nohighlight">\(\mathbf{V}\)</span> is
+orthogonal (<span class="math notranslate nohighlight">\(\mathbf{V}^T \mathbf{V} = \mathbf{I}\)</span>):</p>
+<p>Thus <span class="math notranslate nohighlight">\(\mathbf{c}_j = \mathbf{X}\mathbf{v}_j = \mathbf{u}_j d_j\)</span>,
+for <span class="math notranslate nohighlight">\(j=1, \ldots K\)</span>. Hence <span class="math notranslate nohighlight">\(\mathbf{u}_j\)</span> is simply the
+projection of the row vectors of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, i.e., the input
+predictor vectors, on the direction <span class="math notranslate nohighlight">\(\mathbf{v}_j\)</span>, scaled by
+<span class="math notranslate nohighlight">\(d_j\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{c}_1=
+\begin{bmatrix}
+x_{1,1}v_{1,1}+ \ldots +x_{1,P}v_{1,P}\\
+x_{2,1}v_{1,1}+ \ldots +x_{2,P}v_{1,P}\\
+\vdots\\
+x_{N,1}v_{1,1}+ \ldots +x_{N,P}v_{1,P}
+\end{bmatrix}\end{split}\]</div>
+<ol class="arabic simple" start="3">
+<li><p>The <strong>variance</strong> of each component is given by the eigen values
+<span class="math notranslate nohighlight">\(\lambda_k, k=1, \dots K\)</span>. It can be obtained from the singular
+values:</p></li>
+</ol>
+</section>
+</section>
+<section id="determining-the-number-of-pcs">
+<h3>Determining the number of PCs<a class="headerlink" href="#determining-the-number-of-pcs" title="Link to this heading">¶</a></h3>
+<p>We must choose <span class="math notranslate nohighlight">\(K^* \in [1, \ldots,  K]\)</span>, the number of required
+components. This can be done by calculating the explained variance ratio
+of the <span class="math notranslate nohighlight">\(K^*\)</span> first components and by choosing <span class="math notranslate nohighlight">\(K^*\)</span> such
+that the <strong>cumulative explained variance</strong> ratio is greater than some
+given threshold (e.g., <span class="math notranslate nohighlight">\(\approx 90\%\)</span>). This is expressed as</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{cumulative~explained~variance}(\mathbf{c}_k) = \frac{\sum_j^{K^*} var(\mathbf{c}_k)}{\sum_j^K var(\mathbf{c}_k)}.\]</div>
+</section>
+<section id="interpretation-and-visualization">
+<h3>Interpretation and visualization<a class="headerlink" href="#interpretation-and-visualization" title="Link to this heading">¶</a></h3>
+<p><strong>PCs</strong></p>
+<p>Plot the samples projeted on first the principal components as e.g. PC1
+against PC2.</p>
+<p><strong>PC directions</strong></p>
+<p>Exploring the loadings associated with a component provides the
+contribution of each original variable in the component.</p>
+<p>Remark: The loadings (PC directions) are the coefficients of multiple
+regression of PC on original variables:</p>
+<p>Another way to evaluate the contribution of the original variables in
+each PC can be obtained by computing the correlation between the PCs and
+the original variables, i.e. columns of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, denoted
+<span class="math notranslate nohighlight">\(\mathbf{x}_j\)</span>, for <span class="math notranslate nohighlight">\(j=1, \ldots, P\)</span>. For the <span class="math notranslate nohighlight">\(k^{th}\)</span>
+PC, compute and plot the correlations with all original variables</p>
+<div class="math notranslate nohighlight">
+\[cor(\mathbf{c}_k, \mathbf{x}_j),  j=1 \ldots K, j=1 \ldots K.\]</div>
+<p>These quantities are sometimes called the <em>correlation loadings</em>.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># dataset</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">experience</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+<span class="n">salary</span> <span class="o">=</span> <span class="mi">1500</span> <span class="o">+</span> <span class="n">experience</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">experience</span><span class="p">,</span> <span class="n">salary</span><span class="p">])</span>
+
+<span class="c1"># PCA with scikit-learn</span>
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pca</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">)</span>
+
+<span class="n">PC</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x1&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;x2&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">PC</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">PC</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;PC1 (var=</span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;PC2 (var=</span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0.93646607</span> <span class="mf">0.06353393</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_dimensionality_reduction_4_1.png" src="../_images/linear_dimensionality_reduction_4_1.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">offsetbox</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">manifold</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">decomposition</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span>
+                     <span class="n">discriminant_analysis</span><span class="p">,</span> <span class="n">random_projection</span><span class="p">,</span> <span class="n">neighbors</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">)</span>
+
+<span class="n">digits</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_digits</span><span class="p">(</span><span class="n">n_class</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">digits</span><span class="o">.</span><span class="n">data</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span>
+<span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">n_neighbors</span> <span class="o">=</span> <span class="mi">30</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Automatically</span> <span class="n">created</span> <span class="n">module</span> <span class="k">for</span> <span class="n">IPython</span> <span class="n">interactive</span> <span class="n">environment</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="eigen-faces">
+<h2>Eigen faces<a class="headerlink" href="#eigen-faces" title="Link to this heading">¶</a></h2>
+<p>Sources: <a class="reference external" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">Scikit learn Faces
+decompositions</a></p>
+<p>Load data</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_olivetti_faces</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">decomposition</span>
+
+<span class="n">n_row</span><span class="p">,</span> <span class="n">n_col</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">n_components</span> <span class="o">=</span> <span class="n">n_row</span> <span class="o">*</span> <span class="n">n_col</span>
+<span class="n">image_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+
+<span class="n">faces</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fetch_olivetti_faces</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">faces</span><span class="o">.</span><span class="n">shape</span>
+
+
+<span class="c1"># Utils function</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_gallery</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">n_col</span><span class="o">=</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_row</span><span class="o">=</span><span class="n">n_row</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">n_col</span><span class="p">,</span> <span class="mf">2.26</span> <span class="o">*</span> <span class="n">n_row</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">n_row</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="o">-</span><span class="n">comp</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">image_shape</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                   <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                   <span class="n">vmin</span><span class="o">=-</span><span class="n">vmax</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(())</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.93</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Preprocessing</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># global centering</span>
+<span class="n">faces_centered</span> <span class="o">=</span> <span class="n">faces</span> <span class="o">-</span> <span class="n">faces</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># local centering</span>
+<span class="n">faces_centered</span> <span class="o">-=</span> <span class="n">faces_centered</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>First centered Olivetti faces</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;First centered Olivetti faces&quot;</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_dimensionality_reduction_11_0.png" src="../_images/linear_dimensionality_reduction_11_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pca</span> <span class="o">=</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">)</span>
+<span class="n">pca</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
+<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;PCA first </span><span class="si">%i</span><span class="s2"> loadings&quot;</span> <span class="o">%</span> <span class="n">n_components</span><span class="p">,</span> <span class="n">pca</span><span class="o">.</span><span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_dimensionality_reduction_12_0.png" src="../_images/linear_dimensionality_reduction_12_0.png" />
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">¶</a></h2>
+<section id="write-a-basic-pca-class">
+<h3>Write a basic PCA class<a class="headerlink" href="#write-a-basic-pca-class" title="Link to this heading">¶</a></h3>
+<p>Write a class <code class="docutils literal notranslate"><span class="pre">BasicPCA</span></code> with two methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fit(X)</span></code> that estimates the data mean, principal components
+directions <span class="math notranslate nohighlight">\(\textbf{V}\)</span> and the explained variance of each
+component.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">transform(X)</span></code> that projects the data onto the principal components.</p></li>
+</ul>
+<p>Check that your <code class="docutils literal notranslate"><span class="pre">BasicPCA</span></code> gave similar results, compared to the
+results from <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>.</p>
+</section>
+<section id="apply-your-basic-pca-on-the-iris-dataset">
+<h3>Apply your Basic PCA on the <code class="docutils literal notranslate"><span class="pre">iris</span></code> dataset<a class="headerlink" href="#apply-your-basic-pca-on-the-iris-dataset" title="Link to this heading">¶</a></h3>
+<p>The data set is available at:
+<a class="reference external" href="https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv">https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv</a></p>
+<ul class="simple">
+<li><p>Describe the data set. Should the dataset been standardized?</p></li>
+<li><p>Describe the structure of correlations among variables.</p></li>
+<li><p>Compute a PCA with the maximum number of components.</p></li>
+<li><p>Compute the cumulative explained variance ratio. Determine the number
+of components <span class="math notranslate nohighlight">\(K\)</span> by your computed values.</p></li>
+<li><p>Print the <span class="math notranslate nohighlight">\(K\)</span> principal components directions and correlations
+of the <span class="math notranslate nohighlight">\(K\)</span> principal components with the original variables.
+Interpret the contribution of the original variables into the PC.</p></li>
+<li><p>Plot the samples projected into the <span class="math notranslate nohighlight">\(K\)</span> first PCs.</p></li>
+<li><p>Color samples by their species.</p></li>
+</ul>
+</section>
+<section id="run-scikit-learn-examples">
+<h3>Run scikit-learn examples<a class="headerlink" href="#run-scikit-learn-examples" title="Link to this heading">¶</a></h3>
+<p>Load the notebook or python file at the end of each examples</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">Faces dataset
+decompositions</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/auto_examples/applications/plot_face_recognition.html">Faces recognition example using eigenfaces and
+SVMs</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Linear Dimensionality Reduction and Feature Extraction</a><ul>
+<li><a class="reference internal" href="#singular-value-decomposition-and-matrix-factorization">Singular value decomposition and matrix factorization</a><ul>
+<li><a class="reference internal" href="#matrix-factorization-principles">Matrix factorization principles</a></li>
+<li><a class="reference internal" href="#singular-value-decomposition-svd-principles">Singular value decomposition (SVD) principles</a></li>
+<li><a class="reference internal" href="#svd-for-variables-transformation">SVD for variables transformation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#principal-components-analysis-pca">Principal components analysis (PCA)</a><ul>
+<li><a class="reference internal" href="#principles">Principles</a></li>
+<li><a class="reference internal" href="#dataset-preprocessing">Dataset preprocessing</a><ul>
+<li><a class="reference internal" href="#centering">Centering</a></li>
+<li><a class="reference internal" href="#standardizing">Standardizing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#eigendecomposition-of-the-data-covariance-matrix">Eigendecomposition of the data covariance matrix</a><ul>
+<li><a class="reference internal" href="#back-to-svd">Back to SVD</a></li>
+<li><a class="reference internal" href="#pca-outputs">PCA outputs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#determining-the-number-of-pcs">Determining the number of PCs</a></li>
+<li><a class="reference internal" href="#interpretation-and-visualization">Interpretation and visualization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#eigen-faces">Eigen faces</a></li>
+<li><a class="reference internal" href="#exercises">Exercises</a><ul>
+<li><a class="reference internal" href="#write-a-basic-pca-class">Write a basic PCA class</a></li>
+<li><a class="reference internal" href="#apply-your-basic-pca-on-the-iris-dataset">Apply your Basic PCA on the <code class="docutils literal notranslate"><span class="pre">iris</span></code> dataset</a></li>
+<li><a class="reference internal" href="#run-scikit-learn-examples">Run scikit-learn examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ml_unsupervised/linear_dimensionality_reduction.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/ml_unsupervised/linear_dimensionality_reduction.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

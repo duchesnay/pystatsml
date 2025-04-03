@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Optimization (Minimization) by Gradient Descent &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Univariate Statistics" href="../statistics/stat_univ.html" />
+    <link rel="prev" title="Time Series" href="time_series.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="optimization-minimization-by-gradient-descent">
+<h1>Optimization (Minimization) by Gradient Descent<a class="headerlink" href="#optimization-minimization-by-gradient-descent" title="Link to this heading">¶</a></h1>
+<section id="gradient-descent">
+<h2>Gradient Descent<a class="headerlink" href="#gradient-descent" title="Link to this heading">¶</a></h2>
+<figure class="align-default" id="id1">
+<img alt="Optimization (minimization) by gradient descent" src="../_images/minimization.png" />
+<figcaption>
+<p><span class="caption-text">Optimization (minimization) by gradient descent</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Gradient_descent">Gradient descent</a> is
+an optimization algorithm to minimize a <strong>cost or loss function</strong>
+<span class="math notranslate nohighlight">\(f\)</span> given its parameter <span class="math notranslate nohighlight">\(w\)</span>. The algorithm <strong>iteratively
+moves in the direction of steepest descent</strong> as defined by the
+<strong>opposite direction the gradient</strong>. In machine learning, we use
+gradient descent to update the parameters of our model. <strong>Parameters</strong>
+refer to <strong>coefficients</strong> in <strong>Linear Regression</strong> and <strong>weights</strong> in
+<strong>neural networks</strong>.</p>
+<p>Local minimization of <span class="math notranslate nohighlight">\(f\)</span> at point <span class="math notranslate nohighlight">\(x_k\)</span> make use of
+first-order <a class="reference external" href="https://en.wikipedia.org/wiki/Taylor_series">Taylor
+expansion</a> local
+estimation of <span class="math notranslate nohighlight">\(f\)</span> (in one dimension):</p>
+<div class="math notranslate nohighlight">
+\[f(w_k + t) \approx f(w_k) + f'(w_k)t\]</div>
+<p>Therefore, to minimize <span class="math notranslate nohighlight">\(f(w_k + t)\)</span> we just have to move in the
+opposite direction of the derivative <span class="math notranslate nohighlight">\(f'(w_k)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[w_{k+1} =  w_{k} - \gamma f'(w_{k})\]</div>
+<p>With a <strong>learning rate</strong> <span class="math notranslate nohighlight">\(\gamma\)</span> that determines the step size at
+each iteration while moving toward a minimum of a cost function.</p>
+<p>In multidimensional problems <span class="math notranslate nohighlight">\(\textbf{w}_{k} \in \mathbb{R}^p\)</span>,
+where:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\textbf{w}_k = \begin{bmatrix} w_1 \\ \vdots \\ w_p \end{bmatrix}_k,\end{split}\]</div>
+<p>the derivative <span class="math notranslate nohighlight">\(f'(\textbf{w}_k)\)</span> is the gradient (direction) of
+<span class="math notranslate nohighlight">\(f\)</span> at <span class="math notranslate nohighlight">\(\textbf{w}_k\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\nabla f(\textbf{w}_{k}) = \begin{bmatrix} \partial f / \partial w_1 \\ \vdots \\ \partial f / \partial w_p \end{bmatrix}_k,\end{split}\]</div>
+<p>Leading to the minimization scheme:</p>
+<div class="math notranslate nohighlight">
+\[\textbf{w}_{k+1} =  \textbf{w}_{k} - \gamma \nabla f(\textbf{w}_{k})\]</div>
+<section id="choosing-the-step-size">
+<h3>Choosing the Step Size<a class="headerlink" href="#choosing-the-step-size" title="Link to this heading">¶</a></h3>
+<p>With large learning rate <span class="math notranslate nohighlight">\(\gamma\)</span> we can cover more ground each
+step, but we <strong>risk overshooting the lowest point</strong> since the slope of
+the hill is constantly changing.</p>
+<p>With a very small learning rate**, we can confidently move in the
+direction of the negative gradient since we are recalculating it so
+frequently. A small learning rate is more precise, but calculating the
+gradient is time-consuming, leading too slow convergence</p>
+<figure class="align-default" id="id2">
+<img alt="jeremyjordan" src="../_images/learning_rate_choice.png" />
+<figcaption>
+<p><span class="caption-text">jeremyjordan</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p><strong>Line search</strong> can be used (or more sophisticated <a class="reference external" href="https://en.wikipedia.org/wiki/Backtracking_line_search">Backtracking line
+search</a>) to
+find value of <span class="math notranslate nohighlight">\(\gamma\)</span> such that
+<span class="math notranslate nohighlight">\(f(\textbf{w}_{k} - \gamma \nabla f(\textbf{w}_{k}))\)</span> is minimum.
+However such simple method ignore possible change of the curvature.</p>
+<ul class="simple">
+<li><p>Benefit of gradient decent: simplicity and versatility, almost any
+function with a gradient can be minimized.</p></li>
+<li><p>Limitations:</p>
+<ul>
+<li><p>Local minima (local optimization) for non-convex problem.</p></li>
+<li><p>Convergence speed: With fast changing curvature (gradient direction)
+the estimation of gradient will rapidly become wrong moving away
+from <span class="math notranslate nohighlight">\(x_k\)</span> suggesting small step-size. This also suggest the
+integration of change of the gradient direction in the calculus of
+the step size.</p></li>
+</ul>
+</li>
+</ul>
+<p>Libraries</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numdifftools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nd</span>
+
+<span class="c1"># Plot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">cm</span> <span class="c1"># color map</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># Plot parameters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
+<span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">1.</span><span class="p">)</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span>
+<span class="c1">#%matplotlib inline</span>
+</pre></div>
+</div>
+</section>
+<section id="gradient-descent-algorithm">
+<h3>Gradient Descent Algorithm<a class="headerlink" href="#gradient-descent-algorithm" title="Link to this heading">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">gradient_descent</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(),</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;first-order&quot;</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">hess</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1.5e-08</span><span class="p">,</span>
+                     <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                  <span class="n">intermediate_res</span><span class="o">=</span><span class="kc">False</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Gradient Descent minimization.</span>
+<span class="sd">    To make API compatible with scipy.optimize.minimize, it takes a</span>
+<span class="sd">    required fun parameters that is not used and an optional jac</span>
+<span class="sd">    that is used to compute the gradient.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fun : callable</span>
+<span class="sd">        The objective function to be minimized.</span>
+<span class="sd">    x0 : ndarray, shape (n_features,)</span>
+<span class="sd">        Initial guess.</span>
+<span class="sd">    args : tuple, optional</span>
+<span class="sd">        Extra arguments passed to the objective function and its derivatives</span>
+<span class="sd">        (fun, jac and hess functions)</span>
+<span class="sd">    method : string, optional</span>
+<span class="sd">        the solver, by default &quot;first-order&quot; if the basic first-order gradient</span>
+<span class="sd">        descent.</span>
+<span class="sd">    jac : callable, optional</span>
+<span class="sd">        Method for computing the gradient vector, the Jacobian.,</span>
+<span class="sd">        by default None.</span>
+<span class="sd">        jac(x, *args) -&gt; array_like, shape (n_features,)</span>
+<span class="sd">    hess : callable, optional</span>
+<span class="sd">        Method for computing the Hessian matrix, by default None</span>
+<span class="sd">        hess(x, *args) -&gt; ndarray, (n_features, n_features)</span>
+<span class="sd">    tol : float, optional</span>
+<span class="sd">        Tolerance for termination. Default = 1.5e-08,</span>
+<span class="sd">        sqrt(np.finfo(np.float64).eps)</span>
+<span class="sd">    options : dict, optional</span>
+<span class="sd">        A dictionary of solver options., by default dict(learning_rate=0.01,</span>
+<span class="sd">        maxiter=1000, intermediate_res=False)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray, shape (n_features,): the solution, intermediate_res dict</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize parameters</span>
+    <span class="n">weights_k</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Termination criteria</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="c1"># Dict to store intermediate results</span>
+    <span class="n">intermediate_res</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="p">[],</span> <span class="n">weights</span><span class="o">=</span><span class="p">[])</span>
+
+    <span class="c1"># Perform gradient descent</span>
+    <span class="k">while</span> <span class="n">eps</span> <span class="o">&gt;</span> <span class="n">tol</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;maxiter&quot;</span><span class="p">]:</span>
+    <span class="c1">#for k in range(options[&quot;maxiter&quot;]):</span>
+        <span class="n">weights_prev</span> <span class="o">=</span> <span class="n">weights_k</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">weights_grad</span> <span class="o">=</span> <span class="n">jac</span><span class="p">(</span><span class="n">weights_k</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="c1"># Update the parameters</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;first-order&quot;</span> <span class="ow">and</span> <span class="s2">&quot;learning_rate&quot;</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">weights_k</span> <span class="o">-=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">weights_grad</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;Newton&quot;</span> <span class="ow">and</span> <span class="n">hess</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">H</span> <span class="o">=</span> <span class="n">hess</span><span class="p">(</span><span class="n">weights_k</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">Hinv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+            <span class="n">weights_k</span> <span class="o">-=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Hinv</span><span class="p">,</span> <span class="n">weights_grad</span><span class="p">)</span>
+
+        <span class="c1"># Update termination criteria</span>
+        <span class="n">k</span><span class="p">,</span> <span class="n">eps</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">weights_k</span> <span class="o">-</span> <span class="n">weights_prev</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;intermediate_res&quot;</span><span class="p">]:</span>
+            <span class="n">intermediate_res</span><span class="p">[</span><span class="s2">&quot;eps&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eps</span><span class="p">)</span>
+            <span class="n">intermediate_res</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weights_prev</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">weights_k</span><span class="p">,</span> <span class="n">intermediate_res</span>
+</pre></div>
+</div>
+</section>
+<section id="gradient-descent-with-exact-gradient">
+<h3>Gradient Descent with Exact Gradient<a class="headerlink" href="#gradient-descent-with-exact-gradient" title="Link to this heading">¶</a></h3>
+<p>Minimize:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f(\textbf{w}) = f(x, y) = x^2 + y^2 + x y\\
+\nabla f(\textbf{w}) = \begin{bmatrix} \partial f  / \partial x \\ \partial f / \partial y\end{bmatrix} = \begin{bmatrix} 2 x + 1\\ 2 y + 1\end{bmatrix},\end{split}\]</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span>  <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f:&quot;</span><span class="p">,</span> <span class="n">f</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f:&quot;</span><span class="p">,</span> <span class="n">f</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span> <span class="n">f</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f_grad</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span>  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Grad f:&quot;</span><span class="p">,</span> <span class="n">f_grad</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Grad f:&quot;</span><span class="p">,</span> <span class="n">f_grad</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Grad f:&quot;</span><span class="p">,</span> <span class="n">f_grad</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">:</span> <span class="p">[</span> <span class="mi">7</span> <span class="mi">37</span><span class="p">]</span>
+<span class="n">f</span><span class="p">:</span> <span class="mi">7</span> <span class="mi">37</span>
+<span class="n">Grad</span> <span class="n">f</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.</span> <span class="mf">3.</span><span class="p">]</span>
+<span class="n">Grad</span> <span class="n">f</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.</span> <span class="mf">5.</span><span class="p">]</span>
+<span class="n">Grad</span> <span class="n">f</span><span class="p">:</span> <span class="p">[</span><span class="mf">11.</span> <span class="mf">11.</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">30.</span><span class="p">,</span> <span class="mf">40.</span><span class="p">])</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">weights_sol</span><span class="p">,</span> <span class="n">intermediate_res</span> <span class="o">=</span> \
+    <span class="n">gradient_descent</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">f_grad</span><span class="p">,</span>
+                     <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span>
+                                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                  <span class="n">intermediate_res</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="n">res_</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">intermediate_res</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res_</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res_</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solution: &quot;</span><span class="p">,</span> <span class="n">weights_sol</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>          <span class="n">eps</span>                        <span class="n">weights</span>
+<span class="mi">0</span>  <span class="mf">102.820000</span>                   <span class="p">[</span><span class="mf">30.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">]</span>
+<span class="mi">1</span>   <span class="mf">65.804800</span>                   <span class="p">[</span><span class="mf">23.9</span><span class="p">,</span> <span class="mf">31.9</span><span class="p">]</span>
+<span class="mi">2</span>   <span class="mf">42.115072</span>    <span class="p">[</span><span class="mf">19.02</span><span class="p">,</span> <span class="mf">25.419999999999998</span><span class="p">]</span>
+<span class="mi">3</span>   <span class="mf">26.953646</span>   <span class="p">[</span><span class="mf">15.116</span><span class="p">,</span> <span class="mf">20.235999999999997</span><span class="p">]</span>
+<span class="mi">4</span>   <span class="mf">17.250333</span>  <span class="p">[</span><span class="mf">11.992799999999999</span><span class="p">,</span> <span class="mf">16.0888</span><span class="p">]</span>
+             <span class="n">eps</span>                                      <span class="n">weights</span>
+<span class="mi">47</span>  <span class="mf">7.989809e-08</span>   <span class="p">[</span><span class="o">-</span><span class="mf">0.499149784089306</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.49887102477432443</span><span class="p">]</span>
+<span class="mi">48</span>  <span class="mf">5.113478e-08</span>   <span class="p">[</span><span class="o">-</span><span class="mf">0.4993198272714448</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4990968198194595</span><span class="p">]</span>
+<span class="mi">49</span>  <span class="mf">3.272626e-08</span>  <span class="p">[</span><span class="o">-</span><span class="mf">0.49945586181715584</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4992774558555676</span><span class="p">]</span>
+<span class="mi">50</span>  <span class="mf">2.094480e-08</span>   <span class="p">[</span><span class="o">-</span><span class="mf">0.4995646894537247</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4994219646844541</span><span class="p">]</span>
+<span class="mi">51</span>  <span class="mf">1.340467e-08</span>  <span class="p">[</span><span class="o">-</span><span class="mf">0.49965175156297975</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4995375717475633</span><span class="p">]</span>
+<span class="n">Solution</span><span class="p">:</span>  <span class="p">[</span><span class="o">-</span><span class="mf">0.4997214</span>  <span class="o">-</span><span class="mf">0.49963006</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Plot solution functions</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_surface</span><span class="p">(</span><span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">surf</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">wireframe</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="c1">#x, y = np.arange(-5, 5, 0.25), np.arange(-5, 5, 0.25)</span>
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">zz</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">xx</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">ravel</span><span class="p">())))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">xx</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># Figure</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">})</span>
+
+    <span class="c1"># Plot the surface.</span>
+    <span class="k">if</span> <span class="n">surf</span><span class="p">:</span>
+        <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">coolwarm</span><span class="p">,</span>
+                        <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">wireframe</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot_wireframe</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">crop</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">):</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span>\
+        <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">y_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">y_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="c1">#return x[np.all((x &gt;= min) &amp; (x &lt;= max), axis=1)]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_path</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot3D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter3D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span>
+</pre></div>
+</div>
+<p>Solutions’path for different learning rates</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_range</span> <span class="o">=</span> <span class="n">y_range</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">]</span>
+
+<span class="c1"># Plot function surface</span>
+<span class="n">ax</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">plot_surface</span><span class="p">(</span><span class="n">x_range</span><span class="o">=</span><span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="n">y_range</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+
+<span class="c1"># Plot solution paths</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">weights_sol</span><span class="p">,</span> <span class="n">intermediate_res</span> <span class="o">=</span> \
+    <span class="n">gradient_descent</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">f_grad</span><span class="p">,</span>
+                     <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span>
+                                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                  <span class="n">intermediate_res</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="n">sols</span> <span class="o">=</span> <span class="n">crop</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intermediate_res</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]),</span>
+            <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">)</span>
+<span class="n">plot_path</span><span class="p">(</span><span class="n">sols</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sols</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">sols</span><span class="p">),</span> <span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+          <span class="s1">&#39;lr:</span><span class="si">%.02f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">lr</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">weights_sol</span><span class="p">,</span> <span class="n">intermediate_res</span> <span class="o">=</span> \
+    <span class="n">gradient_descent</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">f_grad</span><span class="p">,</span>
+                     <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span>
+                                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                  <span class="n">intermediate_res</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="n">sols</span> <span class="o">=</span> <span class="n">crop</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intermediate_res</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]),</span>
+            <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">)</span>
+<span class="n">plot_path</span><span class="p">(</span><span class="n">sols</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sols</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">sols</span><span class="p">),</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="s1">&#39;lr:</span><span class="si">%.02f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">lr</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">weights_sol</span><span class="p">,</span> <span class="n">intermediate_res</span> <span class="o">=</span> \
+    <span class="n">gradient_descent</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">f_grad</span><span class="p">,</span>
+                     <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span>
+                                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                  <span class="n">intermediate_res</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="n">sols</span> <span class="o">=</span> <span class="n">crop</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intermediate_res</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]),</span>
+            <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">)</span>
+<span class="n">plot_path</span><span class="p">(</span><span class="n">sols</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sols</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">sols</span><span class="p">),</span> <span class="n">colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+          <span class="s1">&#39;lr:</span><span class="si">%.02f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">lr</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">1.</span>
+<span class="n">weights_sol</span><span class="p">,</span> <span class="n">intermediate_res</span> <span class="o">=</span> \
+    <span class="n">gradient_descent</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">f_grad</span><span class="p">,</span>
+                     <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span>
+                                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                  <span class="n">intermediate_res</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="n">sols</span> <span class="o">=</span> <span class="n">crop</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intermediate_res</span><span class="p">[</span><span class="s2">&quot;weights&quot;</span><span class="p">]),</span>
+            <span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="p">)</span>
+<span class="n">plot_path</span><span class="p">(</span><span class="n">sols</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sols</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">sols</span><span class="p">),</span> <span class="n">colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+          <span class="s1">&#39;lr:</span><span class="si">%.02f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">lr</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/optim_gradient_descent_12_0.png" src="../_images/optim_gradient_descent_12_0.png" />
+</section>
+<section id="gradient-descent-numerical-approximation-of-the-gradient">
+<h3>Gradient Descent Numerical Approximation of the Gradient<a class="headerlink" href="#gradient-descent-numerical-approximation-of-the-gradient" title="Link to this heading">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Numerical approximation</span>
+<span class="n">f_grad</span> <span class="o">=</span>  <span class="n">nd</span><span class="o">.</span><span class="n">Gradient</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_grad</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_grad</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_grad</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">weights_sol</span><span class="p">,</span> <span class="n">intermediate_res</span> <span class="o">=</span> \
+    <span class="n">gradient_descent</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">f_grad</span><span class="p">,</span>
+                     <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span>
+                                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                  <span class="n">intermediate_res</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+
+<span class="n">res_</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">intermediate_res</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res_</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res_</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solution: &quot;</span><span class="p">,</span> <span class="n">weights_sol</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">3.</span> <span class="mf">3.</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">4.</span> <span class="mf">5.</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">15.</span> <span class="mf">15.</span><span class="p">]</span>
+        <span class="n">eps</span>                                   <span class="n">weights</span>
+<span class="mi">0</span>  <span class="mf">2.210000</span>                                <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>
+<span class="mi">1</span>  <span class="mf">1.084500</span>                 <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.9000000000000203</span><span class="p">]</span>
+<span class="mi">2</span>  <span class="mf">0.532701</span>  <span class="p">[</span><span class="mf">1.3099999999999983</span><span class="p">,</span> <span class="mf">2.1200000000000156</span><span class="p">]</span>
+<span class="mi">3</span>  <span class="mf">0.262073</span>  <span class="p">[</span><span class="mf">0.8359999999999975</span><span class="p">,</span> <span class="mf">1.5650000000000128</span><span class="p">]</span>
+<span class="mi">4</span>  <span class="mf">0.129266</span>  <span class="p">[</span><span class="mf">0.5122999999999966</span><span class="p">,</span> <span class="mf">1.1684000000000108</span><span class="p">]</span>
+        <span class="n">eps</span>                                      <span class="n">weights</span>
+<span class="mi">5</span>  <span class="mf">0.064029</span>    <span class="p">[</span><span class="mf">0.29299999999999615</span><span class="p">,</span> <span class="mf">0.8834900000000089</span><span class="p">]</span>
+<span class="mi">6</span>  <span class="mf">0.031932</span>    <span class="p">[</span><span class="mf">0.14605099999999605</span><span class="p">,</span> <span class="mf">0.6774920000000075</span><span class="p">]</span>
+<span class="mi">7</span>  <span class="mf">0.016099</span>    <span class="p">[</span><span class="mf">0.04909159999999599</span><span class="p">,</span> <span class="mf">0.5273885000000065</span><span class="p">]</span>
+<span class="mi">8</span>  <span class="mf">0.008254</span>   <span class="p">[</span><span class="o">-</span><span class="mf">0.01346557000000384</span><span class="p">,</span> <span class="mf">0.4170016400000056</span><span class="p">]</span>
+<span class="mi">9</span>  <span class="mf">0.004341</span>  <span class="p">[</span><span class="o">-</span><span class="mf">0.05247262000000364</span><span class="p">,</span> <span class="mf">0.33494786900000495</span><span class="p">]</span>
+<span class="n">Solution</span><span class="p">:</span>  <span class="p">[</span><span class="o">-</span><span class="mf">0.07547288</span>  <span class="mf">0.27320556</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="first-order-gradient-descent-to-minimize-linear-regression">
+<h3>First-order Gradient Descent to Minimize Linear Regression<a class="headerlink" href="#first-order-gradient-descent-to-minimize-linear-regression" title="Link to this heading">¶</a></h3>
+<p><strong>Least squares problem solved by linear regression</strong></p>
+<p>Given a linear model where the output is a weighted sum of the inputs,
+the model can be expressed as:</p>
+<div class="math notranslate nohighlight">
+\[y_i = \sum_p w_p x_{ip}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(y_i\)</span> is the predicted output for the i-th sample,</p></li>
+<li><p><span class="math notranslate nohighlight">\(w_p\)</span> are the weights (parameters) of the model,</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_{ip}\)</span> is the p-th feature of the i-th sample.</p></li>
+</ul>
+<p>The objective in least squares minimization is to minimize the following
+cost function <span class="math notranslate nohighlight">\(J(\textbf{w})\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[J(\textbf{w}) = \frac{1}{2} \sum_i \left(y_i - \sum_p w_p x_{ip}\right)^2\]</div>
+<p>where w is the vector of weights
+<span class="math notranslate nohighlight">\(\textbf{w} = [w_1, w_2, \ldots, w_p]^T\)</span>.</p>
+<p><strong>Gradient vector (Jacobian) of the least squares problem solved by
+linear regression</strong></p>
+<p>Gradient of the cost function <span class="math notranslate nohighlight">\(\nabla J(\textbf{w})\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\nabla J(\textbf{w}) = \frac{\partial J(\textbf{w})}{\partial w_p} \sum_i\left(\sum_q w_q x_{iq} - y_i\right)x_{ip}.\]</div>
+<p>Note that the gradient is also called the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant">Jacobian</a>
+which is the vector of first-order partial derivatives of a
+scalar-valued function of several variables.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">lse</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Least Squared Error function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    weights: coefficients of the linear model, (n_features) numpy array</span>
+<span class="sd">    X: input variables, (n_samples x n_features) numpy array</span>
+<span class="sd">    y: target variable, (n_samples,) numpy array</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Least Squared Error, scalar</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">y_pred</span> <span class="o">-</span> <span class="n">y</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">err</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">gradient_lse_lr</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gradient of Least Squared Error cost function of linear regression.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    weights: coefficients of the linear model, (n_features) numpy array</span>
+<span class="sd">    X: input variables, (n_samples x n_features) numpy array</span>
+<span class="sd">    y: target variable, (n_samples,) numpy array</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Gradient array, shape (n_features,)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="n">y_pred</span> <span class="o">-</span> <span class="n">y</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">grad</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">n_sample</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_sample</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">weights_sol</span><span class="p">,</span> <span class="n">intermediate_res</span> <span class="o">=</span> \
+    <span class="n">gradient_descent</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">lse</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                     <span class="n">jac</span><span class="o">=</span><span class="n">gradient_lse_lr</span><span class="p">,</span>
+                     <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span>
+                                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                                  <span class="n">intermediate_res</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">intermediate_res</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solution: &quot;</span><span class="p">,</span> <span class="n">weights_sol</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="n">eps</span>                                   <span class="n">weights</span>
+<span class="mi">0</span>  <span class="mf">1.295793e+01</span>                                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="mi">1</span>  <span class="mf">1.286344e-04</span>      <span class="p">[</span><span class="mf">3.0004562311061</span><span class="p">,</span> <span class="mf">1.988767621340993</span><span class="p">]</span>
+<span class="mi">2</span>  <span class="mf">2.094142e-08</span>  <span class="p">[</span><span class="mf">2.9998942753289706</span><span class="p">,</span> <span class="mf">2.0000953997679636</span><span class="p">]</span>
+<span class="mi">3</span>  <span class="mf">5.573591e-12</span>  <span class="p">[</span><span class="mf">3.0000015352872462</span><span class="p">,</span> <span class="mf">1.9999982569697312</span><span class="p">]</span>
+<span class="n">Solution</span><span class="p">:</span>  <span class="p">[</span><span class="mf">2.99999997</span> <span class="mf">2.00000003</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="second-order-newtons-method-in-optimization">
+<h2>Second-order Newton’s method in optimization<a class="headerlink" href="#second-order-newtons-method-in-optimization" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_method_in_optimization">Newton’s
+method</a>
+integrates the change of the curvature (ie, change of gradient
+direction) in the minimization process. Since gradient direction is the
+change of <span class="math notranslate nohighlight">\(f\)</span>, i.e., the first order derivative, thus the change
+of gradient is second order derivative of <span class="math notranslate nohighlight">\(f\)</span>. See <a class="reference external" href="https://www.youtube.com/watch?v=W7S94pq5Xuo">Visually
+Explained: Newton’s Method in
+Optimization</a></p>
+<p>For univariate functions. Like gradient descent Newton’s method try to
+locally minimize <span class="math notranslate nohighlight">\(f(w_k + t)\)</span> given a current position
+<span class="math notranslate nohighlight">\(w_k\)</span>. However, while gradient descent use first order local
+estimation of <span class="math notranslate nohighlight">\(f\)</span>, Newton’s method increases this approximation
+using second-order <a class="reference external" href="https://en.wikipedia.org/wiki/Taylor_series">Taylor
+expansion</a> of <span class="math notranslate nohighlight">\(f\)</span>
+around an iterate <span class="math notranslate nohighlight">\(w_k\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[f(w_k + t) \approx f(w_k) + f'(w_k)t + \frac{1}{2} f''(w_k)t^2\]</div>
+<p>Cancelling the derivative of this expression:
+<span class="math notranslate nohighlight">\(\frac{d}{dt}(f(w_k) + f'(w_k)t + \frac{1}{2} f''(w_k)t^2)=0\)</span>,
+provides <span class="math notranslate nohighlight">\(f'(w_k) + f''(w_k)t = 0\)</span>, and thus
+<span class="math notranslate nohighlight">\(t = \frac{f'(w_k)}{f''(w_k)}\)</span>. The learning rate is
+<span class="math notranslate nohighlight">\(\gamma = \frac{1}{f''(w_k)}\)</span>, and optimization scheme becomes:</p>
+<div class="math notranslate nohighlight">
+\[w_{k+1} =  w_{k} - \frac{1}{f''(w_k)} f'(w_{k}).\]</div>
+<p>In multidimensional problems <span class="math notranslate nohighlight">\(\textbf{w}_{k} \in \mathbb{R}^p\)</span>,
+<span class="math notranslate nohighlight">\([f''(\textbf{w}_k)]^{-1}\)</span> is the inverse of the
+<span class="math notranslate nohighlight">\((p \times p)\)</span> <a class="reference external" href="https://en.wikipedia.org/wiki/Hessian_matrix">Hessian
+matrix</a> containing the
+second-order partial derivatives of <span class="math notranslate nohighlight">\(f\)</span>. It is noted:</p>
+<div class="math notranslate nohighlight">
+\[f''(\textbf{w}_k) = \nabla^2 f(\textbf{w}_k) = \textbf{H}_{f(\textbf{w}_k)}\]</div>
+<p>The optimization scheme becomes:</p>
+<div class="math notranslate nohighlight">
+\[\textbf{w}_{k+1} =  \textbf{w}_{k} - \gamma \left[\textbf{H}_{f(\textbf{w}_k)}\right]^{-1} \nabla f(\textbf{w}_{k}).\]</div>
+<p>We can introduce a small step size <span class="math notranslate nohighlight">\(0 \leq \gamma &lt; 1\)</span> instead of
+<span class="math notranslate nohighlight">\(\gamma = 1\)</span>.</p>
+<ul class="simple">
+<li><p>Benefit of Newton’s method: Convergence speed considering the change
+of the curvature of <span class="math notranslate nohighlight">\(f\)</span> to adapt the learning rate and
+direction.</p></li>
+<li><p>Problems:</p></li>
+<li><p>Local minima (local optimization) for non-convex problem.</p></li>
+<li><p>In large dimension, computing the Newton direction
+<span class="math notranslate nohighlight">\(-[f''(w_k)]^{-1} f'(w_{k})\)</span> can be an expensive operation.</p></li>
+</ul>
+<section id="second-order-newtons-method-to-minimize-linear-regression">
+<h3>Second-order Newton’s Method to Minimize Linear Regression<a class="headerlink" href="#second-order-newtons-method-to-minimize-linear-regression" title="Link to this heading">¶</a></h3>
+<p>** Hessian Matrix of the Least Squares Problem solved by Linear
+Regression**</p>
+<p>The Hessian matrix <span class="math notranslate nohighlight">\(H\)</span> of the least squares problem is a square
+matrix of second-order partial derivatives of the cost function with
+respect to the model parameters. It is given by:</p>
+<div class="math notranslate nohighlight">
+\[H = \nabla^2 J(\textbf{w})\]</div>
+<p>For the least squares cost function, <span class="math notranslate nohighlight">\(J(\textbf{w})\)</span>, the Hessian
+is calculated as follows:</p>
+<p>The Hessian <span class="math notranslate nohighlight">\(H\)</span> is the matrix of second derivatives of
+<span class="math notranslate nohighlight">\(J(\textbf{w})\)</span> with respect to <span class="math notranslate nohighlight">\(w_p\)</span> and <span class="math notranslate nohighlight">\(w_q\)</span>.
+<span class="math notranslate nohighlight">\(H\)</span> is a measure of the curvature of <span class="math notranslate nohighlight">\(J\)</span>: The eigenvectors
+of <span class="math notranslate nohighlight">\(H\)</span> point in the directions of the major and minor axes. The
+eigenvalues measure the steepness of <span class="math notranslate nohighlight">\(J\)</span> along the corresponding
+eigendirection. Thus, each eigenvalue of <span class="math notranslate nohighlight">\(H\)</span> is also a measure of
+the covariance or spread of the inputs along the corresponding
+eigendirection.</p>
+<div class="math notranslate nohighlight">
+\[H_{pq} = \frac{\partial^2 J(\textbf{w})}{\partial w_p \partial w_q}\]</div>
+<p>Given the form of the gradient, the second derivative with respect to
+<span class="math notranslate nohighlight">\(w_p\)</span> and <span class="math notranslate nohighlight">\(w_q\)</span> simplifies to:</p>
+<div class="math notranslate nohighlight">
+\[H_{pq} = \sum_i x_{ip}x_{iq}\]</div>
+<p>This can be written more compactly in matrix form as:</p>
+<div class="math notranslate nohighlight">
+\[H = \textbf{X}^T\textbf{X}\]</div>
+<p>where <span class="math notranslate nohighlight">\(X\)</span> is the matrix of input features (each row corresponds to
+a sample, and each column corresponds to a feature) with
+<span class="math notranslate nohighlight">\(X_{ip}=x_{ip}\)</span>.</p>
+<p>In this case the Hessian turns out the be the same as the covariance
+matrix of the inputs. Thus, each eigenvalue of <span class="math notranslate nohighlight">\(H\)</span> is also a
+measure of the covariance or spread of the inputs along the
+corresponding eigendirection.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">hessian_lse_lr</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hessian of Least Squared Error cost function of linear regression.</span>
+<span class="sd">    To make API compatible with scipy.optimize.minimize, it takes a required weights parameters</span>
+<span class="sd">    that is not used.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    weights: coefficients of the linear model, (n_features) numpy array</span>
+<span class="sd">    It is not used, you can safely give None.</span>
+<span class="sd">    X: input variables, (n_samples x n_features) numpy array</span>
+<span class="sd">    y: target variable, (n_samples,) numpy array</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Hessian array, shape (n_features, n_features)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+
+<span class="n">weights_sol</span><span class="p">,</span> <span class="n">intermediate_res</span> <span class="o">=</span> \
+    <span class="n">gradient_descent</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">lse</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                     <span class="n">jac</span><span class="o">=</span><span class="n">gradient_lse_lr</span><span class="p">,</span> <span class="n">hess</span><span class="o">=</span><span class="n">hessian_lse_lr</span><span class="p">,</span>
+                     <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                                  <span class="n">maxiter</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                                  <span class="n">intermediate_res</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">intermediate_res</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solution: &quot;</span><span class="p">,</span> <span class="n">weights_sol</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="n">eps</span>                                   <span class="n">weights</span>
+<span class="mi">0</span>  <span class="mf">1.295793e+01</span>                                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="mi">1</span>  <span class="mf">1.286344e-04</span>      <span class="p">[</span><span class="mf">3.0004562311061</span><span class="p">,</span> <span class="mf">1.988767621340993</span><span class="p">]</span>
+<span class="mi">2</span>  <span class="mf">2.094142e-08</span>  <span class="p">[</span><span class="mf">2.9998942753289706</span><span class="p">,</span> <span class="mf">2.0000953997679636</span><span class="p">]</span>
+<span class="mi">3</span>  <span class="mf">5.573591e-12</span>  <span class="p">[</span><span class="mf">3.0000015352872462</span><span class="p">,</span> <span class="mf">1.9999982569697312</span><span class="p">]</span>
+<span class="n">Solution</span><span class="p">:</span>  <span class="p">[</span><span class="mf">2.99999997</span> <span class="mf">2.00000003</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="quasi-newton-methods">
+<h2>Quasi-Newton Methods<a class="headerlink" href="#quasi-newton-methods" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Quasi-Newton_method">Quasi-Newton
+Methods</a> are an
+alternative of Newton Methods when Hessian is unavailable or is too
+expensive to compute at every iteration.</p>
+<p>The most popular quasi-Newton method is the
+Broyden–Fletcher–Goldfarb–Shanno algorithm
+<a class="reference external" href="https://en.wikipedia.org/wiki/Broyden%E2%80%93Fletcher%E2%80%93Goldfarb%E2%80%93Shanno_algorithm">BFGS</a></p>
+<section id="example-minimizes-linear-regression">
+<h3>Example: Minimizes linear regression<a class="headerlink" href="#example-minimizes-linear-regression" title="Link to this heading">¶</a></h3>
+<p>Note, that we provide the function to be minimized (Mean Squared Error)
+but the expression of the gradient which is estimated numerically.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">lse</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;BFGS&#39;</span><span class="p">)</span>
+<span class="n">b0</span><span class="p">,</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solution: </span><span class="si">{:e}</span><span class="s2"> x + </span><span class="si">{:e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b0</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Solution</span><span class="p">:</span> <span class="mf">2.000000e+00</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">3.000000e+00</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="gradient-descent-variants-data-sampling-strategies">
+<h2>Gradient Descent Variants: Data Sampling Strategies<a class="headerlink" href="#gradient-descent-variants-data-sampling-strategies" title="Link to this heading">¶</a></h2>
+<p>There are three variants of gradient descent, which differ on the use of
+the dataset made of <span class="math notranslate nohighlight">\(n\)</span> samples of input data
+<span class="math notranslate nohighlight">\(\textbf{x}_i\)</span>’s, and possibly their corresponding targets
+<span class="math notranslate nohighlight">\(y_i\)</span>’s.</p>
+<section id="batch-gradient-descent">
+<h3>Batch gradient descent<a class="headerlink" href="#batch-gradient-descent" title="Link to this heading">¶</a></h3>
+<p>Batch gradient descent, known also as Vanilla gradient descent, computes
+the gradient of the cost function with respect to the parameters
+<span class="math notranslate nohighlight">\(\theta\)</span> for the <strong>entire training dataset</strong> :</p>
+<ul class="simple">
+<li><p>Choose an initial vector of parameters <span class="math notranslate nohighlight">\(\textbf{w}_0\)</span> and
+learning rate <span class="math notranslate nohighlight">\(\gamma\)</span>.</p></li>
+<li><p>Repeat until an approximate minimum is obtained:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(\textbf{w}_{k+1} =  \textbf{w}_{k} - \gamma \sum_{i=1}^n \nabla f(\textbf{w}_{k}, \textbf{x}_i, y_i)\)</span></p></li>
+</ul>
+</li>
+</ul>
+<p>Advantages:</p>
+<ul class="simple">
+<li><p>Batch Gradient Descent is suited for convex or relatively smooth error
+manifolds. Since it directly towards an optimum solution.</p></li>
+</ul>
+<p>Limitations:</p>
+<ul class="simple">
+<li><p>Fast convergence toward “bad” local minimum (on non-convex functions)</p></li>
+<li><p>As we need to calculate the gradients for the whole dataset is
+intractable for datasets that don’t fit in memory and doesn’t allow us
+to update our model online.</p></li>
+</ul>
+</section>
+<section id="stochastic-gradient-descent">
+<h3>Stochastic gradient descent<a class="headerlink" href="#stochastic-gradient-descent" title="Link to this heading">¶</a></h3>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent">Stochastic gradient
+descent</a>
+(SGD) in contrast performs a parameter update for each training example
+<span class="math notranslate nohighlight">\(x^{(i)}\)</span> and <span class="math notranslate nohighlight">\(y^{(i)}\)</span>. A complete passes through the
+training dataset is called an <strong>epoch</strong>. The number of epochs is a
+hyperparameter to be determined observing the convergence.</p>
+<ul class="simple">
+<li><p>Choose an initial vector of parameters <span class="math notranslate nohighlight">\(\textbf{w}_0\)</span> and
+learning rate <span class="math notranslate nohighlight">\(\gamma\)</span>.</p></li>
+<li><p>Repeat epochs until an approximate minimum is obtained:</p>
+<ul>
+<li><p>Randomly shuffle examples in the training set.</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(i \in 1, \dots, n\)</span></p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(\textbf{w}_{k+1} =  \textbf{w}_{k} - \gamma \nabla f(\textbf{w}_{k}, \textbf{x}_i, y_i)\)</span></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Advantages:</p>
+<ul class="simple">
+<li><p>Often provide better local minimum. Minimization will not be smooth
+but rather slightly erratic and jumpy. But this ‘random walk,’ of
+SGD’s fluctuation, enables it to jump from a basin to another, with
+possibly deeper, local minimum.</p></li>
+<li><p>Online learning</p></li>
+</ul>
+<p>Limitations:</p>
+<ul class="simple">
+<li><p>Large fluctuation that ultimately complicates convergence to the exact
+minimum, as SGD will keep overshooting. However, when we slowly
+decrease the learning rate, SGD shows the same convergence behaviour
+as batch gradient descent, almost certainly converging to a local or
+the global minimum for non-convex and convex optimization
+respectively.</p></li>
+<li><p>Slow down computation by not taking advantage of vectorized numerical
+libraries.</p></li>
+</ul>
+</section>
+<section id="mini-batch-gradient-descent">
+<h3>Mini-batch gradient descent<a class="headerlink" href="#mini-batch-gradient-descent" title="Link to this heading">¶</a></h3>
+<p>Mini-batch gradient descent finally takes the best of both worlds and
+performs an update for every mini-batch (subset of) training samples:</p>
+<ul class="simple">
+<li><p>Divide the training set in subsets of size <span class="math notranslate nohighlight">\(m\)</span>.</p></li>
+<li><p>Choose an initial vector of parameters <span class="math notranslate nohighlight">\(\textbf{w}_0\)</span> and
+learning rate <span class="math notranslate nohighlight">\(\gamma\)</span>.</p></li>
+<li><p>Repeat epochs until an approximate minimum is obtained:</p>
+<ul>
+<li><p>Randomly pick a mini-batch.</p></li>
+<li><p>For each mini-batch <span class="math notranslate nohighlight">\(b\)</span></p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(\textbf{w}_{k+1} =  \textbf{w}_{k} - \gamma \sum_{i=b}^{b+m} \nabla f(\textbf{w}_{k}, \textbf{x}_i, y_i)\)</span></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Advantages:</p>
+<ul class="simple">
+<li><p>Reduces the variance of the parameter updates, which can lead to more
+stable convergence.</p></li>
+<li><p>Make use of highly optimized matrix optimizations common to
+state-of-the-art deep learning libraries that make computing the
+gradient very efficient. Common mini-batch sizes range between 50 and
+256, but can vary for different applications.</p></li>
+</ul>
+<p>Mini-batch gradient descent is typically the algorithm of choice when
+training a neural network.</p>
+</section>
+</section>
+<section id="momentum-update">
+<h2>Momentum update<a class="headerlink" href="#momentum-update" title="Link to this heading">¶</a></h2>
+<section id="momentum-and-adaptive-learning-rate-optimizers">
+<h3>Momentum and Adaptive Learning Rate Optimizers<a class="headerlink" href="#momentum-and-adaptive-learning-rate-optimizers" title="Link to this heading">¶</a></h3>
+<p>SGD has trouble navigating ravines (areas where the surface curves much
+more steeply in one dimension than in another), which are common around
+local optima. In these scenarios, SGD oscillates across the slopes of
+the ravine while only making hesitant progress, along the bottom towards
+the local optimum as in the image below.</p>
+<p><a class="reference external" href="https://distill.pub/2017/momentum/">Source</a></p>
+<figure class="align-default" id="id3">
+<img alt="No momentum: oscillations toward local largest gradient" src="../_images/grad_descent_no_momentum.png" />
+<figcaption>
+<p><span class="caption-text">No momentum: oscillations toward local largest gradient</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>No momentum: moving toward local largest gradient create oscillations.</p>
+</center><center><figure class="align-default" id="id4">
+<img alt="With momentum: accumulate velocity to avoid oscillations" src="../_images/grad_descent_momentum.png" />
+<figcaption>
+<p><span class="caption-text">With momentum: accumulate velocity to avoid oscillations</span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</center><center><p>With momentum: accumulate velocity to avoid oscillations.</p>
+</center><p>Momentum is a method that helps to accelerate SGD in the relevant
+direction and dampens oscillations as can be seen in image above. It
+does this by adding a fraction <span class="math notranslate nohighlight">\(\gamma\)</span> of the update vector of
+the past time step to the current update vector.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\begin{split}
+\textbf{v}_{k+1} &amp;= \beta \textbf{v}_{k} + \nabla J(\textbf{w}_k) \\
+\textbf{w}_{k+1} &amp;= \textbf{w}_k - \gamma \nabla \textbf{v}_{k+1}
+\end{split}
+\end{align}\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dw</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+    <span class="n">vx</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">v</span> <span class="o">+</span> <span class="n">dw</span>
+    <span class="n">w</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">v</span>
+</pre></div>
+</div>
+<p>Note: The momentum term <strong>:math:`beta`</strong> is usually set to 0.9 or a
+similar value.</p>
+<p>Essentially, when using momentum, we push a ball down a hill. The ball
+accumulates momentum as it rolls downhill, becoming faster and faster on
+the way, until it reaches its terminal velocity if there is air
+resistance, i.e. <span class="math notranslate nohighlight">\(\beta\)</span> &lt;1.</p>
+<p>The same thing happens to our parameter updates: The momentum term
+increases for dimensions whose gradients point in the same directions
+and reduces updates for dimensions whose gradients change directions. As
+a result, we gain faster convergence and reduced oscillation.</p>
+</section>
+<section id="adagrad-adaptive-learning-rates">
+<h3>AdaGrad: Adaptive Learning Rates<a class="headerlink" href="#adagrad-adaptive-learning-rates" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Added element-wise scaling of the gradient based on the historical sum
+of squares in each dimension.</p></li>
+<li><p>“Per-parameter learning rates” or “adaptive learning rates”</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">grad_squared</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dw</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+    <span class="n">grad_squared</span> <span class="o">+=</span> <span class="n">dw</span> <span class="o">*</span> <span class="n">dw</span>
+    <span class="n">w</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">dw</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">grad_squared</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Progress along “steep” directions is damped.</p></li>
+<li><p>Progress along “flat” directions is accelerated.</p></li>
+<li><p>Problem: step size over long time =&gt; Decays to zero.</p></li>
+</ul>
+</section>
+<section id="rmsprop-leaky-adagrad">
+<h3>RMSProp: “Leaky AdaGrad”<a class="headerlink" href="#rmsprop-leaky-adagrad" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">grad_squared</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dw</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+    <span class="n">grad_squared</span> <span class="o">+=</span> <span class="n">decay_rate</span> <span class="o">*</span> <span class="n">grad_squared</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">decay_rate</span><span class="p">)</span> <span class="o">*</span> <span class="n">dw</span> <span class="o">*</span> <span class="n">dw</span>
+    <span class="n">w</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">dw</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">grad_squared</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">decay_rate</span> <span class="pre">=</span> <span class="pre">1</span></code>: gradient descent</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decay_rate</span> <span class="pre">=</span> <span class="pre">0</span></code>: AdaGrad</p></li>
+</ul>
+</section>
+<section id="nesterov-accelerated-gradient">
+<h3>Nesterov accelerated gradient<a class="headerlink" href="#nesterov-accelerated-gradient" title="Link to this heading">¶</a></h3>
+<p>However, a ball that rolls down a hill, blindly following the slope, is
+highly <strong>unsatisfactory</strong>. We’d like to have a smarter ball, a ball that
+has <strong>a notion of where it is going</strong> so that it <strong>knows to slow down
+before the hill slopes up again</strong>. Nesterov accelerated gradient (NAG)
+is a way to give <strong>our momentum term this kind of prescience</strong>. We know
+that we will use our momentum term <span class="math notranslate nohighlight">\(\gamma v_{t-1}\)</span> to move the
+parameters <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<p>Computing <span class="math notranslate nohighlight">\(\theta - \gamma v_{t-1}\)</span> thus gives us <strong>an
+approximation of the next position of the parameters</strong> (the gradient is
+missing for the full update), a rough idea where our parameters are
+going to be. We can now effectively look ahead by calculating the
+gradient not w.r.t. to our current parameters <span class="math notranslate nohighlight">\(\theta\)</span> but w.r.t.
+the approximate future position of our parameters:</p>
+<p>Again, we set the momentum term <span class="math notranslate nohighlight">\(\gamma\)</span> to a value of around 0.9.
+While <strong>Momentum first computes the current gradient and then takes a
+big jump in the direction of the updated accumulated gradient</strong> ,
+<strong>NAG</strong> first <strong>makes a big jump in the direction of the previous
+accumulated gradient, measures the gradient and then makes a correction,
+which results in the complete NAG update</strong>. This anticipatory update
+<strong>prevents</strong> us from <strong>going too fast</strong> and results in <strong>increased
+responsiveness</strong>, which has significantly <strong>increased the performance of
+RNNs</strong> on a number of tasks</p>
+</section>
+<section id="adam">
+<h3>Adam<a class="headerlink" href="#adam" title="Link to this heading">¶</a></h3>
+<p><strong>Adaptive Moment Estimation (Adam)</strong> is a method that computes
+<strong>adaptive learning rates</strong> for each parameter. In addition to storing
+an <strong>exponentially decaying average of past squared gradients
+:math:`v_t`</strong>, Adam also keeps an <strong>exponentially decaying average of
+past gradients :math:`m_t`, similar to momentum</strong>. Whereas momentum can
+be seen as a ball running down a slope, Adam behaves like a <strong>heavy ball
+with friction</strong>, which thus prefers <strong>flat minima in the error
+surface</strong>. We compute the decaying averages of past and past squared
+gradients <span class="math notranslate nohighlight">\(\textbf{m}_t\)</span> and <span class="math notranslate nohighlight">\(\textbf{v}_t\)</span> respectively as
+follows:</p>
+<p><span class="math notranslate nohighlight">\(\textbf{m}_{t}\)</span> and <span class="math notranslate nohighlight">\(\textbf{v}_{t}\)</span> are estimates of the
+first moment (the mean) and the second moment (the uncentered variance)
+of the gradients respectively, hence the name of the method. Adam
+(almost)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">first_moment</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">second_moment</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="c1"># Momentum:</span>
+    <span class="n">first_moment</span> <span class="o">=</span> <span class="n">beta1</span> <span class="o">*</span> <span class="n">first_moment</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="c1"># AdaGrad/RMSProp</span>
+    <span class="n">second_moment</span> <span class="o">=</span> <span class="n">beta2</span> <span class="o">*</span> <span class="n">second_moment</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">x</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">first_moment</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">second_moment</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As <span class="math notranslate nohighlight">\(\textbf{m}_{t}\)</span> and <span class="math notranslate nohighlight">\(\textbf{v}_{t}\)</span> are initialized as
+vectors of 0’s, the authors of Adam observe that they are biased towards
+zero, especially during the initial time steps, and especially when the
+decay rates are small (i.e. <span class="math notranslate nohighlight">\(\beta_{1}\)</span> and <span class="math notranslate nohighlight">\(\beta_{2}\)</span> are
+close to 1). They counteract these biases by computing bias-corrected
+first and second moment estimates:</p>
+<p>They then use these to update the parameters (Adam update rule):</p>
+<div class="math notranslate nohighlight">
+\[\theta_{t+1} = \theta_{t} - \dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\hat{m}_t\)</span> Accumulate gradient: velocity.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{v}_t\)</span> Element-wise scaling of the gradient based on the
+historical sum of squares in each dimension.</p></li>
+<li><p>Choose Adam as default optimizer</p></li>
+<li><p>Default values of 0.9 for <span class="math notranslate nohighlight">\(\beta_1\)</span>, 0.999 for <span class="math notranslate nohighlight">\(\beta_2\)</span>,
+and <span class="math notranslate nohighlight">\(10^{-7}\)</span> for <span class="math notranslate nohighlight">\(\epsilon\)</span>.</p></li>
+<li><p>learning rate in a range between <span class="math notranslate nohighlight">\(1e-3\)</span> and <span class="math notranslate nohighlight">\(5e-4\)</span></p></li>
+</ul>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
+<p>Sources:</p>
+<ul class="simple">
+<li><p>LeCun Y.A., Bottou L., Orr G.B., Müller KR. (2012) <a class="reference external" href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf">Efficient
+BackProp</a>. In:
+Montavon G., Orr G.B., Müller KR. (eds) Neural Networks: Tricks of the
+Trade. Lecture Notes in Computer Science, vol 7700. Springer, Berlin,
+Heidelberg</p></li>
+<li><p>Introduction to <a class="reference external" href="https://www.analyticsvidhya.com/blog/2017/03/introduction-to-gradient-descent-algorithm-along-its-variants/">Gradient Descent
+Algorithm</a>
+(along with variants) in Machine Learning: Gradient Descent with
+Momentum, ADAGRAD and ADAM.</p></li>
+</ul>
+<p>Summary:</p>
+<ul class="simple">
+<li><p>Choosing a proper learning rate can be difficult. A learning rate that
+is too small leads to painfully slow convergence, while a learning
+rate that is too large can hinder convergence and cause the loss
+function to fluctuate around the minimum or even to diverge.</p></li>
+<li><p>Learning rate schedules try to adjust the learning rate during
+training by e.g. annealing, i.e. reducing the learning rate according
+to a pre-defined schedule or when the change in objective between
+epochs falls below a threshold. These schedules and thresholds,
+however, have to be defined in advance and are thus unable to adapt to
+a dataset’s characteristics.</p></li>
+<li><p>Additionally, the same learning rate applies to all parameter updates.
+If our data is sparse and our features have very different
+frequencies, we might not want to update all of them to the same
+extent, but perform a larger update for rarely occurring features.</p></li>
+<li><p>Another key challenge of minimizing highly non-convex error functions
+common for neural networks is avoiding getting trapped in their
+numerous suboptimal local minima. These <a class="reference external" href="https://en.wikipedia.org/wiki/Saddle_point">saddle
+points</a> are usually
+surrounded by a plateau of the same error, which makes it notoriously
+hard for SGD to escape, as the gradient is close to zero in all
+dimensions.</p></li>
+</ul>
+<p>Recommendation:</p>
+<ul class="simple">
+<li><p>Shuffle the examples (SGD)</p></li>
+<li><p>Center the input variables by subtracting the mean</p></li>
+<li><p>Normalize the input variable to a standard deviation of 1</p></li>
+<li><p>Initializing the weight</p></li>
+<li><p>Adaptive learning rates (momentum), using separate learning rate for
+each weight</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Optimization (Minimization) by Gradient Descent</a><ul>
+<li><a class="reference internal" href="#gradient-descent">Gradient Descent</a><ul>
+<li><a class="reference internal" href="#choosing-the-step-size">Choosing the Step Size</a></li>
+<li><a class="reference internal" href="#gradient-descent-algorithm">Gradient Descent Algorithm</a></li>
+<li><a class="reference internal" href="#gradient-descent-with-exact-gradient">Gradient Descent with Exact Gradient</a></li>
+<li><a class="reference internal" href="#gradient-descent-numerical-approximation-of-the-gradient">Gradient Descent Numerical Approximation of the Gradient</a></li>
+<li><a class="reference internal" href="#first-order-gradient-descent-to-minimize-linear-regression">First-order Gradient Descent to Minimize Linear Regression</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#second-order-newtons-method-in-optimization">Second-order Newton’s method in optimization</a><ul>
+<li><a class="reference internal" href="#second-order-newtons-method-to-minimize-linear-regression">Second-order Newton’s Method to Minimize Linear Regression</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quasi-newton-methods">Quasi-Newton Methods</a><ul>
+<li><a class="reference internal" href="#example-minimizes-linear-regression">Example: Minimizes linear regression</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gradient-descent-variants-data-sampling-strategies">Gradient Descent Variants: Data Sampling Strategies</a><ul>
+<li><a class="reference internal" href="#batch-gradient-descent">Batch gradient descent</a></li>
+<li><a class="reference internal" href="#stochastic-gradient-descent">Stochastic gradient descent</a></li>
+<li><a class="reference internal" href="#mini-batch-gradient-descent">Mini-batch gradient descent</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#momentum-update">Momentum update</a><ul>
+<li><a class="reference internal" href="#momentum-and-adaptive-learning-rate-optimizers">Momentum and Adaptive Learning Rate Optimizers</a></li>
+<li><a class="reference internal" href="#adagrad-adaptive-learning-rates">AdaGrad: Adaptive Learning Rates</a></li>
+<li><a class="reference internal" href="#rmsprop-leaky-adagrad">RMSProp: “Leaky AdaGrad”</a></li>
+<li><a class="reference internal" href="#nesterov-accelerated-gradient">Nesterov accelerated gradient</a></li>
+<li><a class="reference internal" href="#adam">Adam</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/numerical_methods/optim_gradient_descent.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/numerical_methods/optim_gradient_descent.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

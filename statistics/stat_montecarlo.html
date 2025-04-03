@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Resampling and Monte Carlo Methods &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Introduction" href="../ml_overview/introduction_to_ml.html" />
+    <link rel="prev" title="Multivariate Statistics" href="stat_multiv.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="resampling-and-monte-carlo-methods">
+<h1>Resampling and Monte Carlo Methods<a class="headerlink" href="#resampling-and-monte-carlo-methods" title="Link to this heading">¶</a></h1>
+<p>Sources:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/tutorial/stats/resampling.html">Scipy Resampling and Monte Carlo
+Methods</a></p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Manipulate data</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Statistics</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="c1">#import statsmodels.stats.api as sms</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">jarque_bera</span>
+
+<span class="c1"># Plot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pystatsml.plot_utils</span>
+
+<span class="c1"># Plot parameters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
+<span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+<section id="monte-carlo-simulation-of-random-walk-process">
+<h2>Monte-Carlo simulation of Random Walk Process<a class="headerlink" href="#monte-carlo-simulation-of-random-walk-process" title="Link to this heading">¶</a></h2>
+<section id="one-dimensional-random-walk-brownian-motion">
+<h3>One-dimensional random walk (Brownian motion)<a class="headerlink" href="#one-dimensional-random-walk-brownian-motion" title="Link to this heading">¶</a></h3>
+<p>More information: <a class="reference external" href="https://www.youtube.com/watch?v=BUJCF900I0A">Random Walks, Central Limit
+Theorem</a></p>
+<p>At each step <span class="math notranslate nohighlight">\(i\)</span> the process moves with +1 or -1 with equal
+probability, ie, <span class="math notranslate nohighlight">\(X_i \in \{+1, -1\}\)</span> with
+<span class="math notranslate nohighlight">\(P(X_i=+1)=P(X_i=-1)=1/2\)</span>. Steps <span class="math notranslate nohighlight">\(X_i\)</span>’s are i.i.d..</p>
+<p>Let <span class="math notranslate nohighlight">\(S_n = \sum^n_i X_i\)</span>, or <span class="math notranslate nohighlight">\(S_i\)</span> (at time <span class="math notranslate nohighlight">\(i\)</span>) is
+<span class="math notranslate nohighlight">\(S_i = S_{i-1} + X_i\)</span></p>
+<p>Realizations of random walks obtained by Monte Carlo simulation Plot Few
+random walks (trajectories), ie, <span class="math notranslate nohighlight">\(S_n\)</span> for <span class="math notranslate nohighlight">\(n=0\)</span> to
+<span class="math notranslate nohighlight">\(200\)</span></p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># make the example reproducible</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">200</span> <span class="c1"># trajectory depth</span>
+<span class="n">nsamp</span> <span class="o">=</span> <span class="mi">50000</span> <span class="c1">#nb of trajectories</span>
+
+<span class="c1"># X: each row (axis 0) contains one trajectory axis 1</span>
+<span class="c1">#Xn = np.array([np.random.choice(a=[-1, +1], size=n,</span>
+<span class="c1">#                                replace=True, p=np.ones(2) / 2)</span>
+<span class="c1">#               for i in range(nsamp)])</span>
+
+<span class="n">Xn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">]),</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">,</span>
+                                <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+               <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsamp</span><span class="p">)])</span>
+
+<span class="c1"># Sum of random walks (trajectories)</span>
+<span class="n">Sn</span> <span class="o">=</span> <span class="n">Xn</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True Stat. Mean=</span><span class="si">{:.03f}</span><span class="s2">, Sd=</span><span class="si">{:.02f}</span><span class="s2">&quot;</span><span class="o">.</span>\
+    <span class="nb">format</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Est. Stat. Mean=</span><span class="si">{:.03f}</span><span class="s2">, Sd=</span><span class="si">{:.02f}</span><span class="s2">&quot;</span><span class="o">.</span>\
+    <span class="nb">format</span><span class="p">(</span><span class="n">Sn</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">Sn</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span> <span class="n">Stat</span><span class="o">.</span> <span class="n">Mean</span><span class="o">=</span><span class="mf">0.000</span><span class="p">,</span> <span class="n">Sd</span><span class="o">=</span><span class="mf">14.14</span>
+<span class="n">Est</span><span class="o">.</span> <span class="n">Stat</span><span class="o">.</span> <span class="n">Mean</span><span class="o">=</span><span class="mf">0.010</span><span class="p">,</span> <span class="n">Sd</span><span class="o">=</span><span class="mf">14.09</span>
+</pre></div>
+</div>
+<p>Plot cumulative sum of 100 random walks (trajectories)</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Sn_traj</span> <span class="o">=</span> <span class="n">Xn</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">Sn_traj</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_montecarlo_5_0.png" src="../_images/stat_montecarlo_5_0.png" />
+<p>Distribution of <span class="math notranslate nohighlight">\(S_n\)</span> vs <span class="math notranslate nohighlight">\(\mathcal{N}(0, \sqrt(n))\)</span></p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_low</span><span class="p">,</span> <span class="n">x_high</span> <span class="o">=</span> <span class="n">Sn</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">Sn</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">Sn</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">+</span><span class="mi">3</span><span class="o">*</span><span class="n">Sn</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">h_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">Sn</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="n">x_low</span><span class="p">,</span> <span class="n">x_high</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">43</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Histogram&quot;</span><span class="p">)</span>
+
+<span class="n">x_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_low</span><span class="p">,</span> <span class="n">x_high</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">prob_x_range</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x_range</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">Sn</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">scale</span><span class="o">=</span><span class="n">Sn</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_range</span><span class="p">,</span> <span class="n">prob_x_range</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PDF: P(X)&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="c1">#print(h_)</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_montecarlo_7_0.png" src="../_images/stat_montecarlo_7_0.png" />
+</section>
+</section>
+<section id="permutation-tests">
+<h2>Permutation Tests<a class="headerlink" href="#permutation-tests" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Permutation_test">Permutation test</a>:</p>
+<ul class="simple">
+<li><p>The test involves two or more samples assuming that values can be
+<strong>randomly permuted</strong> under the <strong>null hypothesis</strong>.</p></li>
+<li><p>The test is <strong>Resampling procedure to estimate the distribution of a
+parameter or any statistic under the null hypothesis</strong>, i.e.,
+calculated on the permuted data. This parameter or any statistic is
+called the <strong>estimator</strong>.</p></li>
+<li><p><strong>Statistical inference</strong> is conducted by computing the proportion of
+permuted values of the estimator that are “more extreme” than the true
+one, providing an estimation of the <em>p-value</em>.</p></li>
+<li><p>Permutation tests are a subset of non-parametric statistics, useful
+when the distribution of the estimator (under H0) is unknown or
+requires complicated formulas.</p></li>
+</ul>
+<p>Permutation test procedure</p>
+<figure class="align-default" id="id1">
+<img alt="Bootstrapping procedure" src="../_images/stat_random_permutations.png" />
+<figcaption>
+<p><span class="caption-text">Bootstrapping procedure</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple">
+<li><p>Estimate the observed parameter or statistic
+<span class="math notranslate nohighlight">\(\hat{\theta} = S(X)\)</span> on the initial dataset <span class="math notranslate nohighlight">\(X\)</span> of size
+<span class="math notranslate nohighlight">\(N\)</span>. We call it the observed statistic.</p></li>
+<li><p>Generate <span class="math notranslate nohighlight">\(R\)</span> samples (called randomized samples)
+<span class="math notranslate nohighlight">\([X_1, \ldots X_r, \ldots X_R]\)</span> from the initial dataset by
+permutation of the values between the two samples.</p></li>
+<li><p>Distribution of the estimator under HO: For each random sample
+<span class="math notranslate nohighlight">\(r\)</span>, compute the estimator <span class="math notranslate nohighlight">\(\hat{\theta}_r = S(X_r)\)</span>. The
+set of <span class="math notranslate nohighlight">\(\{\hat{\theta}_r\}\)</span> provides an estimate the
+distribution of <span class="math notranslate nohighlight">\(P(\theta | H0)\)</span> (under the null hypothesis).</p></li>
+<li><p>Compute statistics of the estimator under the null hypothesis using
+randomized estimates <span class="math notranslate nohighlight">\(\hat{\theta}_r\)</span>’s:</p></li>
+</ol>
+<ul>
+<li><p>Mean (under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\bar{\theta}_R = \frac{1}{r}\sum_{r=1}^R \hat{\theta}_r\]</div>
+</li>
+<li><p>Standard Error <span class="math notranslate nohighlight">\(\hat{SE}_{\theta_R}\)</span> (under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\hat{SE}_{\theta_R} = \sqrt{\frac{1}{R-1}\sum_{r=1}^K (\bar{\theta}_R - \hat{\theta}_r)^2}\]</div>
+</li>
+<li><p>Compute p-value using the distribution (under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
+<ul>
+<li><p>One-sided p-value:</p>
+<div class="math notranslate nohighlight">
+\[P(\theta \ge \hat{\theta} | H0) \approx \frac{\mathbf{card}(\hat{\theta}_r \ge \hat{\theta})}{R}\]</div>
+</li>
+<li><p>Two-sided p-value:</p>
+<div class="math notranslate nohighlight">
+\[P(\theta \le \hat{\theta}~\text{or}~\theta \ge \hat{\theta} | H0) \approx \frac{\mathbf{card}(\hat{\theta}_r \le \hat{\theta}) + \mathbf{card}(\hat{\theta}_r \ge \hat{\theta})}{R}\]</div>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">randomize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">n_perms</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : array</span>
+<span class="sd">        the datasets</span>
+<span class="sd">    estimator : callable</span>
+<span class="sd">        the estimator function taking x as argument returning the estimator value</span>
+<span class="sd">        (scalar)</span>
+<span class="sd">    n_perms : int, optional</span>
+<span class="sd">        the number of permutation, by default 1000</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    Observed estimate</span>
+<span class="sd">    Mean of randomized estimates</span>
+<span class="sd">    Standard Error of randomized estimates</span>
+<span class="sd">    Two-sided p-value</span>
+<span class="sd">    Randomized distribution estimates (density_values, bins)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># 1. Estimate the observed parameter or statistic</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">estimator</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># 2. Permuted samples</span>
+    <span class="c1"># Randomly pick the sign with the function:</span>
+    <span class="c1"># np.random.choice([-1, 1], size=len(x), replace=True)</span>
+
+    <span class="n">x_R</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span>
+        <span class="k">for</span> <span class="n">boot_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_perms</span><span class="p">)]</span>
+
+    <span class="c1"># 3. Distribution of the parameter or statistic under H0</span>
+
+    <span class="n">thetas_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">estimator</span><span class="p">(</span><span class="n">x_r</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_r</span> <span class="ow">in</span> <span class="n">x_R</span><span class="p">])</span>
+    <span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">thetas_R</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+
+    <span class="c1"># 4. Randomized Statistics</span>
+
+    <span class="c1"># Mean of randomized estimates</span>
+    <span class="n">theta_mean_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">thetas_R</span><span class="p">)</span>
+
+    <span class="c1"># Standard Error of randomized estimates</span>
+    <span class="n">theta_se_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_perms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span>
+                         <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">theta_mean_R</span> <span class="o">-</span> <span class="n">thetas_R</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1"># 4. Compute two-sided p-value using the distribution under H0:</span>
+
+    <span class="n">extream_vals</span> <span class="o">=</span> <span class="p">(</span><span class="n">thetas_R</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">thetas_R</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+    <span class="n">pval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">extream_vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_perms</span>
+    <span class="c1"># We could use:</span>
+    <span class="c1"># (np.sum(thetas_R &lt;= -np.abs(theta)) + \</span>
+    <span class="c1">#  np.sum(thetas_R &gt;=  np.abs(theta))) / n_perms</span>
+
+    <span class="k">return</span> <span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="p">(</span><span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Example, we load the monthly revenue figures of for 100 stores before
+and after a marketing campaigns. We compute the difference
+(<span class="math notranslate nohighlight">\(x_i = x_i^\text{after} - x_i^\text{before}\)</span>) for each store
+<span class="math notranslate nohighlight">\(i\)</span>. Under the null hypothesis, i.e., no effect of the campaigns,
+<span class="math notranslate nohighlight">\(x_i^\text{after}\)</span> and <span class="math notranslate nohighlight">\(x_i^\text{before}\)</span> could be
+permuted, which is equivalent to randomly switch the sign of
+<span class="math notranslate nohighlight">\(x_i\)</span>. Here we will focus on the sample mean
+<span class="math notranslate nohighlight">\(\hat{\theta} = S(X) = 1/n\sum_i x_i\)</span> as statistic of interest.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/Monthly Revenue (in thousands).csv&quot;</span><span class="p">)</span>
+<span class="c1"># Reshape Keep only the 30 first samples</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;store_id&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;revenue&#39;</span><span class="p">)[:</span><span class="mi">30</span><span class="p">]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">after</span> <span class="o">-=</span> <span class="mi">3</span> <span class="c1"># force to smaller effect size</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">after</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">before</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;No effect: 0&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\bar</span><span class="si">{x}</span><span class="s1">=</span><span class="si">%.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Distribution of the sales changes $x_i = x_i^\text</span><span class="si">{after}</span><span class="s1"> - </span><span class="se">\</span>
+<span class="s1">    x_i^\text</span><span class="si">{before}</span><span class="s1">$&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_montecarlo_12_0.png" src="../_images/stat_montecarlo_12_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># set the seed for reproducible results</span>
+
+<span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="p">(</span><span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span> <span class="o">=</span> \
+    <span class="n">randomize</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">n_perms</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>\
+    <span class="nb">format</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">2.26</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="o">-</span><span class="mf">0.0103</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">2.430000e-02</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.018</span>
+</pre></div>
+</div>
+<p>Plot</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pystatsml</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">plot_pvalue_under_h0</span><span class="p">(</span><span class="n">stat_vals</span><span class="o">=</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">stat_probs</span><span class="o">=</span><span class="n">theta_density_R</span><span class="p">,</span>
+                     <span class="n">stat_obs</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span>  <span class="n">stat_h0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bar_width</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">),</span>
+                     <span class="n">thresh_low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">thresh_high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Randomized distribution of the estimator $\hat{\theta}_b$ (sample mean)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_montecarlo_15_0.png" src="../_images/stat_montecarlo_15_0.png" />
+<p>Similar procedure can be conducted with many statistic e.g., the
+t-statistic (same results):</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ttstat</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># set the seed for reproducible results</span>
+<span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="p">(</span><span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span> <span class="o">=</span> \
+    <span class="n">randomize</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">ttstat</span><span class="p">,</span> <span class="n">n_perms</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>\
+    <span class="nb">format</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">2.36</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="o">-</span><span class="mf">0.0106</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">2.430000e-02</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.025</span>
+</pre></div>
+</div>
+<p>Or the median:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># set the seed for reproducible results</span>
+<span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="p">(</span><span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span> <span class="o">=</span> \
+    <span class="n">randomize</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">,</span> <span class="n">n_perms</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>\
+    <span class="nb">format</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">1.85</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="o">-</span><span class="mf">0.0144</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">9.370000e-02</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.066</span>
+</pre></div>
+</div>
+</section>
+<section id="bootstrapping">
+<h2>Bootstrapping<a class="headerlink" href="#bootstrapping" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Bootstrapping_(statistics)">Bootstrapping</a>:</p>
+<ul class="simple">
+<li><p><strong>Resampling procedure</strong> to estimate the distribution of a statistic
+or parameter of interest, called the estimator.</p></li>
+<li><p>Derive estimates of <strong>variability for estimator</strong> (bias, standard
+error, confidence intervals, etc.).</p></li>
+<li><p><strong>Statistical inference</strong> is conducted by looking the <a class="reference external" href="https://www.researchgate.net/publication/296473825_Bootstrap_Confidence_Intervals_for_Noise_Indicators">confidence
+interval</a>
+<strong>(CI) contains the null hypothesis</strong>.</p></li>
+<li><p>Nonparametric approach statistical inference, useful when model
+assumptions is in doubt, unknown or requires complicated formulas.</p></li>
+<li><p><strong>Bootstrapping with replacement</strong> has favorable performances (<a class="reference external" href="https://projecteuclid.org/journals/annals-of-statistics/volume-7/issue-1/Bootstrap-Methods-Another-Look-at-the-Jackknife/10.1214/aos/1176344552.full">Efron
+1979</a>,
+and
+<a class="reference external" href="https://projecteuclid.org/download/pdf_1/euclid.ss/1177013815">1986</a>)
+compared to prior methods like the jackknife that sample without
+replacement</p></li>
+<li><p><strong>Regularize models</strong> by fitting several models on bootstrap samples
+and averaging their predictions (see Baging and random-forest). See
+machine learning chapter.</p></li>
+</ul>
+<p>Note that compared to random permutation, bootstrapping sample the
+distribution under the <strong>alternative hypothesis</strong>, it doesn’t consider
+the distribution under the null hypothesis. A great advantage of
+bootstrap is its <strong>simplicity of the procedure</strong>:</p>
+<figure class="align-default" id="id2">
+<img alt="Bootstrapping procedure" src="../_images/stat_bootstrapping.png" />
+<figcaption>
+<p><span class="caption-text">Bootstrapping procedure</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple">
+<li><p>Compute the estimator <span class="math notranslate nohighlight">\(\hat{\theta} = S(X)\)</span> on the initial
+dataset <span class="math notranslate nohighlight">\(X\)</span> of size <span class="math notranslate nohighlight">\(N\)</span>.</p></li>
+<li><p>Generate <span class="math notranslate nohighlight">\(B\)</span> samples (called bootstrap samples)
+<span class="math notranslate nohighlight">\([X_1, \ldots X_b, \ldots X_B]\)</span> from the initial dataset by
+randomly drawing <strong>with replacement</strong> <span class="math notranslate nohighlight">\(N\)</span> observations.</p></li>
+<li><p>For each sample <span class="math notranslate nohighlight">\(b\)</span> compute the estimator
+<span class="math notranslate nohighlight">\(\hat{\theta}_b = S(X_b)\)</span>, which provides the bootstrap
+distribution <span class="math notranslate nohighlight">\(P_{\theta_B}\)</span> of the estimator.</p></li>
+<li><p>Compute statistics of the estimator on bootstrap estimates
+<span class="math notranslate nohighlight">\(\hat{\theta}_b\)</span>’s:</p></li>
+</ol>
+<ul>
+<li><p>Bootstrap estimate (of the parameters):</p>
+<div class="math notranslate nohighlight">
+\[\bar{\theta}_B = \frac{1}{B}\sum_{b=1}^B \hat{\theta}_b\]</div>
+</li>
+<li><p>Bias = bootstrap estimate - estimate:</p>
+<div class="math notranslate nohighlight">
+\[\hat{b}_{\theta_B} = \bar{\theta}_B - \hat{\theta}\]</div>
+</li>
+<li><p>Standard error <span class="math notranslate nohighlight">\(\hat{S}_{\theta_B}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\hat{S}_{\theta_B} = \sqrt{\frac{1}{B-1}\sum_{b=1}^B (\bar{\theta}_B - \hat{\theta}_b)^2}\]</div>
+</li>
+<li><p>Confidence interval using the estimated bootstrapped distribution of
+the estimator:</p>
+<div class="math notranslate nohighlight">
+\[CI_{95\%}=[\hat{\theta}_1=Q(2.5\%), \hat{\theta}_2=Q(97.5\%)]~\text{i.e., the 2.5\%, 97.5\% quantiles estimators out of the}~\hat{\theta}_b's\]</div>
+</li>
+</ul>
+<p>Application using the monthly revenue of 100 stores before and after a
+marketing campaigns, using the difference
+(<span class="math notranslate nohighlight">\(x_i = x_i^\text{after} - x_i^\text{before}\)</span>) for each store
+<span class="math notranslate nohighlight">\(i\)</span>. If the average difference <span class="math notranslate nohighlight">\(\bar{x}=1/n \sum_i x_i\)</span> is
+positive (resp. negative), then the marketing campaigns will be
+considered as efficient (resp. detrimental). We will use bootstrapping
+to compute the confidence interval (CI) and see if 0 in comprised in the
+CI.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">after</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">before</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span>
+
+<span class="c1"># 1. Model parameters</span>
+<span class="n">theta_hat</span> <span class="o">=</span> <span class="n">S</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># set the seed for reproducible results</span>
+<span class="n">B</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># Number of bootstrap</span>
+
+<span class="c1"># 2. Bootstrapped samples</span>
+
+<span class="n">x_B</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">boot_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">)]</span>
+
+<span class="c1"># 3. Bootstrap estimates and distribution</span>
+
+<span class="n">theta_hats_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">S</span><span class="p">(</span><span class="n">x_b</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_b</span> <span class="ow">in</span> <span class="n">x_B</span><span class="p">])</span>
+<span class="n">theta_density_B</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">theta_hats_B</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+
+<span class="c1"># 4. Bootstrap Statistics</span>
+
+<span class="c1"># Bootstrap estimate</span>
+<span class="n">theta_bar_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">theta_hats_B</span><span class="p">)</span>
+
+<span class="c1"># Bias = bootstrap estimate - estimate</span>
+<span class="n">bias_hat_B</span> <span class="o">=</span> <span class="n">theta_bar_B</span> <span class="o">-</span> <span class="n">theta_hat</span>
+
+<span class="c1"># Standard Error</span>
+<span class="n">se_hat_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">B</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">theta_bar_B</span> <span class="o">-</span> <span class="n">theta_hats_B</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Confidence interval using the estimated bootstrapped distribution of estimator</span>
+
+<span class="n">ci95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">theta_hats_B</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Est.: </span><span class="si">{:.2f}</span><span class="s2">, Boot Est.: </span><span class="si">{:.2f}</span><span class="s2">, bias: </span><span class="si">{:e}</span><span class="s2">,</span><span class="se">\</span>
+<span class="s2">     Boot SE: </span><span class="si">{:.2f}</span><span class="s2">, CI: [</span><span class="si">{:.5f}</span><span class="s2">, </span><span class="si">{:.5f}</span><span class="s2">]&quot;</span>\
+    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">theta_hat</span><span class="p">,</span> <span class="n">theta_bar_B</span><span class="p">,</span> <span class="n">bias_hat_B</span><span class="p">,</span> <span class="n">se_hat_B</span><span class="p">,</span> <span class="n">ci95</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ci95</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Est</span><span class="o">.</span><span class="p">:</span> <span class="mf">2.26</span><span class="p">,</span> <span class="n">Boot</span> <span class="n">Est</span><span class="o">.</span><span class="p">:</span> <span class="mf">2.19</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.201946e-02</span><span class="p">,</span>     <span class="n">Boot</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">CI</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.45256</span><span class="p">,</span> <span class="mf">4.08465</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Conclusion: Zero is outside the CI, moreover <span class="math notranslate nohighlight">\(\bar{X}\)</span> is
+positive. Thus we can conclude the marketing campaign produced a
+significant increase of the sales.</p>
+<p>Plot</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">theta_density_B</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$P_{\theta_B}$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">theta_hat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat{\theta}$ (Obs. Stat.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">theta_bar_B</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\bar{\theta}_B$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ci95</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$CI_{95\%}$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ci95</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;No effect: 0&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Bootstrap distribution of the estimator $\hat{\theta}_b$ (sample mean)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_montecarlo_25_0.png" src="../_images/stat_montecarlo_25_0.png" />
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Resampling and Monte Carlo Methods</a><ul>
+<li><a class="reference internal" href="#monte-carlo-simulation-of-random-walk-process">Monte-Carlo simulation of Random Walk Process</a><ul>
+<li><a class="reference internal" href="#one-dimensional-random-walk-brownian-motion">One-dimensional random walk (Brownian motion)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#permutation-tests">Permutation Tests</a></li>
+<li><a class="reference internal" href="#bootstrapping">Bootstrapping</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/statistics/stat_montecarlo.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/statistics/stat_montecarlo.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Introduction &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Overfitting and Regularization" href="overfitting.html" />
+    <link rel="prev" title="Resampling and Monte Carlo Methods" href="../statistics/stat_montecarlo.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
+<section id="artificial-intelligence-machine-learning">
+<h2>Artificial Intelligence &amp; Machine Learning<a class="headerlink" href="#artificial-intelligence-machine-learning" title="Link to this heading">¶</a></h2>
+<p><strong>Machine learning is a branch of artificial intelligence (AI)</strong> focused on developing algorithms and models that enable computers to <strong>learn patterns</strong> and make data-based decisions. Instead of being explicitly programmed to perform a task, a machine learning system improves its performance through experience by analyzing data and recognizing patterns.</p>
+<a class="reference internal image-reference" href="../_images/ai_ml.png"><img alt="artificial intelligence and Machine learning." src="../_images/ai_ml.png" style="width: 15cm;" />
+</a>
+<p>In machine learning, a <strong>model is a mathematical representation</strong> of the data using set <strong>parameters</strong>. An <strong>estimator</strong> refers to any algorithm that learns or estimates the parameters from data, i.e., fitting the model to the data.</p>
+<p>Machine learning models can <strong>linear or non-linear</strong>, <a class="reference external" href="https://scikit-learn.org/1.3/tutorial/machine_learning_map">see ML map</a>.
+Machine learning can adress various type of problems, including:</p>
+</section>
+<section id="typology-of-machine-learning-problems">
+<h2>Typology of Machine Learning Problems<a class="headerlink" href="#typology-of-machine-learning-problems" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><a class="reference external" href="https://en.wikipedia.org/wiki/Supervised_learning">Supervised learning</a> Learn a function to predict output or target <em>y</em> given input <em>X</em>.</dt><dd><ol class="loweralpha simple">
+<li><p><strong>Regression</strong> problems: <em>y</em> is quantitative.</p></li>
+<li><p><strong>Classification</strong> problems <em>y</em> is qualitative/categorical, i.e., (labels).</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://en.wikipedia.org/wiki/Unsupervised_learning">Unsupervised learning</a>: Learn the hidden structure of the data <em>X</em></dt><dd><ol class="loweralpha simple">
+<li><p><strong>Dimensionality reduction</strong> (or feature extraction) in machine learning refers to techniques that reduce the number of input variables or features in a dataset while preserving essential information and exploiting redundant or irrelevant features. It can be helpful for visualization or analysis of high-dimension data.</p></li>
+<li><p><strong>Clustering</strong> groups similar data points together based on their features. It helps identify patterns or structures within the data by organizing it into clusters, where points within the same cluster are more similar to each other than to those in different clusters.</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+<a class="reference internal image-reference" href="../_images/ml_overview.png"><img alt="Overview of Machine Learning algorithms." src="../_images/ml_overview.png" style="width: 15cm;" />
+</a>
+</section>
+<section id="simplified-typology-of-machine-leaning-algorithms">
+<h2>Simplified Typology of Machine Leaning Algorithms<a class="headerlink" href="#simplified-typology-of-machine-leaning-algorithms" title="Link to this heading">¶</a></h2>
+<p><strong>Linear Models</strong> (scikit-learn)</p>
+<ul class="simple">
+<li><p>Output is a Linear combination of input features: (One neuron)</p></li>
+<li><p>Domains: Tabular data, basic computer vision (with feature extraction) and NLP</p></li>
+<li><p>Robust to overfit but limited power, requires few samples (&gt;100)</p></li>
+</ul>
+<p><strong>Kernel Machine (Linear or non-linear)</strong> (scikit-learn)</p>
+<ul class="simple">
+<li><p>Output is a Linear combination of input samples</p></li>
+<li><p>Domains: Tabular data, basic computer vision (with feature extraction) and NLP</p></li>
+<li><p>Requires limited samples (&gt;500)</p></li>
+</ul>
+<p><strong>Decision Tree  (non-linear)</strong> (scikit-learn)</p>
+<ul class="simple">
+<li><p>Output is a Linear combination of input samples</p></li>
+<li><p>Domains: Tabular data, basic computer vision (with feature extraction) and NLP</p></li>
+<li><p>Requires limited samples (&gt;500)</p></li>
+</ul>
+<p><strong>Deep Learning (Non Linear)</strong> (Pytorch or TensorFlow with scikit-learn)</p>
+<ul class="simple">
+<li><p>Stack layers of neurons</p></li>
+<li><p>Domains: Computer vision, NLP</p></li>
+<li><p>Powerful, requires limited very large sample size samples (&gt;1000)</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#artificial-intelligence-machine-learning">Artificial Intelligence &amp; Machine Learning</a></li>
+<li><a class="reference internal" href="#typology-of-machine-learning-problems">Typology of Machine Learning Problems</a></li>
+<li><a class="reference internal" href="#simplified-typology-of-machine-leaning-algorithms">Simplified Typology of Machine Leaning Algorithms</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ml_overview/introduction_to_ml.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/ml_overview/introduction_to_ml.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

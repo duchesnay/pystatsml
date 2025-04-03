@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Introduction to Python language &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Import libraries" href="../auto_gallery/python_lang.html" />
+    <link rel="prev" title="Important links" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="introduction-to-python-language">
+<h1>Introduction to Python language<a class="headerlink" href="#introduction-to-python-language" title="Link to this heading">¶</a></h1>
+<section id="python-main-features">
+<h2>Python main features<a class="headerlink" href="#python-main-features" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Python is popular <a class="reference external" href="https://trends.google.com/trends/explore?cat=31&amp;date=all&amp;q=python,R,matlab,spss,stata">Google trends</a> (Python vs. R, Matlab, SPSS, Stata).</p></li>
+<li><p>Python is interpreted: source files <code class="docutils literal notranslate"><span class="pre">.py</span></code> are translated into an intermediate representaion whic is executed by the interpreter which is executed by the processor.
+Conversely, to interpreted languages, compiled languages, such as C or C++, rely on two steps: (i) source files are compiled into a binary program. (ii) binaries are executed by the CPU.
+directly.</p></li>
+<li><p>Python integrates an automatic memory management mechanism: the <strong>Garbage Collector (GC)</strong>. (do not prevent from memory leak).</p></li>
+<li><p>Python is a dynamically-typed language (Java is statically typed).</p></li>
+<li><p>Efficient data manipulation is obtained using libraries (<cite>Numpy, Scipy, Pytroch</cite>) executed in compiled code.</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/interpreted_vs_compiled.png"><img alt="Python is interpreted" class="align-center" src="../_images/interpreted_vs_compiled.png" style="width: 845.6px; height: 476.0px;" />
+</a>
+</section>
+<section id="development-process">
+<h2>Development process<a class="headerlink" href="#development-process" title="Link to this heading">¶</a></h2>
+<p><strong>Edit python file then execute</strong></p>
+<ol class="arabic">
+<li><p>Write python file, <code class="docutils literal notranslate"><span class="pre">file.py</span></code> using any text editor:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run with python interpreter. On the dos/unix command line execute wholes file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">file</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p><strong>Interactive mode</strong></p>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">python</span></code> interpreter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Quite with <code class="docutils literal notranslate"><span class="pre">CTL-D</span></code></p>
+<ol class="arabic" start="2">
+<li><p><code class="docutils literal notranslate"><span class="pre">ipython</span></code>: advanced interactive python interpreter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ipython</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Quite with <code class="docutils literal notranslate"><span class="pre">CTL-D</span></code></p>
+</section>
+</section>
+<section id="overview-of-python-ecosystem-for-data-science">
+<h1>Overview of Python ecosystem for data-science<a class="headerlink" href="#overview-of-python-ecosystem-for-data-science" title="Link to this heading">¶</a></h1>
+<a class="reference internal image-reference" href="../_images/python_ecosystem.png"><img alt="../_images/python_ecosystem.png" class="align-center" src="../_images/python_ecosystem.png" style="width: 845.6px; height: 476.0px;" />
+</a>
+<p><a class="reference external" href="https://numpy.org/">Numpy</a>: Basic numerical operation and matrix operation</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">-</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://www.scipy.org/docs.html">Scipy</a>: General scientific libraries with advanced matrix operation and solver</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.linalg</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://pandas.pydata.org/">Pandas</a>: Manipulation of structured data (tables). Input/output excel files, etc.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;datasets/iris.xls&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span>
+<span class="n">sepal_length</span>  <span class="n">sepal_width</span>  <span class="n">petal_length</span>  <span class="n">petal_width</span> <span class="n">species</span>
+<span class="mi">0</span>           <span class="mf">5.1</span>          <span class="mf">3.5</span>           <span class="mf">1.4</span>          <span class="mf">0.2</span>  <span class="n">setosa</span>
+<span class="mi">1</span>           <span class="mf">4.9</span>          <span class="mf">3.0</span>           <span class="mf">1.4</span>          <span class="mf">0.2</span>  <span class="n">setosa</span>
+<span class="mi">2</span>           <span class="mf">4.7</span>          <span class="mf">3.2</span>           <span class="mf">1.3</span>          <span class="mf">0.2</span>  <span class="n">setosa</span>
+<span class="mi">3</span>           <span class="mf">4.6</span>          <span class="mf">3.1</span>           <span class="mf">1.5</span>          <span class="mf">0.2</span>  <span class="n">setosa</span>
+<span class="mi">4</span>           <span class="mf">5.0</span>          <span class="mf">3.6</span>           <span class="mf">1.4</span>          <span class="mf">0.2</span>  <span class="n">setosa</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://matplotlib.org/">Matplotlib</a>: visualization (low level primitives)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="c1">#%matplotlib qt</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">sinus</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sinus</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://seaborn.pydata.org/">Seaborn</a>: Data visualization (high level primitives for statistics)</p>
+<p>See <a class="reference external" href="https://seaborn.pydata.org/examples/index.html">Example gallery</a></p>
+<p><a class="reference external" href="https://www.statsmodels.org">Statsmodel</a> Advanced statistics (linear models, time series, etc.)</p>
+<p><a class="reference external" href="https://scikit-learn.org">Scikit-learn</a> Machine learning: non-deep learning models and toolbox to be combined with other learning models (Pytorch, etc.).</p>
+<p><a class="reference external" href="https://pytorch.org/">Pytorch</a> for deep learning.</p>
+</section>
+<section id="development-environment">
+<h1>Development Environment<a class="headerlink" href="#development-environment" title="Link to this heading">¶</a></h1>
+<p>A typical Python development environment consists of several key components, which work together to facilitate coding, testing, and debugging. Here are the main components:</p>
+<ol class="arabic simple">
+<li><p>Python Interpreter. The core of any Python development environment is the Python interpreter (e.g., Python 3.x). It runs Python code and converts it into machine-readable form. You can download it from python.org.</p></li>
+<li><p>Text Editor or Integrated Development Environment (IDE) or jupyter-notebook.</p>
+<ul class="simple">
+<li><p>Text Editors: Lightweight editors like Sublime Text, Atom, or VS Code offer basic text editing with syntax highlighting and extensions for Python development.</p></li>
+<li><p>IDEs: Full-featured IDEs like PyCharm, VS Code (with Python extensions), or Spyder offer advanced features like code completion, debugging, project management, version control, and testing integrations.</p></li>
+</ul>
+</li>
+<li><p>Package Manager &amp; Dependency Management</p>
+<ul class="simple">
+<li><p>pip: The default Python package manager, which allows you to install, upgrade, and manage external libraries and dependencies.</p></li>
+<li><p>Conda: An alternative package and environment manager, often used in data science for managing dependencies and virtual environments.</p></li>
+<li><p><a class="reference external" href="https://pixi.sh/latest/">Pixi</a> is a fast software package manager built on top of the existing conda ecosystem.</p></li>
+<li><p>Conda &amp; Pixi: provide the Python Interpreter.</p></li>
+</ul>
+</li>
+<li><p>Virtual Environment Manager</p>
+<ul class="simple">
+<li><p>Virtual environments allow you to create isolated environments for different projects, preventing conflicts between different project dependencies. Tools include:</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/venv.html">venv</a> (python module): Built-in module to create virtual environments.</p></li>
+<li><p><a class="reference external" href="https://virtualenv.pypa.io/en/latest/">virtualenv</a>: Another popular tool for creating isolated environments.</p></li>
+<li><p>Conda &amp; Pixi: Manages both packages and environments.</p></li>
+</ul>
+</li>
+<li><p>Version Control System</p>
+<ul class="simple">
+<li><p>Git: Essential for source control, collaboration, and version management. Platforms like GitHub, GitLab, and Bitbucket integrate Git for remote repository management. IDEs often have built-in Git support or plugins that make using Git seamless.</p></li>
+</ul>
+</li>
+<li><p>Debugger</p>
+<ul class="simple">
+<li><p>Python has a built-in debugger called pdb.</p></li>
+<li><p>Most IDEs, like PyCharm or VS Code, offer graphical debugging tools with features like breakpoints, variable inspection, and step-through execution.</p></li>
+</ul>
+</li>
+<li><p>Testing Framework</p>
+<ul class="simple">
+<li><p>Tools like unittest (built-in), pytest, or nose2 help automate testing and ensure code quality.</p></li>
+<li><p>IDEs often integrate testing frameworks to run and debug tests efficiently.</p></li>
+</ul>
+</li>
+<li><p>Documentation Tools</p>
+<ul class="simple">
+<li><p>Tools like Sphinx or pdoc help generate documentation from your code, making it easier for other developers (and your future self) to understand.</p></li>
+</ul>
+</li>
+<li><p>Containers (Optional)</p>
+<ul class="simple">
+<li><p>Docker: Used to create isolated, reproducible development environments and ensure consistency between development and production environments.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="package-environments-dependency-management">
+<h1>Package &amp; Environments Dependency Management<a class="headerlink" href="#package-environments-dependency-management" title="Link to this heading">¶</a></h1>
+<section id="pixi-package-and-environment-manager">
+<h2>Pixi Package and Environment Manager<a class="headerlink" href="#pixi-package-and-environment-manager" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://pixi.sh/latest/">Pixi</a>  is a modern <strong>package management</strong> tool designed to enhance the experience of <strong>managing Python environments</strong>
+particularly for data science and machine learning workflows. It aims to improve upon the existing tools like Conda by offering faster and more efficient package management:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://prefix.dev/blog/pixi_a_fast_conda_alternative">7 Reasons to Switch from Conda to Pixi</a>.</p></li>
+<li><p><a class="reference external" href="https://pixi.sh/dev/switching_from/conda/">Transitioning from the conda or mamba to pixi</a></p></li>
+<li><p><a class="reference external" href="https://pixi.sh/latest/tutorials/python/">Tutorial for python</a>.</p></li>
+</ul>
+<p><a class="reference external" href="https://pixi.sh/dev/">Installation</a></p>
+<p>Linux &amp; macOS</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">fsSL</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pixi</span><span class="o">.</span><span class="n">sh</span><span class="o">/</span><span class="n">install</span><span class="o">.</span><span class="n">sh</span> <span class="o">|</span> <span class="n">bash</span>
+</pre></div>
+</div>
+<p>Windows</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">iwr</span> <span class="o">-</span><span class="n">useb</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pixi</span><span class="o">.</span><span class="n">sh</span><span class="o">/</span><span class="n">install</span><span class="o">.</span><span class="n">ps1</span> <span class="o">|</span> <span class="n">iex</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://pixi.sh/latest/#uninstall">Uninstall</a></p>
+<p><a class="reference external" href="https://pixi.sh/dev/basic_usage/">Creating an Environment</a>, then add python, and packages</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pixi</span> <span class="n">init</span> <span class="n">myenv</span>
+<span class="n">cd</span> <span class="n">myenv</span>
+<span class="n">pixi</span> <span class="n">add</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.8</span>
+<span class="n">pixi</span> <span class="n">add</span> <span class="n">scikit</span><span class="o">-</span><span class="n">learn</span> <span class="n">pandas</span> <span class="n">statsmodels</span> <span class="n">seaborn</span>
+<span class="n">pixi</span> <span class="n">add</span> <span class="n">spyder</span> <span class="n">spyder</span><span class="o">-</span><span class="n">kernels</span>
+</pre></div>
+</div>
+<p>Example with pystatsml, After downloading <a class="reference external" href="https://github.com/duchesnay/pystatsml">pystatsml repository</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">duchesnay</span><span class="o">/</span><span class="n">pystatsml</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">pystatsml</span>
+</pre></div>
+</div>
+<p>Install dependencies contained in <cite>pixi.toml</cite> file (within the project directory)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pixi</span> <span class="n">install</span>
+</pre></div>
+</div>
+<p>Activate an environment (within the project directory)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pixi</span> <span class="n">shell</span>
+</pre></div>
+</div>
+<p>What’s in the environment?</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pixi</span> <span class="nb">list</span>
+</pre></div>
+</div>
+<p>Deactivating an environment</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exit</span>
+</pre></div>
+</div>
+<p>Install/uninstall a package</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pixi</span> <span class="n">add</span> <span class="n">numpy</span>
+<span class="n">pixi</span> <span class="n">remove</span> <span class="n">numpy</span>
+</pre></div>
+</div>
+</section>
+<section id="anaconda-and-conda-environments">
+<h2>Anaconda and Conda environments<a class="headerlink" href="#anaconda-and-conda-environments" title="Link to this heading">¶</a></h2>
+<p>Anaconda is a python distribution that ships most of python tools and libraries.</p>
+<p><strong>Installation</strong></p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://www.anaconda.com/download">Download anaconda</a></p></li>
+<li><p>Install it, on Linux</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bash</span> <span class="n">Anaconda3</span><span class="o">-</span><span class="mf">2.4.1</span><span class="o">-</span><span class="n">Linux</span><span class="o">-</span><span class="n">x86_64</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Add anaconda path in your PATH variable (For Linux in your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> file), example:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{HOME}</span><span class="s2">/anaconda3/bin:$PATH&quot;</span>
+</pre></div>
+</div>
+<p><strong>Conda environments</strong></p>
+<ul class="simple">
+<li><p>A <a class="reference external" href="https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html">Conda environments</a>
+contains a specific collection of conda packages that you have installed.</p></li>
+<li><p>Control packages environment for a specific purpose: collaborating with someone else, delivering an application to your client,</p></li>
+<li><p>Switch between environments</p></li>
+</ul>
+<p>Creating an environment. Example, <a class="reference external" href="https://github.com/duchesnay/pystatsml/blob/master/environment_student.yml">environment_student.yml</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span><span class="p">:</span> <span class="n">pystatsml</span>
+<span class="n">channels</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
+<span class="n">dependencies</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">ipython</span>
+<span class="o">-</span> <span class="n">scipy</span>
+<span class="o">-</span> <span class="n">numpy</span>
+<span class="o">-</span> <span class="n">pandas</span><span class="o">&gt;=</span><span class="mf">2.0.3</span>
+<span class="o">-</span> <span class="n">jupyter</span>
+<span class="o">-</span> <span class="n">matplotlib</span>
+<span class="o">-</span> <span class="n">scikit</span><span class="o">-</span><span class="n">learn</span><span class="o">&gt;=</span><span class="mf">1.3.0</span>
+<span class="o">-</span> <span class="n">seaborn</span>
+<span class="o">-</span> <span class="n">statsmodels</span><span class="o">&gt;=</span><span class="mf">0.14.0</span>
+<span class="o">-</span> <span class="n">torchvision</span>
+<span class="o">-</span> <span class="n">skorch</span>
+</pre></div>
+</div>
+<p>Create the environment (go have a coffee):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">pystatsml</span><span class="o">.</span><span class="n">yml</span>
+</pre></div>
+</div>
+<p>List of all environments. Activate/deactivate an environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="nb">list</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">pystatsml</span>
+<span class="n">conda</span> <span class="n">deactivate</span>
+</pre></div>
+</div>
+<p>Updating an environment (additional or better package, remove packages).
+Update the contents of your environment.yml file accordingly and then run the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">update</span> <span class="o">--</span><span class="n">file</span> <span class="n">pystatsml</span><span class="o">.</span><span class="n">yml</span> <span class="o">--</span><span class="n">prune</span>
+</pre></div>
+</div>
+<p>List all packages or search for a specific package in the current environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="nb">list</span>
+<span class="n">conda</span> <span class="nb">list</span> <span class="n">numpy</span>
+</pre></div>
+</div>
+<p>Search for available versions of package in an environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">search</span> <span class="o">-</span><span class="n">f</span> <span class="n">numpy</span>
+</pre></div>
+</div>
+<p>Install new package in an environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">numpy</span>
+</pre></div>
+</div>
+<p>Delete an environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">remove</span> <span class="o">-</span><span class="n">n</span> <span class="n">pystatsml</span> <span class="o">--</span><span class="nb">all</span>
+</pre></div>
+</div>
+<p><strong>Miniconda</strong></p>
+<p>Anaconda without the collection of (&gt;700) packages.
+With Miniconda you download only the packages you want with the conda command: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">PACKAGENAME</span></code></p>
+<ol class="arabic simple">
+<li><p>Download <a class="reference external" href="https://docs.anaconda.com/free/miniconda/index.html">Miniconda</a></p></li>
+<li><p>Install it, on Linux:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bash</span> <span class="n">Miniconda3</span><span class="o">-</span><span class="n">latest</span><span class="o">-</span><span class="n">Linux</span><span class="o">-</span><span class="n">x86_64</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Add anaconda path in your PATH variable in your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> file:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export PATH=${HOME}/miniconda3/bin:$PATH
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Install required packages:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">scipy</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">pandas</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">matplotlib</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">statsmodels</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">scikit</span><span class="o">-</span><span class="n">learn</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">spyder</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">jupyter</span>
+</pre></div>
+</div>
+</section>
+<section id="pip">
+<h2>Pip<a class="headerlink" href="#pip" title="Link to this heading">¶</a></h2>
+<p><strong>pip</strong> alternative for packages management (update <code class="docutils literal notranslate"><span class="pre">-U</span></code> in user directory <code class="docutils literal notranslate"><span class="pre">--user</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="o">--</span><span class="n">user</span> <span class="n">seaborn</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="o">--</span><span class="n">user</span> <span class="n">nibabel</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="o">--</span><span class="n">user</span> <span class="n">nilearn</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="development-with-integrated-development-environment-ide-and-jupyterlab">
+<h1>Development with Integrated Development Environment (IDE) and JupyterLab<a class="headerlink" href="#development-with-integrated-development-environment-ide-and-jupyterlab" title="Link to this heading">¶</a></h1>
+<p>Integrated Development Environment (IDE) are software development environment that provide:</p>
+<ul class="simple">
+<li><p>Source-code editor (auto-completion, etc.).</p></li>
+<li><p>Execution facilities (interactive, etc.).</p></li>
+<li><p>Debugger.</p></li>
+</ul>
+<section id="visual-studio-code-vs-code">
+<h2>Visual Studio Code (VS Code)<a class="headerlink" href="#visual-studio-code-vs-code" title="Link to this heading">¶</a></h2>
+<p>Setup</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://code.visualstudio.com/">Installation</a>.</p></li>
+<li><p>Tuto for <a class="reference external" href="https://linuxhint.com/install-visual-studio-code-ubuntu22-04/">Linux</a>.pen the Command Palette (Ctrl+Shift+P)</p></li>
+<li><p>Useful settings for python: <a class="reference external" href="https://code.visualstudio.com/docs/python/python-quick-start">VS Code for python</a></p></li>
+<li><p>Extensions for data-science in python: <code class="docutils literal notranslate"><span class="pre">Python,</span> <span class="pre">Jupyter,</span> <span class="pre">Python</span> <span class="pre">Extension</span> <span class="pre">Pack,</span> <span class="pre">Python</span> <span class="pre">Pylance,</span> <span class="pre">Path</span> <span class="pre">Intellisense</span></code></p></li>
+</ul>
+<p><a class="reference external" href="https://code.visualstudio.com/docs/python/environments/">Set Python environment</a>: Open the Command Palette <code class="docutils literal notranslate"><span class="pre">(Ctrl+Shift+P)</span></code> search <code class="docutils literal notranslate"><span class="pre">&gt;Python:</span> <span class="pre">Select</span> <span class="pre">interpreter</span></code>.</p>
+<p>Execution, three possibilities:</p>
+<ol class="arabic">
+<li><p>Run Python file</p></li>
+<li><p>Interactive  execution in python interpreter, type: <code class="docutils literal notranslate"><span class="pre">Shift/Enter</span></code></p></li>
+<li><p>Interactive execution in Jupyter:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Install Jupyter Extension (cube icon / type <code class="docutils literal notranslate"><span class="pre">jupyter</span></code> / Install).</p></li>
+<li><p>Optional, <code class="docutils literal notranslate"><span class="pre">Shift/Enter</span></code> will send selected text to interactive Jupyter notebook:
+in settings (gear wheel or <code class="docutils literal notranslate"><span class="pre">CTL,</span></code>: press control and comma keys),
+check box: <code class="docutils literal notranslate"><span class="pre">Jupyter</span> <span class="pre">&gt;</span> <span class="pre">Interactive</span> <span class="pre">Window</span> <span class="pre">Text</span> <span class="pre">Editor</span> <span class="pre">&gt;</span> <span class="pre">Execute</span> <span class="pre">Selection</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<p><a class="reference external" href="https://code.visualstudio.com/docs/remote/ssh">Remote Development using SSH</a></p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Setup ssh to hostname</p></li>
+<li><p>Select Remote-SSH: Connect to Host… from the Command Palette (<code class="docutils literal notranslate"><span class="pre">F1,</span> <span class="pre">Ctrl+Shift+P</span></code>) and use the same <a class="reference external" href="mailto:user&#37;&#52;&#48;hostname">user<span>&#64;</span>hostname</a> as in step 1</p></li>
+<li><p>Remember hosts: (<code class="docutils literal notranslate"><span class="pre">F1,</span> <span class="pre">Ctrl+Shift+P</span></code>): Remote-SSH: Add New SSH Host or clicking on the Add New icon in the SSH Remote Explorer in the Activity Bar</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="spyder">
+<h2>Spyder<a class="headerlink" href="#spyder" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://www.spyder-ide.org/">Spyder</a> is a basic IDE dedicated to data-science.</p>
+<ul class="simple">
+<li><p>Syntax highlighting.</p></li>
+<li><p>Code introspection for code completion (use <code class="docutils literal notranslate"><span class="pre">TAB</span></code>).</p></li>
+<li><p>Support for multiple Python consoles (including IPython).</p></li>
+<li><p>Explore and edit variables from a GUI.</p></li>
+<li><p>Debugging.</p></li>
+<li><p>Navigate in code (go to function definition) <code class="docutils literal notranslate"><span class="pre">CTL</span></code>.</p></li>
+</ul>
+<p>Shortcuts:
+- <code class="docutils literal notranslate"><span class="pre">F9</span></code> run line/selection</p>
+</section>
+<section id="jupyterlab-jupyter-notebook">
+<h2>JupyterLab (Jupyter Notebook)<a class="headerlink" href="#jupyterlab-jupyter-notebook" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://jupyter.org/">JupyterLab</a>   allows data scientists to create and share document, ie, Jupyter Notebook. A Notebook is that is a document <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> including:</p>
+<ul class="simple">
+<li><p>Python code, text, figures (plots), equations, and other multimedia resources.</p></li>
+<li><p>The Notebook allows interactive execution of blocs of codes or text.</p></li>
+<li><p>Notebook is edited using a Web browsers and it is executed by (possibly remote) IPython kernel.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span> <span class="n">notebook</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">New/kernel</span></code></p>
+<p>Advantages:</p>
+<ul class="simple">
+<li><p>Rapid and one shot data analysis</p></li>
+<li><p>Share all-in-one data analysis documents: inluding code, text and figures</p></li>
+</ul>
+<p>Drawbacks (<a class="reference external" href="https://www.databricks.com/glossary/jupyter-notebook">source</a>):</p>
+<ul class="simple">
+<li><p>Difficult to maintain and keep in sync when collaboratively working on code.</p></li>
+<li><p>Difficult to operationalize your code when using Jupyter notebooks as they don’t feature any built-in integration or tools for operationalizing your machine learning models.</p></li>
+<li><p>Difficult to scale: Jupyter notebooks are designed for single-node data science. If your data is too big to fit in your computer’s memory, using Jupyter notebooks becomes significantly more difficult.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Introduction to Python language</a><ul>
+<li><a class="reference internal" href="#python-main-features">Python main features</a></li>
+<li><a class="reference internal" href="#development-process">Development process</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#overview-of-python-ecosystem-for-data-science">Overview of Python ecosystem for data-science</a></li>
+<li><a class="reference internal" href="#development-environment">Development Environment</a></li>
+<li><a class="reference internal" href="#package-environments-dependency-management">Package &amp; Environments Dependency Management</a><ul>
+<li><a class="reference internal" href="#pixi-package-and-environment-manager">Pixi Package and Environment Manager</a></li>
+<li><a class="reference internal" href="#anaconda-and-conda-environments">Anaconda and Conda environments</a></li>
+<li><a class="reference internal" href="#pip">Pip</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#development-with-integrated-development-environment-ide-and-jupyterlab">Development with Integrated Development Environment (IDE) and JupyterLab</a><ul>
+<li><a class="reference internal" href="#visual-studio-code-vs-code">Visual Studio Code (VS Code)</a></li>
+<li><a class="reference internal" href="#spyder">Spyder</a></li>
+<li><a class="reference internal" href="#jupyterlab-jupyter-notebook">JupyterLab (Jupyter Notebook)</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/introduction/introduction_python_for_datascience.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/introduction/introduction_python_for_datascience.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

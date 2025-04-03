@@ -1,0 +1,535 @@
+{
+ "BeautifulSoup": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "BeautifulSoup"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "bs4.element",
+   "module_short": "bs4",
+   "name": "Tag"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "Tag"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "bs4.element",
+   "module_short": "bs4",
+   "name": "PageElement"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "PageElement"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "BeautifulSoup"
+  }
+ ],
+ "base_url": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "df": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.frame",
+   "module_short": "pandas.core.frame",
+   "name": "DataFrame"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "DataFrame"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "DataFrame"
+  }
+ ],
+ "df.to_csv": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.frame",
+   "module_short": "pandas.core.frame",
+   "name": "DataFrame.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "DataFrame.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "DataFrame.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.generic",
+   "module_short": "pandas.core.generic",
+   "name": "NDFrame.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "NDFrame.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "NDFrame.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.arraylike",
+   "module_short": "pandas.core.arraylike",
+   "name": "OpsMixin.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "OpsMixin.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "OpsMixin.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.base",
+   "module_short": "pandas.core.base",
+   "name": "PandasObject.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "PandasObject.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "PandasObject.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.indexing",
+   "module_short": "pandas.core.indexing",
+   "name": "IndexingMixin.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "IndexingMixin.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "IndexingMixin.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.accessor",
+   "module_short": "pandas.core.accessor",
+   "name": "DirNamesMixin.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "DirNamesMixin.to_csv"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "DirNamesMixin.to_csv"
+  }
+ ],
+ "headers": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "dict"
+  }
+ ],
+ "next_li_element": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "NoneType"
+  }
+ ],
+ "next_li_element.find": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "NoneType"
+  }
+ ],
+ "next_page_relative_url": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
+  }
+ ],
+ "page": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "requests.models",
+   "module_short": "requests",
+   "name": "Response"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "requests",
+   "module_short": "requests",
+   "name": "Response"
+  }
+ ],
+ "page.text": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "requests.models",
+   "module_short": "requests",
+   "name": "Response.text"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "requests",
+   "module_short": "requests",
+   "name": "Response.text"
+  }
+ ],
+ "pd.DataFrame": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core.frame",
+   "module_short": "pandas.core.frame",
+   "name": "DataFrame"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "DataFrame"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "DataFrame"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core.generic",
+   "module_short": "pandas.core.generic",
+   "name": "NDFrame"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "NDFrame"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "NDFrame"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core.arraylike",
+   "module_short": "pandas.core.arraylike",
+   "name": "OpsMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "OpsMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "OpsMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core.base",
+   "module_short": "pandas.core.base",
+   "name": "PandasObject"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "PandasObject"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "PandasObject"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core.indexing",
+   "module_short": "pandas.core.indexing",
+   "name": "IndexingMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "IndexingMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "IndexingMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core.accessor",
+   "module_short": "pandas.core.accessor",
+   "name": "DirNamesMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "DirNamesMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "DirNamesMixin"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "DataFrame"
+  }
+ ],
+ "quotes": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "list"
+  }
+ ],
+ "quotes.append": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "builtin_function_or_method"
+  }
+ ],
+ "requests.get": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "requests",
+   "module_short": "requests",
+   "name": "get"
+  }
+ ],
+ "scrape_page": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  }
+ ],
+ "soup": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "BeautifulSoup"
+  }
+ ],
+ "soup.find": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "BeautifulSoup.find"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4.element",
+   "module_short": "bs4",
+   "name": "Tag.find"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "Tag.find"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4.element",
+   "module_short": "bs4.element",
+   "name": "PageElement.find"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "PageElement.find"
+  }
+ ],
+ "soup.find_all": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "BeautifulSoup.find_all"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4.element",
+   "module_short": "bs4",
+   "name": "Tag.find_all"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "Tag.find_all"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4.element",
+   "module_short": "bs4.element",
+   "name": "PageElement.find_all"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "bs4",
+   "module_short": "bs4",
+   "name": "PageElement.find_all"
+  }
+ ]
+}

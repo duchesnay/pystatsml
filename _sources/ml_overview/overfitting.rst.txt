@@ -1,0 +1,519 @@
+Overfitting and Regularization
+==============================
+
+In statistics and machine learning, overfitting occurs when a
+statistical model describes random errors or noise instead of the
+underlying relationships. Overfitting generally occurs when a model is
+**excessively complex**, such as having **too many parameters relative
+to the number of observations**. A model that has been overfit will
+generally have poor predictive performance, as it can exaggerate minor
+fluctuations in the data.
+
+A learning algorithm is trained using some set of training samples. If
+the learning algorithm has the capacity to overfit the training samples
+the performance on the **training sample set** will improve while the
+performance on unseen **test sample set** will decline.
+
+The overfitting phenomenon has three main explanations: - excessively
+complex models, - multicollinearity, and - high dimensionality.
+
+Causes of Overfitting
+---------------------
+
+Multicollinearity
+~~~~~~~~~~~~~~~~~
+
+Predictors are highly correlated, meaning that one can be linearly
+predicted from the others. In this situation the coefficient estimates
+of the multiple regression may change erratically in response to small
+changes in the model or the data. Multicollinearity does not reduce the
+predictive power or reliability of the model as a whole, at least not
+within the sample data set; it only affects computations regarding
+individual predictors. That is, a multiple regression model with
+correlated predictors can indicate how well the entire bundle of
+predictors predicts the outcome variable, but it may not give valid
+results about any individual predictor, or about which predictors are
+redundant with respect to others. In case of perfect multicollinearity
+the predictor matrix is singular and therefore cannot be inverted. Under
+these circumstances, for a general linear model
+:math:`\mathbf{y} = \mathbf{X} \mathbf{w} + \boldsymbol{\varepsilon}`,
+the ordinary least-squares estimator,
+:math:`\mathbf{w}_{OLS} = (\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^T \mathbf{y}`,
+does not exist.
+
+.. code:: ipython3
+
+    import numpy as np
+    
+    # Plot
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    
+    # Plot parameters
+    plt.style.use('seaborn-v0_8-whitegrid')
+    fig_w, fig_h = plt.rcParams.get('figure.figsize')
+    plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
+
+An example where correlated predictor may produce an unstable model
+follows: We want to predict the business potential (pb) of some
+companies given their business volume (bv) and the taxes (tx) they are
+paying. Here pb ~ 10% of bv. However, taxes = 20% of bv (tax and bv are
+highly collinear), therefore there is an infinite number of linear
+combinations of tax and bv that lead to the same prediction. Solutions
+with very large coefficients will produce excessively large predictions.
+
+Multicollinearity between the predictors: business volumes and tax
+produces unstable models with arbitrary large coefficients.
+|Multicollinearity between the predictors|
+
+Dealing with multicollinearity:
+
+- Regularization by e.g. :math:`\ell_2` shrinkage: Introduce a bias in
+  the solution by making :math:`(X^T X)^{-1}` non-singular. See
+  :math:`\ell_2` shrinkage.
+
+- Feature selection: select a small number of features. See: Isabelle
+  Guyon and André Elisseeff *An introduction to variable and feature
+  selection* The Journal of Machine Learning Research, 2003.
+
+- Feature selection: select a small number of features using
+  :math:`\ell_1` shrinkage.
+
+- Extract few independent (uncorrelated) features using e.g. principal
+  components analysis (PCA), partial least squares regression (PLS-R) or
+  regression methods that cut the number of predictors to a smaller set
+  of uncorrelated components.
+
+.. |Multicollinearity between the predictors| image:: images/ols_multicollinearity.png
+   :width: 10cm
+
+.. code:: ipython3
+
+    bv = np.array([10, 20, 30, 40, 50])             # business volume
+    tax  = .2 * bv                                  # Tax
+    bp = .1 * bv + np.array([-.1, .2, .1, -.2, .1]) # business potential
+    
+    X = np.column_stack([bv, tax])
+    beta_star = np.array([.1, 0])  # true solution
+    
+    '''
+    Since tax and bv are correlated, there is an infinite number of linear
+    combinations leading to the same prediction.
+    '''
+    
+    # 10 times the bv then subtract it 9 times using the tax variable: 
+    beta_medium = np.array([.1 * 10, -.1 * 9 * (1/.2)])
+    # 100 times the bv then subtract it 99 times using the tax variable: 
+    beta_large = np.array([.1 * 100, -.1 * 99 * (1/.2)])
+    
+    print("L2 norm of coefficients: small:%.2f, medium:%.2f, large:%.2f." % 
+          (np.sum(beta_star ** 2), np.sum(beta_medium ** 2), np.sum(beta_large ** 2)))
+    
+    print("However all models provide the exact same predictions.")
+    assert np.all(np.dot(X, beta_star) == np.dot(X, beta_medium))
+    assert np.all(np.dot(X, beta_star) == np.dot(X, beta_large))
+
+
+.. parsed-literal::
+
+    L2 norm of coefficients: small:0.01, medium:21.25, large:2550.25.
+    However all models provide the exact same predictions.
+
+
+Model complexity
+~~~~~~~~~~~~~~~~
+
+Model complexity impacts both bias and variance:
+
+- Low-complexity models (underfitting):
+
+  - High bias (priors or assumptions about data are too strong, leading
+    to oversimplified models).
+  - Low variance (consistent predictions across different datasets but
+    with poor accuracy).
+  - Example: A linear regression model trying to fit a highly non-linear
+    dataset or an under regularized model.
+  - Poor performance on both training and test data.
+
+- High-complexity models (overfitting):
+
+  - Low bias (can fit training data very well).
+  - High variance (small fluctuations in training data lead to large
+    changes in predictions).
+  - Example: A deep neural network with too many parameters trained on
+    limited data or an over regularized model.
+  - Good training performance but poor test performance.
+
+The **bias-variance tradeoff** states that as complexity increases, bias
+decreases, but variance increases. The goal is to find the optimal model
+complexity that balances both.
+
+Complex learners with too many parameters relative to the number of
+observations may overfit the training dataset.
+
+.. figure:: images/model_complexity_bias_variance.png
+   :alt: Model complexity
+   :width: 10cm
+
+   Model complexity
+
+The Challenges of High Dimensionality
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+High-dimensional data refers to datasets with a large number of input
+features (:math:`P`). In linear models, each feature corresponds to a
+parameter, so when the number of features :math:`P` is large compared to
+the number of training samples :math:`N` (the “**large P, small N**”
+problem), the model tends to overfit the training data. This phenomenon
+is part of the **curse of dimensionality**, which describes the
+difficulties that arise when working in high-dimensional spaces.
+
+One of the most critical factors in selecting a machine learning
+algorithm is the relationship between :math:`P` and :math:`N`, as it
+significantly impacts model performance. Below are three key problems
+associated with high-dimensionality:
+
+**Infinite Solutions and Ill-Conditioned Matrices**
+
+In linear models, the covariance matrix :math:`\mathbf{X}^T \mathbf{X}`
+is of size :math:`P \times P` and has rank :math:`\min(N, P)`. When
+:math:`P > N`, the system of equations becomes **overparameterized**,
+meaning there are infinitely many possible solutions that fit the
+training data. This leads to poor generalization, as the learned
+solutions may be highly specific to the dataset. In such cases, the
+covariance matrix is singular or ill-conditioned, making it unstable for
+inversion in methods like ordinary least squares regression.
+
+**Exponential Growth of Sample Requirements**
+
+The density of data points in a high-dimensional space decreases
+exponentially with increasing :math:`P`. Specifically, the effective
+sampling density of :math:`N` points in a :math:`P`-dimensional space is
+proportional to :math:`N^{1/P}`. As a result, the data becomes
+increasingly sparse as :math:`P` grows, making it difficult to estimate
+distributions or learn meaningful patterns. To maintain a constant
+density, the number of required samples grows exponentially. For
+example:
+
+- In **1D**, 50 samples provide reasonable coverage.
+- In **2D**, approximately **2,500** samples are needed for equivalent
+  density.
+- In **3D**, around **125,000** samples are required.
+
+This illustrates why high-dimensional problems often suffer from a lack
+of sufficient training data.
+
+**Most Data Points Lie on the Edge of the Space**
+
+In high-dimensional spaces, most data points are **closer to the
+boundary of the sample space** than to any other data point. Consider
+:math:`N` points uniformly distributed in a :math:`P`-dimensional unit
+ball. The median distance from the origin to the nearest neighbor is
+given by:
+
+.. math::
+
+
+   d(P, N) = \left(1 - \frac{1}{2}^{1/N}\right)^{1/P}
+
+For example, with :math:`N = 500` and :math:`P = 10`, this distance is
+approximately **0.52**, meaning that most data points are more than
+halfway to the boundary. This has severe consequences for prediction:
+
+- In lower dimensions, models **interpolate** between data points.
+- In high dimensions, models must **extrapolate**, which is
+  significantly harder and less reliable.
+
+This explains why many machine learning algorithms perform poorly in
+high-dimensional settings and why dimensionality reduction techniques
+(e.g., PCA, feature selection) are essential.
+
+**Conclusion**
+
+The curse of dimensionality creates fundamental challenges for machine
+learning, including overparameterization, data sparsity, and unreliable
+predictions. Addressing these issues requires strategies such as
+**dimensionality reduction**, **regularization**, and **feature
+selection** to ensure that models generalize well and remain
+computationally efficient.
+
+*(Source: T. Hastie, R. Tibshirani, J. Friedman.* The Elements of
+Statistical Learning: Data Mining, Inference, and Prediction.\* Second
+Edition, 2009.)\*
+
+Measure of overfitting risk: Vapnik–Chervonenkis (VC) Dimension
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Vapnik–Chervonenkis (VC) dimension is a fundamental concept in
+statistical learning theory that measures the capacity of a hypothesis
+class (i.e., the set of functions a model can learn). It provides a way
+to quantify a model’s ability to fit data and generalize to unseen
+examples.
+
+VC dimension (for Vapnik–Chervonenkis dimension) is a measure of the
+**capacity** (complexity, expressive power, richness, or flexibility) of
+a statistical classification algorithm, defined as the cardinality of
+the largest set of points that the algorithm can shatter.
+
+Theorem: Linear classifier in :math:`R^P` have VC dimension of
+:math:`P+1`. Hence in dimension two (:math:`P=2`) any random partition
+of 3 points can be learned.
+
+.. figure:: images/vc_dimension_linear_2d.png
+   :alt: In 2D we can shatter any three non-collinear points
+   :width: 15cm
+
+   In 2D we can shatter any three non-collinear points
+
+Regularization Approaches to Mitigate Overfitting
+-------------------------------------------------
+
+Regularization techniques help prevent overfitting by constraining the
+complexity of machine learning models. Below is a categorized
+enumeration of common regularization methods, along with their
+summaries.
+
+Norm-Based Regularization (Penalty Methods)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These techniques add constraints to the model’s parameters to prevent
+excessive complexity.
+
+- **L2 Regularization (Ridge Regression / Weight Decay / Shrinkage)**
+
+  - Adds a squared penalty: :math:`\lambda \sum w_i^2`.
+  - Shrinks weights but does not eliminate them, reducing model
+    sensitivity to noise.
+  - Common in linear regression, logistic regression, and deep learning.
+
+- **L1 Regularization (Lasso Regression)**
+
+  - Adds an absolute penalty: :math:`\lambda \sum |w_i|`.
+  - Promote sparsity by setting some weights to zero, effectively
+    selecting features.
+  - Used in high-dimensional datasets to perform feature selection.
+
+- **Elastic Net Regularization**
+
+  - Combines L1 and L2 penalties:
+    :math:`\lambda_1 \sum |w_i| + \lambda_2 \sum w_i^2`
+  - Used when dealing with correlated features.
+
+Ensemble Learning approaches
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Bagging & Boosting**
+
+  - **Bagging** (e.g., Random Forests) reduces overfitting by averaging
+    multiple models trained on different data subsets.
+  - **Boosting** (e.g., XGBoost) adds weak learners sequentially with a
+    learning rate to control overfitting.
+  - **Stacking** reduces overfitting by averaging multiple models
+    trained on same data subsets.
+
+Data-Filtering/or preprocessing Regularization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Feature Selection**
+
+  - Reduces model complexity by removing redundant or irrelevant
+    features.
+  - Methods include univariate filter (SelecKBest) or recursive feature
+    elimination (RFE) and mutual information filtering.
+
+- **Unsupervised Dimension Reduction as preprocessing step**
+
+  - Reduces model complexity by reducing the dimension of the imput
+    data.
+  - Methods include Linear Dimension reduction or Manifold Learning.
+  - Unsupervised approaches are generally not efficient, as they tend to
+    overfill the data before the supervised stage.
+
+Regularization for Probabilistic Models
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Bayesian Regularization**
+
+  - Introduces priors over model parameters, effectively acting as L2
+    regularization.
+  - Used in Bayesian Neural Networks, Gaussian Processes, and Bayesian
+    Ridge Regression.
+
+Regularization in Kernel Methods (SVM, Gaussian Processes)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Margin-Based Regularization (SVM)**
+
+  - The **soft margin** parameter $ C $ controls the trade-off between a
+    large margin and misclassification.
+  - A smaller $ C $ encourages more regularization, preventing
+    overfitting.
+
+- **Kernel Regularization**
+
+  - Kernel methods (e.g., Gaussian RBF, polynomial kernels) use
+    hyperparameters like kernel bandwidth to control model complexity.
+  - A wider kernel bandwidth smooths the decision boundary, reducing
+    variance.
+
+Regularization in Deep Learning
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Dropout**
+
+  - Randomly disables a fraction of neurons during training to reduce
+    reliance on specific features.
+  - Helps improve generalization in fully connected and convolutional
+    networks.
+
+- **Batch Normalization**
+
+  - Normalizes activations across mini-batches, reducing internal
+    covariate shift.
+  - Acts as an implicit regularizer by smoothing the optimization
+    landscape.
+
+- **Early Stopping**
+
+  - Monitors validation loss and stops training when it stops
+    decreasing.
+  - Prevents the model from overfitting to the training data.
+
+- **Weight Decay (L2 Regularization in Neural Networks)**
+
+  - Reduces the magnitude of neural network weights to prevent
+    overfitting.
+  - Equivalent to L2 regularization in traditional machine learning
+    models.
+
+Data-Centric Regularization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Data Augmentation**
+
+  - Artificially increases the dataset size using transformations (e.g.,
+    rotations, scaling, flipping).
+  - Particularly useful in image and text processing tasks.
+
+- **Adding Noise to Inputs or Weights**
+
+  - Introduces small random noise to training data or network weights to
+    improve robustness.
+  - Common in deep learning and reinforcement learning.
+
+Regularization for Tree-Based Models
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Pruning (Decision Trees, Random Forests, Gradient Boosting)**
+
+  - Removes branches that have low importance to reduce complexity.
+  - Prevents trees from memorizing noise.
+
+Summary
+~~~~~~~
+
++-----------------------+-------------------+--------------------------+
+| **Category**          | **Method**        | **Description**          |
++=======================+===================+==========================+
+| **Norm-Based          | **L2              | Adds a squared penalty   |
+| Regularization**      | Regularization    | on coefficients; shrinks |
+|                       | (Ridge, Weight    | weights but does not     |
+|                       | Decay,            | eliminate them, reducing |
+|                       | Shrinkage)**      | noise sensitivity.       |
++-----------------------+-------------------+--------------------------+
+|                       | **L1              | Adds an absolute penalty |
+|                       | Regularization    | on coefficients;         |
+|                       | (Lasso)**         | promotes sparsity by     |
+|                       |                   | setting some weights to  |
+|                       |                   | zero (feature            |
+|                       |                   | selection).              |
++-----------------------+-------------------+--------------------------+
+|                       | **Elastic Net**   | Combines L1 and L2       |
+|                       |                   | penalties; useful for    |
+|                       |                   | correlated features.     |
++-----------------------+-------------------+--------------------------+
+| **Ensemble Learning   | **Bagging**       | Reduces overfitting by   |
+| Regularization**      |                   | averaging multiple       |
+|                       |                   | models trained on        |
+|                       |                   | different subsets (e.g., |
+|                       |                   | Random Forests).         |
++-----------------------+-------------------+--------------------------+
+|                       | **Boosting**      | Sequentially adds weak   |
+|                       |                   | learners with a learning |
+|                       |                   | rate to control          |
+|                       |                   | overfitting (e.g.,       |
+|                       |                   | XGBoost).                |
++-----------------------+-------------------+--------------------------+
+|                       | **Stacking**      | Combines multiple models |
+|                       |                   | trained on the same data |
+|                       |                   | and uses a meta-learner  |
+|                       |                   | for final predictions.   |
++-----------------------+-------------------+--------------------------+
+| **Data-Filtering /    | **Feature         | Reduces model complexity |
+| Preprocessing         | Selection**       | by removing redundant or |
+| Regularization**      |                   | irrelevant features      |
+|                       |                   | (e.g., SelectKBest,      |
+|                       |                   | RFE).                    |
++-----------------------+-------------------+--------------------------+
+|                       | **Unsupervised    | Reduces data             |
+|                       | Dimension         | dimensionality before    |
+|                       | Reduction**       | modeling (e.g., PCA,     |
+|                       |                   | Manifold Learning); less |
+|                       |                   | efficient for supervised |
+|                       |                   | learning.                |
++-----------------------+-------------------+--------------------------+
+| **Regularization for  | **Bayesian        | Introduces priors over   |
+| Probabilistic         | Regularization**  | parameters, acting as L2 |
+| Models**              |                   | regularization (e.g.,    |
+|                       |                   | Bayesian Ridge           |
+|                       |                   | Regression, Gaussian     |
+|                       |                   | Processes).              |
++-----------------------+-------------------+--------------------------+
+| **Regularization in   | **Margin-Based    | Soft margin parameter    |
+| Kernel Methods**      | Regularization    | (C) controls the         |
+|                       | (SVM)**           | trade-off between margin |
+|                       |                   | size and                 |
+|                       |                   | misclassification.       |
++-----------------------+-------------------+--------------------------+
+|                       | **Kernel          | Kernel hyperparameters   |
+|                       | Regularization**  | (e.g., RBF bandwidth)    |
+|                       |                   | control decision         |
+|                       |                   | boundary complexity.     |
++-----------------------+-------------------+--------------------------+
+| **Regularization in   | **Dropout**       | Randomly disables        |
+| Deep Learning**       |                   | neurons during training  |
+|                       |                   | to reduce reliance on    |
+|                       |                   | specific features.       |
++-----------------------+-------------------+--------------------------+
+|                       | **Batch           | Normalizes activations   |
+|                       | Normalization**   | across mini-batches,     |
+|                       |                   | reducing internal        |
+|                       |                   | covariate shift and      |
+|                       |                   | smoothing optimization.  |
++-----------------------+-------------------+--------------------------+
+|                       | **Early           | Stops training when      |
+|                       | Stopping**        | validation loss stops    |
+|                       |                   | improving to prevent     |
+|                       |                   | overfitting.             |
++-----------------------+-------------------+--------------------------+
+|                       | **Weight Decay    | Applies L2               |
+|                       | (L2 in Deep       | regularization to neural |
+|                       | Learning)**       | network weights.         |
++-----------------------+-------------------+--------------------------+
+| **Data-Centric        | **Data            | Increases dataset size   |
+| Regularization**      | Augmentation**    | using transformations    |
+|                       |                   | (e.g., rotations,        |
+|                       |                   | scaling, flipping) to    |
+|                       |                   | improve generalization.  |
++-----------------------+-------------------+--------------------------+
+|                       | **Adding Noise**  | Introduces noise to      |
+|                       |                   | inputs or weights to     |
+|                       |                   | improve model            |
+|                       |                   | robustness.              |
++-----------------------+-------------------+--------------------------+
+| **Regularization for  | **Pruning**       | Removes low-importance   |
+| Tree-Based Models**   |                   | branches in decision     |
+|                       |                   | trees and ensemble       |
+|                       |                   | models to reduce         |
+|                       |                   | complexity.              |
++-----------------------+-------------------+--------------------------+

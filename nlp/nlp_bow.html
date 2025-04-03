@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bag-of-Words Models &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Pretraining and Transfer Learning" href="../deep_learning/dl_cnn-pretraining_pytorch.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="bag-of-words-models">
+<h1>Bag-of-Words Models<a class="headerlink" href="#bag-of-words-models" title="Link to this heading">¶</a></h1>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Bag-of-words_model">Bag-of-Words Model from
+Wikipedia</a>: The
+bag-of-words model is a model of text which uses a representation of
+text that is based on an <strong>unordered collection</strong> (or “bag”) of words.
+[…] It <strong>disregards word order</strong> […] but <strong>captures multiplicity</strong>.</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Preparing text data (pre-processing)</p>
+<ul class="simple">
+<li><p>Standardization: removing irrelevant information, such as
+punctuation, special characters, lower-upper case, and stopwords.</p></li>
+<li><p>Tokenization (text splitting)</p></li>
+<li><p>Stemming/Lemmatization</p></li>
+</ul>
+</li>
+<li><p>Encode texts into a numerical vectors (features extraction)</p>
+<ul class="simple">
+<li><p>Bag of Words Vectorization-based Models: consider phrases as
+<strong>sets</strong> of words. Words are encoded as vectors independently of
+the context in which they appear in corpus.</p></li>
+<li><p>Embedding: phrases are <strong>sequences</strong> of words. Words are encoded as
+vectors integrating their context of appearance in corpus.</p></li>
+</ul>
+</li>
+<li><p>Predictive analysis</p>
+<ul class="simple">
+<li><p>Text classification: “What’s the topic of this text?”</p></li>
+<li><p>Content filtering: “Does this text contain abuse?”, spam detection,</p></li>
+<li><p><a class="reference external" href="https://www.analyticsvidhya.com/blog/2022/07/sentiment-analysis-using-python/">Sentiment
+analysis</a>:
+Does this text sound positive or negative?</p></li>
+</ul>
+</li>
+<li><p>Generate new text</p>
+<ul class="simple">
+<li><p>Translation</p></li>
+<li><p>Chatbot/summarization</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="preparing-text-data">
+<h2>Preparing text data<a class="headerlink" href="#preparing-text-data" title="Link to this heading">¶</a></h2>
+<section id="standardization-and-tokenization">
+<h3>Standardization and Tokenization<a class="headerlink" href="#standardization-and-tokenization" title="Link to this heading">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example usage</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Check out the new http://example.com website! It&#39;s awesome.</span>
+<span class="s2">Hé, it is for programmers that like to program with programming language.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>The <strong>Do It Yourself</strong> way</p>
+<p>Basic standardization consist of: - Lower case words - Remove numbers -
+Remove punctuation</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import regex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="c1"># Convert to lower case</span>
+<span class="n">lower_string</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<span class="c1"># Remove numbers</span>
+<span class="n">no_number_string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">lower_string</span><span class="p">)</span>
+
+<span class="c1"># Remove all punctuation except words and space</span>
+<span class="n">no_punc_string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^\w\s]&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">no_number_string</span><span class="p">)</span>
+
+<span class="c1"># Remove white spaces</span>
+<span class="n">no_wspace_string</span> <span class="o">=</span> <span class="n">no_punc_string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="c1"># Tokenization</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">no_wspace_string</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>NLTK to perform more sophisticated standardization, including:</p>
+<p>Basic standardization consist of: - Lower case words - Remove URLs -
+Remove strip accents - <strong>stop words</strong> are commonly used words that are
+often removed from text during preprocessing to focus on the more
+informative words. These words typically include articles, prepositions,
+conjunctions, and pronouns such as “the,” “is,” “in,” “and,” “but,”
+“on,” etc. The rationale behind removing stop words is that they occur
+very frequently in the language and generally do not contribute
+significant meaning to the analysis or understanding of the text. By
+eliminating stop words, NLP models can reduce the dimensionality of the
+data and improve computational efficiency without losing important
+information.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">nltk</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">unicodedata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nltk.corpus</span><span class="w"> </span><span class="kn">import</span> <span class="n">stopwords</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nltk.tokenize</span><span class="w"> </span><span class="kn">import</span> <span class="n">word_tokenize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nltk.stem</span><span class="w"> </span><span class="kn">import</span> <span class="n">PorterStemmer</span><span class="p">,</span> <span class="n">WordNetLemmatizer</span>
+
+<span class="c1"># Download necessary NLTK data</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;punkt&#39;</span><span class="p">)</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;stopwords&#39;</span><span class="p">)</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;wordnet&#39;</span><span class="p">)</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;omw-1.4&#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">strip_accents</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="c1"># Normalize the text to NFKD form and strip accents</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s1">&#39;NFKD&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">combining</span><span class="p">(</span><span class="n">c</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">text</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">standardize_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">stemming</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lemmatization</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># Convert to lowercase</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="c1"># Remove URLs</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;http\S+|www\S+|https\S+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+
+    <span class="c1"># Remove numbers</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+    <span class="c1"># Remove punctuation</span>
+    <span class="c1"># string.punctuation provides a string of all punctuation characters.</span>
+    <span class="c1"># str.maketrans() creates a translation table that maps each punctuation</span>
+    <span class="c1"># character to None.</span>
+    <span class="c1"># text.translate(translator) uses this translation table to remove all</span>
+    <span class="c1"># punctuation characters from the input string.</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">))</span>
+
+    <span class="c1"># Strip accents</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">strip_accents</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="c1"># Tokenize the text</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">word_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="c1"># Remove stop words</span>
+    <span class="n">stop_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">))</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
+
+    <span class="c1"># Remove repeated words</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">words</span><span class="p">))</span>
+
+    <span class="c1"># Initialize stemmer and lemmatizer</span>
+    <span class="n">stemmer</span> <span class="o">=</span> <span class="n">PorterStemmer</span><span class="p">()</span>
+    <span class="n">lemmatizer</span> <span class="o">=</span> <span class="n">WordNetLemmatizer</span><span class="p">()</span>
+
+    <span class="c1"># Apply stemming and lemmatization</span>
+
+    <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span> <span class="k">if</span> <span class="n">stemming</span> \
+        <span class="k">else</span> <span class="n">words</span>
+
+    <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">lemmatizer</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span> <span class="k">if</span> <span class="n">lemmatization</span> \
+        <span class="k">else</span> <span class="n">words</span>
+
+    <span class="k">return</span> <span class="n">words</span>
+
+<span class="c1"># Create callable with default values</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="n">standardize_tokenize_stemming</span> <span class="o">=</span> \
+    <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">standardize_tokenize</span><span class="p">,</span> <span class="n">stemming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">standardize_tokenize_lemmatization</span> <span class="o">=</span> \
+    <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">standardize_tokenize</span><span class="p">,</span> <span class="n">lemmatization</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">standardize_tokenize_stemming_lemmatization</span> <span class="o">=</span> \
+    <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">standardize_tokenize</span><span class="p">,</span> <span class="n">stemming</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lemmatization</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">standardize_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="stemming-and-lemmatization">
+<h3>Stemming and lemmatization<a class="headerlink" href="#stemming-and-lemmatization" title="Link to this heading">¶</a></h3>
+<p>Stemming and lemmatization are techniques used to reduce words to their
+base or root form, which helps in standardizing text and improving the
+performance of various NLP tasks.</p>
+<p><strong>Stemming</strong> is the process of reducing a word to its base or root form,
+often by removing suffixes or prefixes. The resulting stem may not be a
+valid word but is intended to capture the word’s core meaning. Stemming
+algorithms, such as the Porter Stemmer or Snowball Stemmer, use
+heuristic rules to chop off common morphological endings from words.</p>
+<p>Example: The words “running,” “runner,” and “ran” might all be reduced
+to “run.”</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standardize_tokenize(text, stemming=True)</span>
+<span class="n">standardize_tokenize_stemming</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Lemmatization</strong> is the process of reducing a word to its lemma, which
+is its canonical or dictionary form. Unlike stemming, lemmatization
+considers the word’s part of speech and uses a more comprehensive
+approach to ensure that the transformed word is a valid word in the
+language. Lemmatization typically requires more linguistic knowledge and
+is implemented using libraries like WordNet.</p>
+<p>Example: The words “running” and “ran” would both be reduced to “run,”
+while “better” would be reduced to “good.”</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standardize_tokenize(text, lemmatization=True)</span>
+<span class="n">standardize_tokenize_lemmatization</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>While both stemming and lemmatization aim to reduce words to a common
+form, lemmatization is generally more accurate and produces words that
+are meaningful in the context of the language. However, stemming is
+faster and simpler to implement. The choice between the two depends on
+the specific requirements and constraints of the NLP task at hand.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># standardize_tokenize(text, stemming=True, lemmatization=True)</span>
+<span class="n">standardize_tokenize_stemming_lemmatization</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Scikit-learn analyzer</strong> is simple and will be sufficient most of the
+time.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountVectorizer</span>
+
+<span class="n">analyzer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">strip_accents</span><span class="o">=</span><span class="s1">&#39;unicode&#39;</span><span class="p">,</span> <span class="n">stop_words</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">build_analyzer</span><span class="p">()</span>
+<span class="n">analyzer</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="bag-of-words-bows-encoding">
+<h2>Bag of Words (BOWs) Encoding<a class="headerlink" href="#bag-of-words-bows-encoding" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction">Source: text feature extraction with
+scikit-learn</a></p>
+<section id="simple-count-vectorization">
+<h3>Simple Count Vectorization<a class="headerlink" href="#simple-count-vectorization" title="Link to this heading">¶</a></h3>
+<p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html">CountVectorizer</a>:<em>”
+Convert a collection of text documents to a matrix of token counts. Note
+that ``CountVectorizer`` preforms the standardization and the
+tokenization.”</em></p>
+<p>It creates one feature (column) for each tokens (words) in the corpus,
+and returns one line per sentence, counting the occurence of each
+tokens.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;This is the first document. This DOCUMENT is in english.&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;in French, some letters have accents, like é.&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Is this document in French?&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountVectorizer</span>
+
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">strip_accents</span><span class="o">=</span><span class="s1">&#39;unicode&#39;</span><span class="p">,</span> <span class="n">stop_words</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">())</span>
+
+<span class="c1"># Note thatthe shape of the array is:</span>
+<span class="c1"># number of sentences by number of existing token</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span>
+</pre></div>
+</div>
+<p><strong>Word n-grams</strong> are contiguous sequences of ‘n’ words from a given
+text. They are used to <strong>capture the context</strong> and structure of language
+by considering the relationships between words within these sequences.
+The value of ‘n’ determines the length of the word sequence:</p>
+<ul class="simple">
+<li><p>Unigram (1-gram): A single word (e.g., “natural”).</p></li>
+<li><p>Bigram (2-gram): A sequence of two words (e.g., “natural language”).</p></li>
+<li><p>Trigram (3-gram): A sequence of three words (e.g., “natural language
+processing”).</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vectorizer2</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">analyzer</span><span class="o">=</span><span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                              <span class="n">strip_accents</span><span class="o">=</span><span class="s1">&#39;unicode&#39;</span><span class="p">,</span> <span class="n">stop_words</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">vectorizer2</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vectorizer2</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X2</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="tf-idf-vectorization-approach">
+<h3>TF-IDF Vectorization approach:<a class="headerlink" href="#tf-idf-vectorization-approach" title="Link to this heading">¶</a></h3>
+<p><a class="reference external" href="https://kinder-chen.medium.com/introduction-to-natural-language-processing-tf-idf-1507e907c19">TF-IDF (Term Frequency-Inverse Document
+Frequency)</a>
+feature extraction:</p>
+<p><em>“TF-IDF (Term Frequency-Inverse Document Frequency) integrates two
+metrics: Term Frequency (TF) and Inverse Document Frequency (IDF). This
+method is employed when working with multiple documents, operating on
+the principle that rare words provide more insight into a document’s
+content than frequently occurring words across the entire document
+set.”</em></p>
+<p><em>“A challenge with relying solely on word frequency is that commonly
+used words may overshadow the document, despite offering
+less”informational content” compared to rarer, potentially
+domain-specific terms. To address this, one can adjust the frequency of
+words by considering their prevalence across all documents, thereby
+reducing the scores of frequently used words that are common across the
+corpus.”</em></p>
+<p><strong>Term Frequency</strong>: Provide large weight to frequent words. Given a
+token <span class="math notranslate nohighlight">\(t\)</span> (term, word), a doccument <span class="math notranslate nohighlight">\(d\)</span></p>
+<div class="math notranslate nohighlight">
+\[TF(t, d) = \frac{\text{number of times t appears in d}}{\text{total number of term in d}}\]</div>
+<p><strong>Inverse Document Frequency</strong>: Give more importance to rare
+“meaningfull” words a appear in few doduments.</p>
+<p>If N is the total number of documents, and df is the number of documents
+with token t, then:</p>
+<div class="math notranslate nohighlight">
+\[IDF(t) = \frac{N}{1 + df}\]</div>
+<p><span class="math notranslate nohighlight">\(IDF(t) \approx 1\)</span> if <span class="math notranslate nohighlight">\(t\)</span> appears in all documents, while
+<span class="math notranslate nohighlight">\(IDF(t) \approx N\)</span> if <span class="math notranslate nohighlight">\(t\)</span> is a rare meaningfull word that
+appears in only one document.</p>
+<p>Finally:</p>
+<div class="math notranslate nohighlight">
+\[TF\text{-}IDF(t, d) = TF(t, d) * IDF(t)\]</div>
+<p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer">TfidfVectorizer</a>:</p>
+<p>Convert a collection of raw documents to a matrix of TF-IDF (Term
+Frequency-Inverse Document Frequency)</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">strip_accents</span><span class="o">=</span><span class="s1">&#39;unicode&#39;</span><span class="p">,</span> <span class="n">stop_words</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="lab-1-sentiment-analysis-of-financial-data">
+<h3>Lab 1: Sentiment Analysis of Financial data<a class="headerlink" href="#lab-1-sentiment-analysis-of-financial-data" title="Link to this heading">¶</a></h3>
+<p>Sources: <a class="reference external" href="https://www.analyticsvidhya.com/blog/2022/07/sentiment-analysis-using-python/">Sentiment Analysis of Financial
+data</a></p>
+<p>The data is intended for advancing financial sentiment analysis
+research. It’s two datasets (FiQA, Financial PhraseBank) combined into
+one easy-to-use CSV file. It provides financial sentences with sentiment
+labels. Citations <em>Malo, Pekka, et al. “Good debt or bad debt: Detecting
+semantic orientations in economic texts.” Journal of the Association for
+Information Science and Technology 65.4 (2014): 782-796.</em></p>
+<p>Import libraries</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Plot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span><span class="w"> </span><span class="nn">wordcloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">WordCloud</span>
+
+<span class="c1"># ML</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.naive_bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultinomialNB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountVectorizer</span>
+</pre></div>
+</div>
+<p>Load the Dataset</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../datasets/FinancialSentimentAnalysis.csv&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;columns:&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Target variable</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentiment&#39;</span><span class="p">]</span>
+<span class="n">y</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Input data: BOWs encoding</p>
+<p>Choose tokenizer</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Tesla to recall 2,700 Model X SUVs over seat issue https://t.co/OdPraN59Xq $TSLA https://t.co/xvn4blIwpy https://t.co/ThfvWTnRPs&#39;</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">,</span> <span class="n">strip_accents</span><span class="o">=</span><span class="s1">&#39;unicode&#39;</span><span class="p">)</span>
+
+<span class="n">tokenizer_sklearn</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">build_analyzer</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokenizer_sklearn</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape: &quot;</span><span class="p">,</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer_sklearn</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentence&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">standardize_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape: &quot;</span><span class="p">,</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="n">standardize_tokenize</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentence&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">standardize_tokenize_stemming</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape: &quot;</span><span class="p">,</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="n">standardize_tokenize_stemming</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentence&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">standardize_tokenize_lemmatization</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape: &quot;</span><span class="p">,</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="n">standardize_tokenize_lemmatization</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentence&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">standardize_tokenize_stemming_lemmatization</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape: &quot;</span><span class="p">,</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="n">standardize_tokenize_stemming_lemmatization</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentence&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># vectorizer = CountVectorizer(stop_words=&#39;english&#39;, strip_accents=&#39;unicode&#39;)</span>
+<span class="c1"># vectorizer = CountVectorizer(tokenizer=standardize_tokenize)</span>
+<span class="c1"># vectorizer = CountVectorizer(tokenizer=standardize_tokenize_stemming)</span>
+<span class="c1"># vectorizer = CountVectorizer(tokenizer=standardize_tokenize_lemmatization)</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">=</span><span class="n">standardize_tokenize_stemming_lemmatization</span><span class="p">)</span>
+<span class="c1"># vectorizer = TfidfVectorizer(stop_words=&#39;english&#39;, strip_accents=&#39;unicode&#39;)</span>
+<span class="c1"># vectorizer = TfidfVectorizer(tokenizer=standardize_tokenize_stemming_lemmatization)</span>
+
+
+<span class="c1"># Retrieve the analyzer to store transformed sentences in dataframe</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">build_analyzer</span><span class="p">()</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentence_stdz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentence&#39;</span><span class="p">]]</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentence&#39;</span><span class="p">])</span>
+<span class="c1"># print(&quot;Tokens:&quot;, vectorizer.get_feature_names_out())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nb of tokens:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dimension of input data&quot;</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Classification with scikit-learn models</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># clf = LogisticRegression(class_weight=&#39;balanced&#39;, max_iter=3000)</span>
+<span class="c1"># clf = GradientBoostingClassifier()</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">x_str_train</span><span class="p">,</span> <span class="n">x_str_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_test</span> <span class="o">=</span> \
+    <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sentence&#39;</span><span class="p">],</span> <span class="n">y</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Display prediction performances</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;true&#39;</span><span class="p">)</span>
+<span class="n">cm_</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">display_labels</span><span class="o">=</span><span class="n">clf</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+<span class="n">cm_</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Print some samples</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">probas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">clf</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="p">,</span> <span class="n">probas</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;SentimentPred&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">&quot;/tmp/test.xlsx&quot;</span><span class="p">)</span>
+
+<span class="c1"># Keep only test data, correctly classified, ordered by</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx_test</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;SentimentPred&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Sentiment&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Positive sentences</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sentence_positive</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Sentiment&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;positive&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;positive&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s1">&#39;Sentence_stdz&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Most positive sentence&quot;</span><span class="p">,</span> <span class="n">sentence_positive</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">wc</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">max_words</span> <span class="o">=</span> <span class="mi">1000</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">1600</span> <span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
+<span class="n">collocations</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sentence_positive</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Negative sentences</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sentence_negative</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Sentiment&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;negative&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s1">&#39;Sentence_stdz&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Most negative sentence&quot;</span><span class="p">,</span> <span class="n">sentence_negative</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">wc</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">max_words</span> <span class="o">=</span> <span class="mi">1000</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">1600</span> <span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
+<span class="n">collocations</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sentence_negative</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wc</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="lab-2-twitter-sentiment-analysis">
+<h3>Lab 2: Twitter Sentiment Analysis<a class="headerlink" href="#lab-2-twitter-sentiment-analysis" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Source <a class="reference external" href="https://www.analyticsvidhya.com/blog/2021/06/twitter-sentiment-analysis-a-nlp-use-case-for-beginners/">Twitter Sentiment Analysis Using Python | Introduction &amp;
+Techniques</a></p></li>
+<li><p>Dataset <a class="reference external" href="https://www.kaggle.com/datasets/kazanova/sentiment140">Sentiment140 dataset with 1.6 million
+twe</a></p></li>
+</ul>
+<p>Step-1: Import the Necessary Dependencies</p>
+<p>Install some packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">wordcloud</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="n">nltk</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># utilities</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="c1"># plotting</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">wordcloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">WordCloud</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="c1"># nltk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nltk.stem</span><span class="w"> </span><span class="kn">import</span> <span class="n">WordNetLemmatizer</span>
+<span class="c1"># sklearn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.naive_bayes</span><span class="w"> </span><span class="kn">import</span> <span class="n">BernoulliNB</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_extraction.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">classification_report</span>
+</pre></div>
+</div>
+<p>Step-2: Read and Load the Dataset</p>
+<p><a class="reference external" href="https://www.kaggle.com/datasets/ferno2/training1600000processednoemoticoncsv">Download the dataset from
+Kaggle</a></p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importing the dataset</span>
+<span class="n">DATASET_COLUMNS</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">,</span><span class="s1">&#39;ids&#39;</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;flag&#39;</span><span class="p">,</span><span class="s1">&#39;user&#39;</span><span class="p">,</span><span class="s1">&#39;text&#39;</span><span class="p">]</span>
+<span class="n">DATASET_ENCODING</span> <span class="o">=</span> <span class="s2">&quot;ISO-8859-1&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;~/data/NLP/training.1600000.processed.noemoticon.csv&#39;</span><span class="p">,</span>
+                 <span class="n">encoding</span><span class="o">=</span><span class="n">DATASET_ENCODING</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">DATASET_COLUMNS</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Step-3: Exploratory Data Analysis</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Columns names:&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of data:&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;type of data:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Step-4: Data Visualization of Target Variables</p>
+<ul class="simple">
+<li><p>Selecting the text and Target column for our further analysis</p></li>
+<li><p>Replacing the values to ease understanding. (Assigning 1 to Positive
+sentiment 4)</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;text&#39;</span><span class="p">,</span><span class="s1">&#39;target&#39;</span><span class="p">]]</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Count and proportion of target&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(),</span>  <span class="n">data</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Step-5: Data Preprocessing</p>
+<p>5.4: Separating positive and negative tweets 5.5: Taking 20000 positive
+and negatives sample from the data so we can run it on our machine
+easily 5.6: Combining positive and negative tweets</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_pos</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">data_neg</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">data_pos</span> <span class="o">=</span> <span class="n">data_pos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">20000</span><span class="p">]</span>
+<span class="n">data_neg</span> <span class="o">=</span> <span class="n">data_neg</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">20000</span><span class="p">]</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data_pos</span><span class="p">,</span> <span class="n">data_neg</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>5.7: Text pre-processing</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">standardize_stemming_lemmatization</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span>  <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">standardize_tokenize_stemming_lemmatization</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+<span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;text_stdz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">standardize_stemming_lemmatization</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>QC, check for empty standardized strings</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rm</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;text_stdz&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span> <span class="o">|</span> <span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;text_stdz&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">rm</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="s2">&quot;row are empty of null, to be removed&quot;</span><span class="p">)</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="o">~</span><span class="n">rm</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># Save dataset to excel file to explore</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s1">&#39;/tmp/test.xlsx&#39;</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>5.18: Plot a cloud of words for negative tweets</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_neg</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">dataset</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;text_stdz&#39;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">wc</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">max_words</span> <span class="o">=</span> <span class="mi">1000</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">1600</span> <span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
+               <span class="n">collocations</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_neg</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>5.18: Plot a cloud of words for positive tweets</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_pos</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">dataset</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;text_stdz&#39;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">wc</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">max_words</span> <span class="o">=</span> <span class="mi">1000</span> <span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">1600</span> <span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
+               <span class="n">collocations</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_pos</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Step-6: Splitting Our Data Into Train and Test Subsets</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">text_stdz</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">target</span>
+<span class="c1"># Separating the 95% data for training data and 5% for testing data</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">26105111</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Step-7: Transforming the Dataset Using TF-IDF Vectorizer</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vectoriser</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">500000</span><span class="p">)</span>
+<span class="n">vectoriser</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="c1">#print(&#39;No. of feature_words: &#39;, len(vectoriser.get_feature_names()))</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">vectoriser</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test</span>  <span class="o">=</span> <span class="n">vectoriser</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Step-8: Function for Model Evaluation</p>
+<p>After training the model, we then apply the evaluation measures to check
+how the model is performing. Accordingly, we use the following
+evaluation parameters to check the performance of the models
+respectively:</p>
+<ul class="simple">
+<li><p>Accuracy Score</p></li>
+<li><p>Confusion Matrix with Plot</p></li>
+<li><p>ROC-AUC Curve</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">model_Evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="c1"># Predict values for Test dataset</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="c1"># Print the evaluation metrics for the dataset.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+    <span class="c1"># Compute and plot the Confusion matrix</span>
+    <span class="n">cf_matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Negative&#39;</span><span class="p">,</span><span class="s1">&#39;Positive&#39;</span><span class="p">]</span>
+    <span class="n">group_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;True Neg&#39;</span><span class="p">,</span><span class="s1">&#39;False Pos&#39;</span><span class="p">,</span> <span class="s1">&#39;False Neg&#39;</span><span class="p">,</span><span class="s1">&#39;True Pos&#39;</span><span class="p">]</span>
+    <span class="n">group_percentages</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{0:.2%}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cf_matrix</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cf_matrix</span><span class="p">)]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v1</span><span class="si">}</span><span class="s1">n</span><span class="si">{</span><span class="n">v2</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">group_names</span><span class="p">,</span><span class="n">group_percentages</span><span class="p">)]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cf_matrix</span><span class="p">,</span> <span class="n">annot</span> <span class="o">=</span> <span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;Blues&#39;</span><span class="p">,</span><span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="n">xticklabels</span> <span class="o">=</span> <span class="n">categories</span><span class="p">,</span> <span class="n">yticklabels</span> <span class="o">=</span> <span class="n">categories</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Predicted values&quot;</span><span class="p">,</span> <span class="n">fontdict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">14</span><span class="p">},</span> <span class="n">labelpad</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Actual values&quot;</span> <span class="p">,</span> <span class="n">fontdict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">14</span><span class="p">},</span> <span class="n">labelpad</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span> <span class="p">(</span><span class="s2">&quot;Confusion Matrix&quot;</span><span class="p">,</span> <span class="n">fontdict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">18</span><span class="p">},</span> <span class="n">pad</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Step-9: Model Building</p>
+<p>In the problem statement, we have used three different models
+respectively :</p>
+<ul class="simple">
+<li><p>Bernoulli Naive Bayes Classifier</p></li>
+<li><p>SVM (Support Vector Machine)</p></li>
+<li><p>Logistic Regression</p></li>
+</ul>
+<p>The idea behind choosing these models is that we want to try all the
+classifiers on the dataset ranging from simple ones to complex models,
+and then try to find out the one which gives the best performance among
+them.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">BNBmodel</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">()</span>
+<span class="n">BNBmodel</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">model_Evaluate</span><span class="p">(</span><span class="n">BNBmodel</span><span class="p">)</span>
+<span class="n">y_pred1</span> <span class="o">=</span> <span class="n">BNBmodel</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>8.2: Plot the ROC-AUC Curve for model-1</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
+<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred1</span><span class="p">)</span>
+<span class="n">roc_auc</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkorange&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ROC curve (area = </span><span class="si">%0.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">roc_auc</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;False Positive Rate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;True Positive Rate&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;ROC CURVE&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Bag-of-Words Models</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#preparing-text-data">Preparing text data</a><ul>
+<li><a class="reference internal" href="#standardization-and-tokenization">Standardization and Tokenization</a></li>
+<li><a class="reference internal" href="#stemming-and-lemmatization">Stemming and lemmatization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bag-of-words-bows-encoding">Bag of Words (BOWs) Encoding</a><ul>
+<li><a class="reference internal" href="#simple-count-vectorization">Simple Count Vectorization</a></li>
+<li><a class="reference internal" href="#tf-idf-vectorization-approach">TF-IDF Vectorization approach:</a></li>
+<li><a class="reference internal" href="#lab-1-sentiment-analysis-of-financial-data">Lab 1: Sentiment Analysis of Financial data</a></li>
+<li><a class="reference internal" href="#lab-2-twitter-sentiment-analysis">Lab 2: Twitter Sentiment Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/nlp/nlp_bow.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/nlp/nlp_bow.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

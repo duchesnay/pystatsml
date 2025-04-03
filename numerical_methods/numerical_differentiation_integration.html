@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Numerical Differentiation &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Time Series" href="time_series.html" />
+    <link rel="prev" title="Data visualization: matplotlib &amp; seaborn" href="../data_manipulation/data_visualization.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="numerical-differentiation">
+<h1>Numerical Differentiation<a class="headerlink" href="#numerical-differentiation" title="Link to this heading">¶</a></h1>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Plot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="c1">#import pystatsml.plot_utils</span>
+
+<span class="c1"># Plot parameters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
+<span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">)</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+<p>Sources:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://patrickwalls.github.io/mathematicalpython/differentiation/differentiation/">Patrick Walls
+course</a>
+of Dept of Mathematics, University of British Columbia.</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Numerical_differentiation">Wikipedia</a></p></li>
+</ul>
+<p>The derivative of a function at is the limit</p>
+<div class="math notranslate nohighlight">
+\[f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}\]</div>
+<p>For a fixed step size <span class="math notranslate nohighlight">\(h\)</span>, the previous formula provides the slope
+of the function using the forward difference approximation of the
+derivative. Equivalently, the slope could be estimated using backward
+approximation with positions <span class="math notranslate nohighlight">\(x - h\)</span> and <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<p>The most efficient numerical derivative use the central difference
+formula with step size is the average of the forward and backward
+approximation (known as symmetric difference quotient):</p>
+<div class="math notranslate nohighlight">
+\[f'(a) \approx \frac{1}{2} \left( \frac{f(a + h) - f(a)}{h} + \frac{f(a) - f(a - h)}{h} \right) = \frac{f(a + h) - f(a - h)}{2h}\]</div>
+<p>Chose the step size depends of two issues</p>
+<ol class="arabic simple">
+<li><p>Numerical precision: if <span class="math notranslate nohighlight">\(h\)</span> is chosen too small, the
+subtraction will yield a large rounding error due to cancellation
+will produce a value of zero. For basic central differences, the
+optimal (Sauer, Timothy (2012). Numerical Analysis. Pearson. p.248.)
+step is the cube-root of machine epsilon (<span class="math notranslate nohighlight">\(2.2*10^{-16}\)</span> for
+double precision), i.e.: <span class="math notranslate nohighlight">\(h\approx 10^{-5}\)</span>:</p></li>
+</ol>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Machine epsilon: </span><span class="si">{:e}</span><span class="s2">, Min step size: </span><span class="si">{:e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cbrt</span><span class="p">(</span><span class="n">eps</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Machine</span> <span class="n">epsilon</span><span class="p">:</span> <span class="mf">2.220446e-16</span><span class="p">,</span> <span class="n">Min</span> <span class="n">step</span> <span class="n">size</span><span class="p">:</span> <span class="mf">6.055454e-06</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>The error of the central difference approximation is upper bounded by
+a function in <span class="math notranslate nohighlight">\(\mathcal{O}(h^2)\)</span>. I.e., large step size
+<span class="math notranslate nohighlight">\(h=10^{-2}\)</span> leads to large error of <span class="math notranslate nohighlight">\(10^{-4}\)</span>. Small step
+size e.g., <span class="math notranslate nohighlight">\(h=10^{-4}\)</span> provide accurate slope estimation in
+<span class="math notranslate nohighlight">\(10^{-8}\)</span>.</p></li>
+</ol>
+<p>Those two points argue for a step size <span class="math notranslate nohighlight">\(h \in [10^{-3}, 10^{-6}]\)</span></p>
+<p>Example: Numerical differentiation of the function:</p>
+<div class="math notranslate nohighlight">
+\[f(x) = \frac{7x^3-5x+1}{2x^4+x^2+1} \ , \ x \in [-5,5]\]</div>
+<p><strong>Numerical differentiation</strong> with Numpy
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.gradient.html">gradient</a>
+given values <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">x</span></code> (or spacing <code class="docutils literal notranslate"><span class="pre">dx</span></code>) of a function.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">range_</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">range_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">range_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">range_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">range_</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span>  <span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">3</span>  <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># values</span>
+<span class="n">dydx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span> <span class="c1"># values</span>
+</pre></div>
+</div>
+<p><strong>Symbolic differentiation</strong> with
+<a class="reference external" href="https://docs.sympy.org/latest/tutorials/intro-tutorial/calculus.html">sympy</a>
+to compute true derivative <span class="math notranslate nohighlight">\(f'\)</span></p>
+<p>Installation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span><span class="p">::</span><span class="n">sympy</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sympy</span><span class="w"> </span><span class="kn">import</span> <span class="n">lambdify</span>
+<span class="n">x_s</span>  <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">real</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># defining the variables</span>
+
+<span class="n">f_sym</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="n">x_s</span> <span class="o">**</span> <span class="mi">3</span>  <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x_s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x_s</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">x_s</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">dfdx_sym</span> <span class="o">=</span>  <span class="n">sp</span><span class="o">.</span><span class="n">simplify</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">f_sym</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f =&quot;</span><span class="p">,</span> <span class="n">f_sym</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;f&#39;=&quot;</span><span class="p">,</span> <span class="n">dfdx_sym</span><span class="p">)</span>
+<span class="n">dfdx_sym</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x_s</span><span class="p">,</span> <span class="n">dfdx_sym</span><span class="p">,</span>  <span class="s2">&quot;numpy&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">5</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">4</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="sa">f</span><span class="s1">&#39;= (-14*x**6 + 37*x**4 - 8*x**3 + 26*x**2 - 2*x - 5)/(4*x**8 + 4*x**6 + 5*x**4 + 2*x**2 + 1)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dydx</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;f&#39; Num. Approx.&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dfdx_sym</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;f&#39;&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/numerical_differentiation_integration_10_0.png" src="../_images/numerical_differentiation_integration_10_0.png" />
+<p><strong>Numerical differentiation</strong> with
+<a class="reference external" href="https://github.com/pbrod/numdifftools">numdifftools</a></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">numdifftools</span></code> numerical differentiation problems in one or more
+variables.</p>
+<p>Installation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span><span class="p">::</span><span class="n">numdifftools</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://numdifftools.readthedocs.io/en/latest/reference/numdifftools.html#numdifftools.core.Derivative">numdifftools.Derivative</a>
+computes the derivatives of order 1 through 10 on any scalar function.
+It takes a function <code class="docutils literal notranslate"><span class="pre">f</span></code> as argument and return a function <code class="docutils literal notranslate"><span class="pre">dfdx</span></code>
+that compute the derivatives at <code class="docutils literal notranslate"><span class="pre">x</span></code> values. Example of first and
+second order derivative of
+<span class="math notranslate nohighlight">\(f(x) = x^2, f^\prime(x) = 2 x, f^{\prime\prime}(x) = 2\)</span>:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numdifftools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nd</span>
+
+<span class="c1"># Example f(x) = x ** 2</span>
+
+<span class="c1"># First order derivative: dfdx = 2 x</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dfdx = 2 x:&quot;</span><span class="p">,</span> <span class="n">nd</span><span class="o">.</span><span class="n">Derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+
+<span class="c1"># Second order derivative df^2dx^2 = 2 (Cte)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;df2dx2 = 2:&quot;</span><span class="p">,</span> <span class="n">nd</span><span class="o">.</span><span class="n">Derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dfdx</span> <span class="o">=</span> <span class="mi">2</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.</span> <span class="mf">4.</span> <span class="mf">6.</span><span class="p">]</span>
+<span class="n">df2dx2</span> <span class="o">=</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.</span> <span class="mf">2.</span> <span class="mf">2.</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Example with <span class="math notranslate nohighlight">\(f=x^3 - 27 x - 1\)</span>. We have
+<span class="math notranslate nohighlight">\(f^\prime= 3x^2 - 27\)</span>, with roots <span class="math notranslate nohighlight">\((-3, 3)\)</span>, and
+<span class="math notranslate nohighlight">\(f^{\prime\prime}=6x\)</span>, with root <span class="math notranslate nohighlight">\(0\)</span>.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">range_</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">]</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">range_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">range_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">dx</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">range_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">range_</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span>  <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">27</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="c1"># First derivative (! callable function, not values)</span>
+<span class="n">dfdx</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">Derivative</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="c1"># Second derivative  (! callable function, not values)</span>
+<span class="n">df2dx2</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">Derivative</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Second_derivative">Second-order
+derivative</a>, “the
+rate of change of the rate of change” corresponds to the <strong>curvature or
+concavity</strong> of the function.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">range_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">range_</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dfdx</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>  <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;f&#39;&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">df2dx2</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;f&#39;&#39;&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/numerical_differentiation_integration_16_0.png" src="../_images/numerical_differentiation_integration_16_0.png" />
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f'' &lt; 0, x&lt;0, f\)</span> is concave down.</p></li>
+<li><p><span class="math notranslate nohighlight">\(f'' &gt; 0, x&gt;0\)</span>, <span class="math notranslate nohighlight">\(f\)</span> is concave up.</p></li>
+<li><p><span class="math notranslate nohighlight">\(f'' = 0, x=0\)</span>, is an inflection point.</p></li>
+</ul>
+<section id="multivariate-functions">
+<h2>Multivariate functions<a class="headerlink" href="#multivariate-functions" title="Link to this heading">¶</a></h2>
+<p><span class="math notranslate nohighlight">\(f(\textbf{x})\)</span> is function of a vector <span class="math notranslate nohighlight">\(\textbf{x}\)</span> of
+several <span class="math notranslate nohighlight">\(p\)</span> variables <span class="math notranslate nohighlight">\(\textbf{x} = [x_1, ..., x_p]^T\)</span>.</p>
+<p>Example: <span class="math notranslate nohighlight">\(f(x, y) = x^2 + y^2\)</span></p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span>  <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">cm</span>
+
+<span class="c1"># Make data.</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="n">zz</span> <span class="o">=</span> <span class="n">f</span><span class="p">([</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">])</span>
+
+<span class="c1"># Plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">})</span>
+
+<span class="c1"># Plot the surface.</span>
+<span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">coolwarm</span><span class="p">,</span>
+                       <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x1&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;x2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/numerical_differentiation_integration_20_1.png" src="../_images/numerical_differentiation_integration_20_1.png" />
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Gradient">Gradient</a> at a given
+point <span class="math notranslate nohighlight">\(\textbf{x}\)</span> is the vector of partial derivative of
+<span class="math notranslate nohighlight">\(f\)</span> at gives the direction of <strong>fastest increase</strong>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\nabla f(\textbf{x}) = \begin{bmatrix} \partial f / \partial x_1 \\ \vdots \\ \partial f / \partial x_p \end{bmatrix},\end{split}\]</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_grad</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">Gradient</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_grad</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_grad</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f_grad</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0.</span> <span class="mf">0.</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">2.</span> <span class="mf">2.</span><span class="p">]</span>
+<span class="p">[</span><span class="o">-</span><span class="mf">2.</span>  <span class="mf">4.</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Hessian_matrix">Hessian</a> matrix
+contains the second-order partial derivatives of <span class="math notranslate nohighlight">\(f\)</span>. It describes
+the <strong>local curvature</strong> of a function of many variables. It is noted:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f''(\textbf{x}_k) = \nabla^2 f(\textbf{x}_k) = \textbf{H}_{f(\textbf{x}_k)}=
+\begin{bmatrix}
+\frac{\partial^2 f}{\partial^2x_1} \ldots \frac{\partial^2 f}{\partial x_p \partial x_1}\\
+\vdots \\
+\frac{\partial^2 f}{\partial x_1 \partial x_p}  \ldots \frac{\partial^2 f}{\partial^2x_p}
+\end{bmatrix},\end{split}\]</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">Hessian</span><span class="p">(</span><span class="n">f</span><span class="p">)([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mf">2.</span> <span class="mf">0.</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.</span> <span class="mf">2.</span><span class="p">]]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="numerical-integration">
+<h1>Numerical Integration<a class="headerlink" href="#numerical-integration" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p>Principles <a class="reference external" href="https://patrickwalls.github.io/mathematicalpython/integration/">Patrick Walls
+course</a>.</p></li>
+<li><p>Library: <a class="reference external" href="https://docs.scipy.org/doc/scipy/tutorial/integrate.html">Scipy
+integrate</a>
+package.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Plot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="c1">#import pystatsml.plot_utils</span>
+
+<span class="c1"># Plot parameters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
+<span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+<p>Methods for integrating functions given fixed samples:
+<span class="math notranslate nohighlight">\([(x_1, f(x_1)), ..., (x_i, f(x_i)), ...(x_N, f(x_N)]\)</span>.</p>
+<p><a class="reference external" href="https://patrickwalls.github.io/mathematicalpython/integration/riemann-sums/">Riemann sums of
+rectangles</a>
+to approximate the area.</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^N f(x_i^ * ) (x_i - x_{i-1}) \ \ , \ x_i^* \in [x_{i-1},x_i]\]</div>
+<p>The error is in <span class="math notranslate nohighlight">\(\mathcal{O}(\frac{1}{N})\)</span></p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">x_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="mi">10</span><span class="o">*</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 10 * N points to plot the function smoothly</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x_</span><span class="p">),</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">x_left</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Left endpoints</span>
+<span class="n">y_left</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_left</span><span class="p">,</span><span class="n">y_left</span><span class="p">,</span><span class="s1">&#39;b.&#39;</span><span class="p">,</span><span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x_left</span><span class="p">,</span><span class="n">y_left</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="n">align</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">,</span><span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Left Riemann Sum, N = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Left Riemann Sum, N = 10&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/numerical_differentiation_integration_28_1.png" src="../_images/numerical_differentiation_integration_28_1.png" />
+<p>Compute Riemann sums with 100 points</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">50</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Integral:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Integral</span><span class="p">:</span> <span class="mf">1.4214653634808756</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://patrickwalls.github.io/mathematicalpython/integration/trapezoid-rule/">Trapezoid
+Rule</a>
+sum the trapezoids connecting the points. The error is in
+<span class="math notranslate nohighlight">\(\mathcal{O}(\frac{1}{N^2})\)</span>. Use
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.trapezoid.html">scipy.integrate.trapezoid</a>
+function:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">integrate</span>
+<span class="n">integrate</span><span class="o">.</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">1.369466163161004</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://patrickwalls.github.io/mathematicalpython/integration/simpsons-rule/">Simpson’s
+rule</a>
+uses a quadratic polynomial on each subinterval of a partition to
+approximate the function and to compute the definite integral. The error
+is in <span class="math notranslate nohighlight">\(\mathcal{O}(\frac{1}{N^4})\)</span>. Use
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simpson.html#scipy.integrate.simpson">scipy.integrate.simpson</a>
+function:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">integrate</span>
+<span class="n">integrate</span><span class="o">.</span><span class="n">simpson</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">1.3694791829077122</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Gauss%E2%80%93Legendre_quadrature">Gauss-Legendre
+Quadrature</a>
+approximate the integral of a function as a weighted sum of Legendre
+polynomials.</p>
+<p>Methods for Integrating functions given function object <span class="math notranslate nohighlight">\(f()\)</span> that
+could be evaluated for any value <span class="math notranslate nohighlight">\(x\)</span> in a range <span class="math notranslate nohighlight">\([a, b]\)</span>.</p>
+<p>Use
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/tutorial/integrate.html#general-integration-quad">scipy.integrate.quad</a>
+function. The first argument to <code class="docutils literal notranslate"><span class="pre">quad</span></code> is a “callable” Python object
+(i.e., a function, method, or class instance). Notice the use of a
+lambda- function in this case as the argument. The next two arguments
+are the limits of integration.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">integrate</span>
+<span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">1.3734007669450166</span><span class="p">,</span> <span class="mf">7.167069904541812e-09</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The return values are the estimated of the integral and the estimate of
+the absolute integration error.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Numerical Differentiation</a><ul>
+<li><a class="reference internal" href="#multivariate-functions">Multivariate functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#numerical-integration">Numerical Integration</a></li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/numerical_methods/numerical_differentiation_integration.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/numerical_methods/numerical_differentiation_integration.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Overfitting and Regularization &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Linear Dimensionality Reduction and Feature Extraction" href="../ml_unsupervised/linear_dimensionality_reduction.html" />
+    <link rel="prev" title="Introduction" href="introduction_to_ml.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="overfitting-and-regularization">
+<h1>Overfitting and Regularization<a class="headerlink" href="#overfitting-and-regularization" title="Link to this heading">¶</a></h1>
+<p>In statistics and machine learning, overfitting occurs when a
+statistical model describes random errors or noise instead of the
+underlying relationships. Overfitting generally occurs when a model is
+<strong>excessively complex</strong>, such as having <strong>too many parameters relative
+to the number of observations</strong>. A model that has been overfit will
+generally have poor predictive performance, as it can exaggerate minor
+fluctuations in the data.</p>
+<p>A learning algorithm is trained using some set of training samples. If
+the learning algorithm has the capacity to overfit the training samples
+the performance on the <strong>training sample set</strong> will improve while the
+performance on unseen <strong>test sample set</strong> will decline.</p>
+<p>The overfitting phenomenon has three main explanations: - excessively
+complex models, - multicollinearity, and - high dimensionality.</p>
+<section id="causes-of-overfitting">
+<h2>Causes of Overfitting<a class="headerlink" href="#causes-of-overfitting" title="Link to this heading">¶</a></h2>
+<section id="multicollinearity">
+<h3>Multicollinearity<a class="headerlink" href="#multicollinearity" title="Link to this heading">¶</a></h3>
+<p>Predictors are highly correlated, meaning that one can be linearly
+predicted from the others. In this situation the coefficient estimates
+of the multiple regression may change erratically in response to small
+changes in the model or the data. Multicollinearity does not reduce the
+predictive power or reliability of the model as a whole, at least not
+within the sample data set; it only affects computations regarding
+individual predictors. That is, a multiple regression model with
+correlated predictors can indicate how well the entire bundle of
+predictors predicts the outcome variable, but it may not give valid
+results about any individual predictor, or about which predictors are
+redundant with respect to others. In case of perfect multicollinearity
+the predictor matrix is singular and therefore cannot be inverted. Under
+these circumstances, for a general linear model
+<span class="math notranslate nohighlight">\(\mathbf{y} = \mathbf{X} \mathbf{w} + \boldsymbol{\varepsilon}\)</span>,
+the ordinary least-squares estimator,
+<span class="math notranslate nohighlight">\(\mathbf{w}_{OLS} = (\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^T \mathbf{y}\)</span>,
+does not exist.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Plot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># Plot parameters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
+<span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An example where correlated predictor may produce an unstable model
+follows: We want to predict the business potential (pb) of some
+companies given their business volume (bv) and the taxes (tx) they are
+paying. Here pb ~ 10% of bv. However, taxes = 20% of bv (tax and bv are
+highly collinear), therefore there is an infinite number of linear
+combinations of tax and bv that lead to the same prediction. Solutions
+with very large coefficients will produce excessively large predictions.</p>
+<p>Multicollinearity between the predictors: business volumes and tax
+produces unstable models with arbitrary large coefficients.
+<a class="reference internal" href="../_images/ols_multicollinearity.png"><img alt="Multicollinearity between the predictors" src="../_images/ols_multicollinearity.png" style="width: 10cm;" /></a></p>
+<p>Dealing with multicollinearity:</p>
+<ul class="simple">
+<li><p>Regularization by e.g. <span class="math notranslate nohighlight">\(\ell_2\)</span> shrinkage: Introduce a bias in
+the solution by making <span class="math notranslate nohighlight">\((X^T X)^{-1}\)</span> non-singular. See
+<span class="math notranslate nohighlight">\(\ell_2\)</span> shrinkage.</p></li>
+<li><p>Feature selection: select a small number of features. See: Isabelle
+Guyon and André Elisseeff <em>An introduction to variable and feature
+selection</em> The Journal of Machine Learning Research, 2003.</p></li>
+<li><p>Feature selection: select a small number of features using
+<span class="math notranslate nohighlight">\(\ell_1\)</span> shrinkage.</p></li>
+<li><p>Extract few independent (uncorrelated) features using e.g. principal
+components analysis (PCA), partial least squares regression (PLS-R) or
+regression methods that cut the number of predictors to a smaller set
+of uncorrelated components.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>             <span class="c1"># business volume</span>
+<span class="n">tax</span>  <span class="o">=</span> <span class="mf">.2</span> <span class="o">*</span> <span class="n">bv</span>                                  <span class="c1"># Tax</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="mf">.1</span> <span class="o">*</span> <span class="n">bv</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">.1</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">.2</span><span class="p">,</span> <span class="mf">.1</span><span class="p">])</span> <span class="c1"># business potential</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">bv</span><span class="p">,</span> <span class="n">tax</span><span class="p">])</span>
+<span class="n">beta_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># true solution</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Since tax and bv are correlated, there is an infinite number of linear</span>
+<span class="sd">combinations leading to the same prediction.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1"># 10 times the bv then subtract it 9 times using the tax variable:</span>
+<span class="n">beta_medium</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">.1</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mf">.1</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">.2</span><span class="p">)])</span>
+<span class="c1"># 100 times the bv then subtract it 99 times using the tax variable:</span>
+<span class="n">beta_large</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">.1</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mf">.1</span> <span class="o">*</span> <span class="mi">99</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">.2</span><span class="p">)])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;L2 norm of coefficients: small:</span><span class="si">%.2f</span><span class="s2">, medium:</span><span class="si">%.2f</span><span class="s2">, large:</span><span class="si">%.2f</span><span class="s2">.&quot;</span> <span class="o">%</span>
+      <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">beta_star</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">beta_medium</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">beta_large</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;However all models provide the exact same predictions.&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta_star</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta_medium</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta_star</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">beta_large</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L2</span> <span class="n">norm</span> <span class="n">of</span> <span class="n">coefficients</span><span class="p">:</span> <span class="n">small</span><span class="p">:</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">medium</span><span class="p">:</span><span class="mf">21.25</span><span class="p">,</span> <span class="n">large</span><span class="p">:</span><span class="mf">2550.25</span><span class="o">.</span>
+<span class="n">However</span> <span class="nb">all</span> <span class="n">models</span> <span class="n">provide</span> <span class="n">the</span> <span class="n">exact</span> <span class="n">same</span> <span class="n">predictions</span><span class="o">.</span>
+</pre></div>
+</div>
+</section>
+<section id="model-complexity">
+<h3>Model complexity<a class="headerlink" href="#model-complexity" title="Link to this heading">¶</a></h3>
+<p>Model complexity impacts both bias and variance:</p>
+<ul class="simple">
+<li><p>Low-complexity models (underfitting):</p>
+<ul>
+<li><p>High bias (priors or assumptions about data are too strong, leading
+to oversimplified models).</p></li>
+<li><p>Low variance (consistent predictions across different datasets but
+with poor accuracy).</p></li>
+<li><p>Example: A linear regression model trying to fit a highly non-linear
+dataset or an under regularized model.</p></li>
+<li><p>Poor performance on both training and test data.</p></li>
+</ul>
+</li>
+<li><p>High-complexity models (overfitting):</p>
+<ul>
+<li><p>Low bias (can fit training data very well).</p></li>
+<li><p>High variance (small fluctuations in training data lead to large
+changes in predictions).</p></li>
+<li><p>Example: A deep neural network with too many parameters trained on
+limited data or an over regularized model.</p></li>
+<li><p>Good training performance but poor test performance.</p></li>
+</ul>
+</li>
+</ul>
+<p>The <strong>bias-variance tradeoff</strong> states that as complexity increases, bias
+decreases, but variance increases. The goal is to find the optimal model
+complexity that balances both.</p>
+<p>Complex learners with too many parameters relative to the number of
+observations may overfit the training dataset.</p>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../_images/model_complexity_bias_variance.png"><img alt="Model complexity" src="../_images/model_complexity_bias_variance.png" style="width: 10cm;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Model complexity</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="the-challenges-of-high-dimensionality">
+<h3>The Challenges of High Dimensionality<a class="headerlink" href="#the-challenges-of-high-dimensionality" title="Link to this heading">¶</a></h3>
+<p>High-dimensional data refers to datasets with a large number of input
+features (<span class="math notranslate nohighlight">\(P\)</span>). In linear models, each feature corresponds to a
+parameter, so when the number of features <span class="math notranslate nohighlight">\(P\)</span> is large compared to
+the number of training samples <span class="math notranslate nohighlight">\(N\)</span> (the “<strong>large P, small N</strong>”
+problem), the model tends to overfit the training data. This phenomenon
+is part of the <strong>curse of dimensionality</strong>, which describes the
+difficulties that arise when working in high-dimensional spaces.</p>
+<p>One of the most critical factors in selecting a machine learning
+algorithm is the relationship between <span class="math notranslate nohighlight">\(P\)</span> and <span class="math notranslate nohighlight">\(N\)</span>, as it
+significantly impacts model performance. Below are three key problems
+associated with high-dimensionality:</p>
+<p><strong>Infinite Solutions and Ill-Conditioned Matrices</strong></p>
+<p>In linear models, the covariance matrix <span class="math notranslate nohighlight">\(\mathbf{X}^T \mathbf{X}\)</span>
+is of size <span class="math notranslate nohighlight">\(P \times P\)</span> and has rank <span class="math notranslate nohighlight">\(\min(N, P)\)</span>. When
+<span class="math notranslate nohighlight">\(P &gt; N\)</span>, the system of equations becomes <strong>overparameterized</strong>,
+meaning there are infinitely many possible solutions that fit the
+training data. This leads to poor generalization, as the learned
+solutions may be highly specific to the dataset. In such cases, the
+covariance matrix is singular or ill-conditioned, making it unstable for
+inversion in methods like ordinary least squares regression.</p>
+<p><strong>Exponential Growth of Sample Requirements</strong></p>
+<p>The density of data points in a high-dimensional space decreases
+exponentially with increasing <span class="math notranslate nohighlight">\(P\)</span>. Specifically, the effective
+sampling density of <span class="math notranslate nohighlight">\(N\)</span> points in a <span class="math notranslate nohighlight">\(P\)</span>-dimensional space is
+proportional to <span class="math notranslate nohighlight">\(N^{1/P}\)</span>. As a result, the data becomes
+increasingly sparse as <span class="math notranslate nohighlight">\(P\)</span> grows, making it difficult to estimate
+distributions or learn meaningful patterns. To maintain a constant
+density, the number of required samples grows exponentially. For
+example:</p>
+<ul class="simple">
+<li><p>In <strong>1D</strong>, 50 samples provide reasonable coverage.</p></li>
+<li><p>In <strong>2D</strong>, approximately <strong>2,500</strong> samples are needed for equivalent
+density.</p></li>
+<li><p>In <strong>3D</strong>, around <strong>125,000</strong> samples are required.</p></li>
+</ul>
+<p>This illustrates why high-dimensional problems often suffer from a lack
+of sufficient training data.</p>
+<p><strong>Most Data Points Lie on the Edge of the Space</strong></p>
+<p>In high-dimensional spaces, most data points are <strong>closer to the
+boundary of the sample space</strong> than to any other data point. Consider
+<span class="math notranslate nohighlight">\(N\)</span> points uniformly distributed in a <span class="math notranslate nohighlight">\(P\)</span>-dimensional unit
+ball. The median distance from the origin to the nearest neighbor is
+given by:</p>
+<div class="math notranslate nohighlight">
+\[d(P, N) = \left(1 - \frac{1}{2}^{1/N}\right)^{1/P}\]</div>
+<p>For example, with <span class="math notranslate nohighlight">\(N = 500\)</span> and <span class="math notranslate nohighlight">\(P = 10\)</span>, this distance is
+approximately <strong>0.52</strong>, meaning that most data points are more than
+halfway to the boundary. This has severe consequences for prediction:</p>
+<ul class="simple">
+<li><p>In lower dimensions, models <strong>interpolate</strong> between data points.</p></li>
+<li><p>In high dimensions, models must <strong>extrapolate</strong>, which is
+significantly harder and less reliable.</p></li>
+</ul>
+<p>This explains why many machine learning algorithms perform poorly in
+high-dimensional settings and why dimensionality reduction techniques
+(e.g., PCA, feature selection) are essential.</p>
+<p><strong>Conclusion</strong></p>
+<p>The curse of dimensionality creates fundamental challenges for machine
+learning, including overparameterization, data sparsity, and unreliable
+predictions. Addressing these issues requires strategies such as
+<strong>dimensionality reduction</strong>, <strong>regularization</strong>, and <strong>feature
+selection</strong> to ensure that models generalize well and remain
+computationally efficient.</p>
+<p><em>(Source: T. Hastie, R. Tibshirani, J. Friedman.</em> The Elements of
+Statistical Learning: Data Mining, Inference, and Prediction.* Second
+Edition, 2009.)*</p>
+</section>
+<section id="measure-of-overfitting-risk-vapnikchervonenkis-vc-dimension">
+<h3>Measure of overfitting risk: Vapnik–Chervonenkis (VC) Dimension<a class="headerlink" href="#measure-of-overfitting-risk-vapnikchervonenkis-vc-dimension" title="Link to this heading">¶</a></h3>
+<p>The Vapnik–Chervonenkis (VC) dimension is a fundamental concept in
+statistical learning theory that measures the capacity of a hypothesis
+class (i.e., the set of functions a model can learn). It provides a way
+to quantify a model’s ability to fit data and generalize to unseen
+examples.</p>
+<p>VC dimension (for Vapnik–Chervonenkis dimension) is a measure of the
+<strong>capacity</strong> (complexity, expressive power, richness, or flexibility) of
+a statistical classification algorithm, defined as the cardinality of
+the largest set of points that the algorithm can shatter.</p>
+<p>Theorem: Linear classifier in <span class="math notranslate nohighlight">\(R^P\)</span> have VC dimension of
+<span class="math notranslate nohighlight">\(P+1\)</span>. Hence in dimension two (<span class="math notranslate nohighlight">\(P=2\)</span>) any random partition
+of 3 points can be learned.</p>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="../_images/vc_dimension_linear_2d.png"><img alt="In 2D we can shatter any three non-collinear points" src="../_images/vc_dimension_linear_2d.png" style="width: 15cm;" />
+</a>
+<figcaption>
+<p><span class="caption-text">In 2D we can shatter any three non-collinear points</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="regularization-approaches-to-mitigate-overfitting">
+<h2>Regularization Approaches to Mitigate Overfitting<a class="headerlink" href="#regularization-approaches-to-mitigate-overfitting" title="Link to this heading">¶</a></h2>
+<p>Regularization techniques help prevent overfitting by constraining the
+complexity of machine learning models. Below is a categorized
+enumeration of common regularization methods, along with their
+summaries.</p>
+<section id="norm-based-regularization-penalty-methods">
+<h3>Norm-Based Regularization (Penalty Methods)<a class="headerlink" href="#norm-based-regularization-penalty-methods" title="Link to this heading">¶</a></h3>
+<p>These techniques add constraints to the model’s parameters to prevent
+excessive complexity.</p>
+<ul class="simple">
+<li><p><strong>L2 Regularization (Ridge Regression / Weight Decay / Shrinkage)</strong></p>
+<ul>
+<li><p>Adds a squared penalty: <span class="math notranslate nohighlight">\(\lambda \sum w_i^2\)</span>.</p></li>
+<li><p>Shrinks weights but does not eliminate them, reducing model
+sensitivity to noise.</p></li>
+<li><p>Common in linear regression, logistic regression, and deep learning.</p></li>
+</ul>
+</li>
+<li><p><strong>L1 Regularization (Lasso Regression)</strong></p>
+<ul>
+<li><p>Adds an absolute penalty: <span class="math notranslate nohighlight">\(\lambda \sum |w_i|\)</span>.</p></li>
+<li><p>Promote sparsity by setting some weights to zero, effectively
+selecting features.</p></li>
+<li><p>Used in high-dimensional datasets to perform feature selection.</p></li>
+</ul>
+</li>
+<li><p><strong>Elastic Net Regularization</strong></p>
+<ul>
+<li><p>Combines L1 and L2 penalties:
+<span class="math notranslate nohighlight">\(\lambda_1 \sum |w_i| + \lambda_2 \sum w_i^2\)</span></p></li>
+<li><p>Used when dealing with correlated features.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="ensemble-learning-approaches">
+<h3>Ensemble Learning approaches<a class="headerlink" href="#ensemble-learning-approaches" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Bagging &amp; Boosting</strong></p>
+<ul>
+<li><p><strong>Bagging</strong> (e.g., Random Forests) reduces overfitting by averaging
+multiple models trained on different data subsets.</p></li>
+<li><p><strong>Boosting</strong> (e.g., XGBoost) adds weak learners sequentially with a
+learning rate to control overfitting.</p></li>
+<li><p><strong>Stacking</strong> reduces overfitting by averaging multiple models
+trained on same data subsets.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="data-filtering-or-preprocessing-regularization">
+<h3>Data-Filtering/or preprocessing Regularization<a class="headerlink" href="#data-filtering-or-preprocessing-regularization" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Feature Selection</strong></p>
+<ul>
+<li><p>Reduces model complexity by removing redundant or irrelevant
+features.</p></li>
+<li><p>Methods include univariate filter (SelecKBest) or recursive feature
+elimination (RFE) and mutual information filtering.</p></li>
+</ul>
+</li>
+<li><p><strong>Unsupervised Dimension Reduction as preprocessing step</strong></p>
+<ul>
+<li><p>Reduces model complexity by reducing the dimension of the imput
+data.</p></li>
+<li><p>Methods include Linear Dimension reduction or Manifold Learning.</p></li>
+<li><p>Unsupervised approaches are generally not efficient, as they tend to
+overfill the data before the supervised stage.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="regularization-for-probabilistic-models">
+<h3>Regularization for Probabilistic Models<a class="headerlink" href="#regularization-for-probabilistic-models" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Bayesian Regularization</strong></p>
+<ul>
+<li><p>Introduces priors over model parameters, effectively acting as L2
+regularization.</p></li>
+<li><p>Used in Bayesian Neural Networks, Gaussian Processes, and Bayesian
+Ridge Regression.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="regularization-in-kernel-methods-svm-gaussian-processes">
+<h3>Regularization in Kernel Methods (SVM, Gaussian Processes)<a class="headerlink" href="#regularization-in-kernel-methods-svm-gaussian-processes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Margin-Based Regularization (SVM)</strong></p>
+<ul>
+<li><p>The <strong>soft margin</strong> parameter $ C $ controls the trade-off between a
+large margin and misclassification.</p></li>
+<li><p>A smaller $ C $ encourages more regularization, preventing
+overfitting.</p></li>
+</ul>
+</li>
+<li><p><strong>Kernel Regularization</strong></p>
+<ul>
+<li><p>Kernel methods (e.g., Gaussian RBF, polynomial kernels) use
+hyperparameters like kernel bandwidth to control model complexity.</p></li>
+<li><p>A wider kernel bandwidth smooths the decision boundary, reducing
+variance.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="regularization-in-deep-learning">
+<h3>Regularization in Deep Learning<a class="headerlink" href="#regularization-in-deep-learning" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Dropout</strong></p>
+<ul>
+<li><p>Randomly disables a fraction of neurons during training to reduce
+reliance on specific features.</p></li>
+<li><p>Helps improve generalization in fully connected and convolutional
+networks.</p></li>
+</ul>
+</li>
+<li><p><strong>Batch Normalization</strong></p>
+<ul>
+<li><p>Normalizes activations across mini-batches, reducing internal
+covariate shift.</p></li>
+<li><p>Acts as an implicit regularizer by smoothing the optimization
+landscape.</p></li>
+</ul>
+</li>
+<li><p><strong>Early Stopping</strong></p>
+<ul>
+<li><p>Monitors validation loss and stops training when it stops
+decreasing.</p></li>
+<li><p>Prevents the model from overfitting to the training data.</p></li>
+</ul>
+</li>
+<li><p><strong>Weight Decay (L2 Regularization in Neural Networks)</strong></p>
+<ul>
+<li><p>Reduces the magnitude of neural network weights to prevent
+overfitting.</p></li>
+<li><p>Equivalent to L2 regularization in traditional machine learning
+models.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="data-centric-regularization">
+<h3>Data-Centric Regularization<a class="headerlink" href="#data-centric-regularization" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Data Augmentation</strong></p>
+<ul>
+<li><p>Artificially increases the dataset size using transformations (e.g.,
+rotations, scaling, flipping).</p></li>
+<li><p>Particularly useful in image and text processing tasks.</p></li>
+</ul>
+</li>
+<li><p><strong>Adding Noise to Inputs or Weights</strong></p>
+<ul>
+<li><p>Introduces small random noise to training data or network weights to
+improve robustness.</p></li>
+<li><p>Common in deep learning and reinforcement learning.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="regularization-for-tree-based-models">
+<h3>Regularization for Tree-Based Models<a class="headerlink" href="#regularization-for-tree-based-models" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Pruning (Decision Trees, Random Forests, Gradient Boosting)</strong></p>
+<ul>
+<li><p>Removes branches that have low importance to reduce complexity.</p></li>
+<li><p>Prevents trees from memorizing noise.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Category</strong></p></th>
+<th class="head"><p><strong>Method</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Norm-Based
+Regularization</strong></p></td>
+<td><p><strong>L2
+Regularization
+(Ridge, Weight
+Decay,
+Shrinkage)</strong></p></td>
+<td><p>Adds a squared penalty
+on coefficients; shrinks
+weights but does not
+eliminate them, reducing
+noise sensitivity.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><strong>L1
+Regularization
+(Lasso)</strong></p></td>
+<td><p>Adds an absolute penalty
+on coefficients;
+promotes sparsity by
+setting some weights to
+zero (feature
+selection).</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><strong>Elastic Net</strong></p></td>
+<td><p>Combines L1 and L2
+penalties; useful for
+correlated features.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Ensemble Learning
+Regularization</strong></p></td>
+<td><p><strong>Bagging</strong></p></td>
+<td><p>Reduces overfitting by
+averaging multiple
+models trained on
+different subsets (e.g.,
+Random Forests).</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><strong>Boosting</strong></p></td>
+<td><p>Sequentially adds weak
+learners with a learning
+rate to control
+overfitting (e.g.,
+XGBoost).</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><strong>Stacking</strong></p></td>
+<td><p>Combines multiple models
+trained on the same data
+and uses a meta-learner
+for final predictions.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Data-Filtering /
+Preprocessing
+Regularization</strong></p></td>
+<td><p><strong>Feature
+Selection</strong></p></td>
+<td><p>Reduces model complexity
+by removing redundant or
+irrelevant features
+(e.g., SelectKBest,
+RFE).</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><strong>Unsupervised
+Dimension
+Reduction</strong></p></td>
+<td><p>Reduces data
+dimensionality before
+modeling (e.g., PCA,
+Manifold Learning); less
+efficient for supervised
+learning.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Regularization for
+Probabilistic
+Models</strong></p></td>
+<td><p><strong>Bayesian
+Regularization</strong></p></td>
+<td><p>Introduces priors over
+parameters, acting as L2
+regularization (e.g.,
+Bayesian Ridge
+Regression, Gaussian
+Processes).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Regularization in
+Kernel Methods</strong></p></td>
+<td><p><strong>Margin-Based
+Regularization
+(SVM)</strong></p></td>
+<td><p>Soft margin parameter
+(C) controls the
+trade-off between margin
+size and
+misclassification.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><strong>Kernel
+Regularization</strong></p></td>
+<td><p>Kernel hyperparameters
+(e.g., RBF bandwidth)
+control decision
+boundary complexity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Regularization in
+Deep Learning</strong></p></td>
+<td><p><strong>Dropout</strong></p></td>
+<td><p>Randomly disables
+neurons during training
+to reduce reliance on
+specific features.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><strong>Batch
+Normalization</strong></p></td>
+<td><p>Normalizes activations
+across mini-batches,
+reducing internal
+covariate shift and
+smoothing optimization.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><strong>Early
+Stopping</strong></p></td>
+<td><p>Stops training when
+validation loss stops
+improving to prevent
+overfitting.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><strong>Weight Decay
+(L2 in Deep
+Learning)</strong></p></td>
+<td><p>Applies L2
+regularization to neural
+network weights.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Data-Centric
+Regularization</strong></p></td>
+<td><p><strong>Data
+Augmentation</strong></p></td>
+<td><p>Increases dataset size
+using transformations
+(e.g., rotations,
+scaling, flipping) to
+improve generalization.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><strong>Adding Noise</strong></p></td>
+<td><p>Introduces noise to
+inputs or weights to
+improve model
+robustness.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Regularization for
+Tree-Based Models</strong></p></td>
+<td><p><strong>Pruning</strong></p></td>
+<td><p>Removes low-importance
+branches in decision
+trees and ensemble
+models to reduce
+complexity.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Overfitting and Regularization</a><ul>
+<li><a class="reference internal" href="#causes-of-overfitting">Causes of Overfitting</a><ul>
+<li><a class="reference internal" href="#multicollinearity">Multicollinearity</a></li>
+<li><a class="reference internal" href="#model-complexity">Model complexity</a></li>
+<li><a class="reference internal" href="#the-challenges-of-high-dimensionality">The Challenges of High Dimensionality</a></li>
+<li><a class="reference internal" href="#measure-of-overfitting-risk-vapnikchervonenkis-vc-dimension">Measure of overfitting risk: Vapnik–Chervonenkis (VC) Dimension</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#regularization-approaches-to-mitigate-overfitting">Regularization Approaches to Mitigate Overfitting</a><ul>
+<li><a class="reference internal" href="#norm-based-regularization-penalty-methods">Norm-Based Regularization (Penalty Methods)</a></li>
+<li><a class="reference internal" href="#ensemble-learning-approaches">Ensemble Learning approaches</a></li>
+<li><a class="reference internal" href="#data-filtering-or-preprocessing-regularization">Data-Filtering/or preprocessing Regularization</a></li>
+<li><a class="reference internal" href="#regularization-for-probabilistic-models">Regularization for Probabilistic Models</a></li>
+<li><a class="reference internal" href="#regularization-in-kernel-methods-svm-gaussian-processes">Regularization in Kernel Methods (SVM, Gaussian Processes)</a></li>
+<li><a class="reference internal" href="#regularization-in-deep-learning">Regularization in Deep Learning</a></li>
+<li><a class="reference internal" href="#data-centric-regularization">Data-Centric Regularization</a></li>
+<li><a class="reference internal" href="#regularization-for-tree-based-models">Regularization for Tree-Based Models</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ml_overview/overfitting.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/ml_overview/overfitting.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

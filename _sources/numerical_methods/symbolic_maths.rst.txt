@@ -1,0 +1,59 @@
+Symbolic Calculus with Python
+=============================
+
+`Sympy <https://www.sympy.org/en/index.html>`__ package `Online
+courses <https://www.youtube.com/playlist?list=PLSE7WKf_qqo1T5VV1nqXTj2iNiSpFk72T>`__
+
+::
+
+   conda install -c conda-forge sympy
+
+
+
+.. code:: ipython3
+
+    import sympy as sp
+    
+    x  = sp.symbols('x', real=True) # defining the variables
+    f_exp = 2 * x ** 2 + 5
+    print(f_exp)
+
+Evaluation with ``evalf(subs={x: 3})`` for single:
+
+.. code:: ipython3
+
+    f_exp.evalf(subs={x: 3})
+
+Use lambdify function that translates SymPy expressions into Python
+functions, to evaluate numpy array:
+
+.. code:: ipython3
+
+    from sympy import lambdify
+    
+    f_sp = lambdify(x, f_exp,  "numpy")
+    
+    print(f(3))
+    f_sp(np.array([1, 3, 5]))
+
+Symbolic Differentiation
+------------------------
+
+.. code:: ipython3
+
+    df_exp = sp.diff(f_exp)
+    print("f =", f_exp)
+    print("f'=", df_exp)
+
+.. code:: ipython3
+
+    import sympy as sp
+    from sympy import lambdify
+    
+    f_exp = (7 * x ** 3  - 5 * x + 1) / (2 * x ** 4 + x ** 2 + 1)
+    df_exp =  sp.simplify(sp.diff(f_exp))
+    print("f =", f_exp)
+    print("f'=", df_exp)
+    df_call = lambdify(x, df_sp,  "numpy")
+    
+

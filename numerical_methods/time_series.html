@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Time Series &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Optimization (Minimization) by Gradient Descent" href="optim_gradient_descent.html" />
+    <link rel="prev" title="Numerical Differentiation" href="numerical_differentiation_integration.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="time-series">
+<h1>Time Series<a class="headerlink" href="#time-series" title="Link to this heading">¶</a></h1>
+<p>Tools:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/timeseries.html">Pandas</a></p></li>
+<li><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/timeseries.html">Pandas user
+guide</a></p></li>
+<li><p><a class="reference external" href="http://www.statsmodels.org/devel/tsa.html">Time Series analysis (TSA) from
+statsmodels</a></p></li>
+</ul>
+<p>References:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://machinelearningmastery.com/decompose-time-series-data-trend-seasonality/">Basic</a></p></li>
+<li><p><a class="reference external" href="https://otexts.com/fpp2/classical-decomposition.html">Detailed</a></p></li>
+<li><p><a class="reference external" href="https://online.stat.psu.edu/stat510/">PennState Time Series
+course</a></p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+
+<span class="c1"># Plot parameters</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
+<span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">)</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Time series with Pandas</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">&quot;2018-01-01&quot;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;YS&quot;</span><span class="p">)</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">)),</span> <span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2018</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>    <span class="mi">0</span>
+<span class="mi">2019</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>    <span class="mi">1</span>
+<span class="mi">2020</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>    <span class="mi">2</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>    <span class="mi">3</span>
+<span class="mi">2022</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>    <span class="mi">4</span>
+<span class="n">Freq</span><span class="p">:</span> <span class="n">YS</span><span class="o">-</span><span class="n">JAN</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">int64</span>
+</pre></div>
+</div>
+<section id="decomposition-methods-periodic-patterns-trend-seasonal-and-autocorrelation">
+<h2>Decomposition Methods: Periodic Patterns (Trend/Seasonal) and Autocorrelation<a class="headerlink" href="#decomposition-methods-periodic-patterns-trend-seasonal-and-autocorrelation" title="Link to this heading">¶</a></h2>
+<p>Stationarity</p>
+<p>A TS is said to be stationary if its statistical properties such as
+mean, variance remain constant over time.</p>
+<ul class="simple">
+<li><p>constant mean</p></li>
+<li><p>constant variance</p></li>
+<li><p>an autocovariance that does not depend on time.</p></li>
+</ul>
+<p>what is making a TS non-stationary. There are 2 major reasons behind
+non-stationary of a TS:</p>
+<ol class="arabic simple">
+<li><p>Trend - varying mean over time. For eg, in this case we saw that on
+average, the number of passengers was growing over time.</p></li>
+<li><p>Seasonality - variations at specific time-frames. eg people might
+have a tendency to buy cars in a particular month because of pay
+increment or festivals.</p></li>
+</ol>
+<section id="time-series-analysis-of-google-trends">
+<h3><a class="reference external" href="https://www.datacamp.com/community/tutorials/time-series-analysis-tutorial">Time series analysis of Google trends</a><a class="headerlink" href="#time-series-analysis-of-google-trends" title="Link to this heading">¶</a></h3>
+<p>Get Google Trends data of keywords such as ‘diet’ and ‘gym’ and see how
+they vary over time while learning about trends and seasonality in time
+series data.</p>
+<p>In the Facebook Live code along session on the 4th of January, we
+checked out Google trends data of keywords ‘diet’, ‘gym’ and ‘finance’
+to see how they vary over time. We asked ourselves if there could be
+more searches for these terms in January when we’re all trying to turn
+over a new leaf?</p>
+<p>In this tutorial, you’ll go through the code that we put together during
+the session step by step. You’re not going to do much mathematics but
+you are going to do the following:</p>
+<ul class="simple">
+<li><p>Read data</p></li>
+<li><p>Recode data</p></li>
+<li><p>Exploratory Data Analysis</p></li>
+</ul>
+<p>Read data</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/datacamp/datacamp_facebook_live_ny_resolution/raw/master/data/multiTimeline.csv&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/multiTimeline.csv&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="c1"># Rename columns</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="s1">&#39;diet&#39;</span><span class="p">,</span> <span class="s1">&#39;gym&#39;</span><span class="p">,</span> <span class="s1">&#39;finance&#39;</span><span class="p">]</span>
+
+<span class="c1"># Describe</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>     <span class="n">Month</span>  <span class="n">diet</span><span class="p">:</span> <span class="p">(</span><span class="n">Worldwide</span><span class="p">)</span>  <span class="n">gym</span><span class="p">:</span> <span class="p">(</span><span class="n">Worldwide</span><span class="p">)</span>  <span class="n">finance</span><span class="p">:</span> <span class="p">(</span><span class="n">Worldwide</span><span class="p">)</span>
+<span class="mi">0</span>  <span class="mi">2004</span><span class="o">-</span><span class="mi">01</span>                <span class="mi">100</span>                <span class="mi">31</span>                    <span class="mi">48</span>
+<span class="mi">1</span>  <span class="mi">2004</span><span class="o">-</span><span class="mi">02</span>                 <span class="mi">75</span>                <span class="mi">26</span>                    <span class="mi">49</span>
+<span class="mi">2</span>  <span class="mi">2004</span><span class="o">-</span><span class="mi">03</span>                 <span class="mi">67</span>                <span class="mi">24</span>                    <span class="mi">47</span>
+<span class="mi">3</span>  <span class="mi">2004</span><span class="o">-</span><span class="mi">04</span>                 <span class="mi">70</span>                <span class="mi">22</span>                    <span class="mi">48</span>
+<span class="mi">4</span>  <span class="mi">2004</span><span class="o">-</span><span class="mi">05</span>                 <span class="mi">72</span>                <span class="mi">22</span>                    <span class="mi">43</span>
+             <span class="n">diet</span>         <span class="n">gym</span>     <span class="n">finance</span>
+<span class="n">count</span>  <span class="mf">168.000000</span>  <span class="mf">168.000000</span>  <span class="mf">168.000000</span>
+<span class="n">mean</span>    <span class="mf">49.642857</span>   <span class="mf">34.690476</span>   <span class="mf">47.148810</span>
+<span class="n">std</span>      <span class="mf">8.033080</span>    <span class="mf">8.134316</span>    <span class="mf">4.972547</span>
+<span class="nb">min</span>     <span class="mf">34.000000</span>   <span class="mf">22.000000</span>   <span class="mf">38.000000</span>
+<span class="mi">25</span><span class="o">%</span>     <span class="mf">44.000000</span>   <span class="mf">28.000000</span>   <span class="mf">44.000000</span>
+<span class="mi">50</span><span class="o">%</span>     <span class="mf">48.500000</span>   <span class="mf">32.500000</span>   <span class="mf">46.000000</span>
+<span class="mi">75</span><span class="o">%</span>     <span class="mf">53.000000</span>   <span class="mf">41.000000</span>   <span class="mf">50.000000</span>
+<span class="nb">max</span>    <span class="mf">100.000000</span>   <span class="mf">58.000000</span>   <span class="mf">73.000000</span>
+</pre></div>
+</div>
+<p>Recode data</p>
+<p>Next, you’ll turn the ‘month’ column into a DateTime data type and make
+it the index of the DataFrame.</p>
+<p>Note that you do this because you saw in the result of the .info()
+method that the ‘Month’ column was actually an of data type object. Now,
+that generic data type encapsulates everything from strings to integers,
+etc. That’s not exactly what you want when you want to be looking at
+time series data. That’s why you’ll use .to_datetime() to convert the
+‘month’ column in your DataFrame to a DateTime.</p>
+<p>Be careful! Make sure to include the in place argument when you’re
+setting the index of the DataFrame df so that you actually alter the
+original index and set it to the ‘month’ column.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">month</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">month</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;diet&quot;</span><span class="p">,</span> <span class="s2">&quot;gym&quot;</span><span class="p">]]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="n">diet</span>  <span class="n">gym</span>
+<span class="n">month</span>
+<span class="mi">2004</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>   <span class="mi">100</span>   <span class="mi">31</span>
+<span class="mi">2004</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span>    <span class="mi">75</span>   <span class="mi">26</span>
+<span class="mi">2004</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">01</span>    <span class="mi">67</span>   <span class="mi">24</span>
+<span class="mi">2004</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">01</span>    <span class="mi">70</span>   <span class="mi">22</span>
+<span class="mi">2004</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">01</span>    <span class="mi">72</span>   <span class="mi">22</span>
+</pre></div>
+</div>
+<p>Exploratory data analysis</p>
+<p>You can use a built-in pandas visualization method .plot() to plot your
+data as 3 line plots on a single figure (one for each column, namely,
+‘diet’, ‘gym’, and ‘finance’).</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_11_0.png" src="../_images/time_series_11_0.png" />
+<p>Note that this data is relative. As you can read on Google trends:</p>
+<p>Numbers represent search interest relative to the highest point on the
+chart for the given region and time. A value of 100 is the peak
+popularity for the term. A value of 50 means that the term is half as
+popular. Likewise a score of 0 means the term was less than 1% as
+popular as the peak.</p>
+</section>
+<section id="trends-resampling-rolling-average-smoothing-windowing">
+<h3>Trends : Resampling, Rolling average, (Smoothing, Windowing)<a class="headerlink" href="#trends-resampling-rolling-average-smoothing-windowing" title="Link to this heading">¶</a></h3>
+<p>Identify trends or remove seasonality</p>
+<ol class="arabic simple">
+<li><p>Subsampling at year frequency</p></li>
+<li><p>Rolling average (Smoothing, Windowing), for each time point, take the
+average of the points on either side of it. Note that the number of
+points is specified by a window size.</p></li>
+</ol>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diet</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;diet&#39;</span><span class="p">]</span>
+
+<span class="n">diet_resamp_yr</span> <span class="o">=</span> <span class="n">diet</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;YE&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">diet_roll_yr</span> <span class="o">=</span> <span class="n">diet</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">diet</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="c1"># store axis (ax) for latter plots</span>
+<span class="n">diet_resamp_yr</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Resample at year frequency&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">diet_roll_yr</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Rolling average (smooth), window size=12&#39;</span><span class="p">,</span>
+                  <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_14_0.png" src="../_images/time_series_14_0.png" />
+<p>Rolling average (smoothing) with Numpy</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;diet&#39;</span><span class="p">]])</span>
+<span class="n">win</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">win_half</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">win</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">diet_smooth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[(</span><span class="n">idx</span><span class="o">-</span><span class="n">win_half</span><span class="p">):(</span><span class="n">idx</span><span class="o">+</span><span class="n">win_half</span><span class="p">)]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">win_half</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))])</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">diet_smooth</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_16_0.png" src="../_images/time_series_16_0.png" />
+<p>Trends: Plot Diet and Gym using rolling average</p>
+<p>Build a new DataFrame which is the concatenation diet and gym smoothed
+data</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_trend</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;diet&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;gym&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df_trend</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_18_1.png" src="../_images/time_series_18_1.png" />
+</section>
+<section id="seasonality-by-detrending-remove-average">
+<h3>Seasonality by detrending (remove average)<a class="headerlink" href="#seasonality-by-detrending-remove-average" title="Link to this heading">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_dtrend</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;diet&quot;</span><span class="p">,</span> <span class="s2">&quot;gym&quot;</span><span class="p">]]</span> <span class="o">-</span> <span class="n">df_trend</span>
+<span class="n">df_dtrend</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_20_1.png" src="../_images/time_series_20_1.png" />
+</section>
+<section id="seasonality-by-first-order-differencing">
+<h3>Seasonality by First-order Differencing<a class="headerlink" href="#seasonality-by-first-order-differencing" title="Link to this heading">¶</a></h3>
+<p>First-order approximation using <code class="docutils literal notranslate"><span class="pre">diff</span></code> method which compute original -
+shifted data:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># exclude first term for some implementation details</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">((</span><span class="n">diet</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span> <span class="o">==</span> <span class="n">diet</span> <span class="o">-</span> <span class="n">diet</span><span class="o">.</span><span class="n">shift</span><span class="p">())[</span><span class="mi">1</span><span class="p">:])</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_22_1.png" src="../_images/time_series_22_1.png" />
+</section>
+<section id="periodicity-and-autocorrelation">
+<h3>Periodicity and Autocorrelation<a class="headerlink" href="#periodicity-and-autocorrelation" title="Link to this heading">¶</a></h3>
+<p>Correlation matrix</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>          <span class="n">diet</span>       <span class="n">gym</span>
+<span class="n">diet</span>  <span class="mf">1.000000</span> <span class="o">-</span><span class="mf">0.100764</span>
+<span class="n">gym</span>  <span class="o">-</span><span class="mf">0.100764</span>  <span class="mf">1.000000</span>
+</pre></div>
+</div>
+<p>‘diet’ and ‘gym’ are negatively correlated! Remember that you have a
+seasonal and a trend component. The correlation is actually capturing
+both of those. Decomposing into separate components provides a better
+insight of the data:</p>
+<p>Trends components that are negatively correlated:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_trend</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>diet</th>
+      <th>gym</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>diet</th>
+      <td>1.000000</td>
+      <td>-0.298725</td>
+    </tr>
+    <tr>
+      <th>gym</th>
+      <td>-0.298725</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>Seasonal components (Detrended or First-order Differencing) are
+positively correlated</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df_dtrend</span><span class="o">.</span><span class="n">corr</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">corr</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>          <span class="n">diet</span>       <span class="n">gym</span>
+<span class="n">diet</span>  <span class="mf">1.000000</span>  <span class="mf">0.600208</span>
+<span class="n">gym</span>   <span class="mf">0.600208</span>  <span class="mf">1.000000</span>
+          <span class="n">diet</span>       <span class="n">gym</span>
+<span class="n">diet</span>  <span class="mf">1.000000</span>  <span class="mf">0.758707</span>
+<span class="n">gym</span>   <span class="mf">0.758707</span>  <span class="mf">1.000000</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Seasonal_decompose</span></code> function of
+<a class="reference external" href="https://www.statsmodels.org/dev/generated/statsmodels.tsa.seasonal.seasonal_decompose.html">statsmodels</a>.
+“The results are obtained by first estimating the trend by applying a
+using moving averages or a convolution filter to the data. The trend is
+then removed from the series and the average of this de-trended series
+for each period is the returned seasonal component.”</p>
+<p>We use additive (linear) model, i.e., TS = Level + Trend + Seasonality +
+Noise</p>
+<ul class="simple">
+<li><p>Level: The average value in the series.</p></li>
+<li><p>Trend: The increasing or decreasing value in the series.</p></li>
+<li><p>Seasonality: The repeating short-term cycle in the series.</p></li>
+<li><p>Noise: The random variation in the series.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.seasonal</span><span class="w"> </span><span class="kn">import</span> <span class="n">seasonal_decompose</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">gym</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="c1"># force float</span>
+<span class="n">decomposition</span> <span class="o">=</span> <span class="n">seasonal_decompose</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">trend</span> <span class="o">=</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">trend</span>
+<span class="n">seasonal</span> <span class="o">=</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">seasonal</span>
+<span class="n">residual</span> <span class="o">=</span> <span class="n">decomposition</span><span class="o">.</span><span class="n">resid</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span><span class="p">))</span>
+
+<span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
+<span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+
+<span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trend</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Trend&#39;</span><span class="p">)</span>
+<span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+
+<span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">seasonal</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Seasonality&#39;</span><span class="p">)</span>
+<span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+
+<span class="n">axis</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">residual</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Residuals&#39;</span><span class="p">)</span>
+<span class="n">axis</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_31_0.png" src="../_images/time_series_31_0.png" />
+</section>
+<section id="autocorrelation-function-acf">
+<h3>Autocorrelation function (ACF)<a class="headerlink" href="#autocorrelation-function-acf" title="Link to this heading">¶</a></h3>
+<p>A time series is periodic if it repeats itself at equally spaced
+intervals, say, every 12 months. Autocorrelation Function (ACF): It is a
+measure of the correlation between the TS with a lagged version of
+itself. For instance at lag 5, ACF would compare series at time instant
+<span class="math notranslate nohighlight">\(t\)</span> with series at instant <span class="math notranslate nohighlight">\(t-h\)</span>.</p>
+<ul class="simple">
+<li><p>The autocorrelation measures the linear relationship between an
+observation and its previous observations at different lags
+(<span class="math notranslate nohighlight">\(h\)</span>).</p></li>
+<li><p>Represents the overall correlation structure of the time series.</p></li>
+<li><p>Used to identify the order of a moving average (MA) process.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.graphics.tsaplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_acf</span><span class="p">,</span> <span class="n">plot_pacf</span>
+<span class="c1"># from statsmodels.tsa.stattools import acf, pacf</span>
+
+<span class="c1"># We could have considered the first order differences to capture the seasonality</span>
+<span class="c1"># x = df[&quot;gym&quot;].astype(float).diff().dropna()</span>
+
+<span class="c1"># Bu we use the detrended signal</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">df_dtrend</span><span class="o">.</span><span class="n">gym</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">plot_acf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_33_0.png" src="../_images/time_series_33_0.png" />
+<img alt="../_images/time_series_33_1.png" src="../_images/time_series_33_1.png" />
+</section>
+<section id="partial-autocorrelation-function-pacf">
+<h3>Partial autocorrelation function (PACF)<a class="headerlink" href="#partial-autocorrelation-function-pacf" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Partial autocorrelation measures the direct linear relationship
+between an observation and its previous observations at a specific
+offset, excluding contributions from intermediate offsets.</p></li>
+<li><p>Highlights direct relationships between observations at specific lags.</p></li>
+<li><p>Used to identify the order of an autoregressive (AR) process. The
+partial autocorrelation of an AR(p) process equals zero at lags larger
+than p, so the appropriate maximum lag p is the one after which the
+partial autocorrelations are all zero.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_36_0.png" src="../_images/time_series_36_0.png" />
+<p>PACF peaks every 12 months, i.e., the signal is correlated with itself
+shifted by 12 months. Its, then slowly decrease is due to the trend.</p>
+</section>
+</section>
+<section id="time-series-forecasting-using-autoregressive-ar-p-models">
+<h2>Time series forecasting using Autoregressive AR(p) models<a class="headerlink" href="#time-series-forecasting-using-autoregressive-ar-p-models" title="Link to this heading">¶</a></h2>
+<p>Sources:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.kaggle.com/code/eugeniyosetrov/simple-modeling-with-autoreg">Simple modeling with
+AutoReg</a></p></li>
+</ul>
+<p>The autoregressive orders. In general, we can define an AR(p) model with
+<span class="math notranslate nohighlight">\(p\)</span> autoregressive terms as follows:</p>
+<div class="math notranslate nohighlight">
+\[x_t = \sum_i^p a_i x_{t-i} + \varepsilon_t\]</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">root_mean_squared_error</span> <span class="k">as</span> <span class="n">rmse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.tsa.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoReg</span>
+
+<span class="c1"># We set the frequency for the time series to “MS” (month-start) to avoid warnings when using AutoReg.</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">df_dtrend</span><span class="o">.</span><span class="n">gym</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;MS&quot;</span><span class="p">)</span>
+<span class="n">ar1</span> <span class="o">=</span> <span class="n">AutoReg</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ar1</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                            <span class="n">AutoReg</span> <span class="n">Model</span> <span class="n">Results</span>
+<span class="o">==============================================================================</span>
+<span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                    <span class="n">gym</span>   <span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                  <span class="mi">157</span>
+<span class="n">Model</span><span class="p">:</span>                     <span class="n">AutoReg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>   <span class="n">Log</span> <span class="n">Likelihood</span>                <span class="o">-</span><span class="mf">387.902</span>
+<span class="n">Method</span><span class="p">:</span>               <span class="n">Conditional</span> <span class="n">MLE</span>   <span class="n">S</span><span class="o">.</span><span class="n">D</span><span class="o">.</span> <span class="n">of</span> <span class="n">innovations</span>              <span class="mf">2.908</span>
+<span class="n">Date</span><span class="p">:</span>                <span class="n">Thu</span><span class="p">,</span> <span class="mi">03</span> <span class="n">Apr</span> <span class="mi">2025</span>   <span class="n">AIC</span>                            <span class="mf">781.803</span>
+<span class="n">Time</span><span class="p">:</span>                        <span class="mi">13</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">10</span>   <span class="n">BIC</span>                            <span class="mf">790.953</span>
+<span class="n">Sample</span><span class="p">:</span>                    <span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">2005</span>   <span class="n">HQIC</span>                           <span class="mf">785.519</span>
+                         <span class="o">-</span> <span class="mi">12</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">2017</span>
+<span class="o">==============================================================================</span>
+                 <span class="n">coef</span>    <span class="n">std</span> <span class="n">err</span>          <span class="n">z</span>      <span class="n">P</span><span class="o">&gt;|</span><span class="n">z</span><span class="o">|</span>      <span class="p">[</span><span class="mf">0.025</span>      <span class="mf">0.975</span><span class="p">]</span>
+<span class="o">------------------------------------------------------------------------------</span>
+<span class="n">const</span>          <span class="mf">0.6416</span>      <span class="mf">0.243</span>      <span class="mf">2.641</span>      <span class="mf">0.008</span>       <span class="mf">0.165</span>       <span class="mf">1.118</span>
+<span class="n">gym</span><span class="o">.</span><span class="n">L1</span>         <span class="mf">0.2448</span>      <span class="mf">0.078</span>      <span class="mf">3.119</span>      <span class="mf">0.002</span>       <span class="mf">0.091</span>       <span class="mf">0.399</span>
+                                    <span class="n">Roots</span>
+<span class="o">=============================================================================</span>
+                  <span class="n">Real</span>          <span class="n">Imaginary</span>           <span class="n">Modulus</span>         <span class="n">Frequency</span>
+<span class="o">-----------------------------------------------------------------------------</span>
+<span class="n">AR</span><span class="mf">.1</span>            <span class="mf">4.0853</span>           <span class="o">+</span><span class="mf">0.0000</span><span class="n">j</span>            <span class="mf">4.0853</span>            <span class="mf">0.0000</span>
+<span class="o">-----------------------------------------------------------------------------</span>
+</pre></div>
+</div>
+<p>Partial autocorrelation function (PACF) peaks at <span class="math notranslate nohighlight">\(p=12\)</span>, try
+AR(12):</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ar12</span> <span class="o">=</span> <span class="n">AutoReg</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span><span class="p">))</span>
+
+<span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
+<span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ar1</span><span class="o">.</span><span class="n">predict</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;AR(1)&#39;</span><span class="p">)</span>
+<span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+
+<span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
+<span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ar12</span><span class="o">.</span><span class="n">predict</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;AR(12)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_41_0.png" src="../_images/time_series_41_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mae</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span> <span class="p">:</span> <span class="p">(</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MAE: AR(1) </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mae</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ar1</span><span class="o">.</span><span class="n">predict</span><span class="p">()),</span>
+      <span class="s2">&quot;AR(12) </span><span class="si">%.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mae</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ar12</span><span class="o">.</span><span class="n">predict</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MAE</span><span class="p">:</span> <span class="n">AR</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="mf">2.093</span> <span class="n">AR</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="mf">1.375</span>
+</pre></div>
+</div>
+<p>Automatic model selection using Akaike information criterion
+(<a class="reference external" href="https://en.wikipedia.org/wiki/Akaike_information_criterion">AIC</a>).
+AIC drops at <span class="math notranslate nohighlight">\(p=12\)</span>.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aics</span> <span class="o">=</span> <span class="p">[</span><span class="n">AutoReg</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">aic</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)]</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">aics</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">aics</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_44_0.png" src="../_images/time_series_44_0.png" />
+</section>
+<section id="discrete-fourier-transform-dft">
+<h2>Discrete Fourier Transform (DFT)<a class="headerlink" href="#discrete-fourier-transform-dft" title="Link to this heading">¶</a></h2>
+<figure class="align-default" id="id1">
+<img alt="Discrete Fourier Transform" src="../_images/time_series_fft.png" />
+<figcaption>
+<p><span class="caption-text">Discrete Fourier Transform</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p><a class="reference external" href="https://pythonnumericalmethods.studentorg.berkeley.edu/notebooks/chapter24.00-Fourier-Transforms.html">Fourier
+Analysis</a></p>
+<ul class="simple">
+<li><p>Fourier analysis is a mathematical method used to decompose functions
+or signals into their constituent frequencies, known as sine and
+cosine components, that form a orthogonal basis.</p></li>
+<li><p>It transforms a time-domain signal into a frequency-domain
+representation, making it useful for analyzing periodic or
+non-periodic signals.</p></li>
+<li><p>This technique is widely applied in fields like signal processing,
+image analysis, and solving differential equations.</p></li>
+</ul>
+<p><a class="reference external" href="https://pythonnumericalmethods.studentorg.berkeley.edu/notebooks/chapter24.02-Discrete-Fourier-Transform.html">Discrete Fourier Transform
+(DFT)</a></p>
+<ul class="simple">
+<li><p>The Discrete Fourier Transform (DFT) is a specific form of Fourier
+analysis applied to discrete signals, transforming a finite sequence
+of equally spaced samples into a frequency-domain representation.</p></li>
+<li><p>It breaks down a discrete signal into a sum of sine and cosine waves,
+each with specific amplitudes and frequencies.</p></li>
+<li><p>The DFT is widely used in digital signal processing for tasks like
+filtering and spectral analysis.</p></li>
+</ul>
+<p><a class="reference external" href="https://pythonnumericalmethods.studentorg.berkeley.edu/notebooks/chapter24.01-The-Basics-of-waves.html">The Basics of
+Waves</a></p>
+<p>A cosine wave can be represented by the following equation:</p>
+<div class="math notranslate nohighlight">
+\[y(t) = A \cos(2\pi f t + \phi)\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\phi\)</span> is the phase of the signal.</p></li>
+<li><p><span class="math notranslate nohighlight">\(T = 1/f\)</span> is the period of the wave,</p></li>
+<li><p><span class="math notranslate nohighlight">\(f\)</span> is the frequency of the wave</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span> is the amplitude of the signal</p></li>
+</ul>
+<p>To generate sample we need to define the sampling rate which is the
+number of sample per second.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sine</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mf">100.0</span><span class="p">):</span>
+    <span class="c1"># sampling interval</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">sr</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="n">A</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">phase</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cosine</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mf">100.0</span><span class="p">):</span>
+    <span class="c1"># sampling interval</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">sr</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="n">A</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">phase</span><span class="p">)</span>
+
+<span class="n">sr</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">t</span><span class="p">,</span> <span class="n">sine_1hz</span> <span class="o">=</span> <span class="n">cosine</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1">#t, sine_1hz = sine(A=2, f=10, sr=sr, duration=2)</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">sine_10hz</span> <span class="o">=</span> <span class="n">cosine</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">sine_50hz</span> <span class="o">=</span> <span class="n">cosine</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1">#t, sine_20hz = sine(A=.5, f=10, sr=sr, duration=2)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">sine_1hz</span> <span class="o">+</span> <span class="n">sine_10hz</span> <span class="o">+</span> <span class="n">sine_50hz</span>
+
+<span class="c1"># Plot the signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [sec]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Sum of three signals&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_47_0.png" src="../_images/time_series_47_0.png" />
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Discrete_cosine_transform">Discrete Cosine Transform
+DCT</a></p>
+<ul class="simple">
+<li><p>A discrete cosine transform (DCT) expresses a finite sequence of data
+points in terms of a sum of cosine functions oscillating at different
+frequencies.</p></li>
+<li><p>A DCT is a Fourier-related transform similar to the discrete Fourier
+transform (DFT), but using only real numbers.</p></li>
+<li><p>See also <a class="reference external" href="https://en.wikipedia.org/wiki/Discrete_sine_transform">Discrete Sine Transform
+DST</a></p></li>
+</ul>
+<p>There are several definitions of the DCT, see <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fftpack.dct.html">DCT with
+Scipy</a>
+for details. For educational purpose, we use a simplified modified
+version:</p>
+<div class="math notranslate nohighlight">
+\[X_k = \sum_{n=0}^{N-1} x_n \cos(\frac{2\pi k n}{N}),\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p>N is the number of samples</p></li>
+<li><p>n ie the current sample</p></li>
+<li><p>k ie the current frequency, where <span class="math notranslate nohighlight">\(k\in [0,N-1]\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(x_n\)</span> is the sine value at sample <span class="math notranslate nohighlight">\(n\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(X_k\)</span> are the <strong>(frequency terms or DCT)</strong> which include
+information of amplitude. It is called the <strong>spectrum of the signal</strong>.</p></li>
+</ul>
+<p>Relation between</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f_s\)</span> : Sampling rate or Frequency of Sampling, where</p></li>
+<li><p><span class="math notranslate nohighlight">\(T\)</span> : Duration</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[f_s = \frac{N}{T}\]</div>
+<p>Generate Signal, as an addition of three cosines at different
+frequencies: 1 Hz, 10 Hz, and 50 Hz:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="mf">2.</span> <span class="c1"># duration</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Sampling rate/frequency: number of samples per second</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">fs</span> <span class="c1"># sampling interval</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span> <span class="c1"># time axis</span>
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+<span class="c1"># Generate Signal</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">x</span> <span class="o">+=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">1.00</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">+=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">+=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">50.0</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="c1">#figsize = (8, 6))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_50_0.png" src="../_images/time_series_50_0.png" />
+<p>Cosines Basis</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">cosines</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">n</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cosines</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time [s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Freq. [Hz]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Cosines Basis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_52_0.png" src="../_images/time_series_52_0.png" />
+<p>Decompose signal on cosine basis (dot product), i.e., DCT without signal
+normalization</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cosines</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Frequencies = N / T</span>
+<span class="n">freqs</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">T</span>
+
+<span class="c1"># Examine Spectrum, look for frequencies below N / 2</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">freq</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">X</span><span class="p">))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>     <span class="n">freq</span>    <span class="n">val</span>
+<span class="mi">2</span>     <span class="mf">1.0</span>  <span class="mf">300.0</span>
+<span class="mi">20</span>   <span class="mf">10.0</span>  <span class="mf">100.0</span>
+<span class="mi">100</span>  <span class="mf">50.0</span>  <span class="mf">200.0</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://pythonnumericalmethods.studentorg.berkeley.edu/notebooks/chapter24.02-Discrete-Fourier-Transform.html">Discrete Fourier Transform
+(DFT)</a></p>
+<ul class="simple">
+<li><p>The Fourier Transform (FT) decompose any signal into a sum of simple
+sine and cosine waves that we can easily measure the frequency,
+amplitude and phase.</p></li>
+<li><p>FT can be applied to continuous or discrete waves, in this chapter, we
+will only talk about the <strong>Discrete Fourier Transform (DFT)</strong>.”</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[X_k = \sum_{n=0}^{N-1} x_n e^{-i2\pi k n/N} =  \sum_{n=0}^{N-1} x_n [\cos(2\pi k n/N) - i \sin(2\pi k n/N)],\]</div>
+<p>Where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(X_k\)</span> are the <strong>(frequency terms or DFT)</strong> which include
+information of both amplitude and phase. It is called the <strong>spectrum
+of the signal</strong>.</p></li>
+</ul>
+<p>If the input signal is a real-valued sequence the negative frequency
+terms are just the complex conjugates of the corresponding
+positive-frequency terms, and the negative-frequency terms are therefore
+redundant. The DFT spectrum will be symmetric. Therefore, usually we
+only plot the DFT corresponding to the positive frequencies and divide
+by <span class="math notranslate nohighlight">\(N/2\)</span> to get the amplitude corresponding to the time domain
+signal.</p>
+<p>The amplitude is the and phase of the signal can be calculated as:</p>
+<p>TODO
+<a class="reference external" href="https://pythonnumericalmethods.studentorg.berkeley.edu/notebooks/chapter24.04-FFT-in-Python.html">FFT</a></p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># sampling rate/frequency: number of samples per second</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">fs</span> <span class="c1"># sampling interval</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># duration</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="c1">#figsize = (8, 6))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_56_0.png" src="../_images/time_series_56_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">fft</span><span class="p">,</span> <span class="n">ifft</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Frequencies</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="c1"># number of frequencies = number of samples</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="n">fs</span> <span class="c1"># duration</span>
+<span class="n">freqs</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">T</span> <span class="c1"># Frequencies = N / T</span>
+
+<span class="c1"># Examine Spectrum, look for frequencies below N / 2</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">freq</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_fft</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">xlim</span><span class="p">):</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> \
+            <span class="n">markerfmt</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">basefmt</span><span class="o">=</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Freq (Hz)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;FFT Amplitude |X(freq)|&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xlim</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">ifft</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitude&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">plot_fft</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="n">freq</span>    <span class="n">val</span>
+<span class="mi">1</span>   <span class="mf">1.0</span>  <span class="mf">150.0</span>
+<span class="mi">4</span>   <span class="mf">4.0</span>   <span class="mf">50.0</span>
+<span class="mi">7</span>   <span class="mf">7.0</span>   <span class="mf">25.0</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">pystatsml</span><span class="o">/.</span><span class="n">pixi</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.13</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">matplotlib</span><span class="o">/</span><span class="n">cbook</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">1719</span><span class="p">:</span> <span class="n">ComplexWarning</span><span class="p">:</span> <span class="n">Casting</span> <span class="nb">complex</span> <span class="n">values</span> <span class="n">to</span> <span class="n">real</span> <span class="n">discards</span> <span class="n">the</span> <span class="n">imaginary</span> <span class="n">part</span>
+  <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ed203246</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">pystatsml</span><span class="o">/.</span><span class="n">pixi</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.13</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">matplotlib</span><span class="o">/</span><span class="n">cbook</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">1355</span><span class="p">:</span> <span class="n">ComplexWarning</span><span class="p">:</span> <span class="n">Casting</span> <span class="nb">complex</span> <span class="n">values</span> <span class="n">to</span> <span class="n">real</span> <span class="n">discards</span> <span class="n">the</span> <span class="n">imaginary</span> <span class="n">part</span>
+  <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_57_2.png" src="../_images/time_series_57_2.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;diet&#39;</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">-=</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">x</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">12</span> <span class="c1"># sampling frequency 12 sample / year</span>
+</pre></div>
+</div>
+<img alt="../_images/time_series_58_0.png" src="../_images/time_series_58_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Frequencies</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="c1"># number of frequencies = number of samples</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="n">fs</span> <span class="c1"># duration</span>
+<span class="n">freqs</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">T</span> <span class="c1"># Frequencies = N / T</span>
+
+<span class="c1"># Examine Spectrum, look for frequencies below N / 2</span>
+
+<span class="n">Xn</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">Xn</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">freqs</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">freq_year</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span> <span class="n">freq_month</span><span class="o">=</span><span class="mi">12</span> <span class="o">/</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">Xn</span><span class="p">))</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+<span class="c1"># plot_fft(X, freqs, t, xlim=15)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">count</span>    <span class="mf">1.680000e+02</span>
+<span class="n">mean</span>     <span class="mf">6.938104e+01</span>
+<span class="n">std</span>      <span class="mf">7.745030e+01</span>
+<span class="nb">min</span>      <span class="mf">5.115908e-13</span>
+<span class="mi">25</span><span class="o">%</span>      <span class="mf">3.132051e+01</span>
+<span class="mi">50</span><span class="o">%</span>      <span class="mf">4.524089e+01</span>
+<span class="mi">75</span><span class="o">%</span>      <span class="mf">6.551233e+01</span>
+<span class="nb">max</span>      <span class="mf">4.429661e+02</span>
+<span class="n">dtype</span><span class="p">:</span> <span class="n">float64</span>
+    <span class="n">freq_year</span>  <span class="n">freq_month</span>         <span class="n">val</span>
+<span class="mi">2</span>    <span class="mf">0.142857</span>        <span class="mf">84.0</span>  <span class="mf">442.966103</span>
+<span class="mi">14</span>   <span class="mf">1.000000</span>        <span class="mf">12.0</span>  <span class="mf">422.372698</span>
+<span class="mi">28</span>   <span class="mf">2.000000</span>         <span class="mf">6.0</span>  <span class="mf">271.070102</span>
+<span class="mi">42</span>   <span class="mf">3.000000</span>         <span class="mf">4.0</span>  <span class="mf">215.675682</span>
+<span class="mi">56</span>   <span class="mf">4.000000</span>         <span class="mf">3.0</span>  <span class="mf">248.131014</span>
+<span class="mi">70</span>   <span class="mf">5.000000</span>         <span class="mf">2.4</span>  <span class="mf">216.030794</span>
+<span class="mi">84</span>   <span class="mf">6.000000</span>         <span class="mf">2.0</span>  <span class="mf">240.000000</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_216680</span><span class="o">/</span><span class="mf">2580075766.</span><span class="n">py</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span> <span class="ne">RuntimeWarning</span><span class="p">:</span> <span class="n">divide</span> <span class="n">by</span> <span class="n">zero</span> <span class="n">encountered</span> <span class="ow">in</span> <span class="n">divide</span>
+  <span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">freq_year</span><span class="o">=</span><span class="n">freqs</span><span class="p">,</span> <span class="n">freq_month</span><span class="o">=</span><span class="mi">12</span> <span class="o">/</span> <span class="n">freqs</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">Xn</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Time Series</a><ul>
+<li><a class="reference internal" href="#decomposition-methods-periodic-patterns-trend-seasonal-and-autocorrelation">Decomposition Methods: Periodic Patterns (Trend/Seasonal) and Autocorrelation</a><ul>
+<li><a class="reference internal" href="#time-series-analysis-of-google-trends">Time series analysis of Google trends</a></li>
+<li><a class="reference internal" href="#trends-resampling-rolling-average-smoothing-windowing">Trends : Resampling, Rolling average, (Smoothing, Windowing)</a></li>
+<li><a class="reference internal" href="#seasonality-by-detrending-remove-average">Seasonality by detrending (remove average)</a></li>
+<li><a class="reference internal" href="#seasonality-by-first-order-differencing">Seasonality by First-order Differencing</a></li>
+<li><a class="reference internal" href="#periodicity-and-autocorrelation">Periodicity and Autocorrelation</a></li>
+<li><a class="reference internal" href="#autocorrelation-function-acf">Autocorrelation function (ACF)</a></li>
+<li><a class="reference internal" href="#partial-autocorrelation-function-pacf">Partial autocorrelation function (PACF)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#time-series-forecasting-using-autoregressive-ar-p-models">Time series forecasting using Autoregressive AR(p) models</a></li>
+<li><a class="reference internal" href="#discrete-fourier-transform-dft">Discrete Fourier Transform (DFT)</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/numerical_methods/time_series.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/numerical_methods/time_series.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

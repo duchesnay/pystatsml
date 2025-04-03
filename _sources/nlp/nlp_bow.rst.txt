@@ -1,0 +1,735 @@
+Bag-of-Words Models
+===================
+
+`Bag-of-Words Model from
+Wikipedia <https://en.wikipedia.org/wiki/Bag-of-words_model>`__: The
+bag-of-words model is a model of text which uses a representation of
+text that is based on an **unordered collection** (or “bag”) of words.
+[…] It **disregards word order** […] but **captures multiplicity**.
+
+Introduction
+------------
+
+1. Preparing text data (pre-processing)
+
+   - Standardization: removing irrelevant information, such as
+     punctuation, special characters, lower-upper case, and stopwords.
+   - Tokenization (text splitting)
+   - Stemming/Lemmatization
+
+2. Encode texts into a numerical vectors (features extraction)
+
+   - Bag of Words Vectorization-based Models: consider phrases as
+     **sets** of words. Words are encoded as vectors independently of
+     the context in which they appear in corpus.
+   - Embedding: phrases are **sequences** of words. Words are encoded as
+     vectors integrating their context of appearance in corpus.
+
+3. Predictive analysis
+
+   - Text classification: “What’s the topic of this text?”
+   - Content filtering: “Does this text contain abuse?”, spam detection,
+   - `Sentiment
+     analysis <https://www.analyticsvidhya.com/blog/2022/07/sentiment-analysis-using-python/>`__:
+     Does this text sound positive or negative?
+
+4. Generate new text
+
+   - Translation
+   - Chatbot/summarization
+
+Preparing text data
+-------------------
+
+Standardization and Tokenization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: ipython3
+
+    # Example usage
+    
+    text = """Check out the new http://example.com website! It's awesome.
+    Hé, it is for programmers that like to program with programming language.
+    """
+
+The **Do It Yourself** way
+
+Basic standardization consist of: - Lower case words - Remove numbers -
+Remove punctuation
+
+.. code:: ipython3
+
+    # import regex
+    import re
+    
+    # Convert to lower case
+    lower_string = text.lower()
+     
+    # Remove numbers
+    no_number_string = re.sub(r'\d+','', lower_string)
+     
+    # Remove all punctuation except words and space
+    no_punc_string = re.sub(r'[^\w\s]','', no_number_string) 
+     
+    # Remove white spaces
+    no_wspace_string = no_punc_string.strip()
+    
+    # Tokenization
+    print(no_wspace_string.split())
+
+NLTK to perform more sophisticated standardization, including:
+
+Basic standardization consist of: - Lower case words - Remove URLs -
+Remove strip accents - **stop words** are commonly used words that are
+often removed from text during preprocessing to focus on the more
+informative words. These words typically include articles, prepositions,
+conjunctions, and pronouns such as “the,” “is,” “in,” “and,” “but,”
+“on,” etc. The rationale behind removing stop words is that they occur
+very frequently in the language and generally do not contribute
+significant meaning to the analysis or understanding of the text. By
+eliminating stop words, NLP models can reduce the dimensionality of the
+data and improve computational efficiency without losing important
+information.
+
+.. code:: ipython3
+
+    import nltk
+    import re
+    import string
+    import unicodedata
+    from nltk.corpus import stopwords
+    from nltk.tokenize import word_tokenize
+    from nltk.stem import PorterStemmer, WordNetLemmatizer
+    
+    # Download necessary NLTK data
+    nltk.download('punkt')
+    nltk.download('stopwords')
+    nltk.download('wordnet')
+    nltk.download('omw-1.4')
+    
+    def strip_accents(text):
+        # Normalize the text to NFKD form and strip accents
+        text = unicodedata.normalize('NFKD', text)
+        text = ''.join([c for c in text if not unicodedata.combining(c)])
+        return text
+    
+    def standardize_tokenize(text, stemming=False, lemmatization=False):
+        # Convert to lowercase
+        text = text.lower()
+        
+        # Remove URLs
+        text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
+        
+        # Remove numbers
+        text = re.sub(r'\d+', '', text)
+        
+        # Remove punctuation
+        # string.punctuation provides a string of all punctuation characters.
+        # str.maketrans() creates a translation table that maps each punctuation
+        # character to None.
+        # text.translate(translator) uses this translation table to remove all 
+        # punctuation characters from the input string.
+        text = text.translate(str.maketrans('', '', string.punctuation))
+        
+        # Strip accents
+        text = strip_accents(text)
+        
+        # Tokenize the text
+        words = word_tokenize(text)
+        
+        # Remove stop words
+        stop_words = set(stopwords.words('english'))
+        words = [word for word in words if word not in stop_words]
+        
+        # Remove repeated words
+        words = list(dict.fromkeys(words))
+        
+        # Initialize stemmer and lemmatizer
+        stemmer = PorterStemmer()
+        lemmatizer = WordNetLemmatizer()
+        
+        # Apply stemming and lemmatization
+    
+        words = [stemmer.stem(word) for word in words] if stemming \
+            else words
+        
+        words = [lemmatizer.lemmatize(word) for word in words] if lemmatization \
+            else words
+        
+        return words
+    
+    # Create callable with default values
+    import functools
+    standardize_tokenize_stemming = \
+        functools.partial(standardize_tokenize, stemming=True)
+    standardize_tokenize_lemmatization = \
+        functools.partial(standardize_tokenize, lemmatization=True)
+    standardize_tokenize_stemming_lemmatization = \
+        functools.partial(standardize_tokenize, stemming=True, lemmatization=True)
+
+
+.. code:: ipython3
+
+    standardize_tokenize(text)
+
+Stemming and lemmatization
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Stemming and lemmatization are techniques used to reduce words to their
+base or root form, which helps in standardizing text and improving the
+performance of various NLP tasks.
+
+**Stemming** is the process of reducing a word to its base or root form,
+often by removing suffixes or prefixes. The resulting stem may not be a
+valid word but is intended to capture the word’s core meaning. Stemming
+algorithms, such as the Porter Stemmer or Snowball Stemmer, use
+heuristic rules to chop off common morphological endings from words.
+
+Example: The words “running,” “runner,” and “ran” might all be reduced
+to “run.”
+
+.. code:: ipython3
+
+    # standardize_tokenize(text, stemming=True)
+    standardize_tokenize_stemming(text)
+
+**Lemmatization** is the process of reducing a word to its lemma, which
+is its canonical or dictionary form. Unlike stemming, lemmatization
+considers the word’s part of speech and uses a more comprehensive
+approach to ensure that the transformed word is a valid word in the
+language. Lemmatization typically requires more linguistic knowledge and
+is implemented using libraries like WordNet.
+
+Example: The words “running” and “ran” would both be reduced to “run,”
+while “better” would be reduced to “good.”
+
+.. code:: ipython3
+
+    # standardize_tokenize(text, lemmatization=True)
+    standardize_tokenize_lemmatization(text)
+
+While both stemming and lemmatization aim to reduce words to a common
+form, lemmatization is generally more accurate and produces words that
+are meaningful in the context of the language. However, stemming is
+faster and simpler to implement. The choice between the two depends on
+the specific requirements and constraints of the NLP task at hand.
+
+.. code:: ipython3
+
+    # standardize_tokenize(text, stemming=True, lemmatization=True)
+    standardize_tokenize_stemming_lemmatization(text)
+
+**Scikit-learn analyzer** is simple and will be sufficient most of the
+time.
+
+.. code:: ipython3
+
+    from sklearn.feature_extraction.text import CountVectorizer
+    
+    analyzer = CountVectorizer(strip_accents='unicode', stop_words='english').build_analyzer()
+    analyzer(text)
+
+Bag of Words (BOWs) Encoding
+----------------------------
+
+`Source: text feature extraction with
+scikit-learn <https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction>`__
+
+Simple Count Vectorization
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`CountVectorizer <https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html>`__:*”
+Convert a collection of text documents to a matrix of token counts. Note
+that ``CountVectorizer`` preforms the standardization and the
+tokenization.”*
+
+It creates one feature (column) for each tokens (words) in the corpus,
+and returns one line per sentence, counting the occurence of each
+tokens.
+
+.. code:: ipython3
+
+    corpus = [
+        'This is the first document. This DOCUMENT is in english.',
+        'in French, some letters have accents, like é.',
+        'Is this document in French?',
+    ]
+    
+    from sklearn.feature_extraction.text import CountVectorizer
+    
+    vectorizer = CountVectorizer(strip_accents='unicode', stop_words='english')
+    X = vectorizer.fit_transform(corpus)
+    print(vectorizer.get_feature_names_out())
+    
+    # Note thatthe shape of the array is:
+    # number of sentences by number of existing token 
+    print(X.toarray())
+
+**Word n-grams** are contiguous sequences of ‘n’ words from a given
+text. They are used to **capture the context** and structure of language
+by considering the relationships between words within these sequences.
+The value of ‘n’ determines the length of the word sequence:
+
+- Unigram (1-gram): A single word (e.g., “natural”).
+- Bigram (2-gram): A sequence of two words (e.g., “natural language”).
+- Trigram (3-gram): A sequence of three words (e.g., “natural language
+  processing”).
+
+.. code:: ipython3
+
+    vectorizer2 = CountVectorizer(analyzer='word', ngram_range=(2, 2),
+                                  strip_accents='unicode', stop_words='english')
+    X2 = vectorizer2.fit_transform(corpus)
+    print(vectorizer2.get_feature_names_out())
+    print(X2.toarray())
+
+TF-IDF Vectorization approach:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`TF-IDF (Term Frequency-Inverse Document
+Frequency) <https://kinder-chen.medium.com/introduction-to-natural-language-processing-tf-idf-1507e907c19>`__
+feature extraction:
+
+*“TF-IDF (Term Frequency-Inverse Document Frequency) integrates two
+metrics: Term Frequency (TF) and Inverse Document Frequency (IDF). This
+method is employed when working with multiple documents, operating on
+the principle that rare words provide more insight into a document’s
+content than frequently occurring words across the entire document
+set.”*
+
+*“A challenge with relying solely on word frequency is that commonly
+used words may overshadow the document, despite offering
+less”informational content” compared to rarer, potentially
+domain-specific terms. To address this, one can adjust the frequency of
+words by considering their prevalence across all documents, thereby
+reducing the scores of frequently used words that are common across the
+corpus.”*
+
+**Term Frequency**: Provide large weight to frequent words. Given a
+token :math:`t` (term, word), a doccument :math:`d`
+
+.. math::
+
+
+   TF(t, d) = \frac{\text{number of times t appears in d}}{\text{total number of term in d}}
+
+**Inverse Document Frequency**: Give more importance to rare
+“meaningfull” words a appear in few doduments.
+
+If N is the total number of documents, and df is the number of documents
+with token t, then:
+
+.. math::
+
+
+   IDF(t) = \frac{N}{1 + df}
+
+:math:`IDF(t) \approx 1` if :math:`t` appears in all documents, while
+:math:`IDF(t) \approx N` if :math:`t` is a rare meaningfull word that
+appears in only one document.
+
+Finally:
+
+.. math::
+
+
+   TF\text{-}IDF(t, d) = TF(t, d) * IDF(t)
+
+`TfidfVectorizer <https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer>`__:
+
+Convert a collection of raw documents to a matrix of TF-IDF (Term
+Frequency-Inverse Document Frequency)
+
+.. code:: ipython3
+
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    
+    vectorizer = TfidfVectorizer(strip_accents='unicode', stop_words='english')
+    X = vectorizer.fit_transform(corpus)
+    print(vectorizer.get_feature_names_out())
+    print(X.toarray().round(3))
+    print(X.shape)
+
+Lab 1: Sentiment Analysis of Financial data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sources: `Sentiment Analysis of Financial
+data <https://www.analyticsvidhya.com/blog/2022/07/sentiment-analysis-using-python/>`__
+
+The data is intended for advancing financial sentiment analysis
+research. It’s two datasets (FiQA, Financial PhraseBank) combined into
+one easy-to-use CSV file. It provides financial sentences with sentiment
+labels. Citations *Malo, Pekka, et al. “Good debt or bad debt: Detecting
+semantic orientations in economic texts.” Journal of the Association for
+Information Science and Technology 65.4 (2014): 782-796.*
+
+Import libraries
+
+.. code:: ipython3
+
+    import numpy as np
+    import pandas as pd
+    
+    # Plot
+    import matplotlib.pyplot as plt
+    %matplotlib inline
+    from wordcloud import WordCloud
+    
+    # ML
+    from sklearn import metrics
+    from sklearn.naive_bayes import MultinomialNB
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.ensemble import GradientBoostingClassifier
+    
+    from sklearn.feature_extraction.text import CountVectorizer
+
+Load the Dataset
+
+.. code:: ipython3
+
+    data = pd.read_csv('../datasets/FinancialSentimentAnalysis.csv')
+    
+    print("Shape:", data.shape, "columns:", data.columns)
+    print(data.describe())
+    data.head()
+
+Target variable
+
+.. code:: ipython3
+
+    y = data['Sentiment']
+    y.value_counts(), y.value_counts(normalize=True).round(2)
+
+Input data: BOWs encoding
+
+Choose tokenizer
+
+.. code:: ipython3
+
+    text = 'Tesla to recall 2,700 Model X SUVs over seat issue https://t.co/OdPraN59Xq $TSLA https://t.co/xvn4blIwpy https://t.co/ThfvWTnRPs'
+    vectorizer = CountVectorizer(stop_words='english', strip_accents='unicode')
+    
+    tokenizer_sklearn = vectorizer.build_analyzer()
+    print(" ".join(tokenizer_sklearn(text)))
+    print("Shape: ", CountVectorizer(tokenizer=tokenizer_sklearn).fit_transform(data['Sentence']).shape)
+    
+    print(" ".join(standardize_tokenize(text)))
+    print("Shape: ", CountVectorizer(tokenizer=standardize_tokenize).fit_transform(data['Sentence']).shape)
+    
+    print(" ".join(standardize_tokenize_stemming(text)))
+    print("Shape: ", CountVectorizer(tokenizer=standardize_tokenize_stemming).fit_transform(data['Sentence']).shape)
+    
+    print(" ".join(standardize_tokenize_lemmatization(text)))
+    print("Shape: ", CountVectorizer(tokenizer=standardize_tokenize_lemmatization).fit_transform(data['Sentence']).shape)
+    
+    print(" ".join(standardize_tokenize_stemming_lemmatization(text)))
+    print("Shape: ", CountVectorizer(tokenizer=standardize_tokenize_stemming_lemmatization).fit_transform(data['Sentence']).shape)
+
+.. code:: ipython3
+
+    # vectorizer = CountVectorizer(stop_words='english', strip_accents='unicode')
+    # vectorizer = CountVectorizer(tokenizer=standardize_tokenize)
+    # vectorizer = CountVectorizer(tokenizer=standardize_tokenize_stemming)
+    # vectorizer = CountVectorizer(tokenizer=standardize_tokenize_lemmatization)
+    vectorizer = CountVectorizer(tokenizer=standardize_tokenize_stemming_lemmatization)
+    # vectorizer = TfidfVectorizer(stop_words='english', strip_accents='unicode')
+    # vectorizer = TfidfVectorizer(tokenizer=standardize_tokenize_stemming_lemmatization)
+    
+    
+    # Retrieve the analyzer to store transformed sentences in dataframe
+    tokenizer = vectorizer.build_analyzer()
+    data['Sentence_stdz'] = [" ".join(tokenizer(s)) for s in data['Sentence']]
+    
+    X = vectorizer.fit_transform(data['Sentence'])
+    # print("Tokens:", vectorizer.get_feature_names_out())
+    print("Nb of tokens:", len(vectorizer.get_feature_names_out()))
+    print("Dimension of input data", X.shape)
+
+Classification with scikit-learn models
+
+.. code:: ipython3
+
+    # clf = LogisticRegression(class_weight='balanced', max_iter=3000)
+    # clf = GradientBoostingClassifier()
+    clf = MultinomialNB()
+    
+    from sklearn.model_selection import train_test_split
+    idx = np.arange(y.shape[0])
+    X_train, X_test, x_str_train, x_str_test, y_train, y_test, idx_train, idx_test = \
+        train_test_split(X, data['Sentence'], y, idx, test_size=0.25, random_state=5, stratify=y)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+
+Display prediction performances
+
+.. code:: ipython3
+
+    print(metrics.balanced_accuracy_score(y_test, y_pred))
+    print(metrics.classification_report(y_test, y_pred))
+    cm = metrics.confusion_matrix(y_test, y_pred, normalize='true')
+    cm_ = metrics.ConfusionMatrixDisplay(cm, display_labels=clf.classes_)
+    
+    cm_.plot()
+    plt.show()
+
+Print some samples
+
+.. code:: ipython3
+
+    probas = pd.DataFrame(clf.predict_proba(X), columns=clf.classes_)
+    df = pd.concat([data, probas], axis=1)
+    df['SentimentPred'] = clf.predict(X)
+    
+    df.to_excel("/tmp/test.xlsx")
+    
+    # Keep only test data, correctly classified, ordered by 
+    df = df.iloc[idx_test]
+    df = df[df['SentimentPred'] == df['Sentiment']]
+
+Positive sentences
+
+.. code:: ipython3
+
+    sentence_positive = df[df['Sentiment'] == 'positive'].sort_values(by='positive', ascending=False)['Sentence_stdz']
+    print("Most positive sentence", sentence_positive[:5])
+    
+    plt.figure(figsize = (20,20))
+    wc = WordCloud(max_words = 1000 , width = 1600 , height = 800,
+    collocations=False).generate(" ".join(sentence_positive))
+    plt.imshow(wc)
+
+Negative sentences
+
+.. code:: ipython3
+
+    sentence_negative = df[df['Sentiment'] == 'negative'].sort_values(by='negative', ascending=False)['Sentence_stdz']
+    print("Most negative sentence", sentence_negative[:5])
+    
+    plt.figure(figsize = (20,20))
+    wc = WordCloud(max_words = 1000 , width = 1600 , height = 800,
+    collocations=False).generate(" ".join(sentence_negative))
+    plt.imshow(wc)
+
+Lab 2: Twitter Sentiment Analysis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Source `Twitter Sentiment Analysis Using Python \| Introduction &
+  Techniques <https://www.analyticsvidhya.com/blog/2021/06/twitter-sentiment-analysis-a-nlp-use-case-for-beginners/>`__
+- Dataset `Sentiment140 dataset with 1.6 million
+  twe <https://www.kaggle.com/datasets/kazanova/sentiment140>`__
+
+Step-1: Import the Necessary Dependencies
+
+Install some packages:
+
+::
+
+   conda install wordcloud
+   conda install nltk
+
+.. code:: ipython3
+
+    # utilities
+    import re
+    import numpy as np
+    import pandas as pd
+    # plotting
+    import seaborn as sns
+    from wordcloud import WordCloud
+    import matplotlib.pyplot as plt
+    # nltk
+    from nltk.stem import WordNetLemmatizer
+    # sklearn
+    from sklearn.svm import LinearSVC
+    from sklearn.naive_bayes import BernoulliNB
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.model_selection import train_test_split
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics import confusion_matrix, classification_report
+
+Step-2: Read and Load the Dataset
+
+`Download the dataset from
+Kaggle <https://www.kaggle.com/datasets/ferno2/training1600000processednoemoticoncsv>`__
+
+.. code:: ipython3
+
+    # Importing the dataset
+    DATASET_COLUMNS=['target','ids','date','flag','user','text']
+    DATASET_ENCODING = "ISO-8859-1"
+    df = pd.read_csv('~/data/NLP/training.1600000.processed.noemoticon.csv',
+                     encoding=DATASET_ENCODING, names=DATASET_COLUMNS)
+    df.sample(5)
+
+Step-3: Exploratory Data Analysis
+
+.. code:: ipython3
+
+    print("Columns names:", df.columns)
+    print("Shape of data:", df.shape)
+    print("type of data:\n", df.dtypes)
+    df.head()
+
+Step-4: Data Visualization of Target Variables
+
+- Selecting the text and Target column for our further analysis
+- Replacing the values to ease understanding. (Assigning 1 to Positive
+  sentiment 4)
+
+.. code:: ipython3
+
+    data = df[['text','target']]
+    data['target'] = data['target'].replace(4,1)
+    print(data['target'].unique())
+    
+    import seaborn as sns
+    sns.countplot(x='target', data=data)
+    
+    print("Count and proportion of target")
+    data.target.value_counts(),  data.target.value_counts(normalize=True).round(2)
+
+
+Step-5: Data Preprocessing
+
+5.4: Separating positive and negative tweets 5.5: Taking 20000 positive
+and negatives sample from the data so we can run it on our machine
+easily 5.6: Combining positive and negative tweets
+
+.. code:: ipython3
+
+    data_pos = data[data['target'] == 1]
+    data_neg = data[data['target'] == 0]
+    data_pos = data_pos.iloc[:20000]
+    data_neg = data_neg.iloc[:20000]
+    dataset = pd.concat([data_pos, data_neg])
+
+5.7: Text pre-processing
+
+.. code:: ipython3
+
+    def standardize_stemming_lemmatization(text):
+        out =  " ".join(standardize_tokenize_stemming_lemmatization(text))
+        return out
+    
+    dataset['text_stdz'] = dataset['text'].apply(lambda x: standardize_stemming_lemmatization(x))
+
+QC, check for empty standardized strings
+
+.. code:: ipython3
+
+    rm = dataset['text_stdz'].isnull() | (dataset['text_stdz'].str.len() == 0)
+    
+    print(rm.sum(), "row are empty of null, to be removed")
+    dataset = dataset[~rm]
+    print(dataset.shape)
+    
+    # Save dataset to excel file to explore
+    dataset.to_excel('/tmp/test.xlsx', sheet_name='data', index=False)
+
+5.18: Plot a cloud of words for negative tweets
+
+.. code:: ipython3
+
+    data_neg = dataset.loc[dataset.target == 0, 'text_stdz']
+    plt.figure(figsize = (20,20))
+    wc = WordCloud(max_words = 1000 , width = 1600 , height = 800,
+                   collocations=False).generate(" ".join(data_neg))
+    plt.imshow(wc)
+
+5.18: Plot a cloud of words for positive tweets
+
+.. code:: ipython3
+
+    data_pos = dataset.loc[dataset.target == 1, 'text_stdz']
+    plt.figure(figsize = (20,20))
+    wc = WordCloud(max_words = 1000 , width = 1600 , height = 800,
+                   collocations=False).generate(" ".join(data_pos))
+    plt.imshow(wc)
+
+Step-6: Splitting Our Data Into Train and Test Subsets
+
+.. code:: ipython3
+
+    X, y = dataset.text_stdz, dataset.target
+    # Separating the 95% data for training data and 5% for testing data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, random_state=26105111)
+
+Step-7: Transforming the Dataset Using TF-IDF Vectorizer
+
+.. code:: ipython3
+
+    vectoriser = TfidfVectorizer(ngram_range=(1,2), max_features=500000)
+    vectoriser.fit(X_train)
+    #print('No. of feature_words: ', len(vectoriser.get_feature_names()))
+    
+    X_train = vectoriser.transform(X_train)
+    X_test  = vectoriser.transform(X_test)
+
+Step-8: Function for Model Evaluation
+
+After training the model, we then apply the evaluation measures to check
+how the model is performing. Accordingly, we use the following
+evaluation parameters to check the performance of the models
+respectively:
+
+- Accuracy Score
+- Confusion Matrix with Plot
+- ROC-AUC Curve
+
+.. code:: ipython3
+
+    def model_Evaluate(model):
+        # Predict values for Test dataset
+        y_pred = model.predict(X_test)
+        # Print the evaluation metrics for the dataset.
+        print(classification_report(y_test, y_pred))
+        # Compute and plot the Confusion matrix
+        cf_matrix = confusion_matrix(y_test, y_pred)
+        categories = ['Negative','Positive']
+        group_names = ['True Neg','False Pos', 'False Neg','True Pos']
+        group_percentages = ['{0:.2%}'.format(value) for value in cf_matrix.flatten() / np.sum(cf_matrix)]
+        labels = [f'{v1}n{v2}' for v1, v2 in zip(group_names,group_percentages)]
+        labels = np.asarray(labels).reshape(2,2)
+        sns.heatmap(cf_matrix, annot = labels, cmap = 'Blues',fmt = '',
+        xticklabels = categories, yticklabels = categories)
+        plt.xlabel("Predicted values", fontdict = {'size':14}, labelpad = 10)
+        plt.ylabel("Actual values" , fontdict = {'size':14}, labelpad = 10)
+        plt.title ("Confusion Matrix", fontdict = {'size':18}, pad = 20)
+
+Step-9: Model Building
+
+In the problem statement, we have used three different models
+respectively :
+
+- Bernoulli Naive Bayes Classifier
+- SVM (Support Vector Machine)
+- Logistic Regression
+
+The idea behind choosing these models is that we want to try all the
+classifiers on the dataset ranging from simple ones to complex models,
+and then try to find out the one which gives the best performance among
+them.
+
+.. code:: ipython3
+
+    BNBmodel = BernoulliNB()
+    BNBmodel.fit(X_train, y_train)
+    model_Evaluate(BNBmodel)
+    y_pred1 = BNBmodel.predict(X_test)
+
+8.2: Plot the ROC-AUC Curve for model-1
+
+.. code:: ipython3
+
+    from sklearn.metrics import roc_curve, auc
+    fpr, tpr, thresholds = roc_curve(y_test, y_pred1)
+    roc_auc = auc(fpr, tpr)
+    plt.figure()
+    plt.plot(fpr, tpr, color='darkorange', lw=1, label='ROC curve (area = %0.2f)' % roc_auc)
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('ROC CURVE')
+    plt.legend(loc="lower right")
+    plt.show()
