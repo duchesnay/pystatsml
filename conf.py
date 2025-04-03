@@ -241,7 +241,7 @@ latex_elements = {
 latex_documents = [
   (master_doc, 'StatisticsMachineLearningPython.tex', u'Statistics and Machine Learning in Python',
 #  (master_doc, 'StatisticsMachineLearningPython.tex', u'Python fundamentals and advanced',
-   u'Edouard Duchesnay, Tommy Löfstedt, Feki Younes', 'manual'),
+   u'Edouard Duchesnay, Tommy Löfstedt, Younes Feki', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

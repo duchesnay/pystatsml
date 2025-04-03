@@ -75,6 +75,17 @@ Statistics
     statistics/stat_multiv.rst
     statistics/stat_montecarlo.rst
 
+=========================
+Machine Learning Overview
+=========================
+
+.. toctree::
+    :maxdepth: 1
+
+    ml_overview/introduction_to_ml.rst
+    ml_overview/overfitting.rst
+
+
 =====================
 Unsupervised Learning
 =====================
@@ -82,7 +93,6 @@ Unsupervised Learning
 .. toctree::
     :maxdepth: 1
 
-    ml_unsupervised/introduction_to_ml.rst
     ml_unsupervised/linear_dimensionality_reduction.rst
     ml_unsupervised/manifold_learning.rst
     ml_unsupervised/clustering.rst
@@ -94,7 +104,6 @@ Supervised Learning
 .. toctree::
     :maxdepth: 1
 
-    ml_supervised/overfitting.rst
     ml_supervised/linear_regression.rst
     ml_supervised/linear_classification.rst
     auto_gallery/kernel_svm.rst
