@@ -9,11 +9,11 @@ BUILDDIR      = build
 NTBOOK        = $(shell ls data_manipulation/*.ipynb numerical_methods/*.ipynb statistics/*.ipynb statistics/lmm/lmm.ipynb ml_overview/*.ipynb ml_supervised/*.ipynb ml_unsupervised/*.ipynb deep_learning/*.ipynb nlp/*.ipynb)
 # Notebook to execute. Exclude DL file (requires GPU)
 NTBOOK_TO_EXE = $(shell ls data_manipulation/*.ipynb numerical_methods/*.ipynb statistics/*.ipynb statistics/lmm/lmm.ipynb ml_overview/*.ipynb ml_supervised/*.ipynb ml_unsupervised/*.ipynb nlp/*.ipynb)
-
+MARKDOWN      = $(shell ls ml_supervised/*.md)
 #NTBOOK        = $(shell ls statistics/*.ipynb)
 NTBOOK_FILES  = $(NTBOOK:.ipynb=_files)
 #SRC           = $(shell ls python/*.py)
-RST           = $(NTBOOK:.ipynb=.rst) $(SRC:.py=.rst)
+RST           = $(NTBOOK:.ipynb=.rst) $(SRC:.py=.rst) $(MARKDOWN:.md=.rst)
 #$(info $(NTBOOK))
 #$(info $(RST))
 #$(info $(NTBOOK_FILES))
@@ -67,6 +67,12 @@ help:
 
 #	jupyter nbconvert --to rst --stdout $< | bin/filter_fix_rst.py > $@
 #	jupyter nbconvert --to rst $< --output $@
+
+# Rule to convert mardown to rst
+#.md.rst:
+%.rst : %.md
+	pandoc --from=markdown --to=rst $< --output=$@
+
 
 debug:
 	@echo $(RST)

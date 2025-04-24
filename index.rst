@@ -149,6 +149,15 @@ Natural Language Processing
     
     nlp/nlp_bow.rst
 
+=======================================
+Mathematical Details and Demonstrations
+=======================================
+
+.. toctree::
+    :maxdepth: 1
+
+    ml_supervised/demo_ml_losses.rst
+
 ==================
 Indices and tables
 ==================
