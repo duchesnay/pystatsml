@@ -8,13 +8,13 @@ Statistics and Machine Learning in Python
 Structure
 ---------
 
-Courses are available in three formats:
+The Course is a [Sphinx project](https://www.sphinx-doc.org/en/master) made of :
 
 1. Jupyter notebooks `*/*.ipynb` files.
 
 2. Python files using [sphinx-gallery](https://sphinx-gallery.github.io/stable/index.html) `*/*.py` files.
 
-3. ReStructuredText files.
+3. ReStructuredText or Markdown files.
 
 All notebooks and python files are converted into `rst` format and then assembled together using sphinx.
 
@@ -199,3 +199,26 @@ Optional to generate  Microsoft docx. Use [docxbuilder](https://docxbuilder.read
 make docx
 ```
 
+Contributing
+------------
+
+Cross-references
+~~~~~~~~~~~~~~~~
+
+Add the `ref:` prefix to your references.
+
+Defining references label:
+
+- Markdown file (add `#` before the label)
+
+```
+### Demonstration of Negative Log-Likelihood (NLL) {#ref:demonstration-nll}
+```
+
+Cross-referencing:
+
+- Jupyter Notebook
+
+```
+[Demonstration of Negative Log-Likelihood (NLL)](ref:demonstration-nll)
+```

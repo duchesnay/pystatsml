@@ -1,6 +1,6 @@
 ## Negative Log-Likelihood (NLL) for Binary Classification with Sigmoid Activation
 
-### Negative Log-Likelihood (NLL)
+### Demonstration of Negative Log-Likelihood (NLL) {#ref:demonstration-nll}
 
 **Setup**
 
@@ -61,20 +61,16 @@ Therefore, the total loss over $n$ examples is:
 **Final Simplified Expression**
 
 $$
-\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \left[ \log(1 + e^{-z_i}) + (1 - y_i) z_i \right] \quad \text{with } z_i = \mathbf{w}^\top \mathbf{x}_i
+\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \left[ \log(1 + e^{-z_i}) + (1 - y_i) z_i \right] \quad \text{with } y_i \in \{0, 1\},
 $$
 
-Or, equivalently:
+simplifies to
 
 $$
-\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \log\left(1 + e^{-y_i \cdot \mathbf{w}^\top \mathbf{x}_i} \right)
+\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \log\left(1 + e^{-y_i \cdot z_i} \right) \quad \text{with } y_i \in \{-1, +1\}.
 $$
 
 This final form is particularly elegant and often used in optimization routines.
-
-
-Let me know if you'd like gradient derivation next!
-
 
 
 ### Gradient of Negative Log-Likelihood (NLL)

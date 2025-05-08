@@ -27,6 +27,7 @@ skorch = "*"
 pandoc = "*"
 sphinx-gallery = "*"
 nbstripout = "*"
+myst-parser = ">=4.0.1,<5"
 
 [pypi-dependencies]
 docxbuilder = { version = "*", extras = ["math"] }

@@ -905,7 +905,7 @@ print("Join:", join_dict_to_table(simpsons_roles_dict,
                                   simpsons_ages_dict))
 
 ###############################################################################
-# Regular expression
+# Regular Expression
 # ------------------
 # Regular Expression (RE, or RegEx) allow to search and patterns in strings.
 # See `this page <https://www.programiz.com/python-programming/regex>`_ for the syntax
@@ -932,8 +932,11 @@ import re
 
 ###############################################################################
 # **Compile** (``re.compile(string)``) regular expression with a pattern that
-# captures the pattern ``firstname:<subject_id>_lastname:<session_id>``
-pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
+# captures the pattern ``firstname:<subject_id>_lastname:<session_id>``.
+# Note that we use raw string `r'string'` so `\` is not interpreted as
+# the start of an escape sequence.
+
+pattern = re.compile(r'firstname:[\w]+_lastname:[\w]+')
 
 ###############################################################################
 # **Match** (``re.match(string)``) to be used in test, loop, etc.
@@ -960,14 +963,14 @@ print(yes_, yes2_, no_)
 # and returns them as a list.
 
 # Find the whole pattern within the string
-pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
+pattern = re.compile(r'firstname:[\w]+_lastname:[\w]+')
 print(pattern.findall("firstname:John_lastname:Doe blah blah"))
 
 # Find words
 print(re.compile("[a-zA-Z0-9]+").findall("firstname:John_lastname:Doe"))
 
 # Find words with including underscore
-print(re.compile("[\w]+").findall("firstname:John_lastname:Doe"))
+print(re.compile(r'[\w]+').findall("firstname:John_lastname:Doe"))
 
 
 ###############################################################################
