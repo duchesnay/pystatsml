@@ -96,7 +96,7 @@ Unsupervised Learning
     ml_unsupervised/linear_dimensionality_reduction.rst
     ml_unsupervised/manifold_learning.rst
     ml_unsupervised/clustering.rst
-    
+
 ===================
 Supervised Learning
 ===================
@@ -109,15 +109,16 @@ Supervised Learning
     auto_gallery/kernel_svm.rst
     auto_gallery/ensemble_learning.rst
 
-
-==================
-Resampling methods 
-==================
+=======================================
+Resampling Methods and Model Evaluation
+=======================================
 
 .. toctree::
     :maxdepth: 1
 
     auto_gallery/resampling.rst
+    auto_gallery/ml_supervised_classification_pipelines.rst
+
 
 
 ===========================
