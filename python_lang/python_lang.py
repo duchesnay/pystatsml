@@ -442,6 +442,11 @@ for n in inter:
 [[n, simpsons_ages_dict[n], simpsons_roles_dict[n]] for n in inter]
 
 ###############################################################################
+# Iterating both key and values
+
+[[key, val] for key, val in simpsons_ages_dict.items()]
+    
+###############################################################################
 # String substitution using a dictionary: syntax ``%(key)format``, where ``format``
 # is the formatting character e.g. ``s`` for string.
 
@@ -830,6 +835,51 @@ min_max_num = min_max([1, 2, 3])         # min_max_num = (1, 3)
 
 # return values can be assigned into multiple variables using tuple unpacking
 min_num, max_num = min_max([1, 2, 3])    # min_num = 1, max_num = 3
+
+
+###############################################################################
+# **Arbitrary number of Arguments**
+# 
+# `Packing and Unpacking Arguments in Python <https://www.geeksforgeeks.org/packing-and-unpacking-arguments-in-python/>`_
+#
+# `*args` packs many positional arguments e.g., `add(1, 2, 3)` as a tuple,
+# arguments can be manipulated as a tuple, ie `args[0]`, etc.
+
+def add(*args):
+    print(args)
+    s = 0
+    for x in args:
+        s += x
+    return s
+
+print(add(2, 3) + add(1, 2, 3))
+
+###############################################################################
+# Pass arbitrary number of arguments to another function.
+# re-pack arguments while passing them using `*args`
+
+def dummy(*args):
+    # do something
+    return add(*args)
+
+
+print(dummy(2, 3) + dummy(1, 2, 3))
+
+###############################################################################
+# `**kwargs` packs many keywords arguments e.g., `add(x=1, y=2, z=3)` as a dictionary:
+
+def add(**kwargs):
+    s = 0
+    for key, val in kwargs.items():
+        s += val
+    return s
+
+add(x=2, y=3) + add(x=1, y=2, z=3)
+
+
+# - `*args` packs many positional arguments e.g., `add(1, 2, 3)`` as a tuple:
+
+
 
 
 ###############################################################################
