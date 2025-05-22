@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Heading 1 &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="heading-1">
+<h1>Heading 1<a class="headerlink" href="#heading-1" title="Link to this heading">¶</a></h1>
+<blockquote>
+<div><p>blah blah blah</p>
+</div></blockquote>
+<p>See <a class="reference external" href="https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html#sphx-glr-auto-examples-classification-plot-classifier-comparison-py">Scikit-learn Classifier
+comparison</a></p>
+<p><a class="reference external" href="ref:demonstration-nll">Demonstration of Negative Log-Likelihood (NLL)</a></p>
+<p><a class="reference external" href="ref:demonstration-nll">Demonstration of Negative Log-Likelihood
+(NLL)</a> Loss.</p>
+<p><span class="xref std std-ref">Ref OK</span></p>
+<p>Recoding output <span class="math notranslate nohighlight">\(y_i \in \{-1, +1\}\)</span>, the expression simplifies to</p>
+<div class="math notranslate nohighlight">
+\[\boxed{\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \log\left(1 + e^{-y_i \cdot z_i} \right)} \quad \text{with } y_i \in \{-1, +1\}.\]</div>
+<p>For linear models: <span class="math notranslate nohighlight">\(z_i=\mathbf{w}^\top \mathbf{x}_i\)</span>. For more
+details, see the <a class="reference external" href="demonstration-nll">Demonstration of Negative Log-Likelihood (NLL)</a> Loss.</p>
+<p>This expression is also known as the <strong>logistic loss</strong> or <strong>binary
+cross-entropy</strong>. It penalizes confident but incorrect predictions very
+heavily (e.g., predicting <span class="math notranslate nohighlight">\(\hat{p} = 0.99\)</span> when <span class="math notranslate nohighlight">\(y = 0\)</span>).</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the logistic loss for binary classification</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">logistic_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">y</span> <span class="o">*</span> <span class="n">z</span><span class="p">))</span>
+</pre></div>
+</div>
+<section id="heading-2">
+<h2>Heading 2<a class="headerlink" href="#heading-2" title="Link to this heading">¶</a></h2>
+<section id="heading-3">
+<h3>Heading 3<a class="headerlink" href="#heading-3" title="Link to this heading">¶</a></h3>
+<section id="heading-4">
+<h4>Heading 4<a class="headerlink" href="#heading-4" title="Link to this heading">¶</a></h4>
+<section id="heading-5">
+<h5>Heading 5<a class="headerlink" href="#heading-5" title="Link to this heading">¶</a></h5>
+<section id="heading-6">
+<h6>Heading 6<a class="headerlink" href="#heading-6" title="Link to this heading">¶</a></h6>
+</section>
+</section>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Heading 1</a><ul>
+<li><a class="reference internal" href="#heading-2">Heading 2</a><ul>
+<li><a class="reference internal" href="#heading-3">Heading 3</a><ul>
+<li><a class="reference internal" href="#heading-4">Heading 4</a><ul>
+<li><a class="reference internal" href="#heading-5">Heading 5</a><ul>
+<li><a class="reference internal" href="#heading-6">Heading 6</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/bin/text.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/bin/text.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

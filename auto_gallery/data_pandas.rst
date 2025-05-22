@@ -2273,7 +2273,7 @@ value of numerical column with the mean of the current columns.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.006 seconds)
+   **Total running time of the script:** (0 minutes 0.683 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_data_pandas.py:

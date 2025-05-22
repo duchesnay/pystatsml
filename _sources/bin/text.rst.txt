@@ -1,0 +1,55 @@
+#############
+Heading 1
+#############
+
+
+ blah blah blah
+
+See `Scikit-learn Classifier
+comparison <https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html#sphx-glr-auto-examples-classification-plot-classifier-comparison-py>`__
+
+`Demonstration of Negative Log-Likelihood (NLL) <ref:demonstration-nll>`__
+
+`Demonstration of Negative Log-Likelihood
+(NLL) <ref:demonstration-nll>`__ Loss.
+
+
+:ref:`Ref OK <link-to-ref>`
+
+Recoding output :math:`y_i \in \{-1, +1\}`, the expression simplifies to
+
+.. math::
+
+
+   \boxed{\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \log\left(1 + e^{-y_i \cdot z_i} \right)} \quad \text{with } y_i \in \{-1, +1\}.
+
+For linear models: :math:`z_i=\mathbf{w}^\top \mathbf{x}_i`. For more
+details, see the `Demonstration of Negative Log-Likelihood (NLL) <demonstration-nll>`__ Loss.
+
+This expression is also known as the **logistic loss** or **binary
+cross-entropy**. It penalizes confident but incorrect predictions very
+heavily (e.g., predicting :math:`\hat{p} = 0.99` when :math:`y = 0`).
+
+.. code:: ipython3
+
+    # Define the logistic loss for binary classification
+    def logistic_loss(z, y):
+        return np.log(1 + np.exp(-y * z))
+        
+
+*************
+Heading 2
+*************
+
+===========
+Heading 3
+===========
+
+Heading 4
+************
+
+Heading 5
+===========
+
+Heading 6
+~~~~~~~~~~~

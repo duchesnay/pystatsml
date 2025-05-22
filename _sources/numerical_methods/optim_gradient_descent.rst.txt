@@ -972,14 +972,12 @@ going to be. We can now effectively look ahead by calculating the
 gradient not w.r.t. to our current parameters :math:`\theta` but w.r.t.
 the approximate future position of our parameters:
 
-.. raw:: latex
-
-   \begin{align} 
-   \begin{split} 
-   \textbf{v}_t &= \gamma \textbf{v}_{t-1} + \eta \nabla_\textbf{w} J(\textbf{w} - \gamma v_{t-1} ) \\ 
-   \textbf{w} &= \textbf{w} - v_t 
-   \end{split} 
-   \end{align}
+:raw-latex:`\begin{align} 
+\begin{split} 
+\textbf{v}_t &= \gamma \textbf{v}_{t-1} + \eta \nabla_\textbf{w} J(\textbf{w} - \gamma v_{t-1} ) \\ 
+\textbf{w} &= \textbf{w} - v_t 
+\end{split} 
+\end{align}`
 
 Again, we set the momentum term :math:`\gamma` to a value of around 0.9.
 While **Momentum first computes the current gradient and then takes a
@@ -1005,14 +1003,12 @@ surface**. We compute the decaying averages of past and past squared
 gradients :math:`\textbf{m}_t` and :math:`\textbf{v}_t` respectively as
 follows:
 
-.. raw:: latex
-
-   \begin{align} 
-   \begin{split} 
-   \textbf{m}_t &= \beta_1 \textbf{m}_{t-1} + (1 - \beta_1) \nabla_\textbf{w} J( \textbf{w}) \\ 
-   \textbf{v}_t &= \beta_2 \textbf{v}_{t-1} + (1 - \beta_2) \nabla_\textbf{w} J( \textbf{w})^2 
-   \end{split} 
-   \end{align}
+:raw-latex:`\begin{align} 
+\begin{split} 
+\textbf{m}_t &= \beta_1 \textbf{m}_{t-1} + (1 - \beta_1) \nabla_\textbf{w} J( \textbf{w}) \\ 
+\textbf{v}_t &= \beta_2 \textbf{v}_{t-1} + (1 - \beta_2) \nabla_\textbf{w} J( \textbf{w})^2 
+\end{split} 
+\end{align}`
 
 :math:`\textbf{m}_{t}` and :math:`\textbf{v}_{t}` are estimates of the
 first moment (the mean) and the second moment (the uncentered variance)
@@ -1038,12 +1034,10 @@ decay rates are small (i.e. :math:`\beta_{1}` and :math:`\beta_{2}` are
 close to 1). They counteract these biases by computing bias-corrected
 first and second moment estimates:
 
-.. raw:: latex
-
-   \begin{align} 
-   \hat{m}_t &= \dfrac{m_t}{1 - \beta^t_1} \\ 
-   \hat{v}_t &= \dfrac{v_t}{1 - \beta^t_2}
-   \end{align}
+:raw-latex:`\begin{align} 
+\hat{m}_t &= \dfrac{m_t}{1 - \beta^t_1} \\ 
+\hat{v}_t &= \dfrac{v_t}{1 - \beta^t_2}
+\end{align}`
 
 They then use these to update the parameters (Adam update rule):
 

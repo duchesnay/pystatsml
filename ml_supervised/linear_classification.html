@@ -45,118 +45,6 @@
 <h1>Linear Models for Classification<a class="headerlink" href="#linear-models-for-classification" title="Link to this heading">¶</a></h1>
 <p>Linear vs. non-linear classifier: See <a class="reference external" href="https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html#sphx-glr-auto-examples-classification-plot-classifier-comparison-py">Scikit-learn Classifier
 comparison</a>.</p>
-<p><img alt="Linear (logistic) classification" src="../_images/linear_logistic.png" />[width=15cm]</p>
-<p>Given a training set of <span class="math notranslate nohighlight">\(N\)</span> samples,
-<span class="math notranslate nohighlight">\(D = \{(\boldsymbol{x_1} , y_1 ), \ldots , (\boldsymbol{x_N} , y_N )\}\)</span>
-, where <span class="math notranslate nohighlight">\(\boldsymbol{x_i}\)</span> is a multidimensional input vector with
-dimension <span class="math notranslate nohighlight">\(P\)</span> and class label (target or response).</p>
-<p>Multiclass Classification problems can be seen as several binary
-classification problems <span class="math notranslate nohighlight">\(y_i \in \{0, 1\}\)</span> where the classifier
-aims to discriminate the sample of the current class (label 1) versus
-the samples of other classes (label 0).</p>
-<p>Therfore, for each class the classifier seek for a vector of parameters
-<span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span> that performs a linear combination of the input
-variables, <span class="math notranslate nohighlight">\(\boldsymbol{x}^T \boldsymbol{w}\)</span>. This step performs a
-<strong>projection</strong> or a <strong>rotation</strong> of input sample into a good
-discriminative one-dimensional sub-space, that best discriminate sample
-of current class vs sample of other classes.</p>
-<p>This score (a.k.a decision function) is tranformed, using the nonlinear
-activation funtion <span class="math notranslate nohighlight">\(f(.)\)</span>, to a “posterior probabilities” of class
-1: <span class="math notranslate nohighlight">\(p(y=1|\boldsymbol{x}) = f(\boldsymbol{x}^T \boldsymbol{w})\)</span>,
-where, <span class="math notranslate nohighlight">\(p(y=1|\boldsymbol{x}) = 1 - p(y=0|\boldsymbol{x})\)</span>.</p>
-<p>The decision surfaces (orthogonal hyperplan to <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>)
-correspond to <span class="math notranslate nohighlight">\(f(x)=\text{constant}\)</span>, so that
-<span class="math notranslate nohighlight">\(\boldsymbol{x}^T \boldsymbol{w}=\text{constant}\)</span> and hence the
-decision surfaces are linear functions of <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>, even
-if the function <span class="math notranslate nohighlight">\(f(.)\)</span> is nonlinear.</p>
-<p>A thresholding of the activation (shifted by the bias or intercept)
-provides the predicted class label.</p>
-<p>The vector of parameters, that defines the discriminative axis,
-minimizes an <strong>objective function</strong> <span class="math notranslate nohighlight">\(J(\boldsymbol{w})\)</span> that is a
-sum of of <strong>loss function</strong> <span class="math notranslate nohighlight">\(L(\boldsymbol{w})\)</span> and some penalties
-on the weights vector <span class="math notranslate nohighlight">\(\Omega(\boldsymbol{w})\)</span>.</p>
-<div class="math notranslate nohighlight">
-\[\min_{\boldsymbol{w}}~J = \sum_i L(y_i, f(\boldsymbol{x_i}^T\boldsymbol{w})) + \Omega(\boldsymbol{w}),\]</div>
-<section id="fishers-linear-discriminant-with-equal-class-covariance">
-<h2>Fisher’s linear discriminant with equal class covariance<a class="headerlink" href="#fishers-linear-discriminant-with-equal-class-covariance" title="Link to this heading">¶</a></h2>
-<p>This geometric method does not make any probabilistic assumptions,
-instead it relies on distances. It looks for the <strong>linear projection</strong>
-of the data points onto a vector, <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>, that maximizes
-the between/within variance ratio, denoted <span class="math notranslate nohighlight">\(F(\boldsymbol{w})\)</span>.
-Under a few assumptions, it will provide the same results as linear
-discriminant analysis (LDA), explained below.</p>
-<p>Suppose two classes of observations, <span class="math notranslate nohighlight">\(C_0\)</span> and <span class="math notranslate nohighlight">\(C_1\)</span>, have
-means <span class="math notranslate nohighlight">\(\boldsymbol{\mu_0}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{\mu_1}\)</span> and the
-same total within-class scatter (“covariance”) matrix,</p>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{X_c}\)</span> is the <span class="math notranslate nohighlight">\((N \times P)\)</span> matrix of
-data centered on their respective means:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\boldsymbol{X_c} = \begin{bmatrix}
-          \boldsymbol{X_0} -  \boldsymbol{\mu_0} \\
-          \boldsymbol{X_1} -  \boldsymbol{\mu_1}
-      \end{bmatrix},\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{X_0}\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{X_1}\)</span> are the
-<span class="math notranslate nohighlight">\((N_0 \times P)\)</span> and <span class="math notranslate nohighlight">\((N_1 \times P)\)</span> matrices of samples of
-classes <span class="math notranslate nohighlight">\(C_0\)</span> and <span class="math notranslate nohighlight">\(C_1\)</span>.</p>
-<p>Let <span class="math notranslate nohighlight">\(\boldsymbol{S_B}\)</span> being the scatter “between-class” matrix,
-given by</p>
-<div class="math notranslate nohighlight">
-\[\boldsymbol{S_B} = (\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )(\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )^T.\]</div>
-<p>The linear combination of features <span class="math notranslate nohighlight">\(\boldsymbol{w}^T x\)</span> have means
-<span class="math notranslate nohighlight">\(\boldsymbol{w}^T \mu_i\)</span> for <span class="math notranslate nohighlight">\(i=0,1\)</span>, and variance
-<span class="math notranslate nohighlight">\(\boldsymbol{w}^T
-\boldsymbol{X^T_c} \boldsymbol{X_c} \boldsymbol{w}\)</span>. Fisher defined the
-separation between these two distributions to be the ratio of the
-variance between the classes to the variance within the classes:</p>
-<section id="the-fisher-most-discriminant-projection">
-<h3>The Fisher most discriminant projection<a class="headerlink" href="#the-fisher-most-discriminant-projection" title="Link to this heading">¶</a></h3>
-<p>In the two-class case, the maximum separation occurs by a projection on
-the <span class="math notranslate nohighlight">\((\boldsymbol{\mu_1} - \boldsymbol{\mu_0})\)</span> using the
-Mahalanobis metric <span class="math notranslate nohighlight">\(\boldsymbol{S_W}^{-1}\)</span>, so that</p>
-<div class="math notranslate nohighlight">
-\[\boldsymbol{w} \propto \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0}).\]</div>
-<section id="demonstration">
-<h4>Demonstration<a class="headerlink" href="#demonstration" title="Link to this heading">¶</a></h4>
-<p>Differentiating <span class="math notranslate nohighlight">\(F_{\text{Fisher}}(w)\)</span> with respect to <span class="math notranslate nohighlight">\(w\)</span>
-gives</p>
-<p>Since we do not care about the magnitude of <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>, only
-its direction, we replaced the scalar factor
-<span class="math notranslate nohighlight">\((\boldsymbol{w}^T \boldsymbol{S_B} \boldsymbol{w}) / (\boldsymbol{w}^T \boldsymbol{S_W} \boldsymbol{w})\)</span>
-by <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
-<p>In the multiple-class case, the solutions <span class="math notranslate nohighlight">\(w\)</span> are determined by
-the eigenvectors of <span class="math notranslate nohighlight">\(\boldsymbol{S_W}^{-1}{\boldsymbol{S_B}}\)</span> that
-correspond to the <span class="math notranslate nohighlight">\(K-1\)</span> largest eigenvalues.</p>
-<p>However, in the two-class case (in which
-<span class="math notranslate nohighlight">\(\boldsymbol{S_B} = (\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )(\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )^T\)</span>)
-it is easy to show that
-<span class="math notranslate nohighlight">\(\boldsymbol{w} = \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0})\)</span>
-is the unique eigenvector of
-<span class="math notranslate nohighlight">\(\boldsymbol{S_W}^{-1}{\boldsymbol{S_B}}\)</span>:</p>
-<p>where here
-<span class="math notranslate nohighlight">\(\lambda = (\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )^T \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0})\)</span>.
-Which leads to the result</p>
-<div class="math notranslate nohighlight">
-\[\boldsymbol{w} \propto \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0}).\]</div>
-</section>
-</section>
-<section id="the-separating-hyperplane">
-<h3>The separating hyperplane<a class="headerlink" href="#the-separating-hyperplane" title="Link to this heading">¶</a></h3>
-<p>The separating hyperplane is a <span class="math notranslate nohighlight">\(P-1\)</span>-dimensional hyper surface,
-orthogonal to the projection vector, <span class="math notranslate nohighlight">\(w\)</span>. There is no single best
-way to find the origin of the plane along <span class="math notranslate nohighlight">\(w\)</span>, or equivalently the
-classification threshold that determines whether a point should be
-classified as belonging to <span class="math notranslate nohighlight">\(C_0\)</span> or to <span class="math notranslate nohighlight">\(C_1\)</span>. However, if
-the projected points have roughly the same distribution, then the
-threshold can be chosen as the hyperplane exactly between the
-projections of the two means, i.e. as</p>
-<div class="math notranslate nohighlight">
-\[T = \boldsymbol{w} \cdot \frac{1}{2}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0}).\]</div>
-<figure class="align-default" id="id3">
-<img alt="The Fisher most discriminant projection" src="../_images/fisher_linear_disc.png" />
-<figcaption>
-<p><span class="caption-text">The Fisher most discriminant projection</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
-</figcaption>
-</figure>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
@@ -176,25 +64,155 @@ projections of the two means, i.e. as</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">)</span>
 </pre></div>
 </div>
+<section id="geometric-method-naive-method">
+<h2>Geometric Method: Naive Method<a class="headerlink" href="#geometric-method-naive-method" title="Link to this heading">¶</a></h2>
+<p>Principles:</p>
+<ul class="simple">
+<li><p>Compute classes means <span class="math notranslate nohighlight">\(\mathbf{\mu}_1\)</span>,
+<span class="math notranslate nohighlight">\(\mathbf{\mu}_2, \mathbf{\mu}_k, \ldots\)</span></p></li>
+<li><p>Classify new point <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> to the closest mean, i.e.: class
+<span class="math notranslate nohighlight">\(\arg \min_k \|\mathbf{x} - \mathbf{\mu}_k\|_2\)</span></p></li>
+</ul>
+<p>For binary classification, this is equivalent to compute the most
+discriminative direction as the vector between class mean:</p>
+<div class="math notranslate nohighlight">
+\[\boxed{\mathbf{w}_{\text{naive}} = \mathbf{\mu}_1 - \mathbf{\mu}_2}\]</div>
+<p>And projecting a new point <span class="math notranslate nohighlight">\(\mathbf{x_i}\)</span> along this direction to
+obtain a score <span class="math notranslate nohighlight">\(z_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[z_i = \mathbf{x_i}^\top \mathbf{w}_{\text{naive}}\]</div>
+<p>Finally the Classify the point to the closest projected class mean.</p>
+<p>Illustration:</p>
+<figure class="align-default" id="id1">
+<img alt="Most discriminant projections, Naive and Fisher methods" src="../_images/fisher_linear_disc.png" />
+<figcaption>
+<p><span class="caption-text">Most discriminant projections, Naive and Fisher methods</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
 </section>
+<section id="geometric-method-fishers-linear-discriminant">
+<h2>Geometric Method: Fisher’s Linear Discriminant<a class="headerlink" href="#geometric-method-fishers-linear-discriminant" title="Link to this heading">¶</a></h2>
+<p>Principles:</p>
+<ul class="simple">
+<li><p>Dimensionality reduction before later classification.</p></li>
+<li><p>Find the most discriminant axis.</p></li>
+<li><p>Taking account the distribution, assuming same normal distribution for
+all classes.</p></li>
+</ul>
+<p>Simply compute the <strong>within class covariance</strong> <span class="math notranslate nohighlight">\(\mathbf{S_W}\)</span> to
+rotate the projection direction according to the point (elliptic)
+distribution:</p>
+<div class="math notranslate nohighlight">
+\[\boxed{\mathbf{w}_{\text{Fisher}} = \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})}.\]</div>
+<p>This geometric method does not make any probabilistic assumptions,
+instead it relies on distances. It looks for the <strong>linear projection</strong>
+of the data points onto a vector, <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>, that maximizes the
+between/within variance ratio, denoted <span class="math notranslate nohighlight">\(F(\mathbf{w})\)</span>. Under a
+few assumptions, it will provide the same results as linear discriminant
+analysis (LDA), explained below.</p>
+<p>Suppose two classes of observations, <span class="math notranslate nohighlight">\(C_0\)</span> and <span class="math notranslate nohighlight">\(C_1\)</span>, have
+means <span class="math notranslate nohighlight">\(\mathbf{\mu_0}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{\mu_1}\)</span> and the same
+total within-class scatter (“covariance”) matrix,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{S_W} &amp;= \sum_{i\in C_0} (\mathbf{x_i} - \mathbf{\mu_0})(\mathbf{x_i} - \mathbf{\mu_0})^T + \sum_{j\in C_1} (\mathbf{x_j} - \mathbf{\mu_1})(\mathbf{x_j} -\mathbf{\mu_1})^T\\
+    &amp;= \mathbf{X_c}^T \mathbf{X_c},\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{X_c}\)</span> is the <span class="math notranslate nohighlight">\((N \times P)\)</span> matrix of data
+centered on their respective means:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{X_c} = \begin{bmatrix}
+          \mathbf{X_0} -  \mathbf{\mu_0} \\
+          \mathbf{X_1} -  \mathbf{\mu_1}
+      \end{bmatrix},\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{X_0}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{X_1}\)</span> are the
+<span class="math notranslate nohighlight">\((N_0 \times P)\)</span> and <span class="math notranslate nohighlight">\((N_1 \times P)\)</span> matrices of samples of
+classes <span class="math notranslate nohighlight">\(C_0\)</span> and <span class="math notranslate nohighlight">\(C_1\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(\mathbf{S_B}\)</span> being the scatter “between-class” matrix, given
+by</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{S_B} = (\mathbf{\mu_1} - \mathbf{\mu_0} )(\mathbf{\mu_1} - \mathbf{\mu_0} )^T.\]</div>
+<p>The linear combination of features <span class="math notranslate nohighlight">\(\mathbf{w}^T x\)</span> have means
+<span class="math notranslate nohighlight">\(\mathbf{w}^T \mu_i\)</span> for <span class="math notranslate nohighlight">\(i=0,1\)</span>, and variance
+<span class="math notranslate nohighlight">\(\mathbf{w}^T
+\mathbf{X^T_c} \mathbf{X_c} \mathbf{w}\)</span>. Fisher defined the separation
+between these two distributions to be the ratio of the variance between
+the classes to the variance within the classes:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}F_{\text{Fisher}}(\mathbf{w}) &amp;= \frac{\sigma_{\text{between}}^2}{\sigma_{\text{within}}^2}\\
+                     &amp;= \frac{(\mathbf{w}^T \mathbf{\mu_1} - \mathbf{w}^T \mathbf{\mu_0})^2}{\mathbf{w}^T  X^T_c \mathbf{X_c} \mathbf{w}}\\
+                     &amp;= \frac{(\mathbf{w}^T (\mathbf{\mu_1} - \mathbf{\mu_0}))^2}{\mathbf{w}^T  X^T_c \mathbf{X_c} \mathbf{w}}\\
+                     &amp;= \frac{\mathbf{w}^T (\mathbf{\mu_1} - \mathbf{\mu_0}) (\mathbf{\mu_1} - \mathbf{\mu_0})^T w}{\mathbf{w}^T X^T_c \mathbf{X_c} \mathbf{w}}\\
+                     &amp;= \frac{\mathbf{w}^T \mathbf{S_B} w}{\mathbf{w}^T \mathbf{S_W} \mathbf{w}}.\end{split}\]</div>
+<p>In the two-class case, the maximum separation occurs by a projection on
+the <span class="math notranslate nohighlight">\((\mathbf{\mu_1} - \mathbf{\mu_0})\)</span> using the Mahalanobis
+metric <span class="math notranslate nohighlight">\(\mathbf{S_W}^{-1}\)</span>, so that</p>
+<div class="math notranslate nohighlight">
+\[\boxed{\mathbf{w} \propto \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})}.\]</div>
+<p><strong>Demonstration</strong></p>
+<p>Differentiating <span class="math notranslate nohighlight">\(F_{\text{Fisher}}(w)\)</span> with respect to <span class="math notranslate nohighlight">\(w\)</span>
+gives</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\nabla_{\mathbf{w}}F_{\text{Fisher}}(\mathbf{w}) &amp;= 0\\
+\nabla_{\mathbf{w}}\left(\frac{\mathbf{w}^T \mathbf{S_B} w}{\mathbf{w}^T \mathbf{S_W} \mathbf{w}}\right) &amp;= 0\\
+(\mathbf{w}^T \mathbf{S_W} \mathbf{w})(2 \mathbf{S_B} \mathbf{w}) - (\mathbf{w}^T \mathbf{S_B} \mathbf{w})(2 \mathbf{S_W} \mathbf{w}) &amp;= 0\\
+(\mathbf{w}^T \mathbf{S_W} \mathbf{w})(\mathbf{S_B} \mathbf{w}) &amp;= (\mathbf{w}^T \mathbf{S_B} \mathbf{w})(\mathbf{S_W} \mathbf{w})\\
+\mathbf{S_B} \mathbf{w} &amp;= \frac{\mathbf{w}^T \mathbf{S_B} \mathbf{w}}{\mathbf{w}^T \mathbf{S_W} \mathbf{w}}(\mathbf{S_W} \mathbf{w})\\
+\mathbf{S_B} \mathbf{w} &amp;= \lambda (\mathbf{S_W} \mathbf{w})\\
+\mathbf{S_W}^{-1}{\mathbf{S_B}} \mathbf{w} &amp;= \lambda  \mathbf{w}.\end{split}\]</div>
+<p>Since we do not care about the magnitude of <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>, only its
+direction, we replaced the scalar factor
+<span class="math notranslate nohighlight">\((\mathbf{w}^T \mathbf{S_B} \mathbf{w}) / (\mathbf{w}^T \mathbf{S_W} \mathbf{w})\)</span>
+by <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
+<p>In the multiple-class case, the solutions <span class="math notranslate nohighlight">\(w\)</span> are determined by
+the eigenvectors of <span class="math notranslate nohighlight">\(\mathbf{S_W}^{-1}{\mathbf{S_B}}\)</span> that
+correspond to the <span class="math notranslate nohighlight">\(K-1\)</span> largest eigenvalues.</p>
+<p>However, in the two-class case (in which
+<span class="math notranslate nohighlight">\(\mathbf{S_B} = (\mathbf{\mu_1} - \mathbf{\mu_0} )(\mathbf{\mu_1} - \mathbf{\mu_0} )^T\)</span>)
+it is easy to show that
+<span class="math notranslate nohighlight">\(\mathbf{w} = \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})\)</span>
+is the unique eigenvector of <span class="math notranslate nohighlight">\(\mathbf{S_W}^{-1}{\mathbf{S_B}}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0} )(\mathbf{\mu_1} - \mathbf{\mu_0} )^T \mathbf{w} &amp;= \lambda  \mathbf{w}\\
+\mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0} )(\mathbf{\mu_1} - \mathbf{\mu_0} )^T \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0}) &amp;= \lambda  \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0}),\end{split}\]</div>
+<p>where here
+<span class="math notranslate nohighlight">\(\lambda = (\mathbf{\mu_1} - \mathbf{\mu_0} )^T \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})\)</span>.
+Which leads to the result</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{w} \propto \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0}).\]</div>
+<p><strong>The separating hyperplane</strong></p>
+<p>The separating hyperplane is a <span class="math notranslate nohighlight">\(P-1\)</span>-dimensional hyper surface,
+orthogonal to the projection vector, <span class="math notranslate nohighlight">\(w\)</span>. There is no single best
+way to find the origin of the plane along <span class="math notranslate nohighlight">\(w\)</span>, or equivalently the
+classification threshold that determines whether a point should be
+classified as belonging to <span class="math notranslate nohighlight">\(C_0\)</span> or to <span class="math notranslate nohighlight">\(C_1\)</span>. However, if
+the projected points have roughly the same distribution, then the
+threshold can be chosen as the hyperplane exactly between the
+projections of the two means, i.e. as</p>
+<div class="math notranslate nohighlight">
+\[T = \mathbf{w} \cdot \frac{1}{2}(\mathbf{\mu_1} - \mathbf{\mu_0}).\]</div>
 </section>
-<section id="linear-discriminant-analysis-lda">
-<h2>Linear discriminant analysis (LDA)<a class="headerlink" href="#linear-discriminant-analysis-lda" title="Link to this heading">¶</a></h2>
-<p>Linear discriminant analysis (LDA) is a probabilistic generalization of
-Fisher’s linear discriminant. It uses Bayes’ rule to fix the threshold
-based on prior probabilities of classes.</p>
+<section id="generative-model-linear-discriminant-analysis-lda">
+<h2>Generative Model: Linear Discriminant Analysis (LDA)<a class="headerlink" href="#generative-model-linear-discriminant-analysis-lda" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Probabilistic generalization of Fisher’s linear discriminant.</p></li>
+<li><p>Generative model of the <strong>conditional distribution</strong> of the input data
+<span class="math notranslate nohighlight">\(\mathbf{x}\)</span> given the label <span class="math notranslate nohighlight">\(k\)</span>:
+<span class="math notranslate nohighlight">\(p(\mathbf{x}|y=k)\)</span>.</p></li>
+<li><p>Uses Bayes’ rule to provide the <strong>posterior distribution</strong> of the
+label <span class="math notranslate nohighlight">\(k\)</span> given the input data <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>:
+<span class="math notranslate nohighlight">\(p(y=k|\mathbf{x})\)</span>.</p></li>
+<li><p>Uses Bayes’ rule to fix the threshold based on prior probabilities of
+classes.</p></li>
+</ul>
 <ol class="arabic simple">
 <li><p>First compute the class-<strong>conditional distributions</strong> of
-<span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span> given class <span class="math notranslate nohighlight">\(C_k\)</span>:
-<span class="math notranslate nohighlight">\(p(x|C_k) = \mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu_k}, \boldsymbol{S_W})\)</span>.
-Where
-<span class="math notranslate nohighlight">\(\mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu_k}, \boldsymbol{S_W})\)</span>
-is the multivariate Gaussian distribution defined over a
-P-dimensional vector <span class="math notranslate nohighlight">\(x\)</span> of continuous variables, which is
-given by</p></li>
+<span class="math notranslate nohighlight">\(\mathbf{x}\)</span> given class <span class="math notranslate nohighlight">\(C_k\)</span>:
+<span class="math notranslate nohighlight">\(p(x|C_k) = \mathcal{N}(\mathbf{x}|\mathbf{\mu_k}, \mathbf{S_W})\)</span>.
+Where <span class="math notranslate nohighlight">\(\mathcal{N}(\mathbf{x}|\mathbf{\mu_k}, \mathbf{S_W})\)</span> is
+the multivariate Gaussian distribution defined over a P-dimensional
+vector <span class="math notranslate nohighlight">\(x\)</span> of continuous variables, which is given by</p></li>
 </ol>
 <div class="math notranslate nohighlight">
-\[\mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu_k}, \boldsymbol{S_W}) = \frac{1}{(2\pi)^{P/2}|\boldsymbol{S_W}|^{1/2}}\exp\{-\frac{1}{2} (\boldsymbol{x} - \boldsymbol{\mu_k})^T \boldsymbol{S_W}^{-1}(x - \boldsymbol{\mu_k})\}\]</div>
+\[\mathcal{N}(\mathbf{x}|\mathbf{\mu_k}, \mathbf{S_W}) = \frac{1}{(2\pi)^{P/2}|\mathbf{S_W}|^{1/2}}\exp\{-\frac{1}{2} (\mathbf{x} - \mathbf{\mu_k})^T \mathbf{S_W}^{-1}(x - \mathbf{\mu_k})\}\]</div>
 <ol class="arabic simple" start="2">
 <li><p>Estimate the <strong>prior probabilities</strong> of class <span class="math notranslate nohighlight">\(k\)</span>,
 <span class="math notranslate nohighlight">\(p(C_k) = N_k/N\)</span>.</p></li>
@@ -203,15 +221,15 @@ class given a sample) combining conditional with priors using Bayes’
 rule:</p></li>
 </ol>
 <div class="math notranslate nohighlight">
-\[p(C_k|\boldsymbol{x}) = \frac{p(C_k) p(\boldsymbol{x}|C_k)}{p(\boldsymbol{x})}\]</div>
+\[p(C_k|\mathbf{x}) = \frac{p(C_k) p(\mathbf{x}|C_k)}{p(\mathbf{x})}\]</div>
 <p>Where <span class="math notranslate nohighlight">\(p(x)\)</span> is the marginal distribution obtained by summing of
 classes: As usual, the denominator in Bayes’ theorem can be found in
 terms of the quantities appearing in the numerator, because</p>
 <div class="math notranslate nohighlight">
-\[p(x) = \sum_k p(\boldsymbol{x}|C_k)p(C_k)\]</div>
+\[p(x) = \sum_k p(\mathbf{x}|C_k)p(C_k)\]</div>
 <ol class="arabic simple" start="4">
-<li><p>Classify <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span> using the Maximum-a-Posteriori
-probability: <span class="math notranslate nohighlight">\(C_k= \arg \max_{C_k} p(C_k|\boldsymbol{x})\)</span></p></li>
+<li><p>Classify <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> using the Maximum-a-Posteriori
+probability: <span class="math notranslate nohighlight">\(C_k= \arg \max_{C_k} p(C_k|\mathbf{x})\)</span></p></li>
 </ol>
 <p>LDA is a <strong>generative model</strong> since the class-conditional distributions
 cal be used to generate samples of each classes.</p>
@@ -224,6 +242,7 @@ explicitly re-balance the classification by setting
 linear discriminant.</p>
 <p><strong>Question:</strong> How many parameters are required to estimate to perform a
 LDA?</p>
+<p>Application with scikit-learn</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.discriminant_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearDiscriminantAnalysis</span> <span class="k">as</span> <span class="n">LDA</span>
 
 <span class="c1"># Dataset 2 two multivariate normal</span>
@@ -235,55 +254,382 @@ LDA?</p>
 <span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean1</span><span class="p">,</span> <span class="n">Cov</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">])</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">X0</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">X1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Naive rule</span>
+<span class="n">w_naive</span> <span class="o">=</span> <span class="n">mean1</span> <span class="o">-</span> <span class="n">mean0</span>
+<span class="n">w_naive</span> <span class="o">=</span> <span class="n">w_naive</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w_naive</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">score_naive</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w_naive</span><span class="p">)</span>
+
+<span class="c1"># Fischer rule</span>
+<span class="n">Xc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X0</span> <span class="o">-</span> <span class="n">mean0</span><span class="p">,</span> <span class="n">X1</span> <span class="o">-</span> <span class="n">mean1</span><span class="p">])</span>
+<span class="n">Sw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Xc</span><span class="o">.</span><span class="n">T</span> <span class="p">,</span> <span class="n">Xc</span><span class="p">)</span>
+<span class="n">w_fisher</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">Sw</span><span class="p">),</span> <span class="n">mean1</span> <span class="o">-</span> <span class="n">mean0</span><span class="p">)</span>
+<span class="n">w_fisher</span> <span class="o">=</span> <span class="n">w_fisher</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w_fisher</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">score_fisher</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">w_fisher</span><span class="p">)</span>
 
 
 <span class="c1"># LDA with scikit-learn</span>
 <span class="n">lda</span> <span class="o">=</span> <span class="n">LDA</span><span class="p">()</span>
-<span class="n">proj</span> <span class="o">=</span> <span class="n">lda</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">score_lda</span> <span class="o">=</span> <span class="n">lda</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">w_lda</span> <span class="o">=</span> <span class="n">lda</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">w_lda</span> <span class="o">=</span> <span class="n">w_lda</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w_lda</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
 <span class="n">y_pred_lda</span> <span class="o">=</span> <span class="n">lda</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
 <span class="n">errors</span> <span class="o">=</span>  <span class="n">y_pred_lda</span> <span class="o">!=</span> <span class="n">y</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Nb errors=</span><span class="si">%i</span><span class="s2">, error rate=</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span>
       <span class="p">(</span><span class="n">errors</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">errors</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred_lda</span><span class="p">)))</span>
+
+<span class="c1"># Plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">fig_w</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">fig_w</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]),</span> <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">))</span>
+<span class="n">ax_</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+<span class="n">ax_</span><span class="o">.</span><span class="n">quiver</span><span class="p">([</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span>
+           <span class="p">[</span><span class="n">w_naive</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">w_fisher</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">w_lda</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+           <span class="p">[</span><span class="n">w_naive</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">w_fisher</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">w_lda</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+           <span class="n">units</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Naive&quot;</span><span class="p">,</span> <span class="n">score_naive</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Fisher&quot;</span><span class="p">,</span> <span class="n">score_fisher</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;LDA&quot;</span><span class="p">,</span> <span class="n">score_lda</span><span class="p">)]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span>
+<span class="c1">#colors = [colors[i] for i in [0, 2]]</span>
+
+<span class="c1">#Plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">fig_w</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">scores</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">score</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">lab</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>  <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Label </span><span class="si">{</span><span class="n">lab</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">lab</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Projection on discriminative directions&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Nb</span> <span class="n">errors</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">error</span> <span class="n">rate</span><span class="o">=</span><span class="mf">0.05</span>
 </pre></div>
 </div>
+<img alt="../_images/linear_classification_7_1.png" src="../_images/linear_classification_7_1.png" />
+<img alt="../_images/linear_classification_7_2.png" src="../_images/linear_classification_7_2.png" />
 </section>
 <section id="logistic-regression">
-<h2>Logistic regression<a class="headerlink" href="#logistic-regression" title="Link to this heading">¶</a></h2>
-<p>Logistic regression is called a generalized linear models. ie.: it is a
-linear model with a link function that maps the output of linear
-multiple regression to the posterior probability of class <span class="math notranslate nohighlight">\(1\)</span>
-<span class="math notranslate nohighlight">\(p(1|x)\)</span> using the logistic sigmoid function:</p>
+<h2>Logistic Regression<a class="headerlink" href="#logistic-regression" title="Link to this heading">¶</a></h2>
+<p><img alt="Linear (logistic) classification" src="../_images/linear_logistic.png" />[width=15cm]</p>
+<p>Principles:</p>
+<ol class="arabic simple">
+<li><p>Map the output of a linear model: <span class="math notranslate nohighlight">\(\mathbf{w}^\top \mathbf{x}\)</span>
+into a score <span class="math notranslate nohighlight">\(z\)</span>. This step performs a <strong>projection</strong> or a
+<strong>rotation</strong> of input sample into a good discriminative
+one-dimensional sub-space, that best discriminate sample of current
+class vs sample of other classes.</p></li>
+<li><p>Using an activation funtion <span class="math notranslate nohighlight">\(\sigma(.)\)</span>, this score (a.k.a
+decision function) is transformed, to a “posterior probabilities” of
+a class <span class="math notranslate nohighlight">\(k\)</span>:
+<span class="math notranslate nohighlight">\(P(y=k| \mathbf{x}) = \sigma(\mathbf{w}^\top \mathbf{x})\)</span>.</p></li>
+</ol>
+<p>Properties:</p>
+<ul class="simple">
+<li><p>Consider only the posterior probability of a class <span class="math notranslate nohighlight">\(k\)</span>:
+<span class="math notranslate nohighlight">\(P(y=k| \mathbf{x})\)</span></p></li>
+<li><p>Multiclass Classification problems can be seen as several binary
+classification problems <span class="math notranslate nohighlight">\(y_i \in \{0, 1\}\)</span> where the classifier
+aims to discriminate the sample of the current class (label 1) versus
+the samples of other classes (label 0).</p></li>
+<li><p>The decision surfaces (orthogonal hyperplan to <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>)
+correspond to <span class="math notranslate nohighlight">\(\sigma(z)=\text{constant}\)</span>, so that
+<span class="math notranslate nohighlight">\(\mathbf{x}^T \mathbf{w}=\text{constant}\)</span> and hence the decision
+surfaces are linear functions of <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, even if the
+function <span class="math notranslate nohighlight">\(\sigma(.)\)</span> is nonlinear.</p></li>
+<li><p>A thresholding of the activation (shifted by the bias or intercept)
+provides the predicted class label.</p></li>
+</ul>
+<p><strong>Linear Discriminant Analysis (LDA) vs. Logistic Regression</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p><strong>Linear Discriminant
+Analysis (LDA)</strong></p></th>
+<th class="head"><p><strong>Logistic Regression</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Model
+Type</strong></p></td>
+<td><p>Generative model</p></td>
+<td><p>Discriminative model</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>What It
+Models</strong></p></td>
+<td><p>Joint probability:
+:math:
+<cite>P(x, y) = P(x mid y) P(y)</cite></p></td>
+<td><p>Posterior probability:
+<span class="math notranslate nohighlight">\(P(y \mid x)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Ass
+umptions</strong></p></td>
+<td><p>Gaussian class-conditional
+distributions with equal
+covariance</p></td>
+<td><p>No distributional
+assumption on features</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Decision
+Boundary</strong></p></td>
+<td><p>Linear (under equal
+covariance assumption)</p></td>
+<td><p>Linear</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>P
+robability
+Es
+timation</strong></p></td>
+<td><p>Uses Bayes’ rule + Gaussian
+likelihood</p></td>
+<td><p>Uses sigmoid of linear
+function</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Interpre
+tability</strong></p></td>
+<td><p>Less intuitive, based on
+data distribution</p></td>
+<td><p>Coefficients directly
+reflect impact on class
+log-odds</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Per
+formance</strong></p></td>
+<td><p>Can outperform logistic
+regression when assumptions
+hold</p></td>
+<td><p>More robust when
+assumptions (e.g.,
+normality) are violated</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Use in
+Mu
+lticlass</strong></p></td>
+<td><p>Naturally extends to
+multiclass</p></td>
+<td><p>Extends via one-vs-rest
+or softmax (multinomial
+logistic)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Regula
+rization</strong></p></td>
+<td><p>Not built-in (requires
+extensions like shrinkage
+LDA)</p></td>
+<td><p>Easily regularized
+(e.g., with L1/L2
+penalties)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Insights</strong></p>
+<ul class="simple">
+<li><p><strong>LDA</strong> is <strong>generative</strong>: it models how the data was generated
+(distribution of features given class), then uses Bayes’ theorem to
+classify.</p></li>
+<li><p><strong>Logistic regression</strong> is <strong>discriminative</strong>: it models the boundary
+between classes directly.</p></li>
+</ul>
+<section id="activation-functions-for-classification-sigmoid-and-softmax">
+<h3>Activation Functions for Classification (Sigmoid and Softmax)<a class="headerlink" href="#activation-functions-for-classification-sigmoid-and-softmax" title="Link to this heading">¶</a></h3>
+<p>The <strong>sigmoid</strong> and <strong>softmax</strong> functions are closely related—they both
+transform real-valued inputs (<em>logits</em>) into probabilities, but they are
+used in different settings:</p>
+<p><strong>The sigmoid function</strong> maps real-valued inputs (called <em>logits</em>) into
+the interval <span class="math notranslate nohighlight">\([0, 1]\)</span>, making them interpretable as probabilities
+(for scalar <span class="math notranslate nohighlight">\(z\)</span>):</p>
 <div class="math notranslate nohighlight">
-\[p(1|\boldsymbol{w, x_i}) = \frac{1}{1 + \exp(-\boldsymbol{w} \cdot \boldsymbol{x_i})}\]</div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">logistic</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+\[\sigma(z) = \frac{1}{1 + e^{-z}}\]</div>
+<p>It has the following properties:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\sigma(z) \to 1\)</span> as <span class="math notranslate nohighlight">\(z \to +\infty\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma(z) \to 0\)</span> as <span class="math notranslate nohighlight">\(z \to -\infty\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma(0) = 0.5\)</span></p></li>
+</ul>
+<p>In binary classification, we use
+<span class="math notranslate nohighlight">\(\sigma(\mathbf{w}^\top \mathbf{x})\)</span> to estimate the probability
+of the positive class. This function is differentiable, which is
+essential for optimization via gradient descent.</p>
+<p><strong>The softmax function</strong> converts raw scores <span class="math notranslate nohighlight">\(z_k\)</span> into
+probabilities:</p>
+<div class="math notranslate nohighlight">
+\[\hat{p}_k = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}\]</div>
+<p>It ensures that output probabilities are positive and sum to 1, making
+it suitable for use with cross-entropy.</p>
+<p><strong>Softmax function</strong> (for vector <span class="math notranslate nohighlight">\(\mathbf{z} \in \mathbb{R}^K\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\text{softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}} \quad \text{for } i = 1, \dots, K\]</div>
+<p>The <strong>sigmoid function is a special case of the softmax</strong> function when
+you have <strong>two classes (binary classification)</strong>. Given two logits
+<span class="math notranslate nohighlight">\(z_0\)</span> and <span class="math notranslate nohighlight">\(z_1\)</span>, the softmax for class 1 is:</p>
+<div class="math notranslate nohighlight">
+\[\text{softmax}(z_1) = \frac{e^{z_1}}{e^{z_0} + e^{z_1}}\]</div>
+<p>If we define <span class="math notranslate nohighlight">\(z = z_1 - z_0\)</span>, then:</p>
+<div class="math notranslate nohighlight">
+\[\text{softmax}(z_1) = \frac{1}{1 + e^{-(z_1 - z_0)}} = \sigma(z)\]</div>
+<p>So: <strong>Sigmoid = Softmax over 2 logits, if one logit is fixed as 0
+(reference class)</strong></p>
+<p>Intuition</p>
+<ul class="simple">
+<li><p><strong>Sigmoid</strong> gives the probability of one class (positive class)
+vs. its complement.</p></li>
+<li><p><strong>Softmax</strong> generalizes this to <span class="math notranslate nohighlight">\(K &gt; 2\)</span> classes, ensuring the
+sum of probabilities is 1.</p></li>
+</ul>
+<p><strong>Summary</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>F
+unction</p></th>
+<th class="head"><p>Use Case</p></th>
+<th class="head"><p>Output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Sigmoid</p></td>
+<td><p>Binary classification</p></td>
+<td><p>Scalar in <span class="math notranslate nohighlight">\((0, 1)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Softmax</p></td>
+<td><p>Multiclass classification</p></td>
+<td><p>Vector of probabilities
+summing to 1 over classes</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Sigmoid and Softmax maps logits to probabilities over classes</p></li>
+<li><p>The <strong>sigmoid function is equivalent to a 2-class softmax</strong>.</p></li>
+<li><p>Both map logits to probabilities but are used in different
+classification settings.</p></li>
+<li><p>Softmax ensures a <strong>normalized probability distribution</strong> over
+multiple classes.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">logistic</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Logistic (sigmoid)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Sigmoid (Logistic)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Logistic (sigmoid)&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Sigmoid (Logistic)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/linear_classification_6_1.png" src="../_images/linear_classification_6_1.png" />
-<p>Logistic regression is a <strong>discriminative model</strong> since it focuses only
-on the posterior probability of each class <span class="math notranslate nohighlight">\(p(C_k|x)\)</span>. It only
-requires to estimate the <span class="math notranslate nohighlight">\(P\)</span> weights of the <span class="math notranslate nohighlight">\(\boldsymbol{w}\)</span>
-vector. Thus it should be favoured over LDA with many input features. In
-small dimension and balanced situations it would provide similar
-predictions than LDA.</p>
-<p>However imbalanced group sizes cannot be explicitly controlled. It can
-be managed using a reweighting of the input samples.</p>
+<img alt="../_images/linear_classification_10_1.png" src="../_images/linear_classification_10_1.png" />
+</section>
+<section id="loss-functions-for-classification">
+<h3>Loss Functions for Classification<a class="headerlink" href="#loss-functions-for-classification" title="Link to this heading">¶</a></h3>
+<section id="negative-log-likelihood-nll">
+<span id="test-nll"></span><h4>Negative Log-Likelihood (NLL)<a class="headerlink" href="#negative-log-likelihood-nll" title="Link to this heading">¶</a></h4>
+<p>The Negative Log-Likelihood (NLL) for a dataset of observations
+<span class="math notranslate nohighlight">\(\{(\mathbf{x}_i, y_i)\}_{i=1}^n\)</span>, where each <span class="math notranslate nohighlight">\(x_i\)</span> is an
+input and <span class="math notranslate nohighlight">\(y_i\)</span> is the corresponding label.</p>
+<p><strong>General Formulation of NLL</strong></p>
+<p>Given a <strong>probabilistic model</strong> that predicts
+<span class="math notranslate nohighlight">\(P(y_i \mid x_i; \theta)\)</span>, where <span class="math notranslate nohighlight">\(\theta\)</span> are the model
+parameters (e.g., weights in a neural network or logistic regression),
+the <strong>Negative Log-Likelihood</strong> over the dataset is:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}}(\theta) = - \sum_{i=1}^n \log P(y_i \mid x_i; \theta)\]</div>
+<p>This expression encourages the model to assign <strong>high probability</strong> to
+the <strong>correct labels</strong>.</p>
+<p><strong>Binary Classification (Sigmoid Output) a.k.a. Logistic or Binary
+Cross-Entropy Loss</strong></p>
+<p>For binary labels <span class="math notranslate nohighlight">\(y_i \in \{0, 1\}\)</span>, and using:</p>
+<div class="math notranslate nohighlight">
+\[P(y_i = 1 \mid x_i; \theta) = \hat{p}_i = \sigma(z_i)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{p}\)</span> is the predicted probability of the positive class
+(obtained via a sigmoid activation, <span class="math notranslate nohighlight">\(\sigma(z_i)\)</span>). The NLL
+becomes:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}} = -\log \Pi_{i=1}^n \left[\hat{p}_i^{y_i} +  (1 - \hat{p}_i)^{(1 - y_i)} \right]\]</div>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]\]</div>
+<p>or</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \left[ \log(1 + e^{-z_i}) + (1 - y_i) z_i \right] \quad \text{with } y_i \in \{0, 1\}.\]</div>
+<p>Recoding output <span class="math notranslate nohighlight">\(y_i \in \{-1, +1\}\)</span>, the expression simplifies to</p>
+<div class="math notranslate nohighlight">
+\[\boxed{\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \log\left(1 + e^{-y_i \cdot z_i} \right)} \quad \text{with } y_i \in \{-1, +1\}.\]</div>
+<p>For linear models: <span class="math notranslate nohighlight">\(z_i=\mathbf{w}^\top \mathbf{x}_i\)</span>. For more
+details, see the <a class="reference internal" href="demo_ml_losses.html#ref-demonstration-nll"><span class="std std-ref">Demonstration of Negative Log-Likelihood
+(NLL)</span></a> Loss.</p>
+<p>This expression is also known as the <strong>logistic loss</strong> or <strong>binary
+cross-entropy</strong>. It penalizes confident but incorrect predictions very
+heavily (e.g., predicting <span class="math notranslate nohighlight">\(\hat{p} = 0.99\)</span> when <span class="math notranslate nohighlight">\(y = 0\)</span>).</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the logistic loss for binary classification</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">logistic_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">y</span> <span class="o">*</span> <span class="n">z</span><span class="p">))</span>
+
+
+<span class="c1"># Input range (raw scores from the model)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+
+<span class="c1"># Logistic loss for y = 1 and y = 0</span>
+<span class="n">loss_y1</span> <span class="o">=</span> <span class="n">logistic_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">loss_y0</span> <span class="o">=</span> <span class="n">logistic_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># equivalent to logistic loss for y=0</span>
+
+<span class="c1"># Plotting</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">loss_y1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Logistic Loss (y = 1)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">loss_y0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Logistic Loss (y = 0)&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Logistic Loss as a Function of Raw Score z&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Model score z&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/linear_classification_12_0.png" src="../_images/linear_classification_12_0.png" />
+<p><strong>Gradient Logistic or Binary Cross-Entropy Loss for Linear Models</strong></p>
+<p>For linear models where <span class="math notranslate nohighlight">\(z_i=\mathbf{w}^\top \mathbf{x}_i\)</span> the
+gradient of the NLL according to the coefficients vector
+<span class="math notranslate nohighlight">\(\mathbf{w}\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[\boxed{\nabla_{\mathbf{w}} \mathcal{L}_{\text{NLL}} = \sum_{i=1}^n (\sigma(\mathbf{w}^\top \mathbf{x}_i) - y_i)\mathbf{x}_i}\]</div>
+<p><strong>Multiclass Classification (Softmax Output) a.k.a. Cross-Entropy Loss</strong></p>
+<p>Assume <span class="math notranslate nohighlight">\(y_i \in \{1, 2, \dots, K\}\)</span>, and the model outputs softmax
+probabilities <span class="math notranslate nohighlight">\(\hat{p}_{i,k} = P(y_i = k \mid x_i; \theta)\)</span>. Then:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \log \hat{p}_{i, y_i}\]</div>
+<p>If you use one-hot encoded labels <span class="math notranslate nohighlight">\(\mathbf{y}_i\)</span>, the NLL is also
+written as:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \sum_{k=1}^K y_{i,k} \log(\hat{p}_{i,k})\]</div>
+<p>This is equivalent to the <strong>cross-entropy loss</strong> when combined with
+softmax.</p>
+<p><strong>Summary</strong></p>
+<ul class="simple">
+<li><p>Negative Log-Likelihood = general loss for probabilistic models</p></li>
+<li><p>Logistic loss = binary cross-entropy</p></li>
+<li><p>Cross-Entropy loss = NLL + Softmax (for multiclass problems)</p></li>
+<li><p>These losses are convex (for linear models), interpretable, and widely
+used in training classifiers like logistic regression and neural
+networks.</p></li>
+</ul>
+<p>See also <a class="reference external" href="https://scikit-learn.org/stable/modules/sgd.html#mathematical-formulation">Scikit learn
+doc</a></p>
+</section>
+</section>
+<section id="hinge-loss-or-ell-1-loss">
+<h3>Hinge loss or <span class="math notranslate nohighlight">\(\ell_1\)</span> loss<a class="headerlink" href="#hinge-loss-or-ell-1-loss" title="Link to this heading">¶</a></h3>
+<p>TODO</p>
+</section>
+<section id="logistic-regression-summary">
+<h3>Logistic Regression Summary<a class="headerlink" href="#logistic-regression-summary" title="Link to this heading">¶</a></h3>
+<p>Logistic regression minimizes the Cross-Entropy loss i.e. NLL with
+Sigmoid (binary problems) or NLL with Softmax (multiclass problems):</p>
+<div class="math notranslate nohighlight">
+\[\boxed{\min_{\mathbf{w}}~\text{Logistic}(\mathbf{w}) = \mathcal{L}_{\text{NLL}}(\mathbf{w})}\]</div>
+</section>
+<section id="logistic-regression-with-scikit-learn">
+<h3>Logistic Regression with Scikit-Learn<a class="headerlink" href="#logistic-regression-with-scikit-learn" title="Link to this heading">¶</a></h3>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lm</span>
 <span class="n">logreg</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="c1"># This class implements regularized logistic regression.</span>
-<span class="c1"># C is the Inverse of regularization strength.</span>
-<span class="c1"># Large value =&gt; no regularization.</span>
 
 <span class="n">logreg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">y_pred_logreg</span> <span class="o">=</span> <span class="n">logreg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -298,45 +644,6 @@ be managed using a reweighting of the input samples.</p>
 <span class="p">[[</span><span class="o">-</span><span class="mf">5.15</span>  <span class="mf">5.57</span><span class="p">]]</span>
 </pre></div>
 </div>
-<section id="exercise">
-<h3>Exercise<a class="headerlink" href="#exercise" title="Link to this heading">¶</a></h3>
-<p>Explore the <code class="docutils literal notranslate"><span class="pre">Logistic</span> <span class="pre">Regression</span></code> parameters and proposes a solution
-in cases of highly imbalanced training dataset <span class="math notranslate nohighlight">\(N_1 \gg N_0\)</span> when
-we know that in reality both classes have the same probability
-<span class="math notranslate nohighlight">\(p(C_1) = p(C_0)\)</span>.</p>
-</section>
-</section>
-<section id="losses">
-<h2>Losses<a class="headerlink" href="#losses" title="Link to this heading">¶</a></h2>
-<section id="negative-log-likelihood-or-cross-entropy">
-<h3>Negative log likelihood or cross-entropy<a class="headerlink" href="#negative-log-likelihood-or-cross-entropy" title="Link to this heading">¶</a></h3>
-<p>The <strong>Loss function</strong> for sample <span class="math notranslate nohighlight">\(i\)</span> is the negative log of the
-probability:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}L(\boldsymbol{w, x_i}, y_i) = \begin{cases}
-        -\log(p(1|w, \boldsymbol{x_i}))  &amp; \text{if } y_i = 1
-        \\
-        -\log(1 - p(1|w, \boldsymbol{x_i})  &amp; \text{if } y_i = 0
-        \end{cases}\end{split}\]</div>
-<p>For the whole dataset
-<span class="math notranslate nohighlight">\(\boldsymbol{X}, \boldsymbol{y} = \{\boldsymbol{x_i}, y_i\}\)</span> the
-loss function to minimize <span class="math notranslate nohighlight">\(L(\boldsymbol{w, X, y})\)</span> is the
-negative negative log likelihood (nll) that can be simplied using a 0/1
-coding of the label in the case of binary classification:</p>
-<p>This is known as the <strong>cross-entropy</strong> between the true label <span class="math notranslate nohighlight">\(y\)</span>
-and the predicted probability <span class="math notranslate nohighlight">\(p\)</span>.</p>
-<p>For the logistic regression case, we have:</p>
-<div class="math notranslate nohighlight">
-\[L(\boldsymbol{w, X, y}) = \sum_i\{y_i \boldsymbol{w \cdot x_i} - \log(1 + \exp(\boldsymbol{w \cdot x_i}))\}\]</div>
-<p>This is solved by numerical method using the gradient of the loss:</p>
-<div class="math notranslate nohighlight">
-\[\partial\frac{L(\boldsymbol{w, X, y})}{\partial\boldsymbol{w}} = \sum_i \boldsymbol{x_i} (y_i - p(1|\boldsymbol{w}, \boldsymbol{x_i}))\]</div>
-<p>See also <a class="reference external" href="https://scikit-learn.org/stable/modules/sgd.html#mathematical-formulation">Scikit learn
-doc</a></p>
-</section>
-<section id="hinge-loss-or-ell-1-loss">
-<h3>Hinge loss or <span class="math notranslate nohighlight">\(\ell_1\)</span> loss<a class="headerlink" href="#hinge-loss-or-ell-1-loss" title="Link to this heading">¶</a></h3>
-<p>TODO</p>
 </section>
 </section>
 <section id="regularization-using-penalization-of-coefficients">
@@ -390,22 +697,22 @@ coefficients to 0.</p></li>
 </section>
 <section id="understanding-the-effect-of-penalty-using-ell-2-regularization-fishers-linear-classification">
 <h3>Understanding the effect of penalty using <span class="math notranslate nohighlight">\(\ell_2\)</span>-regularization Fisher’s linear classification<a class="headerlink" href="#understanding-the-effect-of-penalty-using-ell-2-regularization-fishers-linear-classification" title="Link to this heading">¶</a></h3>
-<p>When the matrix <span class="math notranslate nohighlight">\(\boldsymbol{S_W}\)</span> is not full rank or
+<p>When the matrix <span class="math notranslate nohighlight">\(\mathbf{S_W}\)</span> is not full rank or
 <span class="math notranslate nohighlight">\(P \gg N\)</span>, the The Fisher most discriminant projection estimate of
 the is not unique. This can be solved using a biased version of
-<span class="math notranslate nohighlight">\(\boldsymbol{S_W}\)</span>:</p>
+<span class="math notranslate nohighlight">\(\mathbf{S_W}\)</span>:</p>
 <div class="math notranslate nohighlight">
-\[\boldsymbol{S_W}^{Ridge} = \boldsymbol{S_W} + \lambda \boldsymbol{I}\]</div>
+\[\mathbf{S_W}^{Ridge} = \mathbf{S_W} + \lambda \mathbf{I}\]</div>
 <p>where <span class="math notranslate nohighlight">\(I\)</span> is the <span class="math notranslate nohighlight">\(P \times P\)</span> identity matrix. This leads to
 the regularized (ridge) estimator of the Fisher’s linear discriminant
 analysis:</p>
 <div class="math notranslate nohighlight">
-\[\boldsymbol{w}^{Ridge} \propto (\boldsymbol{S_W} + \lambda \boldsymbol{I})^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0})\]</div>
-<figure class="align-default" id="id4">
+\[\mathbf{w}^{Ridge} \propto (\mathbf{S_W} + \lambda \mathbf{I})^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})\]</div>
+<figure class="align-default" id="id2">
 <a class="reference internal image-reference" href="../_images/ridge_fisher_linear_disc.png"><img alt="The Ridge Fisher most discriminant projection" src="../_images/ridge_fisher_linear_disc.png" style="width: 15cm;" />
 </a>
 <figcaption>
-<p><span class="caption-text">The Ridge Fisher most discriminant projection</span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
+<p><span class="caption-text">The Ridge Fisher most discriminant projection</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>Increasing <span class="math notranslate nohighlight">\(\lambda\)</span> will:</p>
@@ -419,12 +726,12 @@ contribution of the pairwise covariances.</p></li>
 <section id="ell-2-regularized-logistic-regression">
 <h2><span class="math notranslate nohighlight">\(\ell_2\)</span>-regularized logistic regression<a class="headerlink" href="#ell-2-regularized-logistic-regression" title="Link to this heading">¶</a></h2>
 <p>The <strong>objective function</strong> to be minimized is now the combination of the
-logistic loss (negative log likelyhood)
-<span class="math notranslate nohighlight">\(-\log \mathcal{L}(\boldsymbol{w})\)</span> with a penalty of the L2 norm
-of the weights vector. In the two-class case, using the 0/1 coding we
+logistic loss (Negative Log Likelihood) with a penalty of the L2 norm of
+the weights vector. In the two-class case, using the 0/1 coding we
 obtain:</p>
 <div class="math notranslate nohighlight">
-\[\min_{\boldsymbol{w}}~\text{Logistic ridge}(\boldsymbol{w}) = -\log \mathcal{L}(\boldsymbol{w, X, y}) + \lambda~\|\boldsymbol{w}\|^2\]</div>
+\[\min_{\mathbf{w}}~\text{Logistic L2}(\mathbf{w}) = \mathcal{L}_{\text{NLL}}(\mathbf{w})
+ + \lambda~\|\mathbf{w}\|^2\]</div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lm</span>
 <span class="n">lrl2</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;l2&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">.1</span><span class="p">)</span>
 <span class="c1"># This class implements regularized logistic regression.</span>
@@ -464,11 +771,12 @@ Nb errors=24, error rate=0.24
 <section id="lasso-logistic-regression-ell-1-regularization">
 <h2>Lasso logistic regression (<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)<a class="headerlink" href="#lasso-logistic-regression-ell-1-regularization" title="Link to this heading">¶</a></h2>
 <p>The <strong>objective function</strong> to be minimized is now the combination of the
-logistic loss <span class="math notranslate nohighlight">\(-\log \mathcal{L}(\boldsymbol{w})\)</span> with a penalty
-of the L1 norm of the weights vector. In the two-class case, using the
-0/1 coding we obtain:</p>
+logistic loss <span class="math notranslate nohighlight">\(-\log \mathcal{L}(\mathbf{w})\)</span> with a penalty of
+the L1 norm of the weights vector. In the two-class case, using the 0/1
+coding we obtain:</p>
 <div class="math notranslate nohighlight">
-\[\min_{\boldsymbol{w}}~\text{Logistic Lasso}(w) = -\log \mathcal{L}(\boldsymbol{w, X, y}) + \lambda~\|\boldsymbol{w}\|_1\]</div>
+\[\min_{\mathbf{w}}~\text{Logistic Lasso}(\mathbf{w}) = \mathcal{L}_{\text{NLL}}(\mathbf{w})
+ + \lambda~\|\mathbf{w}\|_1\]</div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lm</span>
 <span class="n">lrl1</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">LogisticRegression</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;l1&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;saga&#39;</span><span class="p">)</span> <span class="c1"># lambda = 1 / C!</span>
 
@@ -497,43 +805,36 @@ of the L1 norm of the weights vector. In the two-class case, using the
 margin to enforce robustness against noise. Like logistic regression it
 is a <strong>discriminative method</strong> that only focuses of predictions.</p>
 <p>Here we present the non separable case of Maximum Margin Classifiers
-with <span class="math notranslate nohighlight">\(\pm 1\)</span> coding (ie.: <span class="math notranslate nohighlight">\(y_i \ \{-1, +1\}\)</span>). In the next
-figure the legend aply to samples of “dot” class.</p>
-<figure class="align-default" id="id5">
+with <span class="math notranslate nohighlight">\(\pm 1\)</span> coding (ie.: <span class="math notranslate nohighlight">\(y_i \ \{-1, +1\}\)</span>).</p>
+<figure class="align-default" id="id3">
 <img alt="Linear lar margin classifiers" src="../_images/svm.png" />
 <figcaption>
-<p><span class="caption-text">Linear lar margin classifiers</span><a class="headerlink" href="#id5" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Linear lar margin classifiers</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>Linear SVM for classification (also called SVM-C or SVC) minimizes:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\begin{array}{lll}
-\text{min}   &amp; \text{Linear SVM}(\boldsymbol{w}) &amp;= \text{penalty}(w) +  C~\text{Hinge loss}(w)\\
-             &amp; &amp; = \|w\|_2^2 + C~\sum_i^N\xi_i\\
-\text{with}  &amp; \forall i &amp; y_i (w \cdot \boldsymbol{x_i}) \geq 1 - \xi_i
-\end{array}\end{split}\]</div>
+\[\min_{\mathbf{w}}~\text{Linear SVM}(\mathbf{w}) = \|\mathbf{w}\|_2^2 +  C~\sum_i^n\max(0, 1 - y_i~ (\mathbf{w} \cdot \mathbf{x_i}))\]</div>
+<p>where <span class="math notranslate nohighlight">\(\max(0, 1 - y_i~ (\mathbf{w} \cdot \mathbf{x_i})\)</span> is the
+<strong>hinge loss</strong>.</p>
 <p>Here we introduced the slack variables: <span class="math notranslate nohighlight">\(\xi_i\)</span>, with
 <span class="math notranslate nohighlight">\(\xi_i = 0\)</span> for points that are on or inside the correct margin
-boundary and <span class="math notranslate nohighlight">\(\xi_i = |y_i - (w \ cdot  \cdot \boldsymbol{x_i})|\)</span>
-for other points. Thus:</p>
+boundary and <span class="math notranslate nohighlight">\(\xi_i = |y_i - (w \ cdot  \cdot \mathbf{x_i})|\)</span> for
+other points. Thus:</p>
 <ol class="arabic simple">
-<li><p>If <span class="math notranslate nohighlight">\(y_i (w \cdot \boldsymbol{x_i}) \geq 1\)</span> then the point lies
-outside the margin but on the correct side of the decision boundary.
-In this case <span class="math notranslate nohighlight">\(\xi_i=0\)</span>. The constraint is thus not active for
-this point. It does not contribute to the prediction.</p></li>
-<li><p>If <span class="math notranslate nohighlight">\(1 &gt; y_i (w \cdot \boldsymbol{x_i}) \geq 0\)</span> then the point
-lies inside the margin and on the correct side of the decision
-boundary. In this case <span class="math notranslate nohighlight">\(0&lt;\xi_i \leq 1\)</span>. The constraint is
-active for this point. It does contribute to the prediction as a
-support vector.</p></li>
-<li><p>If <span class="math notranslate nohighlight">\(0 &lt;  y_i (w \cdot \boldsymbol{x_i})\)</span>) then the point is on
-the wrong side of the decision boundary (missclassification). In this
-case <span class="math notranslate nohighlight">\(0&lt;\xi_i &gt; 1\)</span>. The constraint is active for this point. It
+<li><p>If <span class="math notranslate nohighlight">\(y_i (\mathbf{w} \cdot \mathbf{x_i}) \geq 1\)</span> then the point
+lies outside the margin but on the correct side of the decision
+boundary. In this case the constraint is thus not active for this
+point. It does not contribute to the prediction.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(1 &gt; y_i (\mathbf{w} \cdot \mathbf{x_i}) \geq 0\)</span> then the
+point lies inside the margin and on the correct side of the decision
+boundary. In this case the constraint is active for this point. It
 does contribute to the prediction as a support vector.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(0 &lt;  y_i (\mathbf{w} \cdot \mathbf{x_i})\)</span>) then the point
+is on the wrong side of the decision boundary (missclassification).
+In this case the constraint is active for this point. It does
+contribute to the prediction as a support vector.</p></li>
 </ol>
-<p>This loss is called the hinge loss, defined as:</p>
-<div class="math notranslate nohighlight">
-\[\max(0, 1 - y_i~ (w \cdot \boldsymbol{x_i}))\]</div>
 <p>So linear SVM is closed to Ridge logistic regression, using the hinge
 loss instead of the logistic loss. Both will provide very similar
 predictions.</p>
@@ -559,13 +860,9 @@ predictions.</p>
 </section>
 <section id="lasso-linear-support-vector-machine-ell-1-regularization">
 <h2>Lasso linear Support Vector Machine (<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)<a class="headerlink" href="#lasso-linear-support-vector-machine-ell-1-regularization" title="Link to this heading">¶</a></h2>
-<p>Linear SVM for classification (also called SVM-C or SVC) with
-l1-regularization</p>
+<p>Linear SVM with l1-regularization:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\begin{array}{lll}
-\text{min}   &amp; F_{\text{Lasso linear SVM}}(w) &amp;= ||w||_1 + C~\sum_i^N\xi_i\\
-\text{with}  &amp; \forall i &amp; y_i (w \cdot \boldsymbol{x_i}) \geq 1 - \xi_i
-\end{array}\end{split}\]</div>
+\[\min_{\mathbf{w}}~\text{Lasso Linear SVM}(\mathbf{w}) = \|\mathbf{w}\|_1 +  C~\sum_i^n\max(0, 1 - y_i~ (\mathbf{w} \cdot \mathbf{x_i}))\]</div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">svm</span>
 
 <span class="n">svmlinl1</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">LinearSVC</span><span class="p">(</span><span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;l1&#39;</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -586,31 +883,20 @@ l1-regularization</p>
 </pre></div>
 </div>
 </section>
-<section id="id1">
-<h2>Exercise<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
-<p>Compare predictions of Logistic regression (LR) and their SVM
-counterparts, ie.: L2 LR vs L2 SVM and L1 LR vs L1 SVM</p>
-<ul class="simple">
-<li><p>Compute the correlation between pairs of weights vectors.</p></li>
-<li><p>Compare the predictions of two classifiers using their decision
-function:</p>
-<ul>
-<li><p>Give the equation of the decision function for a linear classifier,
-assuming that their is no intercept.</p></li>
-<li><p>Compute the correlation decision function.</p></li>
-<li><p>Plot the pairwise decision function of the classifiers.</p></li>
-</ul>
-</li>
-<li><p>Conclude on the differences between Linear SVM and logistic
-regression.</p></li>
-</ul>
-</section>
 <section id="elastic-net-classification-ell-1-ell-2-regularization">
 <h2>Elastic-net classification (<span class="math notranslate nohighlight">\(\ell_1\ell_2\)</span>-regularization)<a class="headerlink" href="#elastic-net-classification-ell-1-ell-2-regularization" title="Link to this heading">¶</a></h2>
-<p>The <strong>objective function</strong> to be minimized is now the combination of the
-logistic loss <span class="math notranslate nohighlight">\(\log L(\boldsymbol{w})\)</span> or the hinge loss with
-combination of L1 and L2 penalties. In the two-class case, using the 0/1
-coding we obtain:</p>
+<p>The <strong>objective function</strong> to be minimized is now the combination of a
+loss with combination of L1 and L2 penalties:</p>
+<ul>
+<li><p>For the NLL loss:</p>
+<div class="math notranslate nohighlight">
+\[\min~\text{Logistic Enet}(\mathbf{w}) = \mathcal{L}_{\text{NLL}}(\mathbf{w}) + \alpha~\left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right)\]</div>
+</li>
+<li><p>For the Hinge loss</p>
+<div class="math notranslate nohighlight">
+\[\min~\text{Hinge Enet}(\mathbf{w}) = \text{Hinge loss}(\mathbf{w}) + \alpha~\left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right)\]</div>
+</li>
+</ul>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use SGD solver</span>
 <span class="n">enetlog</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">SGDClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;log_loss&quot;</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s2">&quot;elasticnet&quot;</span><span class="p">,</span>
                             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
@@ -638,7 +924,7 @@ coding we obtain:</p>
 <span class="n">Decision_function</span> <span class="n">log</span> <span class="n">x</span> <span class="n">hinge</span> <span class="n">losses</span><span class="p">:</span>
 </pre></div>
 </div>
-<img alt="../_images/linear_classification_24_1.png" src="../_images/linear_classification_24_1.png" />
+<img alt="../_images/linear_classification_28_1.png" src="../_images/linear_classification_28_1.png" />
 </section>
 <section id="classification-performance-evaluation-metrics">
 <h2>Classification performance evaluation metrics<a class="headerlink" href="#classification-performance-evaluation-metrics" title="Link to this heading">¶</a></h2>
@@ -678,13 +964,13 @@ either class:</p>
 <p>bACC = 1/2 * (SEN + SPC)</p>
 </li>
 <li><p>F1 Score (or F-score) which is a weighted average of precision and
-recall are usefull to deal with imballaced datasets</p></li>
+recall are useful to deal with imbalanced datasets</p></li>
 </ul>
 <p>The four outcomes can be formulated in a 2×2 contingency table or
-confusion matrix
-<a class="reference external" href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">https://en.wikipedia.org/wiki/Sensitivity_and_specificity</a></p>
-<p>For more precision see:
-<a class="reference external" href="http://scikit-learn.org/stable/modules/model_evaluation.html">http://scikit-learn.org/stable/modules/model_evaluation.html</a></p>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">confusion
+matrix</a></p>
+<p>For more precision see <a class="reference external" href="http://scikit-learn.org/stable/modules/model_evaluation.html">Scikit-learn
+doc</a></p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">metrics</span>
 <span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="n">y_true</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
@@ -715,8 +1001,8 @@ is poorly adjusted, the performances will highlight an high specificity
 and a low sensitivity or the contrary.</p>
 <p>In this case it is recommended to use the AUC of a ROC analysis which
 basically provide a measure of overlap of the two classes when points
-are projected on the discriminative axis. For more detail on ROC and AUC
-see:https://en.wikipedia.org/wiki/Receiver_operating_characteristic.</p>
+are projected on the discriminative axis. See <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">Wikipedia: ROC and
+AUC</a>.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">score_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">.1</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.3</span><span class="p">,</span> <span class="mf">.4</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.6</span><span class="p">,</span> <span class="mf">.7</span><span class="p">,</span> <span class="mf">.8</span><span class="p">])</span>
 <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="n">thres</span> <span class="o">=</span> <span class="mf">.9</span>
@@ -909,8 +1195,8 @@ rank-sum test or Wilcoxon–Mann–Whitney test) is a nonparametric</p>
 </pre></div>
 </div>
 </section>
-<section id="id2">
-<h2>Exercise<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<section id="exercise">
+<h2>Exercise<a class="headerlink" href="#exercise" title="Link to this heading">¶</a></h2>
 <section id="fisher-linear-discriminant-rule">
 <h3>Fisher linear discriminant rule<a class="headerlink" href="#fisher-linear-discriminant-rule" title="Link to this heading">¶</a></h3>
 <p>Write a class <code class="docutils literal notranslate"><span class="pre">FisherLinearDiscriminant</span></code> that implements the Fisher’s
@@ -934,22 +1220,18 @@ presented for the LDA.</p>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">Linear Models for Classification</a><ul>
-<li><a class="reference internal" href="#fishers-linear-discriminant-with-equal-class-covariance">Fisher’s linear discriminant with equal class covariance</a><ul>
-<li><a class="reference internal" href="#the-fisher-most-discriminant-projection">The Fisher most discriminant projection</a><ul>
-<li><a class="reference internal" href="#demonstration">Demonstration</a></li>
+<li><a class="reference internal" href="#geometric-method-naive-method">Geometric Method: Naive Method</a></li>
+<li><a class="reference internal" href="#geometric-method-fishers-linear-discriminant">Geometric Method: Fisher’s Linear Discriminant</a></li>
+<li><a class="reference internal" href="#generative-model-linear-discriminant-analysis-lda">Generative Model: Linear Discriminant Analysis (LDA)</a></li>
+<li><a class="reference internal" href="#logistic-regression">Logistic Regression</a><ul>
+<li><a class="reference internal" href="#activation-functions-for-classification-sigmoid-and-softmax">Activation Functions for Classification (Sigmoid and Softmax)</a></li>
+<li><a class="reference internal" href="#loss-functions-for-classification">Loss Functions for Classification</a><ul>
+<li><a class="reference internal" href="#negative-log-likelihood-nll">Negative Log-Likelihood (NLL)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-separating-hyperplane">The separating hyperplane</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#linear-discriminant-analysis-lda">Linear discriminant analysis (LDA)</a></li>
-<li><a class="reference internal" href="#logistic-regression">Logistic regression</a><ul>
-<li><a class="reference internal" href="#exercise">Exercise</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#losses">Losses</a><ul>
-<li><a class="reference internal" href="#negative-log-likelihood-or-cross-entropy">Negative log likelihood or cross-entropy</a></li>
 <li><a class="reference internal" href="#hinge-loss-or-ell-1-loss">Hinge loss or <span class="math notranslate nohighlight">\(\ell_1\)</span> loss</a></li>
+<li><a class="reference internal" href="#logistic-regression-summary">Logistic Regression Summary</a></li>
+<li><a class="reference internal" href="#logistic-regression-with-scikit-learn">Logistic Regression with Scikit-Learn</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#regularization-using-penalization-of-coefficients">Regularization using penalization of coefficients</a><ul>
@@ -961,7 +1243,6 @@ presented for the LDA.</p>
 <li><a class="reference internal" href="#lasso-logistic-regression-ell-1-regularization">Lasso logistic regression (<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)</a></li>
 <li><a class="reference internal" href="#linear-support-vector-machine-ell-2-regularization-with-hinge-loss">Linear Support Vector Machine (<span class="math notranslate nohighlight">\(\ell_2\)</span>-regularization with Hinge loss)</a></li>
 <li><a class="reference internal" href="#lasso-linear-support-vector-machine-ell-1-regularization">Lasso linear Support Vector Machine (<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)</a></li>
-<li><a class="reference internal" href="#id1">Exercise</a></li>
 <li><a class="reference internal" href="#elastic-net-classification-ell-1-ell-2-regularization">Elastic-net classification (<span class="math notranslate nohighlight">\(\ell_1\ell_2\)</span>-regularization)</a></li>
 <li><a class="reference internal" href="#classification-performance-evaluation-metrics">Classification performance evaluation metrics</a><ul>
 <li><a class="reference internal" href="#area-under-curve-auc-of-receiver-operating-characteristic-roc">Area Under Curve (AUC) of Receiver operating characteristic (ROC)</a></li>
@@ -970,7 +1251,7 @@ presented for the LDA.</p>
 <li><a class="reference internal" href="#imbalanced-classes">Imbalanced classes</a></li>
 <li><a class="reference internal" href="#confidence-interval-cross-validation">Confidence interval cross-validation</a></li>
 <li><a class="reference internal" href="#significance-of-classification-metrics">Significance of classification metrics</a></li>
-<li><a class="reference internal" href="#id2">Exercise</a><ul>
+<li><a class="reference internal" href="#exercise">Exercise</a><ul>
 <li><a class="reference internal" href="#fisher-linear-discriminant-rule">Fisher linear discriminant rule</a></li>
 </ul>
 </li>

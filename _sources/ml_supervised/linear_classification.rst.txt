@@ -4,196 +4,6 @@ Linear Models for Classification
 Linear vs. non-linear classifier: See `Scikit-learn Classifier
 comparison <https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html#sphx-glr-auto-examples-classification-plot-classifier-comparison-py>`__.
 
-|Linear (logistic) classification|\ [width=15cm]
-
-Given a training set of :math:`N` samples,
-:math:`D = \{(\boldsymbol{x_1} , y_1 ), \ldots , (\boldsymbol{x_N} , y_N )\}`
-, where :math:`\boldsymbol{x_i}` is a multidimensional input vector with
-dimension :math:`P` and class label (target or response).
-
-Multiclass Classification problems can be seen as several binary
-classification problems :math:`y_i \in \{0, 1\}` where the classifier
-aims to discriminate the sample of the current class (label 1) versus
-the samples of other classes (label 0).
-
-Therfore, for each class the classifier seek for a vector of parameters
-:math:`\boldsymbol{w}` that performs a linear combination of the input
-variables, :math:`\boldsymbol{x}^T \boldsymbol{w}`. This step performs a
-**projection** or a **rotation** of input sample into a good
-discriminative one-dimensional sub-space, that best discriminate sample
-of current class vs sample of other classes.
-
-This score (a.k.a decision function) is tranformed, using the nonlinear
-activation funtion :math:`f(.)`, to a “posterior probabilities” of class
-1: :math:`p(y=1|\boldsymbol{x}) = f(\boldsymbol{x}^T \boldsymbol{w})`,
-where, :math:`p(y=1|\boldsymbol{x}) = 1 - p(y=0|\boldsymbol{x})`.
-
-The decision surfaces (orthogonal hyperplan to :math:`\boldsymbol{w}`)
-correspond to :math:`f(x)=\text{constant}`, so that
-:math:`\boldsymbol{x}^T \boldsymbol{w}=\text{constant}` and hence the
-decision surfaces are linear functions of :math:`\boldsymbol{x}`, even
-if the function :math:`f(.)` is nonlinear.
-
-A thresholding of the activation (shifted by the bias or intercept)
-provides the predicted class label.
-
-The vector of parameters, that defines the discriminative axis,
-minimizes an **objective function** :math:`J(\boldsymbol{w})` that is a
-sum of of **loss function** :math:`L(\boldsymbol{w})` and some penalties
-on the weights vector :math:`\Omega(\boldsymbol{w})`.
-
-.. math::
-
-
-   \min_{\boldsymbol{w}}~J = \sum_i L(y_i, f(\boldsymbol{x_i}^T\boldsymbol{w})) + \Omega(\boldsymbol{w}),
-
-.. |Linear (logistic) classification| image:: images/linear_logistic.png
-
-Fisher’s linear discriminant with equal class covariance
---------------------------------------------------------
-
-This geometric method does not make any probabilistic assumptions,
-instead it relies on distances. It looks for the **linear projection**
-of the data points onto a vector, :math:`\boldsymbol{w}`, that maximizes
-the between/within variance ratio, denoted :math:`F(\boldsymbol{w})`.
-Under a few assumptions, it will provide the same results as linear
-discriminant analysis (LDA), explained below.
-
-Suppose two classes of observations, :math:`C_0` and :math:`C_1`, have
-means :math:`\boldsymbol{\mu_0}` and :math:`\boldsymbol{\mu_1}` and the
-same total within-class scatter (“covariance”) matrix,
-
-.. raw:: latex
-
-   \begin{align}
-       \boldsymbol{S_W} &= \sum_{i\in C_0} (\boldsymbol{x_i} - \boldsymbol{\mu_0})(\boldsymbol{x_i} - \boldsymbol{\mu_0})^T + \sum_{j\in C_1} (\boldsymbol{x_j} - \boldsymbol{\mu_1})(\boldsymbol{x_j} -\boldsymbol{\mu_1})^T\\
-           &= \boldsymbol{X_c}^T \boldsymbol{X_c},
-   \end{align}
-
-where :math:`\boldsymbol{X_c}` is the :math:`(N \times P)` matrix of
-data centered on their respective means:
-
-.. math::
-
-
-   \boldsymbol{X_c} = \begin{bmatrix}
-             \boldsymbol{X_0} -  \boldsymbol{\mu_0} \\
-             \boldsymbol{X_1} -  \boldsymbol{\mu_1} 
-         \end{bmatrix},
-
-where :math:`\boldsymbol{X_0}` and :math:`\boldsymbol{X_1}` are the
-:math:`(N_0 \times P)` and :math:`(N_1 \times P)` matrices of samples of
-classes :math:`C_0` and :math:`C_1`.
-
-Let :math:`\boldsymbol{S_B}` being the scatter “between-class” matrix,
-given by
-
-.. math::
-
-
-       \boldsymbol{S_B} = (\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )(\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )^T.
-
-The linear combination of features :math:`\boldsymbol{w}^T x` have means
-:math:`\boldsymbol{w}^T \mu_i` for :math:`i=0,1`, and variance
-:math:`\boldsymbol{w}^T
-\boldsymbol{X^T_c} \boldsymbol{X_c} \boldsymbol{w}`. Fisher defined the
-separation between these two distributions to be the ratio of the
-variance between the classes to the variance within the classes:
-
-.. raw:: latex
-
-   \begin{align}
-   F_{\text{Fisher}}(\boldsymbol{w}) &= \frac{\sigma_{\text{between}}^2}{\sigma_{\text{within}}^2}\\
-                        &= \frac{(\boldsymbol{w}^T \boldsymbol{\mu_1} - \boldsymbol{w}^T \boldsymbol{\mu_0})^2}{\boldsymbol{w}^T  X^T_c \boldsymbol{X_c} \boldsymbol{w}}\\
-                        &= \frac{(\boldsymbol{w}^T (\boldsymbol{\mu_1} - \boldsymbol{\mu_0}))^2}{\boldsymbol{w}^T  X^T_c \boldsymbol{X_c} \boldsymbol{w}}\\ 
-                        &= \frac{\boldsymbol{w}^T (\boldsymbol{\mu_1} - \boldsymbol{\mu_0}) (\boldsymbol{\mu_1} - \boldsymbol{\mu_0})^T w}{\boldsymbol{w}^T X^T_c \boldsymbol{X_c} \boldsymbol{w}}\\
-                        &= \frac{\boldsymbol{w}^T \boldsymbol{S_B} w}{\boldsymbol{w}^T \boldsymbol{S_W} \boldsymbol{w}}.
-   \end{align}
-
-The Fisher most discriminant projection
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In the two-class case, the maximum separation occurs by a projection on
-the :math:`(\boldsymbol{\mu_1} - \boldsymbol{\mu_0})` using the
-Mahalanobis metric :math:`\boldsymbol{S_W}^{-1}`, so that
-
-.. math::
-
-
-       \boldsymbol{w} \propto \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0}).
-
-Demonstration
-^^^^^^^^^^^^^
-
-Differentiating :math:`F_{\text{Fisher}}(w)` with respect to :math:`w`
-gives
-
-.. raw:: latex
-
-   \begin{align*}
-       \nabla_{\boldsymbol{w}}F_{\text{Fisher}}(\boldsymbol{w}) &= 0\\
-       \nabla_{\boldsymbol{w}}\left(\frac{\boldsymbol{w}^T \boldsymbol{S_B} w}{\boldsymbol{w}^T \boldsymbol{S_W} \boldsymbol{w}}\right) &= 0\\
-       (\boldsymbol{w}^T \boldsymbol{S_W} \boldsymbol{w})(2 \boldsymbol{S_B} \boldsymbol{w}) - (\boldsymbol{w}^T \boldsymbol{S_B} \boldsymbol{w})(2 \boldsymbol{S_W} \boldsymbol{w}) &= 0\\
-       (\boldsymbol{w}^T \boldsymbol{S_W} \boldsymbol{w})(\boldsymbol{S_B} \boldsymbol{w}) &= (\boldsymbol{w}^T \boldsymbol{S_B} \boldsymbol{w})(\boldsymbol{S_W} \boldsymbol{w})\\
-       \boldsymbol{S_B} \boldsymbol{w} &= \frac{\boldsymbol{w}^T \boldsymbol{S_B} \boldsymbol{w}}{\boldsymbol{w}^T \boldsymbol{S_W} \boldsymbol{w}}(\boldsymbol{S_W} \boldsymbol{w})\\
-       \boldsymbol{S_B} \boldsymbol{w} &= \lambda (\boldsymbol{S_W} \boldsymbol{w})\\
-       \boldsymbol{S_W}^{-1}{\boldsymbol{S_B}} \boldsymbol{w} &= \lambda  \boldsymbol{w}.
-   \end{align*}
-
-Since we do not care about the magnitude of :math:`\boldsymbol{w}`, only
-its direction, we replaced the scalar factor
-:math:`(\boldsymbol{w}^T \boldsymbol{S_B} \boldsymbol{w}) / (\boldsymbol{w}^T \boldsymbol{S_W} \boldsymbol{w})`
-by :math:`\lambda`.
-
-In the multiple-class case, the solutions :math:`w` are determined by
-the eigenvectors of :math:`\boldsymbol{S_W}^{-1}{\boldsymbol{S_B}}` that
-correspond to the :math:`K-1` largest eigenvalues.
-
-However, in the two-class case (in which
-:math:`\boldsymbol{S_B} = (\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )(\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )^T`)
-it is easy to show that
-:math:`\boldsymbol{w} = \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0})`
-is the unique eigenvector of
-:math:`\boldsymbol{S_W}^{-1}{\boldsymbol{S_B}}`:
-
-.. raw:: latex
-
-   \begin{align*}
-       \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )(\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )^T \boldsymbol{w} &= \lambda  \boldsymbol{w}\\
-       \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )(\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )^T \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0}) &= \lambda  \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0}),
-   \end{align*}
-
-where here
-:math:`\lambda = (\boldsymbol{\mu_1} - \boldsymbol{\mu_0} )^T \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0})`.
-Which leads to the result
-
-.. math::
-
-
-   \boldsymbol{w} \propto \boldsymbol{S_W}^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0}).
-
-The separating hyperplane
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The separating hyperplane is a :math:`P-1`-dimensional hyper surface,
-orthogonal to the projection vector, :math:`w`. There is no single best
-way to find the origin of the plane along :math:`w`, or equivalently the
-classification threshold that determines whether a point should be
-classified as belonging to :math:`C_0` or to :math:`C_1`. However, if
-the projected points have roughly the same distribution, then the
-threshold can be chosen as the hyperplane exactly between the
-projections of the two means, i.e. as
-
-.. math::
-
-
-   T = \boldsymbol{w} \cdot \frac{1}{2}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0}).
-
-.. figure:: images/fisher_linear_disc.png
-   :alt: The Fisher most discriminant projection
-
-   The Fisher most discriminant projection
-
 .. code:: ipython3
 
     import numpy as np
@@ -214,26 +24,213 @@ projections of the two means, i.e. as
     fig_w, fig_h = plt.rcParams.get('figure.figsize')
     plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
 
-Linear discriminant analysis (LDA)
-----------------------------------
+Geometric Method: Naive Method
+------------------------------
 
-Linear discriminant analysis (LDA) is a probabilistic generalization of
-Fisher’s linear discriminant. It uses Bayes’ rule to fix the threshold
-based on prior probabilities of classes.
+Principles:
 
-1. First compute the class-**conditional distributions** of
-   :math:`\boldsymbol{x}` given class :math:`C_k`:
-   :math:`p(x|C_k) = \mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu_k}, \boldsymbol{S_W})`.
-   Where
-   :math:`\mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu_k}, \boldsymbol{S_W})`
-   is the multivariate Gaussian distribution defined over a
-   P-dimensional vector :math:`x` of continuous variables, which is
-   given by
+- Compute classes means :math:`\mathbf{\mu}_1`,
+  :math:`\mathbf{\mu}_2, \mathbf{\mu}_k, \ldots`
+- Classify new point :math:`\mathbf{x}` to the closest mean, i.e.: class
+  :math:`\arg \min_k \|\mathbf{x} - \mathbf{\mu}_k\|_2`
+
+For binary classification, this is equivalent to compute the most
+discriminative direction as the vector between class mean:
 
 .. math::
 
 
-   \mathcal{N}(\boldsymbol{x}|\boldsymbol{\mu_k}, \boldsymbol{S_W}) = \frac{1}{(2\pi)^{P/2}|\boldsymbol{S_W}|^{1/2}}\exp\{-\frac{1}{2} (\boldsymbol{x} - \boldsymbol{\mu_k})^T \boldsymbol{S_W}^{-1}(x - \boldsymbol{\mu_k})\}
+   \boxed{\mathbf{w}_{\text{naive}} = \mathbf{\mu}_1 - \mathbf{\mu}_2}
+
+And projecting a new point :math:`\mathbf{x_i}` along this direction to
+obtain a score :math:`z_i`:
+
+.. math::
+
+
+   z_i = \mathbf{x_i}^\top \mathbf{w}_{\text{naive}}
+
+Finally the Classify the point to the closest projected class mean.
+
+Illustration:
+
+.. figure:: images/fisher_linear_disc.png
+   :alt: Most discriminant projections, Naive and Fisher methods
+
+   Most discriminant projections, Naive and Fisher methods
+
+Geometric Method: Fisher’s Linear Discriminant
+----------------------------------------------
+
+Principles:
+
+- Dimensionality reduction before later classification.
+- Find the most discriminant axis.
+- Taking account the distribution, assuming same normal distribution for
+  all classes.
+
+Simply compute the **within class covariance** :math:`\mathbf{S_W}` to
+rotate the projection direction according to the point (elliptic)
+distribution:
+
+.. math::
+
+
+   \boxed{\mathbf{w}_{\text{Fisher}} = \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})}.
+
+This geometric method does not make any probabilistic assumptions,
+instead it relies on distances. It looks for the **linear projection**
+of the data points onto a vector, :math:`\mathbf{w}`, that maximizes the
+between/within variance ratio, denoted :math:`F(\mathbf{w})`. Under a
+few assumptions, it will provide the same results as linear discriminant
+analysis (LDA), explained below.
+
+Suppose two classes of observations, :math:`C_0` and :math:`C_1`, have
+means :math:`\mathbf{\mu_0}` and :math:`\mathbf{\mu_1}` and the same
+total within-class scatter (“covariance”) matrix,
+
+.. math::
+
+
+       \mathbf{S_W} &= \sum_{i\in C_0} (\mathbf{x_i} - \mathbf{\mu_0})(\mathbf{x_i} - \mathbf{\mu_0})^T + \sum_{j\in C_1} (\mathbf{x_j} - \mathbf{\mu_1})(\mathbf{x_j} -\mathbf{\mu_1})^T\\
+           &= \mathbf{X_c}^T \mathbf{X_c},
+
+where :math:`\mathbf{X_c}` is the :math:`(N \times P)` matrix of data
+centered on their respective means:
+
+.. math::
+
+
+   \mathbf{X_c} = \begin{bmatrix}
+             \mathbf{X_0} -  \mathbf{\mu_0} \\
+             \mathbf{X_1} -  \mathbf{\mu_1} 
+         \end{bmatrix},
+
+where :math:`\mathbf{X_0}` and :math:`\mathbf{X_1}` are the
+:math:`(N_0 \times P)` and :math:`(N_1 \times P)` matrices of samples of
+classes :math:`C_0` and :math:`C_1`.
+
+Let :math:`\mathbf{S_B}` being the scatter “between-class” matrix, given
+by
+
+.. math::
+
+
+       \mathbf{S_B} = (\mathbf{\mu_1} - \mathbf{\mu_0} )(\mathbf{\mu_1} - \mathbf{\mu_0} )^T.
+
+The linear combination of features :math:`\mathbf{w}^T x` have means
+:math:`\mathbf{w}^T \mu_i` for :math:`i=0,1`, and variance
+:math:`\mathbf{w}^T
+\mathbf{X^T_c} \mathbf{X_c} \mathbf{w}`. Fisher defined the separation
+between these two distributions to be the ratio of the variance between
+the classes to the variance within the classes:
+
+.. math::
+
+
+   F_{\text{Fisher}}(\mathbf{w}) &= \frac{\sigma_{\text{between}}^2}{\sigma_{\text{within}}^2}\\
+                        &= \frac{(\mathbf{w}^T \mathbf{\mu_1} - \mathbf{w}^T \mathbf{\mu_0})^2}{\mathbf{w}^T  X^T_c \mathbf{X_c} \mathbf{w}}\\
+                        &= \frac{(\mathbf{w}^T (\mathbf{\mu_1} - \mathbf{\mu_0}))^2}{\mathbf{w}^T  X^T_c \mathbf{X_c} \mathbf{w}}\\ 
+                        &= \frac{\mathbf{w}^T (\mathbf{\mu_1} - \mathbf{\mu_0}) (\mathbf{\mu_1} - \mathbf{\mu_0})^T w}{\mathbf{w}^T X^T_c \mathbf{X_c} \mathbf{w}}\\
+                        &= \frac{\mathbf{w}^T \mathbf{S_B} w}{\mathbf{w}^T \mathbf{S_W} \mathbf{w}}.
+
+In the two-class case, the maximum separation occurs by a projection on
+the :math:`(\mathbf{\mu_1} - \mathbf{\mu_0})` using the Mahalanobis
+metric :math:`\mathbf{S_W}^{-1}`, so that
+
+.. math::
+
+
+   \boxed{\mathbf{w} \propto \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})}.
+
+**Demonstration**
+
+Differentiating :math:`F_{\text{Fisher}}(w)` with respect to :math:`w`
+gives
+
+.. math::
+
+
+       \nabla_{\mathbf{w}}F_{\text{Fisher}}(\mathbf{w}) &= 0\\
+       \nabla_{\mathbf{w}}\left(\frac{\mathbf{w}^T \mathbf{S_B} w}{\mathbf{w}^T \mathbf{S_W} \mathbf{w}}\right) &= 0\\
+       (\mathbf{w}^T \mathbf{S_W} \mathbf{w})(2 \mathbf{S_B} \mathbf{w}) - (\mathbf{w}^T \mathbf{S_B} \mathbf{w})(2 \mathbf{S_W} \mathbf{w}) &= 0\\
+       (\mathbf{w}^T \mathbf{S_W} \mathbf{w})(\mathbf{S_B} \mathbf{w}) &= (\mathbf{w}^T \mathbf{S_B} \mathbf{w})(\mathbf{S_W} \mathbf{w})\\
+       \mathbf{S_B} \mathbf{w} &= \frac{\mathbf{w}^T \mathbf{S_B} \mathbf{w}}{\mathbf{w}^T \mathbf{S_W} \mathbf{w}}(\mathbf{S_W} \mathbf{w})\\
+       \mathbf{S_B} \mathbf{w} &= \lambda (\mathbf{S_W} \mathbf{w})\\
+       \mathbf{S_W}^{-1}{\mathbf{S_B}} \mathbf{w} &= \lambda  \mathbf{w}.
+
+Since we do not care about the magnitude of :math:`\mathbf{w}`, only its
+direction, we replaced the scalar factor
+:math:`(\mathbf{w}^T \mathbf{S_B} \mathbf{w}) / (\mathbf{w}^T \mathbf{S_W} \mathbf{w})`
+by :math:`\lambda`.
+
+In the multiple-class case, the solutions :math:`w` are determined by
+the eigenvectors of :math:`\mathbf{S_W}^{-1}{\mathbf{S_B}}` that
+correspond to the :math:`K-1` largest eigenvalues.
+
+However, in the two-class case (in which
+:math:`\mathbf{S_B} = (\mathbf{\mu_1} - \mathbf{\mu_0} )(\mathbf{\mu_1} - \mathbf{\mu_0} )^T`)
+it is easy to show that
+:math:`\mathbf{w} = \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})`
+is the unique eigenvector of :math:`\mathbf{S_W}^{-1}{\mathbf{S_B}}`:
+
+.. math::
+
+
+       \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0} )(\mathbf{\mu_1} - \mathbf{\mu_0} )^T \mathbf{w} &= \lambda  \mathbf{w}\\
+       \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0} )(\mathbf{\mu_1} - \mathbf{\mu_0} )^T \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0}) &= \lambda  \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0}),
+
+where here
+:math:`\lambda = (\mathbf{\mu_1} - \mathbf{\mu_0} )^T \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})`.
+Which leads to the result
+
+.. math::
+
+
+   \mathbf{w} \propto \mathbf{S_W}^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0}).
+
+**The separating hyperplane**
+
+The separating hyperplane is a :math:`P-1`-dimensional hyper surface,
+orthogonal to the projection vector, :math:`w`. There is no single best
+way to find the origin of the plane along :math:`w`, or equivalently the
+classification threshold that determines whether a point should be
+classified as belonging to :math:`C_0` or to :math:`C_1`. However, if
+the projected points have roughly the same distribution, then the
+threshold can be chosen as the hyperplane exactly between the
+projections of the two means, i.e. as
+
+.. math::
+
+
+   T = \mathbf{w} \cdot \frac{1}{2}(\mathbf{\mu_1} - \mathbf{\mu_0}).
+
+
+
+Generative Model: Linear Discriminant Analysis (LDA)
+----------------------------------------------------
+
+- Probabilistic generalization of Fisher’s linear discriminant.
+- Generative model of the **conditional distribution** of the input data
+  :math:`\mathbf{x}` given the label :math:`k`:
+  :math:`p(\mathbf{x}|y=k)`.
+- Uses Bayes’ rule to provide the **posterior distribution** of the
+  label :math:`k` given the input data :math:`\mathbf{x}`:
+  :math:`p(y=k|\mathbf{x})`.
+- Uses Bayes’ rule to fix the threshold based on prior probabilities of
+  classes.
+
+1. First compute the class-**conditional distributions** of
+   :math:`\mathbf{x}` given class :math:`C_k`:
+   :math:`p(x|C_k) = \mathcal{N}(\mathbf{x}|\mathbf{\mu_k}, \mathbf{S_W})`.
+   Where :math:`\mathcal{N}(\mathbf{x}|\mathbf{\mu_k}, \mathbf{S_W})` is
+   the multivariate Gaussian distribution defined over a P-dimensional
+   vector :math:`x` of continuous variables, which is given by
+
+.. math::
+
+
+   \mathcal{N}(\mathbf{x}|\mathbf{\mu_k}, \mathbf{S_W}) = \frac{1}{(2\pi)^{P/2}|\mathbf{S_W}|^{1/2}}\exp\{-\frac{1}{2} (\mathbf{x} - \mathbf{\mu_k})^T \mathbf{S_W}^{-1}(x - \mathbf{\mu_k})\}
 
 2. Estimate the **prior probabilities** of class :math:`k`,
    :math:`p(C_k) = N_k/N`.
@@ -245,7 +242,7 @@ based on prior probabilities of classes.
 .. math::
 
 
-   p(C_k|\boldsymbol{x}) = \frac{p(C_k) p(\boldsymbol{x}|C_k)}{p(\boldsymbol{x})}
+   p(C_k|\mathbf{x}) = \frac{p(C_k) p(\mathbf{x}|C_k)}{p(\mathbf{x})}
 
 Where :math:`p(x)` is the marginal distribution obtained by summing of
 classes: As usual, the denominator in Bayes’ theorem can be found in
@@ -254,10 +251,10 @@ terms of the quantities appearing in the numerator, because
 .. math::
 
 
-   p(x) = \sum_k p(\boldsymbol{x}|C_k)p(C_k)
+   p(x) = \sum_k p(\mathbf{x}|C_k)p(C_k)
 
-4. Classify :math:`\boldsymbol{x}` using the Maximum-a-Posteriori
-   probability: :math:`C_k= \arg \max_{C_k} p(C_k|\boldsymbol{x})`
+4. Classify :math:`\mathbf{x}` using the Maximum-a-Posteriori
+   probability: :math:`C_k= \arg \max_{C_k} p(C_k|\mathbf{x})`
 
 LDA is a **generative model** since the class-conditional distributions
 cal be used to generate samples of each classes.
@@ -275,6 +272,8 @@ linear discriminant.
 **Question:** How many parameters are required to estimate to perform a
 LDA?
 
+Application with scikit-learn
+
 .. code:: ipython3
 
     from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
@@ -288,16 +287,55 @@ LDA?
     X1 = np.random.multivariate_normal(mean1, Cov, n_samples)
     X = np.vstack([X0, X1])
     y = np.array([0] * X0.shape[0] + [1] * X1.shape[0])
+    m = X.mean(axis=0)
+    
+    # Naive rule
+    w_naive = mean1 - mean0
+    w_naive = w_naive / np.linalg.norm(w_naive, ord=2) * 2
+    score_naive = np.dot(X, w_naive)
+    
+    # Fischer rule
+    Xc = np.vstack([X0 - mean0, X1 - mean1])
+    Sw = np.dot(Xc.T , Xc)
+    w_fisher = np.dot(np.linalg.inv(Sw), mean1 - mean0)
+    w_fisher = w_fisher / np.linalg.norm(w_fisher, ord=2) * 2
+    score_fisher = np.dot(X, w_fisher)
     
     
     # LDA with scikit-learn
     lda = LDA()
-    proj = lda.fit(X, y).transform(X)
+    score_lda = lda.fit(X, y).transform(X).ravel()
+    w_lda = lda.coef_.ravel()
+    w_lda = w_lda / np.linalg.norm(w_lda, ord=2) * 2
     y_pred_lda = lda.predict(X)
     
     errors =  y_pred_lda != y
     print("Nb errors=%i, error rate=%.2f" % 
           (errors.sum(), errors.sum() / len(y_pred_lda)))
+    
+    # Plot
+    plt.figure(figsize=(fig_w * 0.5, fig_w * 0.5))
+    data = pd.DataFrame(np.hstack([X, y.reshape(-1, 1)]), columns=("x1", "x2", "y"))
+    ax_ = sns.scatterplot(data=data, x="x1", y="x2", hue="y")
+    ax_.quiver([m[0]] * 3, [m[1]] * 3,
+               [w_naive[0], w_fisher[0], w_lda[0]],
+               [w_naive[1], w_fisher[1], w_lda[1]],
+               units='xy', scale=1)
+    
+    scores = [("Naive", score_naive), ("Fisher", score_fisher), ("LDA", score_lda)]
+    colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+    #colors = [colors[i] for i in [0, 2]]
+    
+    #Plot
+    fig, axes = plt.subplots(1, 3, figsize=(fig_w * 2, fig_h * .5), sharey=True)
+    for ax, (title, score) in zip(axes, scores):
+        for lab in np.unique(y):
+            sns.histplot(score[y == lab], ax=ax,  label=f"Label {lab}", kde=True, color=colors[lab])
+        ax.set_title(title)
+        ax.legend()
+    fig.suptitle('Projection on discriminative directions', fontsize=16)
+    plt.tight_layout()
+    plt.show()
 
 
 .. parsed-literal::
@@ -305,58 +343,382 @@ LDA?
     Nb errors=10, error rate=0.05
 
 
-Logistic regression
+
+.. image:: linear_classification_files/linear_classification_7_1.png
+
+
+
+.. image:: linear_classification_files/linear_classification_7_2.png
+
+
+Logistic Regression
 -------------------
 
-Logistic regression is called a generalized linear models. ie.: it is a
-linear model with a link function that maps the output of linear
-multiple regression to the posterior probability of class :math:`1`
-:math:`p(1|x)` using the logistic sigmoid function:
+|Linear (logistic) classification|\ [width=15cm]
+
+Principles:
+
+1. Map the output of a linear model: :math:`\mathbf{w}^\top \mathbf{x}`
+   into a score :math:`z`. This step performs a **projection** or a
+   **rotation** of input sample into a good discriminative
+   one-dimensional sub-space, that best discriminate sample of current
+   class vs sample of other classes.
+
+2. Using an activation funtion :math:`\sigma(.)`, this score (a.k.a
+   decision function) is transformed, to a “posterior probabilities” of
+   a class :math:`k`:
+   :math:`P(y=k| \mathbf{x}) = \sigma(\mathbf{w}^\top \mathbf{x})`.
+
+Properties:
+
+- Consider only the posterior probability of a class :math:`k`:
+  :math:`P(y=k| \mathbf{x})`
+- Multiclass Classification problems can be seen as several binary
+  classification problems :math:`y_i \in \{0, 1\}` where the classifier
+  aims to discriminate the sample of the current class (label 1) versus
+  the samples of other classes (label 0).
+- The decision surfaces (orthogonal hyperplan to :math:`\mathbf{w}`)
+  correspond to :math:`\sigma(z)=\text{constant}`, so that
+  :math:`\mathbf{x}^T \mathbf{w}=\text{constant}` and hence the decision
+  surfaces are linear functions of :math:`\mathbf{x}`, even if the
+  function :math:`\sigma(.)` is nonlinear.
+- A thresholding of the activation (shifted by the bias or intercept)
+  provides the predicted class label.
+
+**Linear Discriminant Analysis (LDA) vs. Logistic Regression**
+
++------------+------------------------------+--------------------------+
+| Feature    | **Linear Discriminant        | **Logistic Regression**  |
+|            | Analysis (LDA)**             |                          |
++============+==============================+==========================+
+| **Model    | Generative model             | Discriminative model     |
+| Type**     |                              |                          |
++------------+------------------------------+--------------------------+
+| **What It  | Joint probability:           | Posterior probability:   |
+| Models**   | :math:                       | :math:`P(y \mid x)`      |
+|            | `P(x, y) = P(x \mid y) P(y)` |                          |
++------------+------------------------------+--------------------------+
+| **Ass      | Gaussian class-conditional   | No distributional        |
+| umptions** | distributions with equal     | assumption on features   |
+|            | covariance                   |                          |
++------------+------------------------------+--------------------------+
+| **Decision | Linear (under equal          | Linear                   |
+| Boundary** | covariance assumption)       |                          |
++------------+------------------------------+--------------------------+
+| **P        | Uses Bayes’ rule + Gaussian  | Uses sigmoid of linear   |
+| robability | likelihood                   | function                 |
+| Es         |                              |                          |
+| timation** |                              |                          |
++------------+------------------------------+--------------------------+
+| **Interpre | Less intuitive, based on     | Coefficients directly    |
+| tability** | data distribution            | reflect impact on class  |
+|            |                              | log-odds                 |
++------------+------------------------------+--------------------------+
+| **Per      | Can outperform logistic      | More robust when         |
+| formance** | regression when assumptions  | assumptions (e.g.,       |
+|            | hold                         | normality) are violated  |
++------------+------------------------------+--------------------------+
+| **Use in   | Naturally extends to         | Extends via one-vs-rest  |
+| Mu         | multiclass                   | or softmax (multinomial  |
+| lticlass** |                              | logistic)                |
++------------+------------------------------+--------------------------+
+| **Regula   | Not built-in (requires       | Easily regularized       |
+| rization** | extensions like shrinkage    | (e.g., with L1/L2        |
+|            | LDA)                         | penalties)               |
++------------+------------------------------+--------------------------+
+
+**Key Insights**
+
+- **LDA** is **generative**: it models how the data was generated
+  (distribution of features given class), then uses Bayes’ theorem to
+  classify.
+- **Logistic regression** is **discriminative**: it models the boundary
+  between classes directly.
+
+.. |Linear (logistic) classification| image:: images/linear_logistic.png
+
+Activation Functions for Classification (Sigmoid and Softmax)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The **sigmoid** and **softmax** functions are closely related—they both
+transform real-valued inputs (*logits*) into probabilities, but they are
+used in different settings:
+
+**The sigmoid function** maps real-valued inputs (called *logits*) into
+the interval :math:`[0, 1]`, making them interpretable as probabilities
+(for scalar :math:`z`):
 
 .. math::
 
 
-   p(1|\boldsymbol{w, x_i}) = \frac{1}{1 + \exp(-\boldsymbol{w} \cdot \boldsymbol{x_i})}
+   \sigma(z) = \frac{1}{1 + e^{-z}}
+
+It has the following properties:
+
+- :math:`\sigma(z) \to 1` as :math:`z \to +\infty`
+- :math:`\sigma(z) \to 0` as :math:`z \to -\infty`
+- :math:`\sigma(0) = 0.5`
+
+In binary classification, we use
+:math:`\sigma(\mathbf{w}^\top \mathbf{x})` to estimate the probability
+of the positive class. This function is differentiable, which is
+essential for optimization via gradient descent.
+
+**The softmax function** converts raw scores :math:`z_k` into
+probabilities:
+
+.. math::
+
+
+   \hat{p}_k = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}
+
+It ensures that output probabilities are positive and sum to 1, making
+it suitable for use with cross-entropy.
+
+**Softmax function** (for vector :math:`\mathbf{z} \in \mathbb{R}^K`):
+
+.. math::
+
+
+   \text{softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{K} e^{z_j}} \quad \text{for } i = 1, \dots, K
+
+The **sigmoid function is a special case of the softmax** function when
+you have **two classes (binary classification)**. Given two logits
+:math:`z_0` and :math:`z_1`, the softmax for class 1 is:
+
+.. math::
+
+
+   \text{softmax}(z_1) = \frac{e^{z_1}}{e^{z_0} + e^{z_1}}
+
+If we define :math:`z = z_1 - z_0`, then:
+
+.. math::
+
+
+   \text{softmax}(z_1) = \frac{1}{1 + e^{-(z_1 - z_0)}} = \sigma(z)
+
+So: **Sigmoid = Softmax over 2 logits, if one logit is fixed as 0
+(reference class)**
+
+Intuition
+
+- **Sigmoid** gives the probability of one class (positive class)
+  vs. its complement.
+- **Softmax** generalizes this to :math:`K > 2` classes, ensuring the
+  sum of probabilities is 1.
+
+**Summary**
+
++---------+-----------------------------+-----------------------------+
+| F       | Use Case                    | Output                      |
+| unction |                             |                             |
++=========+=============================+=============================+
+| Sigmoid | Binary classification       | Scalar in :math:`(0, 1)`    |
++---------+-----------------------------+-----------------------------+
+| Softmax | Multiclass classification   | Vector of probabilities     |
+|         |                             | summing to 1 over classes   |
++---------+-----------------------------+-----------------------------+
+
+- Sigmoid and Softmax maps logits to probabilities over classes
+- The **sigmoid function is equivalent to a 2-class softmax**.
+- Both map logits to probabilities but are used in different
+  classification settings.
+- Softmax ensures a **normalized probability distribution** over
+  multiple classes.
 
 .. code:: ipython3
 
-    def logistic(x): return 1 / (1 + np.exp(-x))
+    def sigmoid(x): return 1 / (1 + np.exp(-x))
     
     x = np.linspace(-6, 6, 100)
-    plt.plot(x, logistic(x))
+    plt.plot(x, sigmoid(x))
     plt.grid(True)
-    plt.title('Logistic (sigmoid)')
+    plt.title('Sigmoid (Logistic)')
 
 
 
 
 .. parsed-literal::
 
-    Text(0.5, 1.0, 'Logistic (sigmoid)')
+    Text(0.5, 1.0, 'Sigmoid (Logistic)')
 
 
 
 
-.. image:: linear_classification_files/linear_classification_6_1.png
+.. image:: linear_classification_files/linear_classification_10_1.png
 
 
-Logistic regression is a **discriminative model** since it focuses only
-on the posterior probability of each class :math:`p(C_k|x)`. It only
-requires to estimate the :math:`P` weights of the :math:`\boldsymbol{w}`
-vector. Thus it should be favoured over LDA with many input features. In
-small dimension and balanced situations it would provide similar
-predictions than LDA.
+Loss Functions for Classification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-However imbalanced group sizes cannot be explicitly controlled. It can
-be managed using a reweighting of the input samples.
+.. _test-nll:
+
+Negative Log-Likelihood (NLL)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Negative Log-Likelihood (NLL) for a dataset of observations
+:math:`\{(\mathbf{x}_i, y_i)\}_{i=1}^n`, where each :math:`x_i` is an
+input and :math:`y_i` is the corresponding label.
+
+**General Formulation of NLL**
+
+Given a **probabilistic model** that predicts
+:math:`P(y_i \mid x_i; \theta)`, where :math:`\theta` are the model
+parameters (e.g., weights in a neural network or logistic regression),
+the **Negative Log-Likelihood** over the dataset is:
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}}(\theta) = - \sum_{i=1}^n \log P(y_i \mid x_i; \theta)
+
+This expression encourages the model to assign **high probability** to
+the **correct labels**.
+
+**Binary Classification (Sigmoid Output) a.k.a. Logistic or Binary
+Cross-Entropy Loss**
+
+For binary labels :math:`y_i \in \{0, 1\}`, and using:
+
+.. math::
+
+
+   P(y_i = 1 \mid x_i; \theta) = \hat{p}_i = \sigma(z_i)
+
+where :math:`\hat{p}` is the predicted probability of the positive class
+(obtained via a sigmoid activation, :math:`\sigma(z_i)`). The NLL
+becomes:
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}} = -\log \Pi_{i=1}^n \left[\hat{p}_i^{y_i} +  (1 - \hat{p}_i)^{(1 - y_i)} \right]
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]
+
+or
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \left[ \log(1 + e^{-z_i}) + (1 - y_i) z_i \right] \quad \text{with } y_i \in \{0, 1\}.
+
+Recoding output :math:`y_i \in \{-1, +1\}`, the expression simplifies to
+
+.. math::
+
+
+   \boxed{\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \log\left(1 + e^{-y_i \cdot z_i} \right)} \quad \text{with } y_i \in \{-1, +1\}.
+
+For linear models: :math:`z_i=\mathbf{w}^\top \mathbf{x}_i`. For more
+details, see the :ref:`Demonstration of Negative Log-Likelihood
+(NLL) <ref:demonstration-nll>` Loss.
+
+This expression is also known as the **logistic loss** or **binary
+cross-entropy**. It penalizes confident but incorrect predictions very
+heavily (e.g., predicting :math:`\hat{p} = 0.99` when :math:`y = 0`).
+
+.. code:: ipython3
+
+    # Define the logistic loss for binary classification
+    def logistic_loss(z, y):
+        return np.log(1 + np.exp(-y * z))
+    
+    
+    # Input range (raw scores from the model)
+    z = np.linspace(-10, 10, 400)
+    
+    # Logistic loss for y = 1 and y = 0
+    loss_y1 = logistic_loss(z, 1)
+    loss_y0 = logistic_loss(z, -1)  # equivalent to logistic loss for y=0
+    
+    # Plotting
+    plt.figure()
+    plt.plot(z, loss_y1, label="Logistic Loss (y = 1)")
+    plt.plot(z, loss_y0, label="Logistic Loss (y = 0)", linestyle="--")
+    plt.title("Logistic Loss as a Function of Raw Score z")
+    plt.xlabel("Model score z")
+    plt.ylabel("Loss")
+    plt.legend()
+    plt.show()
+
+
+
+.. image:: linear_classification_files/linear_classification_12_0.png
+
+
+**Gradient Logistic or Binary Cross-Entropy Loss for Linear Models**
+
+For linear models where :math:`z_i=\mathbf{w}^\top \mathbf{x}_i` the
+gradient of the NLL according to the coefficients vector
+:math:`\mathbf{w}` is:
+
+.. math::
+
+
+     \boxed{\nabla_{\mathbf{w}} \mathcal{L}_{\text{NLL}} = \sum_{i=1}^n (\sigma(\mathbf{w}^\top \mathbf{x}_i) - y_i)\mathbf{x}_i}
+     
+
+**Multiclass Classification (Softmax Output) a.k.a. Cross-Entropy Loss**
+
+Assume :math:`y_i \in \{1, 2, \dots, K\}`, and the model outputs softmax
+probabilities :math:`\hat{p}_{i,k} = P(y_i = k \mid x_i; \theta)`. Then:
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \log \hat{p}_{i, y_i}
+
+If you use one-hot encoded labels :math:`\mathbf{y}_i`, the NLL is also
+written as:
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \sum_{k=1}^K y_{i,k} \log(\hat{p}_{i,k})
+
+This is equivalent to the **cross-entropy loss** when combined with
+softmax.
+
+**Summary**
+
+- Negative Log-Likelihood = general loss for probabilistic models
+- Logistic loss = binary cross-entropy
+- Cross-Entropy loss = NLL + Softmax (for multiclass problems)
+- These losses are convex (for linear models), interpretable, and widely
+  used in training classifiers like logistic regression and neural
+  networks.
+
+See also `Scikit learn
+doc <https://scikit-learn.org/stable/modules/sgd.html#mathematical-formulation>`__
+
+Hinge loss or :math:`\ell_1` loss
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+TODO
+
+Logistic Regression Summary
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Logistic regression minimizes the Cross-Entropy loss i.e. NLL with
+Sigmoid (binary problems) or NLL with Softmax (multiclass problems):
+
+.. math::
+
+
+   \boxed{\min_{\mathbf{w}}~\text{Logistic}(\mathbf{w}) = \mathcal{L}_{\text{NLL}}(\mathbf{w})}
+
+Logistic Regression with Scikit-Learn
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: ipython3
 
     import sklearn.linear_model as lm
     logreg = lm.LogisticRegression(penalty=None).fit(X, y)
-    # This class implements regularized logistic regression.
-    # C is the Inverse of regularization strength.
-    # Large value => no regularization.
     
     logreg.fit(X, y)
     y_pred_logreg = logreg.predict(X)
@@ -372,71 +734,6 @@ be managed using a reweighting of the input samples.
     Nb errors=10, error rate=0.05
     [[-5.15  5.57]]
 
-
-Exercise
-~~~~~~~~
-
-Explore the ``Logistic Regression`` parameters and proposes a solution
-in cases of highly imbalanced training dataset :math:`N_1 \gg N_0` when
-we know that in reality both classes have the same probability
-:math:`p(C_1) = p(C_0)`.
-
-Losses
-------
-
-Negative log likelihood or cross-entropy
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The **Loss function** for sample :math:`i` is the negative log of the
-probability:
-
-.. math::
-
-
-   L(\boldsymbol{w, x_i}, y_i) = \begin{cases}
-           -\log(p(1|w, \boldsymbol{x_i}))  & \text{if } y_i = 1
-           \\
-           -\log(1 - p(1|w, \boldsymbol{x_i})  & \text{if } y_i = 0
-           \end{cases}
-
-For the whole dataset
-:math:`\boldsymbol{X}, \boldsymbol{y} = \{\boldsymbol{x_i}, y_i\}` the
-loss function to minimize :math:`L(\boldsymbol{w, X, y})` is the
-negative negative log likelihood (nll) that can be simplied using a 0/1
-coding of the label in the case of binary classification:
-
-.. raw:: latex
-
-   \begin{align}
-   L(\boldsymbol{w, X, y}) &= -\log \mathcal{L}(\boldsymbol{w, X, y}) \\
-   &= -\log \Pi_i\{p(1|\boldsymbol{w}, \boldsymbol{x_i})^{y_i} (1 - p(1|\boldsymbol{w}, \boldsymbol{x_i})^{(1 - y_i)}\}\\
-   &=  \sum_i\{y_i \log p(1|\boldsymbol{w}, \boldsymbol{x_i}) + (1 - y_i) \log(1 - p(1|\boldsymbol{w}, \boldsymbol{x_i}))\},
-   \end{align}
-
-This is known as the **cross-entropy** between the true label :math:`y`
-and the predicted probability :math:`p`.
-
-For the logistic regression case, we have:
-
-.. math::
-
-
-   L(\boldsymbol{w, X, y}) = \sum_i\{y_i \boldsymbol{w \cdot x_i} - \log(1 + \exp(\boldsymbol{w \cdot x_i}))\}
-
-This is solved by numerical method using the gradient of the loss:
-
-.. math::
-
-
-   \partial\frac{L(\boldsymbol{w, X, y})}{\partial\boldsymbol{w}} = \sum_i \boldsymbol{x_i} (y_i - p(1|\boldsymbol{w}, \boldsymbol{x_i}))
-
-See also `Scikit learn
-doc <https://scikit-learn.org/stable/modules/sgd.html#mathematical-formulation>`__
-
-Hinge loss or :math:`\ell_1` loss
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-TODO
 
 Regularization using penalization of coefficients
 -------------------------------------------------
@@ -495,15 +792,15 @@ Summary
 Understanding the effect of penalty using :math:`\ell_2`-regularization Fisher’s linear classification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When the matrix :math:`\boldsymbol{S_W}` is not full rank or
+When the matrix :math:`\mathbf{S_W}` is not full rank or
 :math:`P \gg N`, the The Fisher most discriminant projection estimate of
 the is not unique. This can be solved using a biased version of
-:math:`\boldsymbol{S_W}`:
+:math:`\mathbf{S_W}`:
 
 .. math::
 
 
-   \boldsymbol{S_W}^{Ridge} = \boldsymbol{S_W} + \lambda \boldsymbol{I}
+   \mathbf{S_W}^{Ridge} = \mathbf{S_W} + \lambda \mathbf{I}
 
 where :math:`I` is the :math:`P \times P` identity matrix. This leads to
 the regularized (ridge) estimator of the Fisher’s linear discriminant
@@ -512,7 +809,7 @@ analysis:
 .. math::
 
 
-       \boldsymbol{w}^{Ridge} \propto (\boldsymbol{S_W} + \lambda \boldsymbol{I})^{-1}(\boldsymbol{\mu_1} - \boldsymbol{\mu_0})
+       \mathbf{w}^{Ridge} \propto (\mathbf{S_W} + \lambda \mathbf{I})^{-1}(\mathbf{\mu_1} - \mathbf{\mu_0})
 
 .. figure:: images/ridge_fisher_linear_disc.png
    :alt: The Ridge Fisher most discriminant projection
@@ -530,15 +827,15 @@ Increasing :math:`\lambda` will:
 ----------------------------------------------
 
 The **objective function** to be minimized is now the combination of the
-logistic loss (negative log likelyhood)
-:math:`-\log \mathcal{L}(\boldsymbol{w})` with a penalty of the L2 norm
-of the weights vector. In the two-class case, using the 0/1 coding we
+logistic loss (Negative Log Likelihood) with a penalty of the L2 norm of
+the weights vector. In the two-class case, using the 0/1 coding we
 obtain:
 
 .. math::
 
 
-   \min_{\boldsymbol{w}}~\text{Logistic ridge}(\boldsymbol{w}) = -\log \mathcal{L}(\boldsymbol{w, X, y}) + \lambda~\|\boldsymbol{w}\|^2
+   \min_{\mathbf{w}}~\text{Logistic L2}(\mathbf{w}) = \mathcal{L}_{\text{NLL}}(\mathbf{w})
+    + \lambda~\|\mathbf{w}\|^2
 
 .. code:: ipython3
 
@@ -583,14 +880,15 @@ Lasso logistic regression (:math:`\ell_1`-regularization)
 ---------------------------------------------------------
 
 The **objective function** to be minimized is now the combination of the
-logistic loss :math:`-\log \mathcal{L}(\boldsymbol{w})` with a penalty
-of the L1 norm of the weights vector. In the two-class case, using the
-0/1 coding we obtain:
+logistic loss :math:`-\log \mathcal{L}(\mathbf{w})` with a penalty of
+the L1 norm of the weights vector. In the two-class case, using the 0/1
+coding we obtain:
 
 .. math::
 
 
-   \min_{\boldsymbol{w}}~\text{Logistic Lasso}(w) = -\log \mathcal{L}(\boldsymbol{w, X, y}) + \lambda~\|\boldsymbol{w}\|_1
+   \min_{\mathbf{w}}~\text{Logistic Lasso}(\mathbf{w}) = \mathcal{L}_{\text{NLL}}(\mathbf{w})
+    + \lambda~\|\mathbf{w}\|_1
 
 .. code:: ipython3
 
@@ -625,8 +923,7 @@ margin to enforce robustness against noise. Like logistic regression it
 is a **discriminative method** that only focuses of predictions.
 
 Here we present the non separable case of Maximum Margin Classifiers
-with :math:`\pm 1` coding (ie.: :math:`y_i \ \{-1, +1\}`). In the next
-figure the legend aply to samples of “dot” class.
+with :math:`\pm 1` coding (ie.: :math:`y_i \ \{-1, +1\}`).
 
 .. figure:: images/svm.png
    :alt: Linear lar margin classifiers
@@ -638,39 +935,30 @@ Linear SVM for classification (also called SVM-C or SVC) minimizes:
 .. math::
 
 
-   \begin{array}{lll}
-   \text{min}   & \text{Linear SVM}(\boldsymbol{w}) &= \text{penalty}(w) +  C~\text{Hinge loss}(w)\\
-                & & = \|w\|_2^2 + C~\sum_i^N\xi_i\\
-   \text{with}  & \forall i & y_i (w \cdot \boldsymbol{x_i}) \geq 1 - \xi_i
-   \end{array}
+   \min_{\mathbf{w}}~\text{Linear SVM}(\mathbf{w}) = \|\mathbf{w}\|_2^2 +  C~\sum_i^n\max(0, 1 - y_i~ (\mathbf{w} \cdot \mathbf{x_i}))
+
+where :math:`\max(0, 1 - y_i~ (\mathbf{w} \cdot \mathbf{x_i})` is the
+**hinge loss**.
 
 Here we introduced the slack variables: :math:`\xi_i`, with
 :math:`\xi_i = 0` for points that are on or inside the correct margin
-boundary and :math:`\xi_i = |y_i - (w \ cdot  \cdot \boldsymbol{x_i})|`
-for other points. Thus:
+boundary and :math:`\xi_i = |y_i - (w \ cdot  \cdot \mathbf{x_i})|` for
+other points. Thus:
 
-1. If :math:`y_i (w \cdot \boldsymbol{x_i}) \geq 1` then the point lies
-   outside the margin but on the correct side of the decision boundary.
-   In this case :math:`\xi_i=0`. The constraint is thus not active for
-   this point. It does not contribute to the prediction.
+1. If :math:`y_i (\mathbf{w} \cdot \mathbf{x_i}) \geq 1` then the point
+   lies outside the margin but on the correct side of the decision
+   boundary. In this case the constraint is thus not active for this
+   point. It does not contribute to the prediction.
 
-2. If :math:`1 > y_i (w \cdot \boldsymbol{x_i}) \geq 0` then the point
-   lies inside the margin and on the correct side of the decision
-   boundary. In this case :math:`0<\xi_i \leq 1`. The constraint is
-   active for this point. It does contribute to the prediction as a
-   support vector.
-
-3. If :math:`0 <  y_i (w \cdot \boldsymbol{x_i})`) then the point is on
-   the wrong side of the decision boundary (missclassification). In this
-   case :math:`0<\xi_i > 1`. The constraint is active for this point. It
+2. If :math:`1 > y_i (\mathbf{w} \cdot \mathbf{x_i}) \geq 0` then the
+   point lies inside the margin and on the correct side of the decision
+   boundary. In this case the constraint is active for this point. It
    does contribute to the prediction as a support vector.
 
-This loss is called the hinge loss, defined as:
-
-.. math::
-
-
-   \max(0, 1 - y_i~ (w \cdot \boldsymbol{x_i}))
+3. If :math:`0 <  y_i (\mathbf{w} \cdot \mathbf{x_i})`) then the point
+   is on the wrong side of the decision boundary (missclassification).
+   In this case the constraint is active for this point. It does
+   contribute to the prediction as a support vector.
 
 So linear SVM is closed to Ridge logistic regression, using the hinge
 loss instead of the logistic loss. Both will provide very similar
@@ -702,16 +990,12 @@ predictions.
 Lasso linear Support Vector Machine (:math:`\ell_1`-regularization)
 -------------------------------------------------------------------
 
-Linear SVM for classification (also called SVM-C or SVC) with
-l1-regularization
+Linear SVM with l1-regularization:
 
 .. math::
 
 
-   \begin{array}{lll}
-   \text{min}   & F_{\text{Lasso linear SVM}}(w) &= ||w||_1 + C~\sum_i^N\xi_i\\
-   \text{with}  & \forall i & y_i (w \cdot \boldsymbol{x_i}) \geq 1 - \xi_i
-   \end{array}
+   \min_{\mathbf{w}}~\text{Lasso Linear SVM}(\mathbf{w}) = \|\mathbf{w}\|_1 +  C~\sum_i^n\max(0, 1 - y_i~ (\mathbf{w} \cdot \mathbf{x_i}))
 
 .. code:: ipython3
 
@@ -736,39 +1020,25 @@ l1-regularization
     [[-0.01  0.37 -0.12  0.24  0.17  0.    0.    0.1  -0.16  0.13]]
 
 
-Exercise
---------
-
-Compare predictions of Logistic regression (LR) and their SVM
-counterparts, ie.: L2 LR vs L2 SVM and L1 LR vs L1 SVM
-
-- Compute the correlation between pairs of weights vectors.
-
-- Compare the predictions of two classifiers using their decision
-  function:
-
-  - Give the equation of the decision function for a linear classifier,
-    assuming that their is no intercept.
-  - Compute the correlation decision function.
-  - Plot the pairwise decision function of the classifiers.
-
-- Conclude on the differences between Linear SVM and logistic
-  regression.
-
 Elastic-net classification (:math:`\ell_1\ell_2`-regularization)
 ----------------------------------------------------------------
 
-The **objective function** to be minimized is now the combination of the
-logistic loss :math:`\log L(\boldsymbol{w})` or the hinge loss with
-combination of L1 and L2 penalties. In the two-class case, using the 0/1
-coding we obtain:
+The **objective function** to be minimized is now the combination of a
+loss with combination of L1 and L2 penalties:
 
-.. raw:: latex
+- For the NLL loss:
 
-   \begin{align}
-   \min~\text{Logistic enet}(\boldsymbol{w}) &= -\log \mathcal{L}(\boldsymbol{w, X, y}) + \alpha~\left(\rho~\|\boldsymbol{w}\|_1 + (1-\rho)~\|\boldsymbol{w}\|_2^2 \right)\\
-   \min~\text{Hinge enet}(\boldsymbol{w}) &= \text{Hinge loss}(\boldsymbol{w}) + \alpha~\left(\rho~\|\boldsymbol{w}\|_1 + (1-\rho)~\|\boldsymbol{w}\|_2^2 \right)
-   \end{align}
+  .. math::
+
+
+     \min~\text{Logistic Enet}(\mathbf{w}) = \mathcal{L}_{\text{NLL}}(\mathbf{w}) + \alpha~\left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right)
+
+- For the Hinge loss
+
+  .. math::
+
+
+     \min~\text{Hinge Enet}(\mathbf{w}) = \text{Hinge loss}(\mathbf{w}) + \alpha~\left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right)
 
 .. code:: ipython3
 
@@ -802,7 +1072,7 @@ coding we obtain:
 
 
 
-.. image:: linear_classification_files/linear_classification_24_1.png
+.. image:: linear_classification_files/linear_classification_28_1.png
 
 
 Classification performance evaluation metrics
@@ -854,14 +1124,14 @@ actual status. In that setting:
   bACC = 1/2 \* (SEN + SPC)
 
 - F1 Score (or F-score) which is a weighted average of precision and
-  recall are usefull to deal with imballaced datasets
+  recall are useful to deal with imbalanced datasets
 
 The four outcomes can be formulated in a 2×2 contingency table or
-confusion matrix
-https://en.wikipedia.org/wiki/Sensitivity_and_specificity
+`confusion
+matrix <https://en.wikipedia.org/wiki/Sensitivity_and_specificity>`__
 
-For more precision see:
-http://scikit-learn.org/stable/modules/model_evaluation.html
+For more precision see `Scikit-learn
+doc <http://scikit-learn.org/stable/modules/model_evaluation.html>`__
 
 .. code:: ipython3
 
@@ -896,8 +1166,8 @@ and a low sensitivity or the contrary.
 
 In this case it is recommended to use the AUC of a ROC analysis which
 basically provide a measure of overlap of the two classes when points
-are projected on the discriminative axis. For more detail on ROC and AUC
-see:https://en.wikipedia.org/wiki/Receiver_operating_characteristic.
+are projected on the discriminative axis. See `Wikipedia: ROC and
+AUC <https://en.wikipedia.org/wiki/Receiver_operating_characteristic>`__.
 
 .. code:: ipython3
 

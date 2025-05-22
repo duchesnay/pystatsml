@@ -104,12 +104,10 @@ are codirectional, then the angle between them is 0° and
 **The (scalar) projection** of a vector :math:`\mathbf{x}` (a point) in
 the direction of :math:`\mathbf{v}` is given by
 
-.. raw:: latex
-
-   \begin{align}
-   x_{v} & = \left\|\mathbf{x} \right\|_2\cos \theta,\\
-         & = \frac{\mathbf{x} \cdot \mathbf{v}}{\|\mathbf{v}\|_2},
-   \end{align}
+:raw-latex:`\begin{align}
+x_{v} & = \left\|\mathbf{x} \right\|_2\cos \theta,\\
+      & = \frac{\mathbf{x} \cdot \mathbf{v}}{\|\mathbf{v}\|_2},
+\end{align}`
 
 where :math:`\theta` is the angle between :math:`\mathbf{x}` and
 :math:`\mathbf{y}`. Note that :math:`x_{v}` is a scalar measuring the

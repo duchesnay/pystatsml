@@ -9,44 +9,45 @@ Linear Models for Regression
 Minimizing the Sum of Squared Errors (SSE) Loss
 -----------------------------------------------
 
-Linear regression models the **output**, or **target** variable
-:math:`y \in \mathrm{R}` as a linear combination of the
-:math:`P`-dimensional input :math:`\mathbf{x} \in \mathbb{R}^{P}`. Let
-:math:`\mathbf{X}` be the :math:`N \times P` matrix with each row an
-input vector (with a 1 in the first position), and similarly let
-:math:`\mathbf{y}` be the :math:`N`-dimensional vector of outputs in the
-**training set**, the linear model will predict the :math:`\mathbf{y}`
-given :math:`\mathbf{x}` using the **parameter vector**, or **weight
-vector** :math:`\mathbf{w} \in \mathbb{R}^P` according to
+A linear model assumes a linear relationship between input features of
+observation :math:`i` :math:`\mathbf{x}_i \in \mathbb{R}^{P}` and an
+output :math:`y \in \mathrm{R}` using:
 
 .. math::
 
 
-   y_i = \mathbf{x}_i^T \mathbf{w}+ \varepsilon_i, 
+   y_i = \mathbf{x}_i^\top \mathbf{w}+ \varepsilon_i, 
 
-for all observation :math:`i`. For the whole dataset this is equivalent
-to:
+where :math:`\boldsymbol{\varepsilon}_i \in \mathrm{R}` is the
+**residual** or the error of the prediction. :math:`\mathbf{w}` is the
+weight vector (model’s parameters) of coefficients. :math:`\mathbf{w}`
+is found by minimizing an **objective function**, which is the **loss
+function**, :math:`L(\mathbf{w})`, i.e. the error measured on the data.
+This error is the **sum of squared errors (SSE) loss**:
+
+.. math::
+
+
+   \text{SSE}(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2
+
+The equivalent matrix notation is:
 
 .. math::
 
 
    \mathbf{y} = \mathbf{X} \mathbf{w} + \boldsymbol{\varepsilon},
 
-where :math:`\boldsymbol{\varepsilon} \in \mathrm{R}^N` are the
-**residuals** (:math:`\varepsilon_i`), or the errors of the prediction.
-The :math:`\mathbf{w}` is found by minimizing an **objective function**,
-which is the **loss function**, :math:`L(\mathbf{w})`, i.e. the error
-measured on the data. This error is the **sum of squared errors (SSE)
-loss**.
+where :math:`\mathbf{X}` be the :math:`N \times P` matrix with each row
+an input vector and similarly let :math:`\mathbf{y}` the
+:math:`N`-dimensional vector of outputs.
 
-.. raw:: latex
+The loss is given by
 
-   \begin{align}
-   L(\mathbf{w}) &= \text{SSE}(\mathbf{w})\\
-                  &= \sum_i^N (y_i - \mathbf{x}_i^T\mathbf{w})^2\\
-                  &= (\mathbf{y} - \mathbf{X}\mathbf{w})^T (\mathbf{y} - \mathbf{X}\mathbf{w})\\
-                  &= \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2,
-   \end{align}
+.. math::
+
+
+   \text{SSE}(\mathbf{w}) = (\mathbf{y} - \mathbf{X}\mathbf{w})^\top (\mathbf{y} - \mathbf{X}\mathbf{w})\\
+   = \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2,
 
 Minimizing the SSE is the Ordinary Least Square **OLS** regression as
 objective function. which is a simple **ordinary least squares (OLS)**
@@ -55,7 +56,7 @@ minimization whose analytic solution is:
 .. math::
 
 
-   \mathbf{w}_{\text{OLS}} = (\mathbf{X}^T\mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}
+   \mathbf{w}_{\text{OLS}} = (\mathbf{X}^\top\mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
 
 The solution could also be found using gradient descent using the
 gradient of the loss:
@@ -63,7 +64,7 @@ gradient of the loss:
 .. math::
 
 
-   \partial\frac{L(\mathbf{w}, \mathbf{X}, \mathbf{y})}{\partial\mathbf{w}} = 2 \sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i)
+   \partial\frac{SSE(\mathbf{w})}{\partial\mathbf{w}} = 2 \sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i)
 
 Linear regression of ``Advertising.csv`` dataset with TV and Radio
 advertising as input features and Sales as target. The linear model that
@@ -140,21 +141,166 @@ form:
 .. math::
 
 
-   J(\mathbf{w}) = L(\mathbf{w}) + \lambda \Omega(\mathbf{w}).
+   J(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2 + \lambda \Omega(\mathbf{w})
 
 The respective contribution of the loss and the penalty is controlled by
-the **regularization parameter** :math:`\lambda`.
+the **regularization hyper-parameter** :math:`\lambda`.
 
-Popular penalties are:
+**Regularization exploits Occam’s razor is a principle**
 
-- Ridge (also called :math:`\ell_2`) penalty:
-  :math:`\|\mathbf{w}\|_2^2`. It shrinks coefficients toward 0.
-- Lasso (also called :math:`\ell_1`) penalty: :math:`\|\mathbf{w}\|_1`.
-  It performs feature selection by setting some coefficients to 0.
-- ElasticNet (also called :math:`\ell_1\ell_2`) penalty:
-  :math:`\alpha \left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right)`.
-  It performs selection of group of correlated features by setting some
-  coefficients to 0.
+Occam’s razor is a principle stating that, among competing hypotheses,
+the one with the fewest assumptions should be selected. This is also
+known as the principle of parsimony, favoring simpler explanations or
+models when possible. In machine learning, this translates to preferring
+models with similar loss but lower complexity.
+
+Ridge Regression (:math:`\ell_2` or L2 regularization)
+------------------------------------------------------
+
+- **Penalty**:
+  :math:`\Omega(\mathbf{w}) = \|\mathbf{w}\|_2^2 = \sum_{j} w_j^2`
+
+- **Objective function**:
+
+  .. math::
+
+
+     \text{Ridge}(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2 + \lambda \|\mathbf{w}\|_2^2
+
+- **Effect**: Shrinks all coefficients smoothly towards zero, but **does
+  not enforce sparsity** (no coefficients become exactly zero).
+
+- The gradient of the loss:
+
+  .. math::
+
+
+     \partial\frac{L(\mathbf{w}, \mathbf{X}, \mathbf{y})}{\partial\mathbf{w}} = 2 (\sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i) + \lambda \mathbf{w})
+
+Numerical Interpretation
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Using the matrix notation, he Ridge objective function can be rewritten
+as
+
+.. math::
+
+
+   \text{Ridge}(\mathbf{w}) = \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2 + \lambda \|\mathbf{w}\|_2^2
+
+The :math:`\mathbf{w}` that minimizes :math:`F_{Ridge}(\mathbf{w})` can
+be found by the following derivation:
+
+.. math::
+
+
+   \nabla_{\mathbf{w}}\text{Ridge}(\mathbf{w}) = 0\\
+   \nabla_{\mathbf{w}}\big((\mathbf{y} - \mathbf{X}\mathbf{w})^\top (\mathbf{y} - \mathbf{X}\mathbf{w}) + \lambda \mathbf{w}^\top\mathbf{w}\big) = 0\\
+   \nabla_{\mathbf{w}}\big(\mathbf{y}^\top\mathbf{y} - 2 \mathbf{w}^\top\mathbf{X}^\top\mathbf{y} + \mathbf{w}^\top\mathbf{X}^\top\mathbf{X}\mathbf{w} + \lambda \mathbf{w}^\top\mathbf{w}\big) = 0\\
+   -2\mathbf{X}^\top\mathbf{y} + 2 \mathbf{X}^\top\mathbf{X}\mathbf{w} + 2 \lambda \mathbf{w} = 0\\
+   -\mathbf{X}^\top\mathbf{y} + (\mathbf{X}^\top\mathbf{X} + \lambda \mathbf{I}) \mathbf{w} = 0\\
+   (\mathbf{X}^\top\mathbf{X} + \lambda \mathbf{I}) \mathbf{w} = \mathbf{X}^\top\mathbf{y}\\
+   \mathbf{w} = (\mathbf{X}^\top\mathbf{X} + \lambda \mathbf{I})^{-1} \mathbf{X}^\top\mathbf{y}
+
+- The solution adds a positive constant to the diagonal of
+  :math:`\mathbf{X}^\top\mathbf{X}` before inversion. This makes the
+  problem nonsingular, even if :math:`\mathbf{X}^\top\mathbf{X}` is not
+  of full rank, and was the main motivation behind ridge regression.
+
+- Increasing :math:`\lambda` shrinks the :math:`\mathbf{w}` coefficients
+  toward 0.
+
+- Solutions with large coefficients become unattractive.
+
+Lasso Regression (:math:`\ell_1` or L1 regularization)
+------------------------------------------------------
+
+- **Penalty**:
+  :math:`\Omega(\mathbf{w}) = \|\mathbf{w}\|_1 = \sum_{j} |w_j|`
+- **Objective function**:
+
+  .. math::
+
+
+     \text{Lasso}(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2 + \lambda \sum_{j} |w_j|
+- **Effect**: Promotes **sparsity**, i.e., forces some coefficients to
+  be exactly zero, ie. performs feature selection.
+- **No closed-form solution**, It is convex but not differentiable.
+  Requires specific optimization algorithms, such as the fast iterative
+  shrinkage-thresholding algorithm (FISTA): Amir Beck and Marc Teboulle,
+  *A Fast Iterative Shrinkage-Thresholding Algorithm for Linear Inverse
+  Problems* SIAM J. Imaging Sci., 2009.
+
+Geometric interpretation
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. figure:: images/l1_sparse.png
+   :alt: Sparsity of L1 norm
+
+   Sparsity of L1 norm
+
+Elastic Net
+-----------
+
+- **Penalty**: Combination of L1 and L2:
+  :math:`\Omega(\mathbf{w}) = \alpha \|\mathbf{w}\|_1 + (1 - \alpha) \|\mathbf{w}\|_2^2`
+  where :math:`\alpha \in [0, 1]` controls the mix of Lasso and Ridge.
+- **Effect**: Balances sparsity (L1) and stability (L2), especially
+  useful when features are correlated.
+
+The Elastic-net estimator combines the :math:`\ell_1` and :math:`\ell_2`
+penalties, and results in the problem to
+
+.. math::
+
+
+   \text{Enet}(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2 + \alpha \left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right),
+
+where :math:`\alpha` acts as a global penalty and :math:`\rho` as an
+:math:`\ell_1 / \ell_2` ratio.
+
+Rational
+~~~~~~~~
+
+- If there are groups of highly correlated variables, Lasso tends to
+  arbitrarily select only one from each group. These models are
+  difficult to interpret because covariates that are strongly associated
+  with the outcome are not included in the predictive model. Conversely,
+  the elastic net encourages a grouping effect, where strongly
+  correlated predictors tend to be in or out of the model together.
+
+- Studies on real world data and simulation studies show that the
+  elastic net often outperforms the lasso, while enjoying a similar
+  sparsity of representation.
+
+Penalization: summary and and Application with scikit-learn
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Summary
+^^^^^^^
+
++--------+-----------+------------+------------------+---------------+
+| Method | Penalty   | Promotes   | Handles          | Closed-Form   |
+|        | Type      | Sparsity   | M                | Solution      |
+|        |           |            | ulticollinearity |               |
++========+===========+============+==================+===============+
+| Ridge  | L2:       | No         | Yes              | Yes           |
+|        | :m        |            |                  |               |
+|        | ath:`\sum |            |                  |               |
+|        | _j w_j^2` |            |                  |               |
++--------+-----------+------------+------------------+---------------+
+| Lasso  | L1:       | Yes        | No (can be       | No            |
+|        | :mat      |            | unstable)        |               |
+|        | h:`\sum_j |            |                  |               |
+|        |  \|w_j\|` |            |                  |               |
++--------+-----------+------------+------------------+---------------+
+| E      | L1 + L2   | Yes (less  | Yes              | No            |
+| lastic |           | than       |                  |               |
+| Net    |           | Lasso)     |                  |               |
++--------+-----------+------------+------------------+---------------+
+
+Effect on problems with increasing dimension
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The next figure shows the predicted performance (r-squared) on train and
 test sets with an increasing number of input features. The number of
@@ -164,7 +310,7 @@ number of input features. The performances on the training set rapidly
 reach 100% (R2=1). However, the performance on the test set decreases
 with the increase of the input dimensionality. The difference between
 the train and test performances (blue shaded region) depicts the
-overfitting phenomena. Regularisation using penalties of the coefficient
+overfitting phenomena. Regularization using penalties of the coefficient
 vector norm greatly limits the overfitting phenomena.
 
 .. figure:: images/linear_regression_penalties.png
@@ -174,7 +320,24 @@ vector norm greatly limits the overfitting phenomena.
    Penalties: prediction performances as a function of number of input
    features
 
-With scikit-learn:
+Effect on solution finding
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ridge penalty shrinks the coefficients toward zero. The figure
+illustrates: the OLS solution on the left. The :math:`\ell_1` and
+:math:`\ell_2` penalties in the middle pane. The penalized OLS in the
+right pane. The right pane shows how the penalties shrink the
+coefficients toward zero. The black points are the minimum found in each
+case, and the white points represents the true solution used to generate
+the data.
+
+.. figure:: images/ols_l1_l2.png
+   :alt: :math:`\ell_1` and :math:`\ell_2` shrinkages
+
+   :math:`\ell_1` and :math:`\ell_2` shrinkages
+
+Application with scikit-learn
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ipython3
 
@@ -197,72 +360,6 @@ With scikit-learn:
     l1     0.00 -0.00   0.00 -0.00  24.40  25.16  25.36 -0.00 -0.00 -0.00
     l1l2   0.78  0.00   0.51 -0.00   7.20   5.71   8.95 -1.38 -0.00 -0.40
 
-
-Ridge regression (:math:`\ell_2`-regularization)
-------------------------------------------------
-
-Ridge regression impose a :math:`\ell_2` penalty on the coefficients,
-i.e. it penalizes with the Euclidean norm of the coefficients while
-minimizing SSE. The objective function becomes:
-
-.. raw:: latex
-
-   \begin{align}
-   \text{Ridge}(\mathbf{w}) &= \sum_i^N (y_i - \mathbf{x}_i^T\mathbf{w})^2 + \lambda \|\mathbf{w}\|_2^2\\
-   &= \|\mathbf{y} - \mathbf{x}\mathbf{w}\|_2^2 + \lambda \|\mathbf{w}\|_2^2.
-   \end{align}
-
-The :math:`\mathbf{w}` that minimises :math:`F_{Ridge}(\mathbf{w})` can
-be found by the following derivation:
-
-.. raw:: latex
-
-   \begin{align}
-   \nabla_{\mathbf{w}}\text{Ridge}(\mathbf{w}) &= 0\\
-   \nabla_{\mathbf{w}}\big((\mathbf{y} - \mathbf{X}\mathbf{w})^T (\mathbf{y} - \mathbf{X}\mathbf{w}) + \lambda \mathbf{w}^T\mathbf{w}\big) &= 0\\
-   \nabla_{\mathbf{w}}\big((\mathbf{y}^T\mathbf{y} - 2 \mathbf{w}^T\mathbf{X}^T\mathbf{y} + \mathbf{w}^T\mathbf{X}^T\mathbf{X}\mathbf{w} + \lambda \mathbf{w}^T\mathbf{w})\big) &= 0\\
-   -2\mathbf{X}^T\mathbf{y} + 2 \mathbf{X}^T\mathbf{X}\mathbf{w} + 2 \lambda \mathbf{w} &= 0\\
-   -\mathbf{X}^T\mathbf{y} + (\mathbf{X}^T\mathbf{X} + \lambda \mathbf{I}) \mathbf{w} &= 0\\
-   (\mathbf{X}^T\mathbf{X} + \lambda \mathbf{I}) \mathbf{w} &= \mathbf{X}^T\mathbf{y}\\
-   \mathbf{w} &= (\mathbf{X}^T\mathbf{X} + \lambda \mathbf{I})^{-1} \mathbf{X}^T\mathbf{y}
-   \end{align}
-
-- The solution adds a positive constant to the diagonal of
-  :math:`\mathbf{X}^T\mathbf{X}` before inversion. This makes the
-  problem nonsingular, even if :math:`\mathbf{X}^T\mathbf{X}` is not of
-  full rank, and was the main motivation behind ridge regression.
-
-- Increasing :math:`\lambda` shrinks the :math:`\mathbf{w}` coefficients
-  toward 0.
-
-- This approach **penalizes** the objective function by the **Euclidian
-  (:math:`\ell_2`) norm** of the coefficients such that solutions with
-  large coefficients become unattractive.
-
-The gradient of the loss:
-
-.. math::
-
-
-   \partial\frac{L(\mathbf{w}, \mathbf{X}, \mathbf{y})}{\partial\mathbf{w}} = 2 (\sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i) + \lambda \mathbf{w})
-
-Lasso regression (:math:`\ell_1`-regularization)
-------------------------------------------------
-
-Lasso regression penalizes the coefficients by the :math:`\ell_1` norm.
-This constraint will reduce (bias) the capacity of the learning
-algorithm. To add such a penalty forces the coefficients to be small,
-i.e. it shrinks them toward zero. The objective function to minimize
-becomes:
-
-.. raw:: latex
-
-   \begin{align}
-   \text{Lasso}(\mathbf{w}) &= \sum_i^N (y_i - \mathbf{x}_i^T\mathbf{w})^2 + \lambda\|\mathbf{w}\|_1.
-   \end{align}
-
-This penalty forces some coefficients to be exactly zero, providing a
-feature selection property.
 
 Sparsity of the :math:`\ell_1` norm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -298,85 +395,7 @@ Among possible models with similar loss, choose the simplest one:
   or (ii) embed the feature selection procedure within the learning
   process.
 
-Sparsity-induced penalty or embedded feature selection with the :math:`\ell_1` penalty
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The penalty based on the :math:`\ell_1` norm promotes **sparsity**
-(scattered, or not dense): it forces many coefficients to be exactly
-zero. This also makes the coefficient vector scattered.
-
-The figure bellow illustrates the OLS loss under a constraint acting on
-the :math:`\ell_1` norm of the coefficient vector. I.e., it illustrates
-the following optimization problem:
-
-.. math::
-
-
-   \begin{aligned}
-       \underset{\mathbf{w}}{\text{minimize}} ~& \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2 \\
-       \text{subject to}                 ~& \|\mathbf{w}\|_1 \leq 1.
-   \end{aligned}
-
-.. figure:: images/l1_sparse.png
-   :alt: Sparsity of L1 norm
-
-   Sparsity of L1 norm
-
-Optimization issues
-~~~~~~~~~~~~~~~~~~~
-
-*Section to be completed*
-
-- No more closed-form solution.
-
-- Convex but not differentiable.
-
-- Requires specific optimization algorithms, such as the fast iterative
-  shrinkage-thresholding algorithm (FISTA): Amir Beck and Marc Teboulle,
-  *A Fast Iterative Shrinkage-Thresholding Algorithm for Linear Inverse
-  Problems* SIAM J. Imaging Sci., 2009.
-
-The ridge penalty shrinks the coefficients toward zero. The figure
-illustrates: the OLS solution on the left. The :math:`\ell_1` and
-:math:`\ell_2` penalties in the middle pane. The penalized OLS in the
-right pane. The right pane shows how the penalties shrink the
-coefficients toward zero. The black points are the minimum found in each
-case, and the white points represents the true solution used to generate
-the data.
-
-.. figure:: images/ols_l1_l2.png
-   :alt: :math:`\ell_1` and :math:`\ell_2` shrinkages
-
-   :math:`\ell_1` and :math:`\ell_2` shrinkages
-
-Elastic-net regression (:math:`\ell_1`-:math:`\ell_2`-regularization)
----------------------------------------------------------------------
-
-The Elastic-net estimator combines the :math:`\ell_1` and :math:`\ell_2`
-penalties, and results in the problem to
-
-.. raw:: latex
-
-   \begin{align}
-   \text{Enet}(\mathbf{w}) &= \sum_i^N (y_i - \mathbf{x}_i^T\mathbf{w})^2 + \alpha \left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right),
-   \end{align}
-
-where :math:`\alpha` acts as a global penalty and :math:`\rho` as an
-:math:`\ell_1 / \ell_2` ratio.
-
-Rational
-~~~~~~~~
-
-- If there are groups of highly correlated variables, Lasso tends to
-  arbitrarily select only one from each group. These models are
-  difficult to interpret because covariates that are strongly associated
-  with the outcome are not included in the predictive model. Conversely,
-  the elastic net encourages a grouping effect, where strongly
-  correlated predictors tend to be in or out of the model together.
-
-- Studies on real world data and simulation studies show that the
-  elastic net often outperforms the lasso, while enjoying a similar
-  sparsity of representation.
 
 Regression performance evaluation metrics: R-squared, MSE and MAE
 -----------------------------------------------------------------

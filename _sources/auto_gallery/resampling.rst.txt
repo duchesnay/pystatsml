@@ -517,7 +517,7 @@ Cross-validation for both model (outer) evaluation and model (inner) selection
 
  .. code-block:: none
 
-    Test AUC:0.85; bACC:0.74, Time: 0.05s
+    Test AUC:0.85; bACC:0.74, Time: 0.03s
 
 
 
@@ -1091,7 +1091,7 @@ Test same predictions and same coefficients
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.461 seconds)
+   **Total running time of the script:** (0 minutes 9.988 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_resampling.py:

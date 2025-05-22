@@ -174,6 +174,11 @@ in the PCA.</p></li>
 <p><span class="math notranslate nohighlight">\(\mathbf{V}\)</span> transforms correlated variables (<span class="math notranslate nohighlight">\(\mathbf{X}\)</span>)
 into a set of uncorrelated ones (<span class="math notranslate nohighlight">\(\mathbf{U}\mathbf{D}\)</span>) that
 better expose the various relationships among the original data items.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{X}           &amp;= \mathbf{U}\mathbf{D}\mathbf{V}^{T},\\
+\mathbf{X}\mathbf{V} &amp;= \mathbf{U}\mathbf{D}\mathbf{V}^{T}\mathbf{V},\\
+\mathbf{X}\mathbf{V} &amp;= \mathbf{U}\mathbf{D}\mathbf{I},\\
+\mathbf{X}\mathbf{V} &amp;= \mathbf{U}\mathbf{D}\end{split}\]</div>
 <p>At the same time, SVD is a method for identifying and ordering the
 dimensions along which data points exhibit the most variation.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -401,6 +406,14 @@ given by</p>
 \[\mathbf{S_{XX}} = \frac{1}{N-1}\mathbf{X}^T\mathbf{X}.\]</div>
 <p>We rewrite <span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span> using the SVD decomposition of
 <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{X}^T\mathbf{X}
+ &amp;= (\mathbf{U}\mathbf{D}\mathbf{V}^T)^T(\mathbf{U}\mathbf{D}\mathbf{V}^T)\\
+ &amp;= \mathbf{V}\mathbf{D}^T\mathbf{U}^T\mathbf{U}\mathbf{D}\mathbf{V}^T\\
+ &amp;=\mathbf{V}\mathbf{D}^2\mathbf{V}^T\\
+\mathbf{V}^T\mathbf{X}^T\mathbf{X}\mathbf{V} &amp;= \mathbf{D}^2\\
+\frac{1}{N-1} \mathbf{V}^T\mathbf{X}^T\mathbf{X}\mathbf{V} &amp;= \frac{1}{N-1}\mathbf{D}^2\\
+\mathbf{V}^T\mathbf{S_{XX}}\mathbf{V} &amp;= \frac{1}{N-1}\mathbf{D}^2.\end{split}\]</div>
 <p>Considering only the <span class="math notranslate nohighlight">\(k^{th}\)</span> right-singular vectors
 <span class="math notranslate nohighlight">\(\mathbf{v}_k\)</span> associated to the singular value <span class="math notranslate nohighlight">\(d_k\)</span></p>
 <div class="math notranslate nohighlight">
@@ -437,6 +450,10 @@ onto the principal components directions, i.e.</p></li>
 \[\mathbf{C}_{N\times K} = \mathbf{X}_{N \times P} \mathbf{V}_{P \times K}.\]</div>
 <p>Since <span class="math notranslate nohighlight">\(\mathbf{X} = \mathbf{UDV}^T\)</span> and <span class="math notranslate nohighlight">\(\mathbf{V}\)</span> is
 orthogonal (<span class="math notranslate nohighlight">\(\mathbf{V}^T \mathbf{V} = \mathbf{I}\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{C}_{N\times K} &amp;= \mathbf{UDV}^T_{N \times P} \mathbf{V}_{P \times K}\\
+\mathbf{C}_{N\times K} &amp;= \mathbf{UD}^T_{N \times K} \mathbf{I}_{K \times K}\\
+\mathbf{C}_{N\times K} &amp;= \mathbf{UD}^T_{N \times K}\\\end{split}\]</div>
 <p>Thus <span class="math notranslate nohighlight">\(\mathbf{c}_j = \mathbf{X}\mathbf{v}_j = \mathbf{u}_j d_j\)</span>,
 for <span class="math notranslate nohighlight">\(j=1, \ldots K\)</span>. Hence <span class="math notranslate nohighlight">\(\mathbf{u}_j\)</span> is simply the
 projection of the row vectors of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, i.e., the input
@@ -455,6 +472,10 @@ x_{N,1}v_{1,1}+ \ldots +x_{N,P}v_{1,P}
 <span class="math notranslate nohighlight">\(\lambda_k, k=1, \dots K\)</span>. It can be obtained from the singular
 values:</p></li>
 </ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}var(\mathbf{c}_k) =&amp; \frac{1}{N-1}(\mathbf{X} \mathbf{v}_k)^2\\
+                  =&amp; \frac{1}{N-1}(\mathbf{u}_k d_k)^2\\
+                  =&amp; \frac{1}{N-1}d_k^2\end{split}\]</div>
 </section>
 </section>
 <section id="determining-the-number-of-pcs">
@@ -477,6 +498,10 @@ against PC2.</p>
 contribution of each original variable in the component.</p>
 <p>Remark: The loadings (PC directions) are the coefficients of multiple
 regression of PC on original variables:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{c}                                             &amp; = \mathbf{X} \mathbf{v}\\
+\mathbf{X}^T \mathbf{c}                                &amp; = \mathbf{X}^T \mathbf{X} \mathbf{v}\\
+(\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{c} &amp; = \mathbf{v}\end{split}\]</div>
 <p>Another way to evaluate the contribution of the original variables in
 each PC can be obtained by computing the correlation between the PCs and
 the original variables, i.e. columns of <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>, denoted
@@ -609,8 +634,8 @@ results from <code class="docutils literal notranslate"><span class="pre">sklear
 </section>
 <section id="apply-your-basic-pca-on-the-iris-dataset">
 <h3>Apply your Basic PCA on the <code class="docutils literal notranslate"><span class="pre">iris</span></code> dataset<a class="headerlink" href="#apply-your-basic-pca-on-the-iris-dataset" title="Link to this heading">¶</a></h3>
-<p>The data set is available at:
-<a class="reference external" href="https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv">https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv</a></p>
+<p>Get
+<a class="reference external" href="https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv">iris.csv</a>.</p>
 <ul class="simple">
 <li><p>Describe the data set. Should the dataset been standardized?</p></li>
 <li><p>Describe the structure of correlations among variables.</p></li>

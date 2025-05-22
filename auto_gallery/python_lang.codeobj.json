@@ -553,6 +553,15 @@
    "name": "str"
   }
  ],
+ "dummy": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  }
+ ],
  "empty_dict": [
   {
    "is_class": false,

@@ -251,7 +251,7 @@ getting the "Next" HTML element
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.174 seconds)
+   **Total running time of the script:** (0 minutes 3.141 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_nlp_webscraping.py:

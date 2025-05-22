@@ -442,6 +442,11 @@ for n in inter:
 [[n, simpsons_ages_dict[n], simpsons_roles_dict[n]] for n in inter]
 
 ###############################################################################
+# Iterating both key and values
+
+[[key, val] for key, val in simpsons_ages_dict.items()]
+    
+###############################################################################
 # String substitution using a dictionary: syntax ``%(key)format``, where ``format``
 # is the formatting character e.g. ``s`` for string.
 
@@ -833,6 +838,51 @@ min_num, max_num = min_max([1, 2, 3])    # min_num = 1, max_num = 3
 
 
 ###############################################################################
+# **Arbitrary number of Arguments**
+# 
+# `Packing and Unpacking Arguments in Python <https://www.geeksforgeeks.org/packing-and-unpacking-arguments-in-python/>`_
+#
+# `*args` packs many positional arguments e.g., `add(1, 2, 3)` as a tuple,
+# arguments can be manipulated as a tuple, ie `args[0]`, etc.
+
+def add(*args):
+    print(args)
+    s = 0
+    for x in args:
+        s += x
+    return s
+
+print(add(2, 3) + add(1, 2, 3))
+
+###############################################################################
+# Pass arbitrary number of arguments to another function.
+# re-pack arguments while passing them using `*args`
+
+def dummy(*args):
+    # do something
+    return add(*args)
+
+
+print(dummy(2, 3) + dummy(1, 2, 3))
+
+###############################################################################
+# `**kwargs` packs many keywords arguments e.g., `add(x=1, y=2, z=3)` as a dictionary:
+
+def add(**kwargs):
+    s = 0
+    for key, val in kwargs.items():
+        s += val
+    return s
+
+add(x=2, y=3) + add(x=1, y=2, z=3)
+
+
+# - `*args` packs many positional arguments e.g., `add(1, 2, 3)`` as a tuple:
+
+
+
+
+###############################################################################
 # Reference and copy
 # ~~~~~~~~~~~~~~~~~~
 #
@@ -905,7 +955,7 @@ print("Join:", join_dict_to_table(simpsons_roles_dict,
                                   simpsons_ages_dict))
 
 ###############################################################################
-# Regular expression
+# Regular Expression
 # ------------------
 # Regular Expression (RE, or RegEx) allow to search and patterns in strings.
 # See `this page <https://www.programiz.com/python-programming/regex>`_ for the syntax
@@ -932,8 +982,11 @@ import re
 
 ###############################################################################
 # **Compile** (``re.compile(string)``) regular expression with a pattern that
-# captures the pattern ``firstname:<subject_id>_lastname:<session_id>``
-pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
+# captures the pattern ``firstname:<subject_id>_lastname:<session_id>``.
+# Note that we use raw string `r'string'` so `\` is not interpreted as
+# the start of an escape sequence.
+
+pattern = re.compile(r'firstname:[\w]+_lastname:[\w]+')
 
 ###############################################################################
 # **Match** (``re.match(string)``) to be used in test, loop, etc.
@@ -960,14 +1013,14 @@ print(yes_, yes2_, no_)
 # and returns them as a list.
 
 # Find the whole pattern within the string
-pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
+pattern = re.compile(r'firstname:[\w]+_lastname:[\w]+')
 print(pattern.findall("firstname:John_lastname:Doe blah blah"))
 
 # Find words
 print(re.compile("[a-zA-Z0-9]+").findall("firstname:John_lastname:Doe"))
 
 # Find words with including underscore
-print(re.compile("[\w]+").findall("firstname:John_lastname:Doe"))
+print(re.compile(r'[\w]+').findall("firstname:John_lastname:Doe"))
 
 
 ###############################################################################

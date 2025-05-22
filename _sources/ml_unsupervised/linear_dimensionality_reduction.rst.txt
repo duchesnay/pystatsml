@@ -167,14 +167,13 @@ SVD for variables transformation
 into a set of uncorrelated ones (:math:`\mathbf{U}\mathbf{D}`) that
 better expose the various relationships among the original data items.
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
+
    \mathbf{X}           &= \mathbf{U}\mathbf{D}\mathbf{V}^{T},\\
    \mathbf{X}\mathbf{V} &= \mathbf{U}\mathbf{D}\mathbf{V}^{T}\mathbf{V},\\
    \mathbf{X}\mathbf{V} &= \mathbf{U}\mathbf{D}\mathbf{I},\\
    \mathbf{X}\mathbf{V} &= \mathbf{U}\mathbf{D}
-   \end{align}
 
 At the same time, SVD is a method for identifying and ordering the
 dimensions along which data points exhibit the most variation.
@@ -461,17 +460,16 @@ given by
 We rewrite :math:`\mathbf{X}^T\mathbf{X}` using the SVD decomposition of
 :math:`\mathbf{X}` as
 
-.. raw:: latex
+.. math::
 
-   \begin{align*}
+
        \mathbf{X}^T\mathbf{X}
         &= (\mathbf{U}\mathbf{D}\mathbf{V}^T)^T(\mathbf{U}\mathbf{D}\mathbf{V}^T)\\
         &= \mathbf{V}\mathbf{D}^T\mathbf{U}^T\mathbf{U}\mathbf{D}\mathbf{V}^T\\
         &=\mathbf{V}\mathbf{D}^2\mathbf{V}^T\\
        \mathbf{V}^T\mathbf{X}^T\mathbf{X}\mathbf{V} &= \mathbf{D}^2\\
        \frac{1}{N-1} \mathbf{V}^T\mathbf{X}^T\mathbf{X}\mathbf{V} &= \frac{1}{N-1}\mathbf{D}^2\\
-       \mathbf{V}^T\mathbf{S_{XX}}\mathbf{V} &= \frac{1}{N-1}\mathbf{D}^2
-   \end{align*}.
+       \mathbf{V}^T\mathbf{S_{XX}}\mathbf{V} &= \frac{1}{N-1}\mathbf{D}^2.
 
 Considering only the :math:`k^{th}` right-singular vectors
 :math:`\mathbf{v}_k` associated to the singular value :math:`d_k`
@@ -520,13 +518,12 @@ three main quantities:
 Since :math:`\mathbf{X} = \mathbf{UDV}^T` and :math:`\mathbf{V}` is
 orthogonal (:math:`\mathbf{V}^T \mathbf{V} = \mathbf{I}`):
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
+
        \mathbf{C}_{N\times K} &= \mathbf{UDV}^T_{N \times P} \mathbf{V}_{P \times K}\\ 
        \mathbf{C}_{N\times K} &= \mathbf{UD}^T_{N \times K} \mathbf{I}_{K \times K}\\
        \mathbf{C}_{N\times K} &= \mathbf{UD}^T_{N \times K}\\
-   \end{align}
 
 Thus :math:`\mathbf{c}_j = \mathbf{X}\mathbf{v}_j = \mathbf{u}_j d_j`,
 for :math:`j=1, \ldots K`. Hence :math:`\mathbf{u}_j` is simply the
@@ -549,13 +546,12 @@ predictor vectors, on the direction :math:`\mathbf{v}_j`, scaled by
    :math:`\lambda_k, k=1, \dots K`. It can be obtained from the singular
    values:
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
+
    var(\mathbf{c}_k) =& \frac{1}{N-1}(\mathbf{X} \mathbf{v}_k)^2\\
                      =& \frac{1}{N-1}(\mathbf{u}_k d_k)^2\\
                      =& \frac{1}{N-1}d_k^2
-   \end{align}
 
 Determining the number of PCs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -587,13 +583,12 @@ contribution of each original variable in the component.
 Remark: The loadings (PC directions) are the coefficients of multiple
 regression of PC on original variables:
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
+
        \mathbf{c}                                             & = \mathbf{X} \mathbf{v}\\
        \mathbf{X}^T \mathbf{c}                                & = \mathbf{X}^T \mathbf{X} \mathbf{v}\\
        (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{c} & = \mathbf{v}
-   \end{align}
 
 Another way to evaluate the contribution of the original variables in
 each PC can be obtained by computing the correlation between the PCs and
@@ -761,8 +756,8 @@ results from ``sklearn``.
 Apply your Basic PCA on the ``iris`` dataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The data set is available at:
-https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv
+Get
+`iris.csv <https://github.com/duchesnay/pystatsml/raw/master/datasets/iris.csv>`__.
 
 - Describe the data set. Should the dataset been standardized?
 

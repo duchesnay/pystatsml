@@ -492,9 +492,16 @@ unordered, iterable, mutable</p>
 <span class="p">[[</span><span class="n">n</span><span class="p">,</span> <span class="n">simpsons_ages_dict</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">simpsons_roles_dict</span><span class="p">[</span><span class="n">n</span><span class="p">]]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">inter</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;Maggie&#39;, &#39;Marge&#39;, &#39;Homer&#39;, &#39;Lisa&#39;, &#39;Bart&#39;}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;Homer&#39;, &#39;Marge&#39;, &#39;Lisa&#39;, &#39;Maggie&#39;, &#39;Bart&#39;}
 
-[[&#39;Maggie&#39;, 1, &#39;daughter&#39;], [&#39;Marge&#39;, 43, &#39;mother&#39;], [&#39;Homer&#39;, 45, &#39;father&#39;], [&#39;Lisa&#39;, 10, &#39;daughter&#39;], [&#39;Bart&#39;, 11, &#39;son&#39;]]
+[[&#39;Homer&#39;, 45, &#39;father&#39;], [&#39;Marge&#39;, 43, &#39;mother&#39;], [&#39;Lisa&#39;, 10, &#39;daughter&#39;], [&#39;Maggie&#39;, 1, &#39;daughter&#39;], [&#39;Bart&#39;, 11, &#39;son&#39;]]
+</pre></div>
+</div>
+<p>Iterating both key and values</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">simpsons_ages_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[&#39;Homer&#39;, 45], [&#39;Marge&#39;, 43], [&#39;Bart&#39;, 11], [&#39;Lisa&#39;, 10], [&#39;Maggie&#39;, 1]]
 </pre></div>
 </div>
 <p>String substitution using a dictionary: syntax <code class="docutils literal notranslate"><span class="pre">%(key)format</span></code>, where <code class="docutils literal notranslate"><span class="pre">format</span></code>
@@ -771,7 +778,7 @@ syntax: <code class="docutils literal notranslate"><span class="pre">[true_condi
 <span class="nb">print</span><span class="p">(</span><span class="n">simpsons_info_dict</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;Maggie&#39;: [&#39;daughter&#39;, 1], &#39;Marge&#39;: [&#39;mother&#39;, 43], &#39;Homer&#39;: [&#39;father&#39;, 45], &#39;Lisa&#39;: [&#39;daughter&#39;, 10], &#39;Bart&#39;: [&#39;son&#39;, 11]}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;Homer&#39;: [&#39;father&#39;, 45], &#39;Marge&#39;: [&#39;mother&#39;, 43], &#39;Lisa&#39;: [&#39;daughter&#39;, 10], &#39;Maggie&#39;: [&#39;daughter&#39;, 1], &#39;Bart&#39;: [&#39;son&#39;, 11]}
 </pre></div>
 </div>
 </section>
@@ -810,7 +817,7 @@ syntax: <code class="docutils literal notranslate"><span class="pre">[true_condi
 <span class="n">freq_veq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">count</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;they&#39;: 2, &#39;but&#39;: 1, &#39;too&#39;: 2, &#39;gall&#39;: 1, &#39;to&#39;: 2, &#39;small&#39;: 1, &#39;incomes&#39;: 1, &#39;shoes;&#39;: 1, &#39;if&#39;: 2, &#39;our&#39;: 2, &#39;pinch&#39;: 1, &#39;are&#39;: 1, &#39;like&#39;: 1, &#39;stumble&#39;: 1, &#39;Tick-tow&#39;: 1, &#39;us&#39;: 2, &#39;large&#39;: 1, &#39;and&#39;: 2, &#39;trip&#39;: 1, &#39;cause&#39;: 1}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;small&#39;: 1, &#39;like&#39;: 1, &#39;stumble&#39;: 1, &#39;trip&#39;: 1, &#39;shoes;&#39;: 1, &#39;cause&#39;: 1, &#39;and&#39;: 2, &#39;pinch&#39;: 1, &#39;to&#39;: 2, &#39;large&#39;: 1, &#39;us&#39;: 2, &#39;but&#39;: 1, &#39;our&#39;: 2, &#39;if&#39;: 2, &#39;too&#39;: 2, &#39;they&#39;: 2, &#39;Tick-tow&#39;: 1, &#39;gall&#39;: 1, &#39;incomes&#39;: 1, &#39;are&#39;: 1}
 </pre></div>
 </div>
 </section>
@@ -918,6 +925,56 @@ IDE, ipython (type: ?power_this) to provide function documentation.</p>
 <span class="n">min_num</span><span class="p">,</span> <span class="n">max_num</span> <span class="o">=</span> <span class="n">min_max</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>    <span class="c1"># min_num = 1, max_num = 3</span>
 </pre></div>
 </div>
+<p><strong>Arbitrary number of Arguments</strong></p>
+<p><a class="reference external" href="https://www.geeksforgeeks.org/packing-and-unpacking-arguments-in-python/">Packing and Unpacking Arguments in Python</a></p>
+<p><cite>*args</cite> packs many positional arguments e.g., <cite>add(1, 2, 3)</cite> as a tuple,
+arguments can be manipulated as a tuple, ie <cite>args[0]</cite>, etc.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(2, 3)
+(1, 2, 3)
+11
+</pre></div>
+</div>
+<p>Pass arbitrary number of arguments to another function.
+re-pack arguments while passing them using <cite>*args</cite></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">dummy</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="c1"># do something</span>
+    <span class="k">return</span> <span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dummy</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="n">dummy</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(2, 3)
+(1, 2, 3)
+11
+</pre></div>
+</div>
+<p><cite>**kwargs</cite> packs many keywords arguments e.g., <cite>add(x=1, y=2, z=3)</cite> as a dictionary:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+<span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+
+<span class="c1"># - `*args` packs many positional arguments e.g., `add(1, 2, 3)`` as a tuple:</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>11
+</pre></div>
+</div>
 <section id="reference-and-copy">
 <h2>Reference and copy<a class="headerlink" href="#reference-and-copy" title="Link to this heading">¶</a></h2>
 <p><a class="reference external" href="https://levelup.gitconnected.com/understanding-reference-and-copy-in-python-c681341a0cd8">References</a> are used to access objects in memory, here lists.
@@ -994,13 +1051,13 @@ is the key, the second and third columns are the values of the dictionaries.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Roles: {&#39;Homer&#39;: &#39;father&#39;, &#39;Marge&#39;: &#39;mother&#39;, &#39;Bart&#39;: &#39;son&#39;, &#39;Maggie&#39;: &#39;daughter&#39;}
 Ages: {&#39;Homer&#39;: 45, &#39;Marge&#39;: 43, &#39;Bart&#39;: 11, &#39;Lisa&#39;: 10}
-Join: [[&#39;Marge&#39;, &#39;mother&#39;, 43], [&#39;Bart&#39;, &#39;son&#39;, 11], [&#39;Homer&#39;, &#39;father&#39;, 45]]
+Join: [[&#39;Bart&#39;, &#39;son&#39;, 11], [&#39;Homer&#39;, &#39;father&#39;, 45], [&#39;Marge&#39;, &#39;mother&#39;, 43]]
 </pre></div>
 </div>
 </section>
 </section>
 <section id="regular-expression">
-<h1>Regular expression<a class="headerlink" href="#regular-expression" title="Link to this heading">¶</a></h1>
+<h1>Regular Expression<a class="headerlink" href="#regular-expression" title="Link to this heading">¶</a></h1>
 <p>Regular Expression (RE, or RegEx) allow to search and patterns in strings.
 See <a class="reference external" href="https://www.programiz.com/python-programming/regex">this page</a> for the syntax
 of the RE patterns.</p>
@@ -1025,12 +1082,10 @@ of the RE patterns.</p>
 </pre></div>
 </div>
 <p><strong>Compile</strong> (<code class="docutils literal notranslate"><span class="pre">re.compile(string)</span></code>) regular expression with a pattern that
-captures the pattern <code class="docutils literal notranslate"><span class="pre">firstname:&lt;subject_id&gt;_lastname:&lt;session_id&gt;</span></code></p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;firstname:[\w]+_lastname:[\w]+&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ed203246/git/pystatsml/python_lang/python_lang.py:936: SyntaxWarning: invalid escape sequence &#39;\w&#39;
-  pattern = re.compile(&quot;firstname:[\w]+_lastname:[\w]+&quot;)
+captures the pattern <code class="docutils literal notranslate"><span class="pre">firstname:&lt;subject_id&gt;_lastname:&lt;session_id&gt;</span></code>.
+Note that we use raw string <cite>r’string’</cite> so <a href="#id2"><span class="problematic" id="id3">`</span></a>` is not interpreted as
+the start of an escape sequence.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;firstname:[\w]+_lastname:[\w]+&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Match</strong> (<code class="docutils literal notranslate"><span class="pre">re.match(string)</span></code>) to be used in test, loop, etc.
@@ -1059,21 +1114,17 @@ Determine if the RE matches <strong>at any location</strong> in the string.</p>
 <p><strong>Find</strong> (<code class="docutils literal notranslate"><span class="pre">re.findall(string)</span></code>) all substrings where the RE matches,
 and returns them as a list.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find the whole pattern within the string</span>
-<span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;firstname:[\w]+_lastname:[\w]+&quot;</span><span class="p">)</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;firstname:[\w]+_lastname:[\w]+&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;firstname:John_lastname:Doe blah blah&quot;</span><span class="p">))</span>
 
 <span class="c1"># Find words</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;[a-zA-Z0-9]+&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;firstname:John_lastname:Doe&quot;</span><span class="p">))</span>
 
 <span class="c1"># Find words with including underscore</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;[\w]+&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;firstname:John_lastname:Doe&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[\w]+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;firstname:John_lastname:Doe&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ed203246/git/pystatsml/python_lang/python_lang.py:963: SyntaxWarning: invalid escape sequence &#39;\w&#39;
-  pattern = re.compile(&quot;firstname:[\w]+_lastname:[\w]+&quot;)
-/home/ed203246/git/pystatsml/python_lang/python_lang.py:970: SyntaxWarning: invalid escape sequence &#39;\w&#39;
-  print(re.compile(&quot;[\w]+&quot;).findall(&quot;firstname:John_lastname:Doe&quot;))
-[&#39;firstname:John_lastname:Doe&#39;]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;firstname:John_lastname:Doe&#39;]
 [&#39;firstname&#39;, &#39;John&#39;, &#39;lastname&#39;, &#39;Doe&#39;]
 [&#39;firstname&#39;, &#39;John_lastname&#39;, &#39;Doe&#39;]
 </pre></div>
@@ -1086,7 +1137,7 @@ and Doe is suffixed with lastname:</p>
 <span class="s2">    firstname:Bart_lastname:Simpson&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ed203246/git/pystatsml/python_lang/python_lang.py:978: SyntaxWarning: invalid escape sequence &#39;\w&#39;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ed203246/git/pystatsml/python_lang/python_lang.py:1031: SyntaxWarning: invalid escape sequence &#39;\w&#39;
   pattern = re.compile(&quot;firstname:([\w]+)_lastname:([\w]+)&quot;)
 [(&#39;John&#39;, &#39;Doe&#39;), (&#39;Bart&#39;, &#39;Simpson&#39;)]
 </pre></div>
@@ -1107,9 +1158,9 @@ matched occurrences are replaced with the content of replace variable.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;Sentence with white      space&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ed203246/git/pystatsml/python_lang/python_lang.py:995: SyntaxWarning: invalid escape sequence &#39;\s&#39;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ed203246/git/pystatsml/python_lang/python_lang.py:1048: SyntaxWarning: invalid escape sequence &#39;\s&#39;
   print(re.sub(&#39;\s&#39;, &quot;_&quot;, &quot;Sentence with white      space&quot;))
-/home/ed203246/git/pystatsml/python_lang/python_lang.py:996: SyntaxWarning: invalid escape sequence &#39;\s&#39;
+/home/ed203246/git/pystatsml/python_lang/python_lang.py:1049: SyntaxWarning: invalid escape sequence &#39;\s&#39;
   print(re.sub(&#39;\s+&#39;, &quot;_&quot;, &quot;Sentence with white      space&quot;))
 Sentence_with_white______space
 Sentence_with_white_space
@@ -1119,7 +1170,7 @@ Sentence_with_white_space
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[^0-9a-zA-Z\s]+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;H^&amp;ell`.,|o W]{+orld&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ed203246/git/pystatsml/python_lang/python_lang.py:1001: SyntaxWarning: invalid escape sequence &#39;\s&#39;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/ed203246/git/pystatsml/python_lang/python_lang.py:1054: SyntaxWarning: invalid escape sequence &#39;\s&#39;
   re.sub(&#39;[^0-9a-zA-Z\s]+&#39;, &#39;&#39;, &#39;H^&amp;ell`.,|o W]{+orld&#39;)
 
 &#39;Hello World&#39;
@@ -1423,11 +1474,11 @@ on bootstrapped samples.</p>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_test_boot</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.63
-0.68
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.64
 0.63
-0.63
-0.67
+0.66
+0.62
+0.65
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
@@ -1454,7 +1505,7 @@ on bootstrapped samples.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Balanced Accuracy: 0.63
-Sequential execution, elapsed time: 1.3796963691711426
+Sequential execution, elapsed time: 1.3636796474456787
 </pre></div>
 </div>
 <p><strong>Multithreading</strong></p>
@@ -1483,8 +1534,8 @@ Sequential execution, elapsed time: 1.3796963691711426
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Concurrent execution with threads, elapsed time:&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Balanced Accuracy: 0.62
-Concurrent execution with threads, elapsed time: 0.7034385204315186
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Balanced Accuracy: 0.64
+Concurrent execution with threads, elapsed time: 0.6563949584960938
 </pre></div>
 </div>
 <p><strong>Multiprocessing</strong></p>
@@ -1523,7 +1574,7 @@ which manages shared objects.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Balanced Accuracy: 0.64
-Concurrent execution with processes, elapsed time: 0.6105175018310547
+Concurrent execution with processes, elapsed time: 0.6514365673065186
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Pool()</span></code> of <strong>workers (processes or Jobs)</strong> for concurrent (parallel) execution of multiples
@@ -1572,7 +1623,7 @@ to the process pool does not block, allowing the caller that issued the task to 
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Balanced Accuracy: 0.64
-Concurrent execution with processes, elapsed time: 1.761357069015503
+Concurrent execution with processes, elapsed time: 1.8547492027282715
 </pre></div>
 </div>
 </section>
@@ -1660,7 +1711,7 @@ Concurrent execution with processes, elapsed time: 1.761357069015503
 <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">ftp_url</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;README2.md&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(&#39;/tmp/README2.md&#39;, &lt;email.message.Message object at 0x733805637390&gt;)
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(&#39;/tmp/README2.md&#39;, &lt;email.message.Message object at 0x7a05a10ea490&gt;)
 </pre></div>
 </div>
 </section>
@@ -2088,7 +2139,7 @@ Manager(‘paul’, 3)</p></li>
 salary]]</p></li>
 <li><p>Compute the average salary</p></li>
 </ol>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.373 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.467 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-python-lang-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/c4275fe2e0574ad0ea500e359b4cfa73/python_lang.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">python_lang.ipynb</span></code></a></p>
@@ -2143,7 +2194,7 @@ salary]]</p></li>
 <li><a class="reference internal" href="#example-function-and-dictionary-comprehension">Example: function, and dictionary comprehension</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#regular-expression">Regular expression</a></li>
+<li><a class="reference internal" href="#regular-expression">Regular Expression</a></li>
 <li><a class="reference internal" href="#system-programming">System programming</a><ul>
 <li><a class="reference internal" href="#operating-system-interfaces-os">Operating system interfaces (os)</a></li>
 <li><a class="reference internal" href="#file-input-output">File input/output</a></li>

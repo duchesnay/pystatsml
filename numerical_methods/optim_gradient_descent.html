@@ -45,10 +45,10 @@
 <h1>Optimization (Minimization) by Gradient Descent<a class="headerlink" href="#optimization-minimization-by-gradient-descent" title="Link to this heading">¶</a></h1>
 <section id="gradient-descent">
 <h2>Gradient Descent<a class="headerlink" href="#gradient-descent" title="Link to this heading">¶</a></h2>
-<figure class="align-default" id="id1">
+<figure class="align-default" id="id7">
 <img alt="Optimization (minimization) by gradient descent" src="../_images/minimization.png" />
 <figcaption>
-<p><span class="caption-text">Optimization (minimization) by gradient descent</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Optimization (minimization) by gradient descent</span><a class="headerlink" href="#id7" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p><a class="reference external" href="https://en.wikipedia.org/wiki/Gradient_descent">Gradient descent</a> is
@@ -91,10 +91,10 @@ the hill is constantly changing.</p>
 direction of the negative gradient since we are recalculating it so
 frequently. A small learning rate is more precise, but calculating the
 gradient is time-consuming, leading too slow convergence</p>
-<figure class="align-default" id="id2">
+<figure class="align-default" id="id8">
 <img alt="jeremyjordan" src="../_images/learning_rate_choice.png" />
 <figcaption>
-<p><span class="caption-text">jeremyjordan</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+<p><span class="caption-text">jeremyjordan</span><a class="headerlink" href="#id8" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p><strong>Line search</strong> can be used (or more sophisticated <a class="reference external" href="https://en.wikipedia.org/wiki/Backtracking_line_search">Backtracking line
@@ -768,17 +768,17 @@ local optima. In these scenarios, SGD oscillates across the slopes of
 the ravine while only making hesitant progress, along the bottom towards
 the local optimum as in the image below.</p>
 <p><a class="reference external" href="https://distill.pub/2017/momentum/">Source</a></p>
-<figure class="align-default" id="id3">
+<figure class="align-default" id="id9">
 <img alt="No momentum: oscillations toward local largest gradient" src="../_images/grad_descent_no_momentum.png" />
 <figcaption>
-<p><span class="caption-text">No momentum: oscillations toward local largest gradient</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
+<p><span class="caption-text">No momentum: oscillations toward local largest gradient</span><a class="headerlink" href="#id9" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 </center><center><p>No momentum: moving toward local largest gradient create oscillations.</p>
-</center><center><figure class="align-default" id="id4">
+</center><center><figure class="align-default" id="id10">
 <img alt="With momentum: accumulate velocity to avoid oscillations" src="../_images/grad_descent_momentum.png" />
 <figcaption>
-<p><span class="caption-text">With momentum: accumulate velocity to avoid oscillations</span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
+<p><span class="caption-text">With momentum: accumulate velocity to avoid oscillations</span><a class="headerlink" href="#id10" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 </center><center><p>With momentum: accumulate velocity to avoid oscillations.</p>
@@ -860,6 +860,12 @@ missing for the full update), a rough idea where our parameters are
 going to be. We can now effectively look ahead by calculating the
 gradient not w.r.t. to our current parameters <span class="math notranslate nohighlight">\(\theta\)</span> but w.r.t.
 the approximate future position of our parameters:</p>
+<p><a href="#id1"><span class="problematic" id="id2">:raw-latex:`\begin{align}
+\begin{split}
+\textbf{v}_t &amp;= \gamma \textbf{v}_{t-1} + \eta \nabla_\textbf{w} J(\textbf{w} - \gamma v_{t-1} ) \\
+\textbf{w} &amp;= \textbf{w} - v_t
+\end{split}
+\end{align}`</span></a></p>
 <p>Again, we set the momentum term <span class="math notranslate nohighlight">\(\gamma\)</span> to a value of around 0.9.
 While <strong>Momentum first computes the current gradient and then takes a
 big jump in the direction of the updated accumulated gradient</strong> ,
@@ -882,6 +888,12 @@ with friction</strong>, which thus prefers <strong>flat minima in the error
 surface</strong>. We compute the decaying averages of past and past squared
 gradients <span class="math notranslate nohighlight">\(\textbf{m}_t\)</span> and <span class="math notranslate nohighlight">\(\textbf{v}_t\)</span> respectively as
 follows:</p>
+<p><a href="#id3"><span class="problematic" id="id4">:raw-latex:`\begin{align}
+\begin{split}
+\textbf{m}_t &amp;= \beta_1 \textbf{m}_{t-1} + (1 - \beta_1) \nabla_\textbf{w} J( \textbf{w}) \\
+\textbf{v}_t &amp;= \beta_2 \textbf{v}_{t-1} + (1 - \beta_2) \nabla_\textbf{w} J( \textbf{w})^2
+\end{split}
+\end{align}`</span></a></p>
 <p><span class="math notranslate nohighlight">\(\textbf{m}_{t}\)</span> and <span class="math notranslate nohighlight">\(\textbf{v}_{t}\)</span> are estimates of the
 first moment (the mean) and the second moment (the uncentered variance)
 of the gradients respectively, hence the name of the method. Adam
@@ -903,6 +915,10 @@ zero, especially during the initial time steps, and especially when the
 decay rates are small (i.e. <span class="math notranslate nohighlight">\(\beta_{1}\)</span> and <span class="math notranslate nohighlight">\(\beta_{2}\)</span> are
 close to 1). They counteract these biases by computing bias-corrected
 first and second moment estimates:</p>
+<p><a href="#id5"><span class="problematic" id="id6">:raw-latex:`\begin{align}
+\hat{m}_t &amp;= \dfrac{m_t}{1 - \beta^t_1} \\
+\hat{v}_t &amp;= \dfrac{v_t}{1 - \beta^t_2}
+\end{align}`</span></a></p>
 <p>They then use these to update the parameters (Adam update rule):</p>
 <div class="math notranslate nohighlight">
 \[\theta_{t+1} = \theta_{t} - \dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t\]</div>

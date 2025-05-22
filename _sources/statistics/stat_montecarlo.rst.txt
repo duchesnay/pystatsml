@@ -15,7 +15,7 @@ Sources:
     # Statistics
     import scipy.stats
     import statsmodels.api as sm
-    #import statsmodels.stats.api as sms
+    # import statsmodels.stats.api as sms
     import statsmodels.formula.api as smf
     from statsmodels.stats.stattools import jarque_bera
     
@@ -28,7 +28,7 @@ Sources:
     plt.style.use('seaborn-v0_8-whitegrid')
     fig_w, fig_h = plt.rcParams.get('figure.figsize')
     plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
-    %matplotlib inline
+    colors = sns.color_palette()
 
 Monte-Carlo simulation of Random Walk Process
 ---------------------------------------------
@@ -54,11 +54,11 @@ random walks (trajectories), ie, :math:`S_n` for :math:`n=0` to
 
     np.random.seed(seed=42)  # make the example reproducible
     
-    n = 200 # trajectory depth
-    nsamp = 50000 #nb of trajectories
+    n = 200  # trajectory depth
+    nsamp = 50000  # nb of trajectories
     
     # X: each row (axis 0) contains one trajectory axis 1
-    #Xn = np.array([np.random.choice(a=[-1, +1], size=n,
+    # Xn = np.array([np.random.choice(a=[-1, +1], size=n,
     #                                replace=True, p=np.ones(2) / 2)
     #               for i in range(nsamp)])
     
@@ -69,13 +69,11 @@ random walks (trajectories), ie, :math:`S_n` for :math:`n=0` to
     # Sum of random walks (trajectories)
     Sn = Xn.sum(axis=1)
     
-    print("True Stat. Mean={:.03f}, Sd={:.02f}".\
-        format(0, np.sqrt(n) * 1))
+    print("True Stat. Mean={:.03f}, Sd={:.02f}".
+          format(0, np.sqrt(n) * 1))
     
-    print("Est. Stat. Mean={:.03f}, Sd={:.02f}".\
-        format(Sn.mean(), Sn.std()))
-    
-
+    print("Est. Stat. Mean={:.03f}, Sd={:.02f}".
+          format(Sn.mean(), Sn.std()))
 
 
 .. parsed-literal::
@@ -102,13 +100,13 @@ Distribution of :math:`S_n` vs :math:`\mathcal{N}(0, \sqrt(n))`
 
     x_low, x_high = Sn.mean()-3*Sn.std(), Sn.mean()+3*Sn.std()
     h_ = plt.hist(Sn, range=(x_low, x_high), density=True, bins=43, fill=False,
-                 label="Histogram")
+                  label="Histogram")
     
     x_range = np.linspace(x_low, x_high, 30)
     prob_x_range = scipy.stats.norm.pdf(x_range, loc=Sn.mean(), scale=Sn.std())
     plt.plot(x_range, prob_x_range, 'r-', label="PDF: P(X)")
     _ = plt.legend()
-    #print(h_)
+    # print(h_)
 
 
 
@@ -133,216 +131,638 @@ Permutation Tests
   when the distribution of the estimator (under H0) is unknown or
   requires complicated formulas.
 
-Permutation test procedure
-
 .. figure:: images/stat_random_permutations.png
-   :alt: Bootstrapping procedure
+   :alt: Permutation test procedure
 
-   Bootstrapping procedure
+   Permutation test procedure
 
-1. Estimate the observed parameter or statistic
-   :math:`\hat{\theta} = S(X)` on the initial dataset :math:`X` of size
-   :math:`N`. We call it the observed statistic.
-2. Generate :math:`R` samples (called randomized samples)
-   :math:`[X_1, \ldots X_r, \ldots X_R]` from the initial dataset by
-   permutation of the values between the two samples.
-3. Distribution of the estimator under HO: For each random sample
-   :math:`r`, compute the estimator :math:`\hat{\theta}_r = S(X_r)`. The
-   set of :math:`\{\hat{\theta}_r\}` provides an estimate the
-   distribution of :math:`P(\theta | H0)` (under the null hypothesis).
-4. Compute statistics of the estimator under the null hypothesis using
-   randomized estimates :math:`\hat{\theta}_r`\ ’s:
+**1. Estimate the observed parameter or statistic**:
+
+.. math::
+
+
+   T^{\text{obs}}=S(X)
+
+on the initial dataset :math:`X` of size :math:`N`. We call it the
+observed statistic.
+
+Application to mean of one sample. Note that for genericity purposes,
+the proposed Python implementation can take an iterable list of arrays
+and calculate several statistics for several variables at once.
+
+.. code:: ipython3
+
+    def mean(*x):
+        return np.mean(x[0], axis=0)
+    
+    
+    # Can manage two variables, and return two statistics
+    x = np.array([[1, -1], [2, -2], [3, -3], [4, -4]])
+    print(mean(x))
+    
+    # In our case with one variable
+    x = np.array([-1, 0, +1])
+    stat_obs = mean(x)
+    print(stat_obs)
+
+
+.. parsed-literal::
+
+    [ 2.5 -2.5]
+    0.0
+
+
+**2. Generate B samples (called randomized samples)**
+:math:`[X_1, \ldots X_b, \ldots X_B]` from the initial dataset using a
+adapted permutation scheme and compute the estimator (under H0):
+
+.. math::
+
+
+   T^{(b)} = S(X_b).
+
+First, we need a permutation scheme:
+
+.. code:: ipython3
+
+    def onesample_sign_permutation(*x):
+        """Randomly change the sign of all datsets"""
+        return [np.random.choice([-1, 1], size=len(x_), replace=True) * x_
+                for x_ in x]
+    
+    
+    x = np.array([-1, 0, +1])
+    # 10 random sign permutation of [-1, 0, +1] and mean calculation
+    # Mean([-1,0,1])= 0 or Mean([1,0,1])= 0.66 or Mean([-1,0,-1])= -0.66
+    np.random.seed(42)
+    stats_rnd = [float(mean(*onesample_sign_permutation(x)).round(3))
+                 for perm in range(10)]
+    print(stats_rnd)
+
+
+.. parsed-literal::
+
+    [0.0, 0.667, 0.0, -0.667, 0.667, 0.667, 0.0, 0.667, 0.0, 0.0]
+
+
+Using a parallelized permutation procedure using
+`Joblib <https://joblib.readthedocs.io/en/stable/>`__ whose code is
+available
+`here <https://github.com/duchesnay/pystatsml/blob/master/lib/pystatsml/resampling.py>`__
+
+.. code:: ipython3
+
+    from pystatsml import resampling
+    
+    stats_rnd = np.array(resampling.resample_estimate(x, estimator=mean,
+                            resample=onesample_sign_permutation, n_resamples=10))
+    print(stats_rnd.round(3))
+
+
+.. parsed-literal::
+
+    [ 0.     0.667  0.667  0.     0.     0.667  0.667 -0.667  0.     0.   ]
+
+
+**3. Permutation test: Compute statistics of the estimator** under the
+null hypothesis using randomized estimates :math:`T^{(b)}`\ ’s.
 
 - Mean (under :math:`H0`):
 
   .. math::
 
 
-     \bar{\theta}_R = \frac{1}{r}\sum_{r=1}^R \hat{\theta}_r
+     \bar{T}_B = \frac{1}{B}\sum_{b=1}^B T^{(b)}
 
-- Standard Error :math:`\hat{SE}_{\theta_R}` (under :math:`H0`):
+- Standard Error :math:`\sigma_{T_B}` (under :math:`H0`):
 
   .. math::
 
 
-     \hat{SE}_{\theta_R} = \sqrt{\frac{1}{R-1}\sum_{r=1}^K (\bar{\theta}_R - \hat{\theta}_r)^2}
+     \sigma_{T_B} = \sqrt{\frac{1}{B-1}\sum_{b=1}^B (\bar{T}_B - T^{(b)})^2}
 
-- Compute p-value using the distribution (under :math:`H0`):
+- :math:`T^{(b)}`\ ’s provides an estimate the distribution of
+  :math:`P(T | H0)` necessary to compute p-value using the distribution
+  (under H0):
 
   - One-sided p-value:
 
     .. math::
 
 
-       P(\theta \ge \hat{\theta} | H0) \approx \frac{\mathbf{card}(\hat{\theta}_r \ge \hat{\theta})}{R}
+       P(T \ge T^{\text{obs}} | H0) \approx \frac{\mathbf{card}(T^{(b)} \ge T^{\text{obs}})}{B}
 
   - Two-sided p-value:
 
     .. math::
 
 
-       P(\theta \le \hat{\theta}~\text{or}~\theta \ge \hat{\theta} | H0) \approx \frac{\mathbf{card}(\hat{\theta}_r \le \hat{\theta}) + \mathbf{card}(\hat{\theta}_r \ge \hat{\theta})}{R}
+       P(T\le T^{\text{obs}}~\text{or}~T \ge T^{\text{obs}} | H0) \approx \frac{\mathbf{card}(T^{(b)} \le T^{\text{obs}}) + \mathbf{card}(T^{(b)} \ge T^{\text{obs}})}{B}
+
+Let randomized samples) :math:`[X_1, \ldots X_r, \ldots X_rnd]` from the
+initial dataset using a adapted permutation scheme and compute the
+estimator (under HO): :math:`T^{(b)} = S(X_r)`.
+
+3. Permutation test: Compute statistics of the estimator under the null
+   hypothesis using randomized estimates :math:`T^{(b)}`\ ’s.
+
+- Mean (under :math:`H0`):
+
+  .. math::
+
+
+     \bar{T}_B = \frac{1}{r}\sum_{r=1}^R T^{(b)}
+
+- Standard Error :math:`\sigma_{T_B}` (under :math:`H0`):
+
+  .. math::
+
+
+     \sigma_{T_B} = \sqrt{\frac{1}{R-1}\sum_{r=1}^K (\bar{T}_B - T^{(b)})^2}
+
+- :math:`T^{(b)}`\ ’s provides an estimate the distribution of
+  :math:`P(T | H0)` necessary to compute p-value using the distribution
+  (under :math:`H0`):
+
+  - One-sided p-value:
+
+    .. math::
+
+
+       P(T\ge T^{\text{obs}} | H0) \approx \frac{\mathbf{card}(T^{(b)} \ge T^{\text{obs}})}{R}
+
+  - Two-sided p-value:
+
+    .. math::
+
+
+       P(T\le T^{\text{obs}}~\text{or}~T \ge T^{\text{obs}} | H0) \approx \frac{\mathbf{card}(T^{(b)} \le T^{\text{obs}}) + \mathbf{card}(T^{(b)} \ge T^{\text{obs}})}{R}
 
 .. code:: ipython3
 
-    def randomize(x, estimator, n_perms=1000):
-        """_summary_
+    # 3. Permutation test: Compute statistics under H0, estimates distribution and
+    # compute p-values
+    
+    def permutation_test(stat_obs, stats_rnd):
+        """Compute permutation test using statistic under H1 (true statistic)
+        and statistics under H0 (randomized statistics) for several statistics.
     
         Parameters
         ----------
-        x : array
-            the datasets
-        estimator : callable
-            the estimator function taking x as argument returning the estimator value
-            (scalar) 
-        n_perms : int, optional
-            the number of permutation, by default 1000
-            
-        Return
-        ------
-        Observed estimate
-        Mean of randomized estimates
-        Standard Error of randomized estimates
-        Two-sided p-value
-        Randomized distribution estimates (density_values, bins)
+        stat_obs : array of shape (nb_statistics)
+            statistic under H1 (true statistic)
+        stats_rnd : array of shape (nb_permutations, nb_statistics)
+            statistics under H0 (randomized statistics)
+    
+        Returns
+        -------
+        tuple
+            p-value, statistics mean under HO, statistics stan under HO
+    
+        Example
+        -------
+        >>> np.random.seed(42)
+        >>> stats_rnd = np.random.randn(1000, 5)
+        >>> stat_obs = np.arange(5)
+        >>> pval, stat_mean_rnd, stat_se_rnd = permutation_test(stat_obs, stats_rnd)
+        >>> print(pval)
+        [1.    0.315 0.049 0.002 0.   ]
         """
-           
-        # 1. Estimate the observed parameter or statistic
-        theta = estimator(x)
     
-        # 2. Permuted samples
-        # Randomly pick the sign with the function:
-        # np.random.choice([-1, 1], size=len(x), replace=True)
+        n_perms = stats_rnd.shape[0]
     
-        x_R = [np.random.choice([-1, 1], size=len(x), replace=True) * x
-            for boot_i in range(n_perms)]
-    
-        # 3. Distribution of the parameter or statistic under H0
-    
-        thetas_R = np.array([estimator(x_r) for x_r in x_R])
-        theta_density_R, bins = np.histogram(thetas_R, bins=50, density=True)
-        dx = np.diff(bins)
-    
-        # 4. Randomized Statistics
+        # 1. Randomized Statistics
     
         # Mean of randomized estimates
-        theta_mean_R = np.mean(thetas_R)
+        stat_mean_rnd = np.mean(stats_rnd, axis=0)
     
         # Standard Error of randomized estimates
-        theta_se_R = np.sqrt(1 / (n_perms - 1) * 
-                             np.sum((theta_mean_R - thetas_R) ** 2))
+        stat_se_rnd = np.sqrt(1 / (n_perms - 1) *
+                              np.sum((stat_mean_rnd - stats_rnd) ** 2, axis=0))
     
-        # 4. Compute two-sided p-value using the distribution under H0:
+        # 2. Compute two-sided p-value using the distribution under H0:
     
-        extream_vals = (thetas_R <= -np.abs(theta)) | (thetas_R >= np.abs(theta))
-        pval = np.sum(extream_vals) / n_perms
+        extreme_vals = (stats_rnd <= -np.abs(stat_obs)
+                        ) | (stats_rnd >= np.abs(stat_obs))
+        pval = np.sum(extreme_vals, axis=0) / n_perms
         # We could use:
-        # (np.sum(thetas_R <= -np.abs(theta)) + \
-        #  np.sum(thetas_R >=  np.abs(theta))) / n_perms
-        
-        return theta, theta_mean_R, theta_se_R, pval, (theta_density_R, bins)
+        # (np.sum(stats_rnd <= -np.abs(stat_obs)) + \
+        #  np.sum(stats_rnd >=  np.abs(stat_obs))) / n_perms
+    
+        # 3. Distribution of the parameter or statistic under H0
+        # stat_density_rnd, bins = np.histogram(stats_rnd, bins=50, density=True)
+        # dx = np.diff(bins)
+    
+        return pval, stat_mean_rnd, stat_se_rnd
+    
+    
+    pval, stat_mean_rnd, stat_se_rnd = permutation_test(stat_obs, stats_rnd)
+    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".
+          format(stat_obs, stat_mean_rnd, pval, stat_se_rnd))
 
-Example, we load the monthly revenue figures of for 100 stores before
-and after a marketing campaigns. We compute the difference
+
+.. parsed-literal::
+
+    Estimate: 0.00, Mean(Estimate|HO): 0.2000, p-val: 1.000000e+00, SE: 0.450
+
+
+One Sample Sign Permutation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Consider the monthly revenue figures of for 100 stores before and after
+a marketing campaigns. We compute the difference
 (:math:`x_i = x_i^\text{after} - x_i^\text{before}`) for each store
 :math:`i`. Under the null hypothesis, i.e., no effect of the campaigns,
 :math:`x_i^\text{after}` and :math:`x_i^\text{before}` could be
 permuted, which is equivalent to randomly switch the sign of
 :math:`x_i`. Here we will focus on the sample mean
-:math:`\hat{\theta} = S(X) = 1/n\sum_i x_i` as statistic of interest.
+:math:`T^{\text{obs}} = S(X) = 1/n\sum_i x_i` as statistic of interest.
+
+Read data:
 
 .. code:: ipython3
 
     df = pd.read_csv("../datasets/Monthly Revenue (in thousands).csv")
     # Reshape Keep only the 30 first samples
     df = df.pivot(index='store_id', columns='time', values='revenue')[:30]
-    df.after -= 3 # force to smaller effect size
-
-.. code:: ipython3
-
+    df.after -= 3  # force to smaller effect size
+    
     x = df.after - df.before
     
     plt.hist(x, fill=False)
     plt.axvline(x=0, color="b", label=r'No effect: 0')
     plt.axvline(x=x.mean(), color="r", ls='-', label=r'$\bar{x}=%.2f$' % x.mean())
     plt.legend()
-    _ = plt.title(r'Distribution of the sales changes $x_i = x_i^\text{after} - \
-        x_i^\text{before}$')
+    _ = plt.title(
+        r'Distribution of the sales changes $x_i = x_i^\text{after} - x_i^\text{before}$')
 
 
 
-.. image:: stat_montecarlo_files/stat_montecarlo_12_0.png
+.. image:: stat_montecarlo_files/stat_montecarlo_19_0.png
 
 
 .. code:: ipython3
 
-    np.random.seed(15) # set the seed for reproducible results
+    # 1. Estimate the observed parameter or statistic
+    stat_obs = mean(x)
     
-    theta, theta_mean_R, theta_se_R, pval, (theta_density_R, bins) = \
-        randomize(x=x, estimator=np.mean, n_perms=10000)
+    # 2. Generate randomized samples and compute the estimator (under HO)
+    stats_rnd = np.array(resampling.resample_estimate(x, estimator=mean,
+                            resample=onesample_sign_permutation, n_resamples=1000))
     
-    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".\
-        format(theta, theta_mean_R, pval, theta_se_R))
+    # 3. Permutation test: Compute stats. under H0, and p-values
+    pval, stat_mean_rnd, stat_se_rnd = permutation_test(stat_obs, stats_rnd)
+    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".
+          format(stat_obs, stat_mean_rnd, pval, stat_se_rnd))
 
 
 .. parsed-literal::
 
-    Estimate: 2.26, Mean(Estimate|HO): -0.0103, p-val: 2.430000e-02, SE: 1.018
+    Estimate: 2.26, Mean(Estimate|HO): -0.0093, p-val: 3.900000e-02, SE: 1.051
 
 
-Plot
+Plot density
 
 .. code:: ipython3
 
-    pystatsml.plot_utils.plot_pvalue_under_h0(stat_vals=bins[1:], stat_probs=theta_density_R,
-                         stat_obs=theta,  stat_h0=0, bar_width=np.diff(bins),
-                         thresh_low=-np.abs(theta), thresh_high=np.abs(theta))
-    _ = plt.title(r'Randomized distribution of the estimator $\hat{\theta}_b$ (sample mean)')
+    stats_density_rnd, bins = np.histogram(stats_rnd, bins=50, density=True)
+    dx = np.diff(bins)
+    
+    pystatsml.plot_utils.plot_pvalue_under_h0(stat_vals=bins[1:],
+                        stat_probs=stats_density_rnd,
+                        stat_obs=stat_obs,  stat_h0=0, bar_width=np.diff(bins),
+                        thresh_low=-np.abs(stat_obs), thresh_high=np.abs(stat_obs))
+    _ = plt.title(r'Randomized distribution of the estimator $T$ (sample mean)')
 
 
 
-.. image:: stat_montecarlo_files/stat_montecarlo_15_0.png
+.. image:: stat_montecarlo_files/stat_montecarlo_22_0.png
 
 
 Similar procedure can be conducted with many statistic e.g., the
-t-statistic (same results):
+t-statistic (more sensitive than the mean):
 
 .. code:: ipython3
 
-    def ttstat(x):
-        return (np.mean(x) - 0) / np.std(x, ddof=1) * np.sqrt(len(x))
+    def ttest_1samp(*x):
+        x = x[0]
+        return (np.mean(x, axis=0) - 0) / np.std(x, ddof=1, axis=0) * np.sqrt(len(x))
     
     
-    np.random.seed(15) # set the seed for reproducible results
-    theta, theta_mean_R, theta_se_R, pval, (theta_density_R, bins) = \
-        randomize(x=x, estimator=ttstat, n_perms=10000)
+    # 1. Estimate the observed parameter or statistic
+    stat_obs = ttest_1samp(x)
     
-    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".\
-        format(theta, theta_mean_R, pval, theta_se_R))
+    # 2. Generate randomized samples and compute the estimator (under HO)
+    stats_rnd = np.array(resampling.resample_estimate(x, estimator=ttest_1samp,
+                            resample=onesample_sign_permutation, n_resamples=1000))
+    
+    # 3. Permutation test: Compute stats. under H0, and p-values
+    pval, stat_mean_rnd, stat_se_rnd = permutation_test(stat_obs, stats_rnd)
+    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".
+          format(stat_obs, stat_mean_rnd, pval, stat_se_rnd))
 
 
 .. parsed-literal::
 
-    Estimate: 2.36, Mean(Estimate|HO): -0.0106, p-val: 2.430000e-02, SE: 1.025
+    Estimate: 2.36, Mean(Estimate|HO): 0.0130, p-val: 2.800000e-02, SE: 1.064
 
 
-Or the median:
+Or the median (less sensitive than the mean):
 
 .. code:: ipython3
 
-    np.random.seed(15) # set the seed for reproducible results
-    theta, theta_mean_R, theta_se_R, pval, (theta_density_R, bins) = \
-        randomize(x=x, estimator=np.median, n_perms=10000)
+    def median(*x):
+        x = x[0]
+        return np.median(x, axis=0)
     
-    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".\
-        format(theta, theta_mean_R, pval, theta_se_R))
+    
+    # 1. Estimate the observed parameter or statistic
+    stat_obs = median(x)
+    
+    # 2. Generate randomized samples and compute the estimator (under HO)
+    stats_rnd = np.array(resampling.resample_estimate(x, estimator=median,
+                            resample=onesample_sign_permutation, n_resamples=1000))
+    
+    # 3. Permutation test: Compute stats. under H0, and p-values
+    pval, stat_mean_rnd, stat_se_rnd = permutation_test(stat_obs, stats_rnd)
+    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".
+          format(stat_obs, stat_mean_rnd, pval, stat_se_rnd))
 
 
 .. parsed-literal::
 
-    Estimate: 1.85, Mean(Estimate|HO): -0.0144, p-val: 9.370000e-02, SE: 1.066
+    Estimate: 1.85, Mean(Estimate|HO): 0.0255, p-val: 1.030000e-01, SE: 1.081
 
 
+Two Samples Permutation
+~~~~~~~~~~~~~~~~~~~~~~~
+
+:math:`x` is a variable :math:`y \in \{0, 1\}` is a sample label for two
+groups. To obtain sample under HO we just have to permute the group’s
+labels :math:`y`:
+
+.. code:: ipython3
+
+    # Dataset
+    from pystatsml import datasets
+    
+    x, y = datasets.make_twosamples(n_samples=30, n_features=1, n_informative=1,
+                                    group_scale=1., noise_scale=1., shared_scale=0,
+                                    random_state=0)
+    
+    print(scipy.stats.ttest_ind(x[y == 0], x[y == 1], equal_var=True))
+    
+    # Label permutation, expect label_permutation(x, label)
+    
+    
+    def label_permutation(*x):
+        x, label = x[0], x[1]
+        label = np.random.permutation(label)
+        return x, label
+    
+    
+    xr, yr = label_permutation(x, y)
+    assert np.all(x == xr)
+    print("Original labels:", y)
+    print("Permuted labels:", yr)
+
+
+.. parsed-literal::
+
+    TtestResult(statistic=np.float64(-1.2845532458346598), pvalue=np.float64(0.2094747870423826), df=np.float64(28.0))
+    Original labels: [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+     1. 1. 1. 1. 1. 1.]
+    Permuted labels: [0. 1. 0. 1. 0. 0. 0. 0. 1. 1. 0. 0. 1. 0. 0. 0. 0. 1. 1. 1. 1. 0. 1. 1.
+     0. 1. 1. 0. 1. 1.]
+
+
+As statistic we use the `student statistic of two sample test with equal
+variance <https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html>`__
+
+.. code:: ipython3
+
+    def twosample_ttest(*x):
+        x, label = x[0], x[1]
+        ttest = scipy.stats.ttest_ind(x[label == 0], x[label == 1],
+                                      equal_var=True, axis=0)
+    
+        return ttest.statistic
+
+.. code:: ipython3
+
+    # 1. Estimate the observed parameter or statistic
+    stat_obs = twosample_ttest(x, y)
+    
+    # 2. Generate randomized samples and compute the estimator (under HO)
+    
+    # Sequential version:
+    # stats_rnd = np.array([twosample_ttest(*label_permutation(x, y))
+    #                       for perm in range(1000)])
+    
+    # Parallel version:
+    stats_rnd = np.array(resampling.resample_estimate(x, y, estimator=twosample_ttest,
+                         resample=label_permutation, n_resamples=1000))
+    
+    # 3. Permutation test: Compute stats. under H0, and p-values
+    pval, stat_mean_rnd, stat_se_rnd = permutation_test(stat_obs, stats_rnd)
+    print("Estimate: {:.2f}, Mean(Estimate|HO): {:.4f}, p-val: {:e}, SE: {:.3f}".
+          format(stat_obs, stat_mean_rnd, pval, stat_se_rnd))
+    
+    
+    print("\nNon permuted t-test:")
+    ttest = scipy.stats.ttest_ind(x[y == 0], x[y == 1], equal_var=True)
+    print("Estimate: {:.2f}, p-val: {:e}".
+          format(ttest.statistic, ttest.pvalue))
+    
+    print("\nPermutation using scipy.stats.ttest_ind")
+    ttest = scipy.stats.ttest_ind(x[y == 0], x[y == 1], equal_var=True,
+                                  method=scipy.stats.PermutationMethod())
+    print("Estimate: {:.2f}, p-val: {:e}".
+          format(ttest.statistic, ttest.pvalue))
+
+
+.. parsed-literal::
+
+    Estimate: -1.28, Mean(Estimate|HO): 0.0015, p-val: 1.970000e-01, SE: 1.023
+    
+    Non permuted t-test:
+    Estimate: -1.28, p-val: 2.094748e-01
+    
+    Permutation using scipy.stats.ttest_ind
+    Estimate: -1.28, p-val: 1.962000e-01
+
+
+Permutation-Based Correction for Multiple Testing: Westfall and Young Correction
+--------------------------------------------------------------------------------
+
+`Westfall and Young (1993) <https://www.jstor.org/stable/2532216>`__
+Correction for Multiple Testing, also known as maxT, controls the
+**Family-Wise Error Rate (FWER)** in the context of **multiple
+hypothesis testing**, particularly in high-dimensional settings (e.g.,
+genomics), where traditional methods like Bonferroni are overly
+conservative.
+
+- The method relies on **permutation testing** to empirically estimate
+  the distribution of test statistics under the **global null
+  hypothesis**.
+- It accounts for the **dependence structure** between tests, improving
+  power compared to Bonferroni-type corrections.
+
+**Procedure**
+
+Let there be :math:`P` hypotheses :math:`H_1, \dots, H_P` and
+corresponding test statistics :math:`T_1, \dots, T_P`:
+
+1. **Compute observed test statistics**
+   :math:`\{T_j^{\text{obs}}\}_{j=1}^P`, for each hypothesis.
+
+2. **Permute the data** :math:`B` times (e.g., shuffle labels),
+   recomputing all :math:`P` test statistics each time yielding to a
+   :math:`(B \times P)` table with all permuted statistics
+   :math:`\{T_j^{(b)}\}_{(b,j)}^{(B,P)}`.
+
+3. **For each permutation**, record the **maximum test statistic**
+   across all hypotheses, yielding to a vector of :math:`B` maximum
+   which value is given by:
+
+   .. math::
+
+
+      M^{(b)} = \max_{j = 1, \dots, P} T_j^{(b)}
+
+4. For each hypothesis :math:`j`, calculate the adjusted p-value,
+   yielding to a vector of :math:`P` p-values which value is given by:
+
+   .. math::
+
+
+      \tilde{p}_j = \frac{1}{B} \sum_{b=1}^B \mathbf{card}(T_j^{\text{obs}} \leq M^{(b)})
+
+   (For one-sided tests. For two-sided, take :math:`|T_j|`.)
+
+5. Reject hypotheses with :math:`\tilde{p}_j \leq \alpha`.
+
+**Advantages**
+
+- **Strong FWER control**, even under arbitrary dependence.
+- **More powerful** than Bonferroni or Holm in many dependent testing
+  scenarios.
+- **Non-parametric**: does not rely on distributional assumptions.
+
+**Limitations**
+
+- **Computationally intensive**, especially with large :math:`m` and
+  many permutations.
+- Requires **exchangeability** of data under the null (a key assumption
+  for valid permutations).
+
+Dataset
+
+.. code:: ipython3
+
+    from pystatsml import datasets
+    
+    n_informative = 100  # Number of features with signal (Positive features)
+    n_features = 1000
+    x, y = datasets.make_twosamples(n_samples=30, n_features=n_features, n_informative=n_informative,
+                                    group_scale=1., noise_scale=1., shared_scale=1.5,
+                                    random_state=42)
+
+.. code:: ipython3
+
+    # 1. **Compute observed test statistics**
+    stat_obs = twosample_ttest(x, y)
+    
+    # 2. Randomized statistics
+    stats_rnd = np.array(resampling.resample_estimate(x, y, estimator=twosample_ttest,
+                         resample=label_permutation, n_resamples=1000))
+    
+    def multipletests_westfall_young(stats_rnd, stat_obs):
+        """Westfall and Young FWER correction for multiple comparisons.
+    
+        Parameters
+        ----------
+        stats_rnd : array (n_resamples, n_features)
+            Randomized Statistics
+        stats_true : array (n_features)
+            Observed Statistics
+        alpha : float, optional
+            by default 0.05
+        
+        Return
+        ------
+        Array (n_features) P-values corrected for multiple comparison
+        """
+    
+        # 3. **For each permutation**, record the **maximum test statistic**
+        stat_rnd_max = np.max(np.abs(stats_rnd), axis=1)
+    
+        # 4. For each hypothesis $j$, calculate the adjusted p-value
+        pvalues_ws = np.array([np.sum(stat_rnd_max >= np.abs(
+            stat)) / stat_rnd_max.shape[0] for stat in stat_obs])
+    
+        return pvalues_ws
+    
+    pvalues_ws = multipletests_westfall_young(stats_rnd, stat_obs)
+
+Compute p-values using:
+
+1. Un-corrected p-values: High false positives rate.
+2. Bonferroni correction: Reduced sensitivity (low True positives rate).
+3. Westfall and Young correction: Improved sensitivity with controlled
+   false positive:
+
+.. code:: ipython3
+
+    # Usual t-test with uncorrected p-values:
+    import statsmodels.sandbox.stats.multicomp as multicomp
+    ttest = scipy.stats.ttest_ind(x[y == 0], x[y == 1], equal_var=True)
+    
+    # Classical Bonferroni correction
+    _, pvals_bonf, _, _ = multicomp.multipletests(ttest.pvalue, alpha=0.05,
+                                                  method='bonferroni')
+    
+    def print_positve(title, pvalues, n_informative, n_features):
+        print('%s \nPositive: %i/%i, True Positive: %i/%i, False Positive: %i/%i' %
+              (title,
+               np.sum(pvalues <= 0.05), n_features,
+               np.sum(pvalues[:n_informative] <= 0.05), n_informative,
+               np.sum(pvalues[n_informative:] <= 0.05), (n_features-n_informative)))
+    
+    print_positve("No correction", ttest.pvalue, n_informative, n_features)
+    print_positve("Bonferroni correction", pvals_bonf, n_informative, n_features)
+    print_positve("Westfall and Young", pvalues_ws, n_informative, n_features)
+
+
+.. parsed-literal::
+
+    No correction 
+    Positive: 209/1000, True Positive: 94/100, False Positive: 115/900
+    Bonferroni correction 
+    Positive: 0/1000, True Positive: 0/100, False Positive: 0/900
+    Westfall and Young 
+    Positive: 4/1000, True Positive: 4/100, False Positive: 0/900
+
+
+Compare P-Values distribution with Bonferroni correction for multiple
+comparison:
+
+.. code:: ipython3
+
+    from scipy import stats
+    _, q_bonferroni = stats.probplot(pvals_bonf[:n_informative], fit=False)
+    _, q_ws = stats.probplot(pvalues_ws[:n_informative], fit=False)
+    ax = plt.scatter(q_bonferroni, q_ws, marker='o', color=colors[0])
+    ax = plt.axline([0, 0], slope=1, color="gray", ls='--', alpha=0.5)
+    ax = plt.vlines(0.05, 0, 1, color="r", ls='--', alpha=0.5)
+    ax = plt.hlines(0.05, 0, 1, color="r", ls='--', alpha=0.5)
+    ax = plt.xlabel('Bonferroni Correction')
+    ax = plt.ylabel('Westfall & Young Correction')
+    ax = plt.title('Q-Q Plots of P-values distributions Corrected for Mult. Comp.')
+
+
+
+.. image:: stat_montecarlo_files/stat_montecarlo_39_0.png
 
 
 Bootstrapping
@@ -379,45 +799,46 @@ bootstrap is its **simplicity of the procedure**:
 
    Bootstrapping procedure
 
-1. Compute the estimator :math:`\hat{\theta} = S(X)` on the initial
+1. Compute the estimator :math:`T^{\text{obs}} = S(X)` on the initial
    dataset :math:`X` of size :math:`N`.
 2. Generate :math:`B` samples (called bootstrap samples)
    :math:`[X_1, \ldots X_b, \ldots X_B]` from the initial dataset by
-   randomly drawing **with replacement** :math:`N` observations.
+   randomly drawing **with replacement** $ of the N$ observations.
 3. For each sample :math:`b` compute the estimator
-   :math:`\hat{\theta}_b = S(X_b)`, which provides the bootstrap
-   distribution :math:`P_{\theta_B}` of the estimator.
+   :math:`\{T^{(b)}= S(X_b)\}_{b=1}^B`, which provides the bootstrap
+   distribution :math:`P(T_B|H1)` of the estimator (under the
+   alternative hypothesis H1).
 4. Compute statistics of the estimator on bootstrap estimates
-   :math:`\hat{\theta}_b`\ ’s:
+   :math:`T^{(b)}`\ ’s:
 
 - Bootstrap estimate (of the parameters):
 
   .. math::
 
 
-     \bar{\theta}_B = \frac{1}{B}\sum_{b=1}^B \hat{\theta}_b
+     \bar{T_B} = \frac{1}{B}\sum_{b=1}^B T^{(b)}
 
 - Bias = bootstrap estimate - estimate:
 
   .. math::
 
 
-     \hat{b}_{\theta_B} = \bar{\theta}_B - \hat{\theta}
+     \hat{b_{T_B}} = \bar{T}_B - T^{\text{obs}}
 
-- Standard error :math:`\hat{S}_{\theta_B}`:
+- Standard error :math:`\hat{\sigma_{T_B}}`:
 
   .. math::
 
 
-     \hat{S}_{\theta_B} = \sqrt{\frac{1}{B-1}\sum_{b=1}^B (\bar{\theta}_B - \hat{\theta}_b)^2}
+     \hat{\sigma_{T_B}} = \sqrt{\frac{1}{B-1}\sum_{b=1}^B (\bar{T_B} - T^{(b)})^2}
 
 - Confidence interval using the estimated bootstrapped distribution of
   the estimator:
 
-  .. math::
+.. math::
 
 
-     CI_{95\%}=[\hat{\theta}_1=Q(2.5\%), \hat{\theta}_2=Q(97.5\%)]~\text{i.e., the 2.5\%, 97.5\% quantiles estimators out of the}~\hat{\theta}_b's
+   CI_{95\%}=[T^{\text{obs}}_1=Q_{T^{(b)}}(2.5\%), T^{\text{obs}}_2=Q_{T^{(b)}}(97.5\%)]~\text{i.e., the 2.5\%, 97.5\% quantiles estimators out of the}~\{T^{(b)}\}_{b=1}^B
 
 Application using the monthly revenue of 100 stores before and after a
 marketing campaigns, using the difference
@@ -434,10 +855,10 @@ CI.
     S = np.mean
     
     # 1. Model parameters
-    theta_hat = S(x)
+    stat_hat = S(x)
     
-    np.random.seed(15) # set the seed for reproducible results
-    B = 1000 # Number of bootstrap
+    np.random.seed(15)  # set the seed for reproducible results
+    B = 1000  # Number of bootstrap
     
     # 2. Bootstrapped samples
     
@@ -445,29 +866,29 @@ CI.
     
     # 3. Bootstrap estimates and distribution
     
-    theta_hats_B = np.array([S(x_b) for x_b in x_B])
-    theta_density_B, bins = np.histogram(theta_hats_B, bins=50, density=True)
+    stat_hats_B = np.array([S(x_b) for x_b in x_B])
+    stat_density_B, bins = np.histogram(stat_hats_B, bins=50, density=True)
     dx = np.diff(bins)
     
     # 4. Bootstrap Statistics
     
     # Bootstrap estimate
-    theta_bar_B = np.mean(theta_hats_B)
+    stat_bar_B = np.mean(stat_hats_B)
     
     # Bias = bootstrap estimate - estimate
-    bias_hat_B = theta_bar_B - theta_hat
+    bias_hat_B = stat_bar_B - stat_hat
     
     # Standard Error
-    se_hat_B = np.sqrt(1 / (B - 1) * np.sum((theta_bar_B - theta_hats_B) ** 2))
+    se_hat_B = np.sqrt(1 / (B - 1) * np.sum((stat_bar_B - stat_hats_B) ** 2))
     
     # Confidence interval using the estimated bootstrapped distribution of estimator
     
-    ci95 = np.quantile(a=theta_hats_B, q=[0.025, 0.975])
+    ci95 = np.quantile(a=stat_hats_B, q=[0.025, 0.975])
     
     print(
         "Est.: {:.2f}, Boot Est.: {:.2f}, bias: {:e},\
-         Boot SE: {:.2f}, CI: [{:.5f}, {:.5f}]"\
-        .format(theta_hat, theta_bar_B, bias_hat_B, se_hat_B, ci95[0], ci95[1]))
+         Boot SE: {:.2f}, CI: [{:.5f}, {:.5f}]"
+        .format(stat_hat, stat_bar_B, bias_hat_B, se_hat_B, ci95[0], ci95[1]))
 
 
 .. parsed-literal::
@@ -483,17 +904,18 @@ Plot
 
 .. code:: ipython3
 
-    plt.bar(bins[1:], theta_density_B, width=dx, fill=False, label=r'$P_{\theta_B}$')
-    plt.axvline(x=theta_hat, color='r', ls='--', lw=2, label=r'$\hat{\theta}$ (Obs. Stat.)')
-    plt.axvline(x=theta_bar_B, color="b", ls='-', label=r'$\bar{\theta}_B$')
+    plt.bar(bins[1:], stat_density_B, width=dx, fill=False, label=r'$P_{T_B}$')
+    plt.axvline(x=stat_hat, color='r', ls='--', lw=2,
+                label=r'$T^{\text{obs}}$ (Obs. Stat.)')
+    plt.axvline(x=stat_bar_B, color="b", ls='-', label=r'$\bar{T_B}$')
     plt.axvline(x=ci95[0], color="b", ls='--', label=r'$CI_{95\%}$')
     plt.axvline(x=ci95[1], color="b", ls='--')
     plt.axvline(x=0, color="k", lw=2, label=r'No effect: 0')
     plt.legend()
-    _ = plt.title(r'Bootstrap distribution of the estimator $\hat{\theta}_b$ (sample mean)')
+    _ = plt.title(
+        r'Bootstrap distribution of the estimator $\hat{\theta}_b$ (sample mean)')
 
 
 
-
-.. image:: stat_montecarlo_files/stat_montecarlo_25_0.png
+.. image:: stat_montecarlo_files/stat_montecarlo_44_0.png
 

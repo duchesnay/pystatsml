@@ -123,10 +123,14 @@ imported using <code class="docutils literal notranslate"><span class="pre">impo
 <h3>Mean<a class="headerlink" href="#mean" title="Link to this heading">¶</a></h3>
 <p>Properties of the expected value operator
 <span class="math notranslate nohighlight">\(\operatorname{E}(\cdot)\)</span> of a random variable <span class="math notranslate nohighlight">\(X\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}E(X + c) &amp;= E(X) + c \\
+E(X + Y) &amp;= E(X) + E(Y) \\
+E(aX)    &amp;= a E(X)\end{split}\]</div>
 <p>The estimator <span class="math notranslate nohighlight">\(\bar{x}\)</span> on a sample of size <span class="math notranslate nohighlight">\(n\)</span>:
 <span class="math notranslate nohighlight">\(x = x_1, ..., x_n\)</span> is given by</p>
 <div class="math notranslate nohighlight">
-\[\bar{x} = \frac{1}{n} \sum_i x_i\]</div>
+\[\boxed{\bar{x} = \frac{1}{n} \sum_i x_i}\]</div>
 <p><span class="math notranslate nohighlight">\(\bar{x}\)</span> is itself a random variable with properties:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(E(\bar{x}) = \bar{x}\)</span>,</p></li>
@@ -139,7 +143,7 @@ imported using <code class="docutils literal notranslate"><span class="pre">impo
 \[\operatorname{Var}(X) = E((X - E(X))^2) =  E(X^2) - (E(X))^2\]</div>
 <p>The estimator is</p>
 <div class="math notranslate nohighlight">
-\[\sigma_x^2 = \frac{1}{n-1} \sum_i (x_i - \bar{x})^2\]</div>
+\[\boxed{\sigma_x^2 = \frac{1}{n-1} \sum_i (x_i - \bar{x})^2}\]</div>
 <p>Note here the subtracted 1 degree of freedom (df) in the divisor. In
 standard statistical practice, <span class="math notranslate nohighlight">\(df=1\)</span> provides an unbiased
 estimator of the variance of a hypothetical infinite population. With
@@ -157,6 +161,11 @@ variance for normally distributed variables.</p>
 <div class="math notranslate nohighlight">
 \[\operatorname{Cov}(X, Y) = E((X - E(X))(Y - E(Y))) =  E(XY) - E(X)E(Y).\]</div>
 <p>Properties:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\operatorname{Cov}(X, X) &amp;= \operatorname{Var}(X)\\
+\operatorname{Cov}(X, Y) &amp;= \operatorname{Cov}(Y, X)\\
+\operatorname{Cov}(cX, Y) &amp;= c \operatorname{Cov}(X, Y)\\
+\operatorname{Cov}(X+c, Y) &amp;= \operatorname{Cov}(X, Y)\\\end{split}\]</div>
 <p>The estimator with <span class="math notranslate nohighlight">\(df=1\)</span> is</p>
 <div class="math notranslate nohighlight">
 \[\sigma_{xy} = \frac{1}{n-1} \sum_i (x_i - \bar{x}) (y_i - \bar{y}).\]</div>
@@ -172,13 +181,14 @@ variance for normally distributed variables.</p>
 <section id="standard-error-se">
 <h3>Standard Error (SE)<a class="headerlink" href="#standard-error-se" title="Link to this heading">¶</a></h3>
 <p>The standard error (SE) is the standard deviation (of the sampling
-distribution) of a statistic:</p>
+distribution) of a statistic. It is most commonly considered for the
+estimator of the mean (<span class="math notranslate nohighlight">\(\bar{x}\)</span>) whose estimator
+<span class="math notranslate nohighlight">\(\sigma_{\bar{x}}\)</span> is:</p>
 <div class="math notranslate nohighlight">
-\[\operatorname{SE}(X) = \frac{\operatorname{Std}(X)}{\sqrt{n}}.\]</div>
-<p>It is most commonly considered for the mean with the estimator</p>
+\[\boxed{\sigma_{\bar{x}} = \frac{\sigma_x}{\sqrt{n}}}\]</div>
 </section>
-<section id="descriptives-statistics-with-numpy">
-<h3>Descriptives statistics with Numpy<a class="headerlink" href="#descriptives-statistics-with-numpy" title="Link to this heading">¶</a></h3>
+<section id="descriptive-statistics-with-numpy">
+<h3>Descriptive statistics with Numpy<a class="headerlink" href="#descriptive-statistics-with-numpy" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Generate 2 random samples: <span class="math notranslate nohighlight">\(x \sim N(1.78, 0.1)\)</span> and
 <span class="math notranslate nohighlight">\(y \sim N(1.66, 0.1)\)</span>, both of size 10.</p></li>
@@ -525,6 +535,17 @@ samples of size 30 or more, is approximately normally distributed:</p>
 <div class="math notranslate nohighlight">
 \[\bar{X} = \frac{\sum^n_i X_i}{n} \rightarrow \mathcal{N}(\mu_X, \frac{\sigma_X}{\sqrt{n}})\]</div>
 <p>Simple but useful demonstrations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}E[\bar{X}_n] =  E[\frac{1}{n}\sum^n_i X_i] =\frac{1}{n} \sum^n_i E[X_i],\\
+\text{since}~X_i~\text{are i.i.d., i.e., }~E[X_i] = \mu_X \forall i~\text{then} \\
+=\frac{1}{n}  n \mu_X = \mu_X\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}Var[\bar{X}_n] = Var[\frac{1}{n}\sum^n_i X_i] = (\frac{1}{n})^2  \sum^2_X Var[X_i],\\
+\text{since}~X_i~\text{are i.i.d., i.e., }~Var[X_i] = \sigma^2_X \forall i~\text{then}\\
+= (\frac{1}{n})^2  n \sigma^2_X = \sigma_X^2/n\end{split}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[Sd[\bar{X}_n] = \sigma_X/\sqrt{n}\]</div>
 <p>Note that the <strong>standard deviation of the sample mean is the standard
 deviation of the parent RV scaled by</strong> <span class="math notranslate nohighlight">\(\sqrt{n}\)</span>. The larger the
 sample size, the better the approximation.</p>
@@ -706,13 +727,19 @@ the number of samples.</p></li>
 <p>What is the probability that the computed test statistic <span class="math notranslate nohighlight">\(\bar{X}\)</span>
 would be observed under pure chance? I.e., What is the probability that
 the test statistics under <span class="math notranslate nohighlight">\(H_0\)</span> would be more extreme, i.e.,
-“larger” or “smaller” than <span class="math notranslate nohighlight">\(\bar{X}\)</span>? * Calculate the
-distribution of test statistic <span class="math notranslate nohighlight">\(X\)</span> under <span class="math notranslate nohighlight">\(H_0\)</span>. * Compute
-the probability (P-value) to obtain a larger test statistic by chance
-(under the null hypothesis).</p>
+“larger” or “smaller” than <span class="math notranslate nohighlight">\(\bar{X}\)</span>?</p>
+<ul class="simple">
+<li><p>Calculate the distribution of test statistic <span class="math notranslate nohighlight">\(X\)</span> under
+<span class="math notranslate nohighlight">\(H_0\)</span>.</p></li>
+<li><p>Compute the probability (P-value) to obtain a larger test statistic by
+chance (under the null hypothesis).</p></li>
+</ul>
 <p>For a symmetric distribution the two sided p-value <span class="math notranslate nohighlight">\(P\)</span> is defined
-as: - <span class="math notranslate nohighlight">\(P(\bar{X} \leq X | H_0) = P/2\)</span>, or -
-<span class="math notranslate nohighlight">\(P(X \geq \bar{X}) = P/2\)</span></p>
+as:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(P(\bar{X} \leq X | H_0) = P/2\)</span>, or</p></li>
+<li><p><span class="math notranslate nohighlight">\(P(X \geq \bar{X}) = P/2\)</span></p></li>
+</ul>
 <p><span class="math notranslate nohighlight">\(\bar{X}\)</span> is declared to be <strong>significantly different to the null
 hypothesis</strong> if the p-value is less than a <strong>significance level</strong>
 <span class="math notranslate nohighlight">\(\alpha\)</span> generally considered as <span class="math notranslate nohighlight">\(5\%\)</span>.</p>
@@ -726,9 +753,11 @@ Intervals</a></p>
 <p>The 95% CI (Confidence Interval) is the range of values <span class="math notranslate nohighlight">\(x_1, x_2\)</span>
 such <span class="math notranslate nohighlight">\(P(x_1 &lt; \bar{X} &lt; x_2) = 95\%\)</span>.</p>
 <p>For a symmetric distribution the two sided <span class="math notranslate nohighlight">\(95\% (= 1 - 5\%)\)</span>
-confidence interval, is defined as: - <span class="math notranslate nohighlight">\(x_1\)</span> such
-<span class="math notranslate nohighlight">\(P(\bar{X} \leq x_1) = 2.5\% =5\%/2\)</span> - <span class="math notranslate nohighlight">\(x_2\)</span> such
-<span class="math notranslate nohighlight">\(P(x_2 \leq \bar{X}) = 2.5\%\)</span></p>
+confidence interval, is defined as:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(x_1\)</span> such <span class="math notranslate nohighlight">\(P(\bar{X} \leq x_1) = 2.5\% =5\%/2\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(x_2\)</span> such <span class="math notranslate nohighlight">\(P(x_2 \leq \bar{X}) = 2.5\%\)</span></p></li>
+</ul>
 <p>Terminology</p>
 <ul class="simple">
 <li><p>Margin of error = <span class="math notranslate nohighlight">\(\bar{X} - x_1\)</span> (for symmetric distribution).</p></li>
@@ -1121,10 +1150,10 @@ infinite. E.g.: salary, experience in years, weight.</p></li>
 </ul>
 <p><a class="reference external" href="http://www.ats.ucla.edu/stat/mult_pkg/whatstat/">What statistical test should I
 use?</a></p>
-<figure class="align-default" id="id2">
+<figure class="align-default" id="id4">
 <img alt="Statistical tests" src="../_images/stat_tests_flowchart.png" />
 <figcaption>
-<p><span class="caption-text">Statistical tests</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Statistical tests</span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <section id="pearson-correlation-test-association-between-two-quantitative-variables">
@@ -1155,11 +1184,11 @@ with <span class="math notranslate nohighlight">\(n-2\)</span> degrees of freedo
 </section>
 <section id="two-sample-student-t-test-compare-two-means">
 <h3>Two sample (Student) T-test: Compare Two Means<a class="headerlink" href="#two-sample-student-t-test-compare-two-means" title="Link to this heading">¶</a></h3>
-<figure class="align-default" id="id3">
+<figure class="align-default" id="id5">
 <a class="reference internal image-reference" href="../_images/model_two-sample.png"><img alt="Two-sample model" src="../_images/model_two-sample.png" style="width: 7cm;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Two-sample model</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Two-sample model</span><a class="headerlink" href="#id5" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>The two-sample <span class="math notranslate nohighlight">\(t\)</span>-test (Snedecor and Cochran, 1989) is used to
@@ -1187,7 +1216,13 @@ accepted.</p></li>
 <li><p>t-test</p></li>
 </ol>
 <p>The general principle is</p>
-<p>Since <span class="math notranslate nohighlight">\(y_1\)</span> and <span class="math notranslate nohighlight">\(y_2\)</span> are independant:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}t &amp;= \frac{\text{difference of means}}{\text{standard dev of error}} = \frac{\bar{y_1}-\bar{y_2}}{s_{\bar{y_1}-\bar{y_2}}}\\
+  &amp;= \frac{\bar{y_1}-\bar{y_2}}{\sqrt{\sum\varepsilon^2}}\sqrt{n-2}\end{split}\]</div>
+<p>Since <span class="math notranslate nohighlight">\(y_1\)</span> and <span class="math notranslate nohighlight">\(y_2\)</span> are independent:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}s^2_{\bar{y_1}-\bar{y_2}} &amp;= s^2_{\bar{y_1}} + s^2_{\bar{y_2}} = \frac{s^2_{y_1}}{n_1} + \frac{s^2_{y_2}}{n_2},~\text{thus}\\
+s_{\bar{y_1}-\bar{y_2}} &amp;= \sqrt{\frac{s^2_{y_1}}{n_1} + \frac{s^2_{y_2}}{n_2}}\end{split}\]</div>
 <section id="equal-or-unequal-sample-sizes-unequal-variances-welchs-t-test">
 <h4>Equal or unequal sample sizes, unequal variances (Welch’s <span class="math notranslate nohighlight">\(t\)</span>-test)<a class="headerlink" href="#equal-or-unequal-sample-sizes-unequal-variances-welchs-t-test" title="Link to this heading">¶</a></h4>
 <p>Welch’s <span class="math notranslate nohighlight">\(t\)</span>-test defines the <span class="math notranslate nohighlight">\(t\)</span> statistic as</p>
@@ -1204,6 +1239,9 @@ Welch–Satterthwaite equation:</p>
 <p>If we assume equal variance (ie, <span class="math notranslate nohighlight">\(s^2_{y_1} = s^2_{y_1} = s^2\)</span>),
 where <span class="math notranslate nohighlight">\(s^2\)</span> is an estimator of the common variance of the two
 samples:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}s^2 &amp;= \frac{s_{y_1}^2(n_1-1)+s_{y_2}^2(n_2-1)}{n_1+n_2-2}\\
+    &amp;= \frac{\sum_i^{n_1} (y_{1i} -\bar{y_1})^2 + \sum_j^{n_2} (y_{2j} -\bar{y_2})^2}{(n_1 - 1) + (n_2 - 1)}\end{split}\]</div>
 <p>then</p>
 <div class="math notranslate nohighlight">
 \[s_{\bar{y_1}-\bar{y_2}} = \sqrt{\frac{s^2}{n_1} + \frac{s^2}{n_2}} = s \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}\]</div>
@@ -1216,6 +1254,9 @@ means are different is:</p>
 <h4>Equal sample sizes, equal variances<a class="headerlink" href="#equal-sample-sizes-equal-variances" title="Link to this heading">¶</a></h4>
 <p>If we simplify the problem assuming equal samples of size
 <span class="math notranslate nohighlight">\(n_1 = n_2 = n/2\)</span> we get</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}t &amp;= \frac{\bar{y_1} - \bar{y_2}}{s} \cdot \sqrt{n}\\
+&amp;\approx \frac{\text{difference of means}}{\text{standard deviation of the noise}} \cdot \sqrt{n} = \approx \text{effect size} \cdot \sqrt{n}\end{split}\]</div>
 </section>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h4>
@@ -1247,8 +1288,7 @@ comparing (testing) three or more means (groups or variables) for
 statistical significance. It is conceptually similar to multiple
 two-sample <span class="math notranslate nohighlight">\(t\)</span>-tests, but is less conservative.</p>
 <p>Here we will consider one-way ANOVA with one independent variable, ie
-one-way anova.</p>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/F-test">Wikipedia</a>:</p>
+one-way ANOVA, <a class="reference external" href="https://en.wikipedia.org/wiki/F-test">see</a>:</p>
 <ul class="simple">
 <li><p>Test if any group is on average superior, or inferior, to the others
 versus the null hypothesis that all four strategies yield the same
@@ -1285,6 +1325,9 @@ from three random variables that are normally distributed. I.e.,
 <span class="math notranslate nohighlight">\(\bar{y}_i, \sigma_i,\;\; \forall i \in \{1, 2, 3\}\)</span>.</p>
 <p><strong>3. :math:`F`-test</strong></p>
 <p>The formula for the one-way ANOVA F-test statistic is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}F &amp;= \frac{\text{Explained variance}}{\text{Unexplained variance}}\\
+&amp;=\frac{\text{Between-group variability}}{\text{Within-group variability}} = \frac{s^2_B}{s^2_W}.\end{split}\]</div>
 <p>The “explained variance”, or “between-group variability” is</p>
 <div class="math notranslate nohighlight">
 \[s^2_B = \sum_i n_i(\bar{y}_{i\cdot} - \bar{y})^2/(K-1),\]</div>
@@ -1580,11 +1623,11 @@ it is nearly as efficient as the <span class="math notranslate nohighlight">\(t\
 </section>
 <section id="linear-model">
 <h2>Linear Model<a class="headerlink" href="#linear-model" title="Link to this heading">¶</a></h2>
-<figure class="align-default" id="id4">
+<figure class="align-default" id="id6">
 <a class="reference internal image-reference" href="../_images/model_lm.png"><img alt="Linear model" src="../_images/model_lm.png" style="width: 5cm;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Linear model</span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Linear model</span><a class="headerlink" href="#id6" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>Given <span class="math notranslate nohighlight">\(n\)</span> random samples
@@ -1752,6 +1795,16 @@ rewritten</strong>:</p>
 <div class="math notranslate nohighlight">
 \[MSE(\beta) = \frac{1}{N}||y - X\beta||_2^2.\]</div>
 <p>The <span class="math notranslate nohighlight">\(\beta\)</span> that minimizes the MSE can be found by:</p>
+<p>:raw-latex:<a href="#id2"><span class="problematic" id="id3">`</span></a>begin{align}
+nabla_beta left(frac{1}{N} ||y - Xbeta||_2^2right) &amp;= 0\
+frac{1}{N}nabla_beta (y - Xbeta)^T (y - Xbeta) &amp;= 0\
+frac{1}{N}nabla_beta (y^Ty - 2 beta^TX^Ty + beta^T X^TXbeta) &amp;= 0\</p>
+<blockquote>
+<div><p>-2X^Ty + 2 X^TXbeta &amp;= 0\
+X^TXbeta &amp;= X^Ty\
+beta &amp;= (X^TX)^{-1} X^Ty,</p>
+</div></blockquote>
+<p>end{align}`</p>
 <p>where <span class="math notranslate nohighlight">\((X^TX)^{-1} X^T\)</span> is a pseudo inverse of <span class="math notranslate nohighlight">\(X\)</span>.</p>
 <p>Simulated dataset where:</p>
 <div class="math notranslate nohighlight">
@@ -1822,8 +1875,8 @@ examples</a></p>
 <span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                      <span class="n">y</span>   <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                       <span class="mf">0.363</span>
 <span class="n">Model</span><span class="p">:</span>                            <span class="n">OLS</span>   <span class="n">Adj</span><span class="o">.</span> <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                  <span class="mf">0.322</span>
 <span class="n">Method</span><span class="p">:</span>                 <span class="n">Least</span> <span class="n">Squares</span>   <span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">:</span>                     <span class="mf">8.748</span>
-<span class="n">Date</span><span class="p">:</span>                <span class="n">Thu</span><span class="p">,</span> <span class="mi">03</span> <span class="n">Apr</span> <span class="mi">2025</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000106</span>
-<span class="n">Time</span><span class="p">:</span>                        <span class="mi">13</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">31</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">71.271</span>
+<span class="n">Date</span><span class="p">:</span>                <span class="n">Wed</span><span class="p">,</span> <span class="mi">14</span> <span class="n">May</span> <span class="mi">2025</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000106</span>
+<span class="n">Time</span><span class="p">:</span>                        <span class="mi">23</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">21</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">71.271</span>
 <span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                  <span class="mi">50</span>   <span class="n">AIC</span><span class="p">:</span>                             <span class="mf">150.5</span>
 <span class="n">Df</span> <span class="n">Residuals</span><span class="p">:</span>                      <span class="mi">46</span>   <span class="n">BIC</span><span class="p">:</span>                             <span class="mf">158.2</span>
 <span class="n">Df</span> <span class="n">Model</span><span class="p">:</span>                           <span class="mi">3</span>
@@ -1866,8 +1919,8 @@ examples</a></p>
 <span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                      <span class="n">y</span>   <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                       <span class="mf">0.363</span>
 <span class="n">Model</span><span class="p">:</span>                            <span class="n">OLS</span>   <span class="n">Adj</span><span class="o">.</span> <span class="n">R</span><span class="o">-</span><span class="n">squared</span><span class="p">:</span>                  <span class="mf">0.322</span>
 <span class="n">Method</span><span class="p">:</span>                 <span class="n">Least</span> <span class="n">Squares</span>   <span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">:</span>                     <span class="mf">8.748</span>
-<span class="n">Date</span><span class="p">:</span>                <span class="n">Thu</span><span class="p">,</span> <span class="mi">03</span> <span class="n">Apr</span> <span class="mi">2025</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000106</span>
-<span class="n">Time</span><span class="p">:</span>                        <span class="mi">13</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">31</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">71.271</span>
+<span class="n">Date</span><span class="p">:</span>                <span class="n">Wed</span><span class="p">,</span> <span class="mi">14</span> <span class="n">May</span> <span class="mi">2025</span>   <span class="n">Prob</span> <span class="p">(</span><span class="n">F</span><span class="o">-</span><span class="n">statistic</span><span class="p">):</span>           <span class="mf">0.000106</span>
+<span class="n">Time</span><span class="p">:</span>                        <span class="mi">23</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">21</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">71.271</span>
 <span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                  <span class="mi">50</span>   <span class="n">AIC</span><span class="p">:</span>                             <span class="mf">150.5</span>
 <span class="n">Df</span> <span class="n">Residuals</span><span class="p">:</span>                      <span class="mi">46</span>   <span class="n">BIC</span><span class="p">:</span>                             <span class="mf">158.2</span>
 <span class="n">Df</span> <span class="n">Model</span><span class="p">:</span>                           <span class="mi">3</span>
@@ -2043,27 +2096,25 @@ By default Pandas use “dummy coding”. Explore:</p>
 </section>
 <section id="multiple-comparisons">
 <h2>Multiple Comparisons<a class="headerlink" href="#multiple-comparisons" title="Link to this heading">¶</a></h2>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># make example reproducible</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dataset</span>
 
-<span class="c1"># Dataset</span>
-<span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span>
-<span class="n">n_info</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_features</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># number of features with information</span>
-<span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_samples</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="n">n_samples</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_samples</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">snr</span> <span class="o">=</span> <span class="mf">.5</span>
-<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
-<span class="n">grp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;g1&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n1</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;g2&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n2</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pystatsml</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span>
 
-<span class="c1"># Add some group effect for Pinfo features</span>
-<span class="n">Y</span><span class="p">[</span><span class="n">grp</span><span class="o">==</span><span class="s2">&quot;g1&quot;</span><span class="p">,</span> <span class="p">:</span><span class="n">n_info</span><span class="p">]</span> <span class="o">+=</span> <span class="n">snr</span>
+<span class="n">n_features</span><span class="p">,</span> <span class="n">n_informative</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">100</span>
+<span class="n">Y</span><span class="p">,</span> <span class="n">grp</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_twosamples</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                  <span class="n">n_features</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="n">n_informative</span><span class="p">,</span>
+                         <span class="n">group_scale</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">noise_scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shared_scale</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                         <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="c1">#</span>
+<span class="c1"># Stats</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
 <span class="c1">#import matplotlib.pyplot as plt</span>
 <span class="n">tvals</span><span class="p">,</span> <span class="n">pvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_features</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
-    <span class="n">tvals</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">pvals</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">grp</span><span class="o">==</span><span class="s2">&quot;g1&quot;</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">Y</span><span class="p">[</span><span class="n">grp</span><span class="o">==</span><span class="s2">&quot;g2&quot;</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
+    <span class="n">tvals</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">pvals</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="n">grp</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">Y</span><span class="p">[</span><span class="n">grp</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
                                          <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+<span class="c1"># Plot</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span><span class="c1">#, sharex=&#39;col&#39;)</span>
 
 <span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">),</span> <span class="n">tvals</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
@@ -2075,7 +2126,7 @@ By default Pandas use “dummy coding”. Explore:</p>
 <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;p-value&quot;</span><span class="p">)</span>
 <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
-<span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">pvals</span><span class="p">[</span><span class="n">n_info</span><span class="p">:],</span> <span class="n">pvals</span><span class="p">[:</span><span class="n">n_info</span><span class="p">]],</span>
+<span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">pvals</span><span class="p">[</span><span class="n">n_informative</span><span class="p">:],</span> <span class="n">pvals</span><span class="p">[:</span><span class="n">n_informative</span><span class="p">]],</span>
     <span class="n">stacked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Negatives&quot;</span><span class="p">,</span> <span class="s2">&quot;Positives&quot;</span><span class="p">])</span>
 <span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;p-value histogram&quot;</span><span class="p">)</span>
 <span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;density&quot;</span><span class="p">)</span>
@@ -2105,9 +2156,6 @@ improperly concludes the absence of an effect.</p></li>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No correction, FP: </span><span class="si">%i</span><span class="s2"> (expected: </span><span class="si">%.2f</span><span class="s2">), TP: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">FP</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">TP</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">No</span> <span class="n">correction</span><span class="p">,</span> <span class="n">FP</span><span class="p">:</span> <span class="mi">47</span> <span class="p">(</span><span class="n">expected</span><span class="p">:</span> <span class="mf">45.00</span><span class="p">),</span> <span class="n">TP</span><span class="p">:</span> <span class="mi">71</span>
-</pre></div>
-</div>
 <section id="bonferroni-correction-for-multiple-comparisons">
 <h3>Bonferroni Correction for Multiple Comparisons<a class="headerlink" href="#bonferroni-correction-for-multiple-comparisons" title="Link to this heading">¶</a></h3>
 <p>The Bonferroni correction is based on the idea that if an experimenter
@@ -2131,9 +2179,6 @@ each individual hypothesis at <span class="math notranslate nohighlight">\(\alph
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FWER correction, FP: </span><span class="si">%i</span><span class="s2">, TP: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">FP</span><span class="p">,</span> <span class="n">TP</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FWER</span> <span class="n">correction</span><span class="p">,</span> <span class="n">FP</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">TP</span><span class="p">:</span> <span class="mi">6</span>
-</pre></div>
-</div>
 </section>
 <section id="the-false-discovery-rate-fdr-correction-for-multiple-comparisons">
 <h3>The False Discovery Rate (FDR) Correction for Multiple Comparisons<a class="headerlink" href="#the-false-discovery-rate-fdr-correction-for-multiple-comparisons" title="Link to this heading">¶</a></h3>
@@ -2151,9 +2196,6 @@ rates of Type I errors.</p>
 <span class="n">FP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pvals_fdr</span><span class="p">[</span><span class="n">n_info</span><span class="p">:</span> <span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span>  <span class="c1"># False Positives</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FDR correction, FP: </span><span class="si">%i</span><span class="s2">, TP: </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">FP</span><span class="p">,</span> <span class="n">TP</span><span class="p">))</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FDR</span> <span class="n">correction</span><span class="p">,</span> <span class="n">FP</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">TP</span><span class="p">:</span> <span class="mi">20</span>
 </pre></div>
 </div>
 </section>
@@ -2179,7 +2221,7 @@ rates of Type I errors.</p>
 <li><a class="reference internal" href="#covariance">Covariance</a></li>
 <li><a class="reference internal" href="#correlation">Correlation</a></li>
 <li><a class="reference internal" href="#standard-error-se">Standard Error (SE)</a></li>
-<li><a class="reference internal" href="#descriptives-statistics-with-numpy">Descriptives statistics with Numpy</a></li>
+<li><a class="reference internal" href="#descriptive-statistics-with-numpy">Descriptive statistics with Numpy</a></li>
 <li><a class="reference internal" href="#descriptives-statistics-on-iris-dataset">Descriptives Statistics on Iris Dataset</a></li>
 </ul>
 </li>

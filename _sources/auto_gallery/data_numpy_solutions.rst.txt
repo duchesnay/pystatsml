@@ -31,10 +31,10 @@ Created on Fri Jan 29 16:54:32 2016
 
  .. code-block:: none
 
-    [[-0.93145666 -0.48747614]
-     [ 1.27377538  1.62953865]
-     [ 0.55950963  0.20575939]
-     [-1.01124648 -0.83322721]]
+    [[ 1.11380121 -0.01784065]
+     [-1.15914974  1.41936223]
+     [ 1.24433842  0.23269093]
+     [-0.87497067  1.27671201]]
 
     array([1., 1., 1.])
 
@@ -75,7 +75,7 @@ Created on Fri Jan 29 16:54:32 2016
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.002 seconds)
+   **Total running time of the script:** (0 minutes 0.001 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_data_numpy_solutions.py:

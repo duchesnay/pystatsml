@@ -867,6 +867,35 @@ random factor as if it were fixed.</p>
 variance structure, using <span class="math notranslate nohighlight">\(k\)</span> variance components, modeling the
 non-independance between the observations. In our case with only one
 component we get:</p>
+<p><a href="#id1"><span class="problematic" id="id2">:raw-latex:`\begin{align*}
+\mathbf{V} &amp;=
+\begin{bmatrix}
+\sigma_k&amp; \sigma_k &amp; 0 &amp; 0 &amp; 0 &amp; 0\\
+\sigma_k&amp; \sigma_k &amp; 0 &amp; 0 &amp; 0 &amp; 0\\
+0&amp; 0 &amp; \sigma_k &amp; \sigma_k &amp; 0 &amp; 0\\
+0&amp; 0 &amp; \sigma_k &amp; \sigma_k &amp; 0 &amp; 0\\
+0&amp; 0 &amp; 0 &amp; 0 &amp; \sigma_k &amp; \sigma_k\\
+0&amp; 0 &amp; 0 &amp; 0 &amp; \sigma_k &amp; \sigma_k\\
+\end{bmatrix}
++
+\begin{bmatrix}
+\sigma&amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0\\
+0&amp; \sigma &amp; 0 &amp; 0 &amp; 0 &amp; 0\\
+0&amp; 0 &amp; \sigma &amp; 0 &amp; 0 &amp; 0\\
+0&amp; 0 &amp; 0 &amp; \sigma &amp; 0 &amp; 0\\
+0&amp; 0 &amp; 0 &amp; 0 &amp; \sigma &amp; 0\\
+0&amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; \sigma\\
+\end{bmatrix}\\
+&amp;=
+\begin{bmatrix}
+\sigma_k+\sigma&amp; \sigma_k &amp; 0 &amp; 0 &amp; 0 &amp; 0\\
+\sigma_k&amp; \sigma_k+\sigma &amp; 0 &amp; 0 &amp; 0 &amp; 0\\
+0&amp; 0 &amp; \sigma_k+\sigma &amp; \sigma_k &amp; 0 &amp; 0\\
+0&amp; 0 &amp; \sigma_k &amp; \sigma_k+\sigma &amp; 0 &amp; 0\\
+0&amp; 0 &amp; 0 &amp; 0 &amp; \sigma_k+\sigma &amp; \sigma_k\\
+0&amp; 0 &amp; 0 &amp; 0 &amp; \sigma_k &amp; \sigma_k+\sigma\\
+\end{bmatrix}
+\end{align*}`</span></a></p>
 <p><strong>The model to be minimized</strong></p>
 <p>Here <span class="math notranslate nohighlight">\(\sigma_k\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are called variance components
 of the model. Solving the problem constist in the estimation the fixed

@@ -1077,18 +1077,42 @@ Intersecting two dictionaries
 
  .. code-block:: none
 
-    {'Maggie', 'Marge', 'Homer', 'Lisa', 'Bart'}
+    {'Homer', 'Marge', 'Lisa', 'Maggie', 'Bart'}
 
-    [['Maggie', 1, 'daughter'], ['Marge', 43, 'mother'], ['Homer', 45, 'father'], ['Lisa', 10, 'daughter'], ['Bart', 11, 'son']]
+    [['Homer', 45, 'father'], ['Marge', 43, 'mother'], ['Lisa', 10, 'daughter'], ['Maggie', 1, 'daughter'], ['Bart', 11, 'son']]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 445-447
+.. GENERATED FROM PYTHON SOURCE LINES 445-446
+
+Iterating both key and values
+
+.. GENERATED FROM PYTHON SOURCE LINES 446-449
+
+.. code-block:: Python
+
+
+    [[key, val] for key, val in simpsons_ages_dict.items()]
+    
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    [['Homer', 45], ['Marge', 43], ['Bart', 11], ['Lisa', 10], ['Maggie', 1]]
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 450-452
 
 String substitution using a dictionary: syntax ``%(key)format``, where ``format``
 is the formatting character e.g. ``s`` for string.
 
-.. GENERATED FROM PYTHON SOURCE LINES 447-451
+.. GENERATED FROM PYTHON SOURCE LINES 452-456
 
 .. code-block:: Python
 
@@ -1109,7 +1133,7 @@ is the formatting character e.g. ``s`` for string.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 452-459
+.. GENERATED FROM PYTHON SOURCE LINES 457-464
 
 Sets
 ~~~~
@@ -1119,11 +1143,11 @@ They are: unordered, iterable, mutable, can contain multiple data types
 made up of unique elements (strings, numbers, or tuples)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 461-462
+.. GENERATED FROM PYTHON SOURCE LINES 466-467
 
 Creation
 
-.. GENERATED FROM PYTHON SOURCE LINES 462-470
+.. GENERATED FROM PYTHON SOURCE LINES 467-475
 
 .. code-block:: Python
 
@@ -1142,11 +1166,11 @@ Creation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 471-472
+.. GENERATED FROM PYTHON SOURCE LINES 476-477
 
 Examine a set
 
-.. GENERATED FROM PYTHON SOURCE LINES 472-475
+.. GENERATED FROM PYTHON SOURCE LINES 477-480
 
 .. code-block:: Python
 
@@ -1166,11 +1190,11 @@ Examine a set
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 476-477
+.. GENERATED FROM PYTHON SOURCE LINES 481-482
 
 Set operations
 
-.. GENERATED FROM PYTHON SOURCE LINES 477-504
+.. GENERATED FROM PYTHON SOURCE LINES 482-509
 
 .. code-block:: Python
 
@@ -1215,22 +1239,22 @@ Set operations
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 505-508
+.. GENERATED FROM PYTHON SOURCE LINES 510-513
 
 Execution control statements
 ----------------------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 510-512
+.. GENERATED FROM PYTHON SOURCE LINES 515-517
 
 Conditional statements
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. GENERATED FROM PYTHON SOURCE LINES 514-515
+.. GENERATED FROM PYTHON SOURCE LINES 519-520
 
 if statement
 
-.. GENERATED FROM PYTHON SOURCE LINES 515-520
+.. GENERATED FROM PYTHON SOURCE LINES 520-525
 
 .. code-block:: Python
 
@@ -1252,11 +1276,11 @@ if statement
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 521-522
+.. GENERATED FROM PYTHON SOURCE LINES 526-527
 
 if/else statement
 
-.. GENERATED FROM PYTHON SOURCE LINES 522-528
+.. GENERATED FROM PYTHON SOURCE LINES 527-533
 
 .. code-block:: Python
 
@@ -1279,11 +1303,11 @@ if/else statement
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 529-530
+.. GENERATED FROM PYTHON SOURCE LINES 534-535
 
 Single-line if/else statement, known as a 'ternary operator'
 
-.. GENERATED FROM PYTHON SOURCE LINES 530-534
+.. GENERATED FROM PYTHON SOURCE LINES 535-539
 
 .. code-block:: Python
 
@@ -1304,11 +1328,11 @@ Single-line if/else statement, known as a 'ternary operator'
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 535-536
+.. GENERATED FROM PYTHON SOURCE LINES 540-541
 
 if/elif/else statement
 
-.. GENERATED FROM PYTHON SOURCE LINES 536-545
+.. GENERATED FROM PYTHON SOURCE LINES 541-550
 
 .. code-block:: Python
 
@@ -1334,7 +1358,7 @@ if/elif/else statement
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 546-553
+.. GENERATED FROM PYTHON SOURCE LINES 551-558
 
 Loops
 ~~~~~
@@ -1344,7 +1368,7 @@ conditions are met. This can include iterating through all values in an
 object, go through a range of values, etc
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 553-560
+.. GENERATED FROM PYTHON SOURCE LINES 558-565
 
 .. code-block:: Python
 
@@ -1368,11 +1392,11 @@ object, go through a range of values, etc
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 561-562
+.. GENERATED FROM PYTHON SOURCE LINES 566-567
 
 Iterate on list values
 
-.. GENERATED FROM PYTHON SOURCE LINES 562-567
+.. GENERATED FROM PYTHON SOURCE LINES 567-572
 
 .. code-block:: Python
 
@@ -1396,11 +1420,11 @@ Iterate on list values
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 568-569
+.. GENERATED FROM PYTHON SOURCE LINES 573-574
 
 Iterate with index
 
-.. GENERATED FROM PYTHON SOURCE LINES 569-573
+.. GENERATED FROM PYTHON SOURCE LINES 574-578
 
 .. code-block:: Python
 
@@ -1423,11 +1447,11 @@ Iterate with index
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 574-575
+.. GENERATED FROM PYTHON SOURCE LINES 579-580
 
 Iterate with index and values: ``enumerate``
 
-.. GENERATED FROM PYTHON SOURCE LINES 575-585
+.. GENERATED FROM PYTHON SOURCE LINES 580-590
 
 .. code-block:: Python
 
@@ -1456,7 +1480,7 @@ Iterate with index and values: ``enumerate``
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 586-598
+.. GENERATED FROM PYTHON SOURCE LINES 591-603
 
 List comprehensions, iterators, etc.
 ------------------------------------
@@ -1471,11 +1495,11 @@ provides an elegant syntax for the most common processing pattern:
 2. apply some operation
 3. store the result in a new list
 
-.. GENERATED FROM PYTHON SOURCE LINES 600-601
+.. GENERATED FROM PYTHON SOURCE LINES 605-606
 
 Classical iteration over a list
 
-.. GENERATED FROM PYTHON SOURCE LINES 601-607
+.. GENERATED FROM PYTHON SOURCE LINES 606-612
 
 .. code-block:: Python
 
@@ -1492,11 +1516,11 @@ Classical iteration over a list
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 608-609
+.. GENERATED FROM PYTHON SOURCE LINES 613-614
 
 Equivalent list comprehension
 
-.. GENERATED FROM PYTHON SOURCE LINES 609-612
+.. GENERATED FROM PYTHON SOURCE LINES 614-617
 
 .. code-block:: Python
 
@@ -1510,12 +1534,12 @@ Equivalent list comprehension
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 613-615
+.. GENERATED FROM PYTHON SOURCE LINES 618-620
 
 Classical iteration over a list with **if condition**:
 create a list of cubes of even numbers
 
-.. GENERATED FROM PYTHON SOURCE LINES 615-621
+.. GENERATED FROM PYTHON SOURCE LINES 620-626
 
 .. code-block:: Python
 
@@ -1532,12 +1556,12 @@ create a list of cubes of even numbers
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 622-624
+.. GENERATED FROM PYTHON SOURCE LINES 627-629
 
 Equivalent list comprehension with **if condition**
 syntax: ``[expression for variable in iterable if condition]``
 
-.. GENERATED FROM PYTHON SOURCE LINES 624-627
+.. GENERATED FROM PYTHON SOURCE LINES 629-632
 
 .. code-block:: Python
 
@@ -1551,12 +1575,12 @@ syntax: ``[expression for variable in iterable if condition]``
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 628-630
+.. GENERATED FROM PYTHON SOURCE LINES 633-635
 
 Classical iteration over a list with **if else condition**:
 for loop to cube even numbers and square odd numbers
 
-.. GENERATED FROM PYTHON SOURCE LINES 630-638
+.. GENERATED FROM PYTHON SOURCE LINES 635-643
 
 .. code-block:: Python
 
@@ -1575,13 +1599,13 @@ for loop to cube even numbers and square odd numbers
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 639-642
+.. GENERATED FROM PYTHON SOURCE LINES 644-647
 
 Equivalent list comprehension (using a ternary expression)
 for loop to cube even numbers and square odd numbers
 syntax: ``[true_condition if condition else false_condition for variable in iterable]``
 
-.. GENERATED FROM PYTHON SOURCE LINES 642-646
+.. GENERATED FROM PYTHON SOURCE LINES 647-651
 
 .. code-block:: Python
 
@@ -1602,11 +1626,11 @@ syntax: ``[true_condition if condition else false_condition for variable in iter
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 647-648
+.. GENERATED FROM PYTHON SOURCE LINES 652-653
 
 Nested loops: flatten a 2d-matrix
 
-.. GENERATED FROM PYTHON SOURCE LINES 648-655
+.. GENERATED FROM PYTHON SOURCE LINES 653-660
 
 .. code-block:: Python
 
@@ -1624,11 +1648,11 @@ Nested loops: flatten a 2d-matrix
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 656-657
+.. GENERATED FROM PYTHON SOURCE LINES 661-662
 
 Equivalent list comprehension with Nested loops
 
-.. GENERATED FROM PYTHON SOURCE LINES 657-663
+.. GENERATED FROM PYTHON SOURCE LINES 662-668
 
 .. code-block:: Python
 
@@ -1651,12 +1675,12 @@ Equivalent list comprehension with Nested loops
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 664-666
+.. GENERATED FROM PYTHON SOURCE LINES 669-671
 
 Set comprehension
 ~~~~~~~~~~~~~~~~~
 
-.. GENERATED FROM PYTHON SOURCE LINES 666-671
+.. GENERATED FROM PYTHON SOURCE LINES 671-676
 
 .. code-block:: Python
 
@@ -1678,16 +1702,16 @@ Set comprehension
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 672-674
+.. GENERATED FROM PYTHON SOURCE LINES 677-679
 
 Dictionary comprehension
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. GENERATED FROM PYTHON SOURCE LINES 676-677
+.. GENERATED FROM PYTHON SOURCE LINES 681-682
 
 Create a dictionary from a list
 
-.. GENERATED FROM PYTHON SOURCE LINES 677-681
+.. GENERATED FROM PYTHON SOURCE LINES 682-686
 
 .. code-block:: Python
 
@@ -1708,11 +1732,11 @@ Create a dictionary from a list
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 682-683
+.. GENERATED FROM PYTHON SOURCE LINES 687-688
 
 Iterate over keys and values. Increase age of each subject:
 
-.. GENERATED FROM PYTHON SOURCE LINES 683-687
+.. GENERATED FROM PYTHON SOURCE LINES 688-692
 
 .. code-block:: Python
 
@@ -1733,12 +1757,12 @@ Iterate over keys and values. Increase age of each subject:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 688-690
+.. GENERATED FROM PYTHON SOURCE LINES 693-695
 
 Combine two dictionaries sharing key. Example, a function that joins two dictionaries
 (intersecting keys) into a dictionary of lists
 
-.. GENERATED FROM PYTHON SOURCE LINES 690-696
+.. GENERATED FROM PYTHON SOURCE LINES 695-701
 
 .. code-block:: Python
 
@@ -1756,17 +1780,17 @@ Combine two dictionaries sharing key. Example, a function that joins two diction
 
  .. code-block:: none
 
-    {'Maggie': ['daughter', 1], 'Marge': ['mother', 43], 'Homer': ['father', 45], 'Lisa': ['daughter', 10], 'Bart': ['son', 11]}
+    {'Homer': ['father', 45], 'Marge': ['mother', 43], 'Lisa': ['daughter', 10], 'Maggie': ['daughter', 1], 'Bart': ['son', 11]}
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 697-699
+.. GENERATED FROM PYTHON SOURCE LINES 702-704
 
 Iterators ``itertools`` package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. GENERATED FROM PYTHON SOURCE LINES 699-702
+.. GENERATED FROM PYTHON SOURCE LINES 704-707
 
 .. code-block:: Python
 
@@ -1780,11 +1804,11 @@ Iterators ``itertools`` package
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 703-704
+.. GENERATED FROM PYTHON SOURCE LINES 708-709
 
 Example: Cartesian product
 
-.. GENERATED FROM PYTHON SOURCE LINES 704-708
+.. GENERATED FROM PYTHON SOURCE LINES 709-713
 
 .. code-block:: Python
 
@@ -1805,13 +1829,13 @@ Example: Cartesian product
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 709-712
+.. GENERATED FROM PYTHON SOURCE LINES 714-717
 
 Example, use loop, dictionary and set to count words in a sentence
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 712-732
+.. GENERATED FROM PYTHON SOURCE LINES 717-737
 
 .. code-block:: Python
 
@@ -1843,18 +1867,18 @@ Example, use loop, dictionary and set to count words in a sentence
 
  .. code-block:: none
 
-    {'they': 2, 'but': 1, 'too': 2, 'gall': 1, 'to': 2, 'small': 1, 'incomes': 1, 'shoes;': 1, 'if': 2, 'our': 2, 'pinch': 1, 'are': 1, 'like': 1, 'stumble': 1, 'Tick-tow': 1, 'us': 2, 'large': 1, 'and': 2, 'trip': 1, 'cause': 1}
+    {'small': 1, 'like': 1, 'stumble': 1, 'trip': 1, 'shoes;': 1, 'cause': 1, 'and': 2, 'pinch': 1, 'to': 2, 'large': 1, 'us': 2, 'but': 1, 'our': 2, 'if': 2, 'too': 2, 'they': 2, 'Tick-tow': 1, 'gall': 1, 'incomes': 1, 'are': 1}
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 733-736
+.. GENERATED FROM PYTHON SOURCE LINES 738-741
 
 Exceptions handling
 ~~~~~~~~~~~~~~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 736-748
+.. GENERATED FROM PYTHON SOURCE LINES 741-753
 
 .. code-block:: Python
 
@@ -1884,7 +1908,7 @@ Exceptions handling
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 749-755
+.. GENERATED FROM PYTHON SOURCE LINES 754-760
 
 Functions
 ---------
@@ -1893,11 +1917,11 @@ Functions are sets of instructions launched when called upon, they can
 have multiple input values and a return value
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 757-758
+.. GENERATED FROM PYTHON SOURCE LINES 762-763
 
 Function with no arguments and no return values
 
-.. GENERATED FROM PYTHON SOURCE LINES 758-767
+.. GENERATED FROM PYTHON SOURCE LINES 763-772
 
 .. code-block:: Python
 
@@ -1923,11 +1947,11 @@ Function with no arguments and no return values
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 768-769
+.. GENERATED FROM PYTHON SOURCE LINES 773-774
 
 Function with one argument and no return values
 
-.. GENERATED FROM PYTHON SOURCE LINES 769-780
+.. GENERATED FROM PYTHON SOURCE LINES 774-785
 
 .. code-block:: Python
 
@@ -1957,7 +1981,7 @@ Function with one argument and no return values
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 781-788
+.. GENERATED FROM PYTHON SOURCE LINES 786-793
 
 **Dynamic typing**
 
@@ -1967,7 +1991,7 @@ language that are statically typed). As a consequence, the function behavior, de
 at execution time, will be different and specific to parameters type.
 Python function are polymorphic.
 
-.. GENERATED FROM PYTHON SOURCE LINES 788-796
+.. GENERATED FROM PYTHON SOURCE LINES 793-801
 
 .. code-block:: Python
 
@@ -1992,11 +2016,11 @@ Python function are polymorphic.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 797-798
+.. GENERATED FROM PYTHON SOURCE LINES 802-803
 
 **Default arguments**
 
-.. GENERATED FROM PYTHON SOURCE LINES 798-806
+.. GENERATED FROM PYTHON SOURCE LINES 803-811
 
 .. code-block:: Python
 
@@ -2021,12 +2045,12 @@ Python function are polymorphic.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 807-809
+.. GENERATED FROM PYTHON SOURCE LINES 812-814
 
 **Docstring** to describe the effect of a function
 IDE, ipython (type: ?power_this) to provide function documentation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 809-821
+.. GENERATED FROM PYTHON SOURCE LINES 814-826
 
 .. code-block:: Python
 
@@ -2049,11 +2073,11 @@ IDE, ipython (type: ?power_this) to provide function documentation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 822-823
+.. GENERATED FROM PYTHON SOURCE LINES 827-828
 
 **Return several values** as tuple
 
-.. GENERATED FROM PYTHON SOURCE LINES 823-835
+.. GENERATED FROM PYTHON SOURCE LINES 828-840
 
 .. code-block:: Python
 
@@ -2076,7 +2100,113 @@ IDE, ipython (type: ?power_this) to provide function documentation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 836-844
+.. GENERATED FROM PYTHON SOURCE LINES 841-847
+
+**Arbitrary number of Arguments**
+
+`Packing and Unpacking Arguments in Python <https://www.geeksforgeeks.org/packing-and-unpacking-arguments-in-python/>`_
+
+`*args` packs many positional arguments e.g., `add(1, 2, 3)` as a tuple,
+arguments can be manipulated as a tuple, ie `args[0]`, etc.
+
+.. GENERATED FROM PYTHON SOURCE LINES 847-857
+
+.. code-block:: Python
+
+
+    def add(*args):
+        print(args)
+        s = 0
+        for x in args:
+            s += x
+        return s
+
+    print(add(2, 3) + add(1, 2, 3))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    (2, 3)
+    (1, 2, 3)
+    11
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 858-860
+
+Pass arbitrary number of arguments to another function.
+re-pack arguments while passing them using `*args`
+
+.. GENERATED FROM PYTHON SOURCE LINES 860-868
+
+.. code-block:: Python
+
+
+    def dummy(*args):
+        # do something
+        return add(*args)
+
+
+    print(dummy(2, 3) + dummy(1, 2, 3))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    (2, 3)
+    (1, 2, 3)
+    11
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 869-870
+
+`**kwargs` packs many keywords arguments e.g., `add(x=1, y=2, z=3)` as a dictionary:
+
+.. GENERATED FROM PYTHON SOURCE LINES 870-885
+
+.. code-block:: Python
+
+
+    def add(**kwargs):
+        s = 0
+        for key, val in kwargs.items():
+            s += val
+        return s
+
+    add(x=2, y=3) + add(x=1, y=2, z=3)
+
+
+    # - `*args` packs many positional arguments e.g., `add(1, 2, 3)`` as a tuple:
+
+
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    11
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 886-894
 
 Reference and copy
 ~~~~~~~~~~~~~~~~~~
@@ -2087,7 +2217,7 @@ will change the content of all other references.
 
 Modify a a reference of a list
 
-.. GENERATED FROM PYTHON SOURCE LINES 844-850
+.. GENERATED FROM PYTHON SOURCE LINES 894-900
 
 .. code-block:: Python
 
@@ -2110,14 +2240,14 @@ Modify a a reference of a list
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 851-855
+.. GENERATED FROM PYTHON SOURCE LINES 901-905
 
 Copies are references to different objects.
 Modifying the content of the one reference, will not affect the others.
 
 Modify a copy of a list
 
-.. GENERATED FROM PYTHON SOURCE LINES 855-862
+.. GENERATED FROM PYTHON SOURCE LINES 905-912
 
 .. code-block:: Python
 
@@ -2141,11 +2271,11 @@ Modify a copy of a list
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 863-864
+.. GENERATED FROM PYTHON SOURCE LINES 913-914
 
 Examine objects
 
-.. GENERATED FROM PYTHON SOURCE LINES 864-872
+.. GENERATED FROM PYTHON SOURCE LINES 914-922
 
 .. code-block:: Python
 
@@ -2170,12 +2300,12 @@ Examine objects
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 873-875
+.. GENERATED FROM PYTHON SOURCE LINES 923-925
 
 Functions' arguments are references to objects.
 Thus functions can modify their arguments with possible side effect.
 
-.. GENERATED FROM PYTHON SOURCE LINES 875-884
+.. GENERATED FROM PYTHON SOURCE LINES 925-934
 
 .. code-block:: Python
 
@@ -2201,7 +2331,7 @@ Thus functions can modify their arguments with possible side effect.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 885-891
+.. GENERATED FROM PYTHON SOURCE LINES 935-941
 
 Example: function, and dictionary comprehension
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2210,7 +2340,7 @@ Example of a function ``join_dict_to_table(dict1, dict2)`` joining two dictionar
 (intersecting keys) into a table, i.e., a list of tuples, where the first column
 is the key, the second and third columns are the values of the dictionaries.
 
-.. GENERATED FROM PYTHON SOURCE LINES 891-907
+.. GENERATED FROM PYTHON SOURCE LINES 941-957
 
 .. code-block:: Python
 
@@ -2240,20 +2370,20 @@ is the key, the second and third columns are the values of the dictionaries.
 
     Roles: {'Homer': 'father', 'Marge': 'mother', 'Bart': 'son', 'Maggie': 'daughter'}
     Ages: {'Homer': 45, 'Marge': 43, 'Bart': 11, 'Lisa': 10}
-    Join: [['Marge', 'mother', 43], ['Bart', 'son', 11], ['Homer', 'father', 45]]
+    Join: [['Bart', 'son', 11], ['Homer', 'father', 45], ['Marge', 'mother', 43]]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 908-913
+.. GENERATED FROM PYTHON SOURCE LINES 958-963
 
-Regular expression
+Regular Expression
 ------------------
 Regular Expression (RE, or RegEx) allow to search and patterns in strings.
 See `this page <https://www.programiz.com/python-programming/regex>`_ for the syntax
 of the RE patterns.
 
-.. GENERATED FROM PYTHON SOURCE LINES 913-916
+.. GENERATED FROM PYTHON SOURCE LINES 963-966
 
 .. code-block:: Python
 
@@ -2267,7 +2397,7 @@ of the RE patterns.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 917-929
+.. GENERATED FROM PYTHON SOURCE LINES 967-979
 
 **Usual patterns**
 
@@ -2282,7 +2412,7 @@ of the RE patterns.
 - ``\s`` Matches where a string contains any whitespace character, equivalent to [ \t\n\r\f\v].
 - ``[^\s]`` Caret ``^`` symbol (the start of a square-bracket) inverts the pattern selection .
 
-.. GENERATED FROM PYTHON SOURCE LINES 929-933
+.. GENERATED FROM PYTHON SOURCE LINES 979-983
 
 .. code-block:: Python
 
@@ -2297,37 +2427,33 @@ of the RE patterns.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 934-936
+.. GENERATED FROM PYTHON SOURCE LINES 984-988
 
 **Compile** (``re.compile(string)``) regular expression with a pattern that
-captures the pattern ``firstname:<subject_id>_lastname:<session_id>``
+captures the pattern ``firstname:<subject_id>_lastname:<session_id>``.
+Note that we use raw string `r'string'` so `\` is not interpreted as
+the start of an escape sequence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 936-938
+.. GENERATED FROM PYTHON SOURCE LINES 988-991
 
 .. code-block:: Python
 
-    pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
+
+    pattern = re.compile(r'firstname:[\w]+_lastname:[\w]+')
 
 
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/ed203246/git/pystatsml/python_lang/python_lang.py:936: SyntaxWarning: invalid escape sequence '\w'
-      pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 939-941
+.. GENERATED FROM PYTHON SOURCE LINES 992-994
 
 **Match** (``re.match(string)``) to be used in test, loop, etc.
 Determine if the RE matches **at the beginning** of the string.
 
-.. GENERATED FROM PYTHON SOURCE LINES 941-948
+.. GENERATED FROM PYTHON SOURCE LINES 994-1001
 
 .. code-block:: Python
 
@@ -2351,12 +2477,12 @@ Determine if the RE matches **at the beginning** of the string.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 949-951
+.. GENERATED FROM PYTHON SOURCE LINES 1002-1004
 
 **Match** (``re.search(string)``) to be used in test, loop, etc.
 Determine if the RE matches **at any location** in the string.
 
-.. GENERATED FROM PYTHON SOURCE LINES 951-958
+.. GENERATED FROM PYTHON SOURCE LINES 1004-1011
 
 .. code-block:: Python
 
@@ -2380,25 +2506,25 @@ Determine if the RE matches **at any location** in the string.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 959-961
+.. GENERATED FROM PYTHON SOURCE LINES 1012-1014
 
 **Find** (``re.findall(string)``) all substrings where the RE matches,
 and returns them as a list.
 
-.. GENERATED FROM PYTHON SOURCE LINES 961-973
+.. GENERATED FROM PYTHON SOURCE LINES 1014-1026
 
 .. code-block:: Python
 
 
     # Find the whole pattern within the string
-    pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
+    pattern = re.compile(r'firstname:[\w]+_lastname:[\w]+')
     print(pattern.findall("firstname:John_lastname:Doe blah blah"))
 
     # Find words
     print(re.compile("[a-zA-Z0-9]+").findall("firstname:John_lastname:Doe"))
 
     # Find words with including underscore
-    print(re.compile("[\w]+").findall("firstname:John_lastname:Doe"))
+    print(re.compile(r'[\w]+').findall("firstname:John_lastname:Doe"))
 
 
 
@@ -2409,10 +2535,6 @@ and returns them as a list.
 
  .. code-block:: none
 
-    /home/ed203246/git/pystatsml/python_lang/python_lang.py:963: SyntaxWarning: invalid escape sequence '\w'
-      pattern = re.compile("firstname:[\w]+_lastname:[\w]+")
-    /home/ed203246/git/pystatsml/python_lang/python_lang.py:970: SyntaxWarning: invalid escape sequence '\w'
-      print(re.compile("[\w]+").findall("firstname:John_lastname:Doe"))
     ['firstname:John_lastname:Doe']
     ['firstname', 'John', 'lastname', 'Doe']
     ['firstname', 'John_lastname', 'Doe']
@@ -2420,13 +2542,13 @@ and returns them as a list.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 974-977
+.. GENERATED FROM PYTHON SOURCE LINES 1027-1030
 
 Extract specific parts of the RE: use parenthesis ``(part of pattern to be matched)``
 Extract John and Doe, such as John is suffixed with firstname:
 and Doe is suffixed with lastname: 
 
-.. GENERATED FROM PYTHON SOURCE LINES 977-982
+.. GENERATED FROM PYTHON SOURCE LINES 1030-1035
 
 .. code-block:: Python
 
@@ -2443,21 +2565,21 @@ and Doe is suffixed with lastname:
 
  .. code-block:: none
 
-    /home/ed203246/git/pystatsml/python_lang/python_lang.py:978: SyntaxWarning: invalid escape sequence '\w'
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:1031: SyntaxWarning: invalid escape sequence '\w'
       pattern = re.compile("firstname:([\w]+)_lastname:([\w]+)")
     [('John', 'Doe'), ('Bart', 'Simpson')]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 983-987
+.. GENERATED FROM PYTHON SOURCE LINES 1036-1040
 
 **Split** (``re.split(string)``) splits the string where there is a match and
 returns a list of strings where the splits have occurred. Example, match
 any non alphanumeric character (digits and alphabets) ``[^a-zA-Z0-9]`` to split
 the string.
 
-.. GENERATED FROM PYTHON SOURCE LINES 987-991
+.. GENERATED FROM PYTHON SOURCE LINES 1040-1044
 
 .. code-block:: Python
 
@@ -2478,12 +2600,12 @@ the string.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 992-994
+.. GENERATED FROM PYTHON SOURCE LINES 1045-1047
 
 **Substitute** (``re.sub(pattern, replace, string)``) returns a string where
 matched occurrences are replaced with the content of replace variable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 994-998
+.. GENERATED FROM PYTHON SOURCE LINES 1047-1051
 
 .. code-block:: Python
 
@@ -2499,9 +2621,9 @@ matched occurrences are replaced with the content of replace variable.
 
  .. code-block:: none
 
-    /home/ed203246/git/pystatsml/python_lang/python_lang.py:995: SyntaxWarning: invalid escape sequence '\s'
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:1048: SyntaxWarning: invalid escape sequence '\s'
       print(re.sub('\s', "_", "Sentence with white      space"))
-    /home/ed203246/git/pystatsml/python_lang/python_lang.py:996: SyntaxWarning: invalid escape sequence '\s'
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:1049: SyntaxWarning: invalid escape sequence '\s'
       print(re.sub('\s+', "_", "Sentence with white      space"))
     Sentence_with_white______space
     Sentence_with_white_space
@@ -2509,11 +2631,11 @@ matched occurrences are replaced with the content of replace variable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 999-1000
+.. GENERATED FROM PYTHON SOURCE LINES 1052-1053
 
 Remove all non-alphanumeric characters and space in a string
 
-.. GENERATED FROM PYTHON SOURCE LINES 1000-1003
+.. GENERATED FROM PYTHON SOURCE LINES 1053-1056
 
 .. code-block:: Python
 
@@ -2528,25 +2650,25 @@ Remove all non-alphanumeric characters and space in a string
 
  .. code-block:: none
 
-    /home/ed203246/git/pystatsml/python_lang/python_lang.py:1001: SyntaxWarning: invalid escape sequence '\s'
+    /home/ed203246/git/pystatsml/python_lang/python_lang.py:1054: SyntaxWarning: invalid escape sequence '\s'
       re.sub('[^0-9a-zA-Z\s]+', '', 'H^&ell`.,|o W]{+orld')
 
     'Hello World'
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1004-1007
+.. GENERATED FROM PYTHON SOURCE LINES 1057-1060
 
 System programming
 ------------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1009-1011
+.. GENERATED FROM PYTHON SOURCE LINES 1062-1064
 
 Operating system interfaces (os)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. GENERATED FROM PYTHON SOURCE LINES 1011-1014
+.. GENERATED FROM PYTHON SOURCE LINES 1064-1067
 
 .. code-block:: Python
 
@@ -2560,11 +2682,11 @@ Operating system interfaces (os)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1015-1016
+.. GENERATED FROM PYTHON SOURCE LINES 1068-1069
 
 Get/set current working directory
 
-.. GENERATED FROM PYTHON SOURCE LINES 1016-1025
+.. GENERATED FROM PYTHON SOURCE LINES 1069-1078
 
 .. code-block:: Python
 
@@ -2590,11 +2712,11 @@ Get/set current working directory
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1026-1027
+.. GENERATED FROM PYTHON SOURCE LINES 1079-1080
 
 Temporary directory
 
-.. GENERATED FROM PYTHON SOURCE LINES 1027-1032
+.. GENERATED FROM PYTHON SOURCE LINES 1080-1085
 
 .. code-block:: Python
 
@@ -2616,11 +2738,11 @@ Temporary directory
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1033-1034
+.. GENERATED FROM PYTHON SOURCE LINES 1086-1087
 
 Join paths
 
-.. GENERATED FROM PYTHON SOURCE LINES 1034-1037
+.. GENERATED FROM PYTHON SOURCE LINES 1087-1090
 
 .. code-block:: Python
 
@@ -2634,11 +2756,11 @@ Join paths
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1038-1039
+.. GENERATED FROM PYTHON SOURCE LINES 1091-1092
 
 Create a directory
 
-.. GENERATED FROM PYTHON SOURCE LINES 1039-1045
+.. GENERATED FROM PYTHON SOURCE LINES 1092-1098
 
 .. code-block:: Python
 
@@ -2661,12 +2783,12 @@ Create a directory
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1046-1048
+.. GENERATED FROM PYTHON SOURCE LINES 1099-1101
 
 File input/output
 ~~~~~~~~~~~~~~~~~
 
-.. GENERATED FROM PYTHON SOURCE LINES 1048-1053
+.. GENERATED FROM PYTHON SOURCE LINES 1101-1106
 
 .. code-block:: Python
 
@@ -2688,11 +2810,11 @@ File input/output
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1054-1055
+.. GENERATED FROM PYTHON SOURCE LINES 1107-1108
 
 Write line by line
 
-.. GENERATED FROM PYTHON SOURCE LINES 1055-1061
+.. GENERATED FROM PYTHON SOURCE LINES 1108-1114
 
 .. code-block:: Python
 
@@ -2709,11 +2831,11 @@ Write line by line
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1062-1063
+.. GENERATED FROM PYTHON SOURCE LINES 1115-1116
 
 Context manager to automatically close your file
 
-.. GENERATED FROM PYTHON SOURCE LINES 1063-1068
+.. GENERATED FROM PYTHON SOURCE LINES 1116-1121
 
 .. code-block:: Python
 
@@ -2729,12 +2851,12 @@ Context manager to automatically close your file
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1069-1071
+.. GENERATED FROM PYTHON SOURCE LINES 1122-1124
 
 Read
 read one line at a time (entire file does not have to fit into memory)
 
-.. GENERATED FROM PYTHON SOURCE LINES 1071-1091
+.. GENERATED FROM PYTHON SOURCE LINES 1124-1144
 
 .. code-block:: Python
 
@@ -2765,17 +2887,17 @@ read one line at a time (entire file does not have to fit into memory)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1092-1095
+.. GENERATED FROM PYTHON SOURCE LINES 1145-1148
 
 Explore, list directories
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1097-1098
+.. GENERATED FROM PYTHON SOURCE LINES 1150-1151
 
 Walk through directories and subdirectories ``os.walk(dir)``
 
-.. GENERATED FROM PYTHON SOURCE LINES 1098-1105
+.. GENERATED FROM PYTHON SOURCE LINES 1151-1158
 
 .. code-block:: Python
 
@@ -2801,11 +2923,11 @@ Walk through directories and subdirectories ``os.walk(dir)``
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1106-1107
+.. GENERATED FROM PYTHON SOURCE LINES 1159-1160
 
 Search for a file using a wildcard ``glob.glob(dir)``
 
-.. GENERATED FROM PYTHON SOURCE LINES 1107-1112
+.. GENERATED FROM PYTHON SOURCE LINES 1160-1165
 
 .. code-block:: Python
 
@@ -2827,11 +2949,11 @@ Search for a file using a wildcard ``glob.glob(dir)``
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1113-1114
+.. GENERATED FROM PYTHON SOURCE LINES 1166-1167
 
 Manipulating file names, basename and extension
 
-.. GENERATED FROM PYTHON SOURCE LINES 1114-1125
+.. GENERATED FROM PYTHON SOURCE LINES 1167-1178
 
 .. code-block:: Python
 
@@ -2859,11 +2981,11 @@ Manipulating file names, basename and extension
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1126-1127
+.. GENERATED FROM PYTHON SOURCE LINES 1179-1180
 
 File operations: (recursive) copy, move, test if exists: ``shutil`` package
 
-.. GENERATED FROM PYTHON SOURCE LINES 1127-1130
+.. GENERATED FROM PYTHON SOURCE LINES 1180-1183
 
 .. code-block:: Python
 
@@ -2877,11 +2999,11 @@ File operations: (recursive) copy, move, test if exists: ``shutil`` package
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1131-1132
+.. GENERATED FROM PYTHON SOURCE LINES 1184-1185
 
 Copy
 
-.. GENERATED FROM PYTHON SOURCE LINES 1132-1138
+.. GENERATED FROM PYTHON SOURCE LINES 1185-1191
 
 .. code-block:: Python
 
@@ -2904,11 +3026,11 @@ Copy
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1139-1140
+.. GENERATED FROM PYTHON SOURCE LINES 1192-1193
 
 Test if file exists ?
 
-.. GENERATED FROM PYTHON SOURCE LINES 1140-1143
+.. GENERATED FROM PYTHON SOURCE LINES 1193-1196
 
 .. code-block:: Python
 
@@ -2928,11 +3050,11 @@ Test if file exists ?
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1144-1145
+.. GENERATED FROM PYTHON SOURCE LINES 1197-1198
 
 Recursive copy,deletion and move
 
-.. GENERATED FROM PYTHON SOURCE LINES 1145-1163
+.. GENERATED FROM PYTHON SOURCE LINES 1198-1216
 
 .. code-block:: Python
 
@@ -2969,14 +3091,14 @@ Recursive copy,deletion and move
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1164-1168
+.. GENERATED FROM PYTHON SOURCE LINES 1217-1221
 
 Command execution with subprocess
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For more advanced use cases, the underlying Popen interface can be used directly.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1168-1171
+.. GENERATED FROM PYTHON SOURCE LINES 1221-1224
 
 .. code-block:: Python
 
@@ -2990,7 +3112,7 @@ For more advanced use cases, the underlying Popen interface can be used directly
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1172-1178
+.. GENERATED FROM PYTHON SOURCE LINES 1225-1231
 
 ``subprocess.run([command, args*])``
 
@@ -2999,7 +3121,7 @@ For more advanced use cases, the underlying Popen interface can be used directly
 - return a CompletedProcess instance.
 - Does not capture stdout or stderr by default. To do so, pass PIPE for the stdout and/or stderr arguments.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1178-1182
+.. GENERATED FROM PYTHON SOURCE LINES 1231-1235
 
 .. code-block:: Python
 
@@ -3020,11 +3142,11 @@ For more advanced use cases, the underlying Popen interface can be used directly
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1183-1184
+.. GENERATED FROM PYTHON SOURCE LINES 1236-1237
 
 Run through the shell
 
-.. GENERATED FROM PYTHON SOURCE LINES 1184-1187
+.. GENERATED FROM PYTHON SOURCE LINES 1237-1240
 
 .. code-block:: Python
 
@@ -3044,11 +3166,11 @@ Run through the shell
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1188-1189
+.. GENERATED FROM PYTHON SOURCE LINES 1241-1242
 
 Capture output
 
-.. GENERATED FROM PYTHON SOURCE LINES 1189-1196
+.. GENERATED FROM PYTHON SOURCE LINES 1242-1249
 
 .. code-block:: Python
 
@@ -3072,7 +3194,7 @@ Capture output
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1197-1244
+.. GENERATED FROM PYTHON SOURCE LINES 1250-1297
 
 Multiprocessing and multithreading
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3122,7 +3244,7 @@ is essential to perform efficient parallel processing on multi-cores computers.
    - Multithreading rely on ``threading`` module.
    - Multiprocessing rely on ``multiprocessing`` module.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1247-1253
+.. GENERATED FROM PYTHON SOURCE LINES 1300-1306
 
 **Example: Random forest**
 
@@ -3131,7 +3253,7 @@ on bootstrapped samples.
 
 Toy dataset
 
-.. GENERATED FROM PYTHON SOURCE LINES 1253-1268
+.. GENERATED FROM PYTHON SOURCE LINES 1306-1321
 
 .. code-block:: Python
 
@@ -3157,17 +3279,17 @@ Toy dataset
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1269-1272
+.. GENERATED FROM PYTHON SOURCE LINES 1322-1325
 
 Random forest algorithm:
 (i) In parallel, fit decision trees on bootstrapped data samples. Make predictions.
 (ii) Majority vote on predictions
 
-.. GENERATED FROM PYTHON SOURCE LINES 1274-1275
+.. GENERATED FROM PYTHON SOURCE LINES 1327-1328
 
 1. In parallel, fit decision trees on bootstrapped data sample. Make predictions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1275-1286
+.. GENERATED FROM PYTHON SOURCE LINES 1328-1339
 
 .. code-block:: Python
 
@@ -3189,11 +3311,11 @@ Random forest algorithm:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1287-1288
+.. GENERATED FROM PYTHON SOURCE LINES 1340-1341
 
 Independent runs of decision tree, see variability of predictions
 
-.. GENERATED FROM PYTHON SOURCE LINES 1288-1293
+.. GENERATED FROM PYTHON SOURCE LINES 1341-1346
 
 .. code-block:: Python
 
@@ -3210,20 +3332,20 @@ Independent runs of decision tree, see variability of predictions
 
  .. code-block:: none
 
+    0.64
     0.63
-    0.68
-    0.63
-    0.63
-    0.67
+    0.66
+    0.62
+    0.65
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1294-1295
+.. GENERATED FROM PYTHON SOURCE LINES 1347-1348
 
 2. Majority vote on predictions
 
-.. GENERATED FROM PYTHON SOURCE LINES 1295-1305
+.. GENERATED FROM PYTHON SOURCE LINES 1348-1358
 
 .. code-block:: Python
 
@@ -3244,13 +3366,13 @@ Independent runs of decision tree, see variability of predictions
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1306-1309
+.. GENERATED FROM PYTHON SOURCE LINES 1359-1362
 
 **Sequential execution**
 
 Sequentially fit decision tree on bootstrapped samples, then apply majority vote
 
-.. GENERATED FROM PYTHON SOURCE LINES 1309-1319
+.. GENERATED FROM PYTHON SOURCE LINES 1362-1372
 
 .. code-block:: Python
 
@@ -3273,18 +3395,18 @@ Sequentially fit decision tree on bootstrapped samples, then apply majority vote
  .. code-block:: none
 
     Balanced Accuracy: 0.63
-    Sequential execution, elapsed time: 1.3796963691711426
+    Sequential execution, elapsed time: 1.3636796474456787
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1320-1323
+.. GENERATED FROM PYTHON SOURCE LINES 1373-1376
 
 **Multithreading**
 
 Concurrent (parallel) execution of the function with two threads.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1323-1348
+.. GENERATED FROM PYTHON SOURCE LINES 1376-1401
 
 .. code-block:: Python
 
@@ -3321,13 +3443,13 @@ Concurrent (parallel) execution of the function with two threads.
 
  .. code-block:: none
 
-    Balanced Accuracy: 0.62
-    Concurrent execution with threads, elapsed time: 0.7034385204315186
+    Balanced Accuracy: 0.64
+    Concurrent execution with threads, elapsed time: 0.6563949584960938
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1349-1364
+.. GENERATED FROM PYTHON SOURCE LINES 1402-1417
 
 **Multiprocessing**
 
@@ -3345,7 +3467,7 @@ different processes, including sharing over a network between processes
 running on different machines. A manager object controls a server process
 which manages shared objects.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1364-1388
+.. GENERATED FROM PYTHON SOURCE LINES 1417-1441
 
 .. code-block:: Python
 
@@ -3382,12 +3504,12 @@ which manages shared objects.
  .. code-block:: none
 
     Balanced Accuracy: 0.64
-    Concurrent execution with processes, elapsed time: 0.6105175018310547
+    Concurrent execution with processes, elapsed time: 0.6514365673065186
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1389-1407
+.. GENERATED FROM PYTHON SOURCE LINES 1442-1460
 
 ``Pool()`` of **workers (processes or Jobs)** for concurrent (parallel) execution of multiples
 tasks.
@@ -3408,7 +3530,7 @@ to the process pool does not block, allowing the caller that issued the task to 
 3. Wait for all jobs to complete `pool.join()`
 4. Collect the results
 
-.. GENERATED FROM PYTHON SOURCE LINES 1407-1435
+.. GENERATED FROM PYTHON SOURCE LINES 1460-1488
 
 .. code-block:: Python
 
@@ -3449,12 +3571,12 @@ to the process pool does not block, allowing the caller that issued the task to 
  .. code-block:: none
 
     Balanced Accuracy: 0.64
-    Concurrent execution with processes, elapsed time: 1.761357069015503
+    Concurrent execution with processes, elapsed time: 1.8547492027282715
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1436-1483
+.. GENERATED FROM PYTHON SOURCE LINES 1489-1536
 
 Scripts and argument parsing
 -----------------------------
@@ -3504,13 +3626,13 @@ Example, the word count script ::
            df = pd.DataFrame([[k, count[k]] for k in count], columns=["word", "count"])
            df.to_csv(options.output, index=False)
 
-.. GENERATED FROM PYTHON SOURCE LINES 1485-1488
+.. GENERATED FROM PYTHON SOURCE LINES 1538-1541
 
 Networking
 ----------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1488-1491
+.. GENERATED FROM PYTHON SOURCE LINES 1541-1544
 
 .. code-block:: Python
 
@@ -3524,16 +3646,16 @@ Networking
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1492-1494
+.. GENERATED FROM PYTHON SOURCE LINES 1545-1547
 
 FTP
 ~~~
 
-.. GENERATED FROM PYTHON SOURCE LINES 1497-1498
+.. GENERATED FROM PYTHON SOURCE LINES 1550-1551
 
 FTP with ``ftplib``
 
-.. GENERATED FROM PYTHON SOURCE LINES 1498-1511
+.. GENERATED FROM PYTHON SOURCE LINES 1551-1564
 
 .. code-block:: Python
 
@@ -3567,11 +3689,11 @@ FTP with ``ftplib``
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1512-1513
+.. GENERATED FROM PYTHON SOURCE LINES 1565-1566
 
 FTP file download with ``urllib``
 
-.. GENERATED FROM PYTHON SOURCE LINES 1513-1519
+.. GENERATED FROM PYTHON SOURCE LINES 1566-1572
 
 .. code-block:: Python
 
@@ -3590,17 +3712,17 @@ FTP file download with ``urllib``
  .. code-block:: none
 
 
-    ('/tmp/README2.md', <email.message.Message object at 0x733805637390>)
+    ('/tmp/README2.md', <email.message.Message object at 0x7a05a10ea490>)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1520-1523
+.. GENERATED FROM PYTHON SOURCE LINES 1573-1576
 
 HTTP
 ~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1523-1526
+.. GENERATED FROM PYTHON SOURCE LINES 1576-1579
 
 .. code-block:: Python
 
@@ -3614,13 +3736,13 @@ HTTP
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1527-1530
+.. GENERATED FROM PYTHON SOURCE LINES 1580-1583
 
 Sockets
 ~~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1530-1533
+.. GENERATED FROM PYTHON SOURCE LINES 1583-1586
 
 .. code-block:: Python
 
@@ -3634,13 +3756,13 @@ Sockets
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1534-1537
+.. GENERATED FROM PYTHON SOURCE LINES 1587-1590
 
 xmlrpc
 ~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1537-1541
+.. GENERATED FROM PYTHON SOURCE LINES 1590-1594
 
 .. code-block:: Python
 
@@ -3655,7 +3777,7 @@ xmlrpc
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1542-1565
+.. GENERATED FROM PYTHON SOURCE LINES 1595-1618
 
 Object Oriented Programming (OOP)
 ---------------------------------
@@ -3681,7 +3803,7 @@ Object Oriented Programming (OOP)
    called on 2 objects of 2 different classes will behave differently.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1565-1590
+.. GENERATED FROM PYTHON SOURCE LINES 1618-1643
 
 .. code-block:: Python
 
@@ -3717,11 +3839,11 @@ Object Oriented Programming (OOP)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1591-1592
+.. GENERATED FROM PYTHON SOURCE LINES 1644-1645
 
 Object creation
 
-.. GENERATED FROM PYTHON SOURCE LINES 1592-1595
+.. GENERATED FROM PYTHON SOURCE LINES 1645-1648
 
 .. code-block:: Python
 
@@ -3735,11 +3857,11 @@ Object creation
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1596-1597
+.. GENERATED FROM PYTHON SOURCE LINES 1649-1650
 
 Call a method of the object
 
-.. GENERATED FROM PYTHON SOURCE LINES 1597-1600
+.. GENERATED FROM PYTHON SOURCE LINES 1650-1653
 
 .. code-block:: Python
 
@@ -3759,11 +3881,11 @@ Call a method of the object
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1601-1602
+.. GENERATED FROM PYTHON SOURCE LINES 1654-1655
 
 More sophisticated use
 
-.. GENERATED FROM PYTHON SOURCE LINES 1602-1615
+.. GENERATED FROM PYTHON SOURCE LINES 1655-1668
 
 .. code-block:: Python
 
@@ -3794,7 +3916,7 @@ More sophisticated use
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1616-1628
+.. GENERATED FROM PYTHON SOURCE LINES 1669-1681
 
 Style guide for Python programming
 ----------------------------------
@@ -3809,7 +3931,7 @@ See `PEP 8 <https://www.python.org/dev/peps/pep-0008/>`_
 - Function and Variable Names: ``lower_case_with_underscores``
 - Class Names: ``CapitalizedWords`` (aka: ``CamelCase``)
 
-.. GENERATED FROM PYTHON SOURCE LINES 1631-1643
+.. GENERATED FROM PYTHON SOURCE LINES 1684-1696
 
 Documenting
 -----------
@@ -3824,7 +3946,7 @@ Documenting = comments + docstrings (Python documentation string)
 
 Docstrings for functions (same for classes and methods):
 
-.. GENERATED FROM PYTHON SOURCE LINES 1643-1670
+.. GENERATED FROM PYTHON SOURCE LINES 1696-1723
 
 .. code-block:: Python
 
@@ -3889,7 +4011,7 @@ Docstrings for functions (same for classes and methods):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1671-1682
+.. GENERATED FROM PYTHON SOURCE LINES 1724-1735
 
 Docstrings for scripts:
 
@@ -3903,7 +4025,7 @@ At the begining of a script add a pream::
        Some description
        """
 
-.. GENERATED FROM PYTHON SOURCE LINES 1685-1690
+.. GENERATED FROM PYTHON SOURCE LINES 1738-1743
 
 Modules and packages
 --------------------
@@ -3911,7 +4033,7 @@ Modules and packages
 Python `packages and modules <https://docs.python.org/3/tutorial/modules.html>`_
 structure python code into modular "libraries" to be shared.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1692-1697
+.. GENERATED FROM PYTHON SOURCE LINES 1745-1750
 
 Package
 ~~~~~~~
@@ -3919,7 +4041,7 @@ Package
 Packages are a way of structuring Python’s module namespace by using “dotted module names”.
 A package is a directory (here, ``stat_pkg``) containing a ``__init__.py`` file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1699-1709
+.. GENERATED FROM PYTHON SOURCE LINES 1752-1762
 
 Example, ``package``
 ::
@@ -3932,7 +4054,7 @@ The ``__init__.py`` can be empty.
 Or it can be used to define the package API, i.e., the modules (``*.py`` files)
 that are exported and those that remain internal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 1711-1719
+.. GENERATED FROM PYTHON SOURCE LINES 1764-1772
 
 Example, file ``stat_pkg/__init__.py``
 ::
@@ -3943,7 +4065,7 @@ Example, file ``stat_pkg/__init__.py``
     # 2) Make them visible in the package
     __all__ = ["make_regression"]
 
-.. GENERATED FROM PYTHON SOURCE LINES 1722-1733
+.. GENERATED FROM PYTHON SOURCE LINES 1775-1786
 
 Module
 ~~~~~~
@@ -3957,12 +4079,12 @@ Example, ``stat_pkg/datasets_mod.py``
         ...
         return X, y, coef
 
-.. GENERATED FROM PYTHON SOURCE LINES 1736-1738
+.. GENERATED FROM PYTHON SOURCE LINES 1789-1791
 
 Usage
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1738-1744
+.. GENERATED FROM PYTHON SOURCE LINES 1791-1797
 
 .. code-block:: Python
 
@@ -3985,7 +4107,7 @@ Usage
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1745-1765
+.. GENERATED FROM PYTHON SOURCE LINES 1798-1818
 
 The search path
 ~~~~~~~~~~~~~~~
@@ -4008,7 +4130,7 @@ You can modify ``PYTHONPATH`` by any method, or access it via ``sys`` package, e
     import sys
     sys.path.append("/home/ed203246/git/pystatsml/python_lang")
 
-.. GENERATED FROM PYTHON SOURCE LINES 1767-1778
+.. GENERATED FROM PYTHON SOURCE LINES 1820-1831
 
 Unit testing
 ------------
@@ -4022,7 +4144,7 @@ Unit testing is a framework to asses to those two points. See sources:
 - `Unit testing reference doc <https://docs.python.org/3/library/unittest.html>`_
 - `Getting Started With Testing in Python <https://realpython.com/python-testing/>`_
 
-.. GENERATED FROM PYTHON SOURCE LINES 1780-1815
+.. GENERATED FROM PYTHON SOURCE LINES 1833-1868
 
 unittest: test your code
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -4060,7 +4182,7 @@ Example:
     if __name__ == '__main__':
         unittest.main()
 
-.. GENERATED FROM PYTHON SOURCE LINES 1817-1843
+.. GENERATED FROM PYTHON SOURCE LINES 1870-1896
 
 2) Run the tests  (test runner)
 
@@ -4089,7 +4211,7 @@ as a module.
 
    python -m unittest discover -v -s tests
 
-.. GENERATED FROM PYTHON SOURCE LINES 1845-1908
+.. GENERATED FROM PYTHON SOURCE LINES 1898-1961
 
 Doctest: add unit tests in docstring
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -4155,18 +4277,18 @@ Test failed with the output:
     ***Test Failed*** 1 failures.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1910-1912
+.. GENERATED FROM PYTHON SOURCE LINES 1963-1965
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1916-1919
+.. GENERATED FROM PYTHON SOURCE LINES 1969-1972
 
 Exercises
 ---------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1922-1931
+.. GENERATED FROM PYTHON SOURCE LINES 1975-1984
 
 Exercise 1: functions
 ~~~~~~~~~~~~~~~~~~~~~
@@ -4178,7 +4300,7 @@ If the operation is misspecified, return a error message Ex: ``calc(4,5,"*")`` r
 message
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1934-1945
+.. GENERATED FROM PYTHON SOURCE LINES 1987-1998
 
 Exercise 2: functions + list + loop
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -4192,7 +4314,7 @@ Remove all duplicate values (adjacent or not) Ex: ``[1, 2, 2, 3, 2]``
 returns ``[1, 2, 3]``
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 1948-1963
+.. GENERATED FROM PYTHON SOURCE LINES 2001-2016
 
 Exercise 3: File I/O
 ~~~~~~~~~~~~~~~~~~~~
@@ -4210,7 +4332,7 @@ Use:
 - regular expression
 - argparse (https://docs.python.org/3/howto/argparse.html)
 
-.. GENERATED FROM PYTHON SOURCE LINES 1966-1985
+.. GENERATED FROM PYTHON SOURCE LINES 2019-2038
 
 Exercise 4: OOP
 ~~~~~~~~~~~~~~~
@@ -4235,7 +4357,7 @@ Exercise 4: OOP
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.373 seconds)
+   **Total running time of the script:** (0 minutes 8.467 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_python_lang.py:

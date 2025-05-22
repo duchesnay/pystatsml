@@ -991,37 +991,35 @@ variance structure, using :math:`k` variance components, modeling the
 non-independance between the observations. In our case with only one
 component we get:
 
-.. raw:: latex
-
-   \begin{align*}
-   \mathbf{V} &=
-   \begin{bmatrix}
-   \sigma_k& \sigma_k & 0 & 0 & 0 & 0\\
-   \sigma_k& \sigma_k & 0 & 0 & 0 & 0\\
-   0& 0 & \sigma_k & \sigma_k & 0 & 0\\
-   0& 0 & \sigma_k & \sigma_k & 0 & 0\\
-   0& 0 & 0 & 0 & \sigma_k & \sigma_k\\
-   0& 0 & 0 & 0 & \sigma_k & \sigma_k\\
-   \end{bmatrix}
-   +
-   \begin{bmatrix}
-   \sigma& 0 & 0 & 0 & 0 & 0\\
-   0& \sigma & 0 & 0 & 0 & 0\\
-   0& 0 & \sigma & 0 & 0 & 0\\
-   0& 0 & 0 & \sigma & 0 & 0\\
-   0& 0 & 0 & 0 & \sigma & 0\\
-   0& 0 & 0 & 0 & 0 & \sigma\\
-   \end{bmatrix}\\
-   &=
-   \begin{bmatrix}
-   \sigma_k+\sigma& \sigma_k & 0 & 0 & 0 & 0\\
-   \sigma_k& \sigma_k+\sigma & 0 & 0 & 0 & 0\\
-   0& 0 & \sigma_k+\sigma & \sigma_k & 0 & 0\\
-   0& 0 & \sigma_k & \sigma_k+\sigma & 0 & 0\\
-   0& 0 & 0 & 0 & \sigma_k+\sigma & \sigma_k\\
-   0& 0 & 0 & 0 & \sigma_k & \sigma_k+\sigma\\
-   \end{bmatrix}
-   \end{align*}
+:raw-latex:`\begin{align*}
+\mathbf{V} &=
+\begin{bmatrix}
+\sigma_k& \sigma_k & 0 & 0 & 0 & 0\\
+\sigma_k& \sigma_k & 0 & 0 & 0 & 0\\
+0& 0 & \sigma_k & \sigma_k & 0 & 0\\
+0& 0 & \sigma_k & \sigma_k & 0 & 0\\
+0& 0 & 0 & 0 & \sigma_k & \sigma_k\\
+0& 0 & 0 & 0 & \sigma_k & \sigma_k\\
+\end{bmatrix}
++
+\begin{bmatrix}
+\sigma& 0 & 0 & 0 & 0 & 0\\
+0& \sigma & 0 & 0 & 0 & 0\\
+0& 0 & \sigma & 0 & 0 & 0\\
+0& 0 & 0 & \sigma & 0 & 0\\
+0& 0 & 0 & 0 & \sigma & 0\\
+0& 0 & 0 & 0 & 0 & \sigma\\
+\end{bmatrix}\\
+&=
+\begin{bmatrix}
+\sigma_k+\sigma& \sigma_k & 0 & 0 & 0 & 0\\
+\sigma_k& \sigma_k+\sigma & 0 & 0 & 0 & 0\\
+0& 0 & \sigma_k+\sigma & \sigma_k & 0 & 0\\
+0& 0 & \sigma_k & \sigma_k+\sigma & 0 & 0\\
+0& 0 & 0 & 0 & \sigma_k+\sigma & \sigma_k\\
+0& 0 & 0 & 0 & \sigma_k & \sigma_k+\sigma\\
+\end{bmatrix}
+\end{align*}`
 
 **The model to be minimized**
 

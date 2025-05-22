@@ -772,17 +772,17 @@ Stats with statsmodels
  .. code-block:: none
 
     --- In control population ---
-                                 OLS Regression Results                            
-    ===============================================================================
-    Dep. Variable:                    gm_f   R-squared:                       0.106
-    Model:                             OLS   Adj. R-squared:                  0.095
-    Method:                  Least Squares   F-statistic:                     9.929
-    Date:              jeu., 03 avril 2025   Prob (F-statistic):            0.00226
-    Time:                         12:17:57   Log-Likelihood:                 159.34
-    No. Observations:                   86   AIC:                            -314.7
-    Df Residuals:                       84   BIC:                            -309.8
-    Df Model:                            1                                         
-    Covariance Type:             nonrobust                                         
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                   gm_f   R-squared:                       0.106
+    Model:                            OLS   Adj. R-squared:                  0.095
+    Method:                 Least Squares   F-statistic:                     9.929
+    Date:               jeu., 08 mai 2025   Prob (F-statistic):            0.00226
+    Time:                        02:16:34   Log-Likelihood:                 159.34
+    No. Observations:                  86   AIC:                            -314.7
+    Df Residuals:                      84   BIC:                            -309.8
+    Df Model:                           1                                         
+    Covariance Type:            nonrobust                                         
     ==============================================================================
                      coef    std err          t      P>|t|      [0.025      0.975]
     ------------------------------------------------------------------------------
@@ -799,17 +799,17 @@ Stats with statsmodels
     [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
     Age explains 10.57% of the grey matter fraction variance
     --- In patient population ---
-                                 OLS Regression Results                            
-    ===============================================================================
-    Dep. Variable:                    gm_f   R-squared:                       0.280
-    Model:                             OLS   Adj. R-squared:                  0.275
-    Method:                  Least Squares   F-statistic:                     60.16
-    Date:              jeu., 03 avril 2025   Prob (F-statistic):           1.09e-12
-    Time:                         12:17:57   Log-Likelihood:                 289.38
-    No. Observations:                  157   AIC:                            -574.8
-    Df Residuals:                      155   BIC:                            -568.7
-    Df Model:                            1                                         
-    Covariance Type:             nonrobust                                         
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                   gm_f   R-squared:                       0.280
+    Model:                            OLS   Adj. R-squared:                  0.275
+    Method:                 Least Squares   F-statistic:                     60.16
+    Date:               jeu., 08 mai 2025   Prob (F-statistic):           1.09e-12
+    Time:                        02:16:34   Log-Likelihood:                 289.38
+    No. Observations:                 157   AIC:                            -574.8
+    Df Residuals:                     155   BIC:                            -568.7
+    Df Model:                           1                                         
+    Covariance Type:            nonrobust                                         
     ==============================================================================
                      coef    std err          t      P>|t|      [0.025      0.975]
     ------------------------------------------------------------------------------
@@ -908,17 +908,17 @@ Stats with statsmodels
 
  .. code-block:: none
 
-                                 OLS Regression Results                            
-    ===============================================================================
-    Dep. Variable:                     age   R-squared:                       0.006
-    Model:                             OLS   Adj. R-squared:                  0.002
-    Method:                  Least Squares   F-statistic:                     1.478
-    Date:              jeu., 03 avril 2025   Prob (F-statistic):              0.225
-    Time:                         12:17:57   Log-Likelihood:                -949.69
-    No. Observations:                  243   AIC:                             1903.
-    Df Residuals:                      241   BIC:                             1910.
-    Df Model:                            1                                         
-    Covariance Type:             nonrobust                                         
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:                    age   R-squared:                       0.006
+    Model:                            OLS   Adj. R-squared:                  0.002
+    Method:                 Least Squares   F-statistic:                     1.478
+    Date:               jeu., 08 mai 2025   Prob (F-statistic):              0.225
+    Time:                        02:16:34   Log-Likelihood:                -949.69
+    No. Observations:                 243   AIC:                             1903.
+    Df Residuals:                     241   BIC:                             1910.
+    Df Model:                           1                                         
+    Covariance Type:            nonrobust                                         
     ====================================================================================
                            coef    std err          t      P>|t|      [0.025      0.975]
     ------------------------------------------------------------------------------------
@@ -1093,7 +1093,7 @@ atrophy process in patient population faster than in the control population.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.003 seconds)
+   **Total running time of the script:** (0 minutes 2.668 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_stat_univ_lab_brain-volume.py:

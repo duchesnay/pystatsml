@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:01.989** total execution time for 14 files **from all galleries**:
+**00:01.056** total execution time for 14 files **from all galleries**:
 
 .. container::
 
@@ -32,8 +32,8 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_gallery_ml_lab_face_recognition.py` (``labs/ml_lab_face_recognition.py``)
-     - 00:01.989
+   * - :ref:`sphx_glr_auto_gallery_ensemble_learning.py` (``ml_supervised/ensemble_learning.py``)
+     - 00:01.056
      - 0.0
    * - :ref:`sphx_glr_auto_gallery_data_numpy.py` (``data_manipulation/data_numpy.py``)
      - 00:00.000
@@ -47,6 +47,9 @@ Computation times
    * - :ref:`sphx_glr_auto_gallery_data_pandas_solutions.py` (``data_manipulation/data_pandas_solutions.py``)
      - 00:00.000
      - 0.0
+   * - :ref:`sphx_glr_auto_gallery_ml_supervised_classification_pipelines.py` (``labs/ml_supervised_classification_pipelines.py``)
+     - 00:00.000
+     - 0.0
    * - :ref:`sphx_glr_auto_gallery_stat_univ_lab_brain-volume.py` (``labs/stat_univ_lab_brain-volume.py``)
      - 00:00.000
      - 0.0
@@ -54,9 +57,6 @@ Computation times
      - 00:00.000
      - 0.0
    * - :ref:`sphx_glr_auto_gallery_resampling_solution.py` (``ml_model_selection_evaluation/resampling_solution.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_auto_gallery_ensemble_learning.py` (``ml_supervised/ensemble_learning.py``)
      - 00:00.000
      - 0.0
    * - :ref:`sphx_glr_auto_gallery_kernel_svm.py` (``ml_supervised/kernel_svm.py``)

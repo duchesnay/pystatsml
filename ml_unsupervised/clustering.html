@@ -109,6 +109,16 @@ whichever value of <span class="math notranslate nohighlight">\(k\)</span> gives
 <span class="math notranslate nohighlight">\(||x_i - \mu_k||^2\)</span> . In other words, we simply assign the
 <span class="math notranslate nohighlight">\(i\)</span>th data point to the closest cluster centre. More formally,
 this can be expressed as</p>
+<dl>
+<dt>:raw-latex:<a href="#id1"><span class="problematic" id="id2">`</span></a>begin{equation}</dt><dd><dl class="simple">
+<dt>r_{ik}=begin{cases}</dt><dd><p>1, &amp; text{if } k = argmin_j ||x_i - mu_j||^2.\
+0, &amp; text{otherwise}.</p>
+</dd>
+</dl>
+<p>end{cases}</p>
+</dd>
+</dl>
+<p>end{equation}`</p>
 <p>Now consider the optimization of the <span class="math notranslate nohighlight">\(\mu_k\)</span> with the
 <span class="math notranslate nohighlight">\(r_{ik}\)</span> held fixed. The objective function <span class="math notranslate nohighlight">\(J\)</span> is a
 quadratic function of <span class="math notranslate nohighlight">\(\mu_k\)</span>, and it can be minimized by setting
@@ -240,6 +250,12 @@ classes sum to one <span class="math notranslate nohighlight">\(\sum_k p(k \,|\,
 is the conditional probability of class <span class="math notranslate nohighlight">\(k\)</span> given <span class="math notranslate nohighlight">\(x\)</span>:
 <span class="math notranslate nohighlight">\(p(k \,|\, x)\)</span> (sometimes called the posterior). It can be
 computed using Bayes’ rule:</p>
+<p>:raw-latex:<a href="#id3"><span class="problematic" id="id4">`</span></a>begin{align}
+p(k ,|, x) &amp;= frac{p(x ,|, k)p(k)}{p(x)}\</p>
+<blockquote>
+<div><p>&amp;= frac{mathcal{N}(x ,|, mu_k, Sigma_k)p(k)}{sum_{k=1}^K mathcal{N}(x ,|, mu_k, Sigma_k)p(k)}</p>
+</div></blockquote>
+<p>end{align}`</p>
 <p>Since the class parameters, <span class="math notranslate nohighlight">\(p(k)\)</span>, <span class="math notranslate nohighlight">\(\mu_k\)</span> and
 <span class="math notranslate nohighlight">\(\Sigma_k\)</span>, depend on the responsibilities <span class="math notranslate nohighlight">\(p(k \,|\, x)\)</span>
 and the responsibilities depend on class parameters, we need a two-step
@@ -262,6 +278,11 @@ for each class <span class="math notranslate nohighlight">\(k\)</span> using the
 <li><p><strong>M step</strong>. For each class, re-estimate the parameters using the
 current responsibilities</p></li>
 </ol>
+<p><a href="#id5"><span class="problematic" id="id6">:raw-latex:`\begin{align}
+\mu_k^{\text{new}}    &amp;= \frac{1}{N_k} \sum_{i=1}^N p(k \,|\, x_i) x_i\\
+\Sigma_k^{\text{new}} &amp;= \frac{1}{N_k} \sum_{i=1}^N p(k \,|\, x_i) (x_i - \mu_k^{\text{new}}) (x_i - \mu_k^{\text{new}})^T\\
+p^{\text{new}}(k)     &amp;= \frac{N_k}{N}
+\end{align}`</span></a></p>
 <ol class="arabic simple" start="3">
 <li><p>Evaluate the log-likelihood</p></li>
 </ol>
@@ -469,8 +490,8 @@ clusters and is commonly used for hierarchical clustering.</p></li>
 </div>
 <img alt="../_images/clustering_12_1.png" src="../_images/clustering_12_1.png" />
 </section>
-<section id="id1">
-<h2>Exercises<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<section id="id7">
+<h2>Exercises<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
 <p>Perform clustering of the iris dataset based on all variables using
 Gaussian mixture models. Use PCA to visualize clusters.</p>
 </section>
@@ -501,7 +522,7 @@ Gaussian mixture models. Use PCA to visualize clusters.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#hierarchical-clustering">Hierarchical clustering</a></li>
-<li><a class="reference internal" href="#id1">Exercises</a></li>
+<li><a class="reference internal" href="#id7">Exercises</a></li>
 </ul>
 </li>
 </ul>

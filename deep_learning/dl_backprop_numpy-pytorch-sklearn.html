@@ -66,16 +66,49 @@ examples</a></p></li>
 <h2>Backpropagation and chain rule<a class="headerlink" href="#backpropagation-and-chain-rule" title="Link to this heading">¶</a></h2>
 <p>We will set up a two layer network:</p>
 <div class="math notranslate nohighlight">
-\[\mathbf{Y} = \text{max}(\mathbf{X} \mathbf{W}^{(1)}, 0) \mathbf{W}^{(2)}\]</div>
+\[\mathbf{y} = \mathbf{W}^{(2)} \text{max}(\mathbf{W}^{(1)}\mathbf{x}, 0)\]</div>
 <p>A fully-connected ReLU network with one hidden layer and no biases,
-trained to predict y from x using Euclidean error.</p>
-<p><strong>Forward pass</strong> with <strong>local</strong> partial derivatives of output given
-inputs:</p>
-<p><strong>Backward pass</strong>: compute gradient of the loss given each parameters
+trained to predict <span class="math notranslate nohighlight">\(y\)</span> from <span class="math notranslate nohighlight">\(x\)</span> using Euclidean error.</p>
+<p><strong>1. Forward pass</strong> can be decomposed as:</p>
+<div class="math notranslate nohighlight">
+\[x       \rightarrow \boxed{z^{(1)} = x^\top w^{(1)}} \rightarrow \boxed{h^{(1)} = \max(z^{(1)}, 0)} \rightarrow \boxed{z^{(2)}=h^{(1)\top}w^{(2)}} \rightarrow   \boxed{L(z^{(2)}, y) = (z^{(2)} - y)^2}\]</div>
+<p>With <strong>local</strong> partial derivatives of output given inputs for each the
+four steps:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(z^{(1)} = x^\top w^{(1)}\)</span></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial z^{(1)}}{\partial w^{(1)}} = x\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial z^{(1)}}{\partial x} = w^{(1)}\)</span></p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\(h^{(1)} = \max(z^{(1)}, 0)\)</span></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial h^{(1)}}{\partial z^{(1)}} = \{^{1~\text{if}~z^{(1)}&gt;0}_{\text{else}~0}\)</span></p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\(z^{(2)}=h^{(1)\top}w^{(2)}\)</span></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial z^{(2)} }{\partial w^{(2)}}=h^{(1)}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial z^{(2)} }{\partial h^{(1)}}= w^{(2)}\)</span></p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\(L(z^{(2)}, y) = (z^{(2)} - y)^2\)</span></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\frac{\partial L}{\partial z^{(2)}}=2(z^{(2)}-y)\)</span></p></li>
+</ul>
+</li>
+</ol>
+<p><strong>2. Backward pass</strong>: compute gradient of the loss given each parameters
 vectors applying the chain rule from the loss downstream to the
 parameters:</p>
 <p>For <span class="math notranslate nohighlight">\(w^{(2)}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial L}{\partial w^{(2)}} = \frac{\partial L}{\partial z^{(2)}} \frac{\partial z^{(2)}}{\partial w^{(2)}}
+                                    = 2(z^{(2)}-y) h^{(1)}\]</div>
 <p>For <span class="math notranslate nohighlight">\(w^{(1)}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial L}{\partial w^{(1)}} = \frac{\partial L}{\partial z^{(2)}} \frac{\partial z^{(2)}}{\partial h^{(1)}} \frac{\partial h^{(1)}}{\partial z^{(1)}} \frac{\partial z^{(1)}}{\partial w^{(1)}}
+                                    = 2(z^{(2)}-y) w^{(2)} \{^{1~\text{if}~z^{(1)}&gt;0}_{\text{else}~0} x\]</div>
 <section id="recap-vector-derivatives">
 <h3>Recap: Vector derivatives<a class="headerlink" href="#recap-vector-derivatives" title="Link to this heading">¶</a></h3>
 <p>Given a function <span class="math notranslate nohighlight">\(z = x`w\)</span> with <span class="math notranslate nohighlight">\(z\)</span> the output, <span class="math notranslate nohighlight">\(x\)</span>
@@ -89,6 +122,14 @@ the input and <span class="math notranslate nohighlight">\(w\)</span> the coeffi
 <span class="math notranslate nohighlight">\(w \in \mathbb{R}^N\)</span>. The derivative is the <strong>Gradient</strong> of
 partial derivative:
 <span class="math notranslate nohighlight">\(\frac{\partial z}{\partial w} \in \mathbb{R}^N\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{\partial z}{\partial w} = \nabla_w z = \begin{bmatrix}
+       \frac{\partial z}{\partial w_1} \\
+       \vdots \\
+       \frac{\partial z}{\partial w_i} \\
+       \vdots \\
+       \frac{\partial z}{\partial w_N}
+     \end{bmatrix}\end{split}\]</div>
 <p>For each element <span class="math notranslate nohighlight">\(w_i\)</span> of <span class="math notranslate nohighlight">\(w\)</span>, if it changes by a small
 amount then how much will y change?</p>
 <p><strong>Vector to Vector</strong>: <span class="math notranslate nohighlight">\(w \in \mathbb{R}^N, z \in \mathbb{R}^M\)</span>.
@@ -130,7 +171,6 @@ the current update is the current upstream gradient time the input.</p></li>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
 <span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">)</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
 </section>
@@ -171,6 +211,15 @@ sepal_width])</p>
                                              <span class="n">train_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">label_iris</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ipykernel_181680</span><span class="o">/</span><span class="mf">2720649438.</span><span class="n">py</span><span class="p">:</span><span class="mi">5</span><span class="p">:</span> <span class="n">SettingWithCopyWarning</span><span class="p">:</span>
+<span class="n">A</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">on</span> <span class="n">a</span> <span class="n">copy</span> <span class="n">of</span> <span class="n">a</span> <span class="nb">slice</span> <span class="kn">from</span><span class="w"> </span><span class="nn">a</span> <span class="n">DataFrame</span><span class="o">.</span>
+<span class="n">Try</span> <span class="n">using</span> <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row_indexer</span><span class="p">,</span><span class="n">col_indexer</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span> <span class="n">instead</span>
+
+<span class="n">See</span> <span class="n">the</span> <span class="n">caveats</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">documentation</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pandas</span><span class="o">.</span><span class="n">pydata</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">pandas</span><span class="o">-</span><span class="n">docs</span><span class="o">/</span><span class="n">stable</span><span class="o">/</span><span class="n">user_guide</span><span class="o">/</span><span class="n">indexing</span><span class="o">.</span><span class="n">html</span><span class="c1">#returning-a-view-versus-a-copy</span>
+  <span class="n">df</span><span class="p">[</span><span class="s1">&#39;species_n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">species</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;versicolor&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;virginica&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_5_1.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_5_1.png" />
 </section>
 <section id="backpropagation-with-numpy">
 <h3>Backpropagation with Numpy<a class="headerlink" href="#backpropagation-with-numpy" title="Link to this heading">¶</a></h3>
@@ -233,6 +282,14 @@ loss, and backward pass.</p>
              <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">8320.86283567932</span> <span class="mf">566.4003298191709</span>
+<span class="mi">10</span> <span class="mf">69.1144254443256</span> <span class="mf">78.183681464354</span>
+<span class="mi">20</span> <span class="mf">55.983394365066715</span> <span class="mf">77.33285806985458</span>
+<span class="mi">30</span> <span class="mf">50.57373709813517</span> <span class="mf">77.19249121024394</span>
+<span class="mi">40</span> <span class="mf">47.19138471346897</span> <span class="mf">76.77478593928662</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_7_1.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_7_1.png" />
 </section>
 <section id="backpropagation-with-pytorch-tensors">
 <h3>Backpropagation with PyTorch Tensors<a class="headerlink" href="#backpropagation-with-pytorch-tensors" title="Link to this heading">¶</a></h3>
@@ -324,6 +381,14 @@ network:</p>
              <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">4303.93603515625</span> <span class="mf">418.63006591796875</span>
+<span class="mi">10</span> <span class="mf">71.38607025146484</span> <span class="mf">116.78504943847656</span>
+<span class="mi">20</span> <span class="mf">51.27054214477539</span> <span class="mf">87.81427001953125</span>
+<span class="mi">30</span> <span class="mf">45.72554397583008</span> <span class="mf">80.99897003173828</span>
+<span class="mi">40</span> <span class="mf">43.343406677246094</span> <span class="mf">78.32192993164062</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_9_1.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_9_1.png" />
 </section>
 <section id="backpropagation-with-pytorch-tensors-and-autograd">
 <h3>Backpropagation with PyTorch: Tensors and autograd<a class="headerlink" href="#backpropagation-with-pytorch-tensors-and-autograd" title="Link to this heading">¶</a></h3>
@@ -420,6 +485,14 @@ Tensor holding the gradient of <code class="docutils literal notranslate"><span 
              <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">6619.669921875</span> <span class="mf">4738.6064453125</span>
+<span class="mi">10</span> <span class="mf">278.9159851074219</span> <span class="mf">521.75732421875</span>
+<span class="mi">20</span> <span class="mf">93.21061706542969</span> <span class="mf">257.3363037109375</span>
+<span class="mi">30</span> <span class="mf">64.7365493774414</span> <span class="mf">219.1724853515625</span>
+<span class="mi">40</span> <span class="mf">56.20269012451172</span> <span class="mf">206.47886657714844</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_11_1.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_11_1.png" />
 </section>
 <section id="backpropagation-with-pytorch-nn">
 <h3>Backpropagation with PyTorch: nn<a class="headerlink" href="#backpropagation-with-pytorch-nn" title="Link to this heading">¶</a></h3>
@@ -511,6 +584,14 @@ some trainable weights.</p>
              <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">60.84171676635742</span> <span class="mf">65.23538970947266</span>
+<span class="mi">10</span> <span class="mf">42.599857330322266</span> <span class="mf">55.307090759277344</span>
+<span class="mi">20</span> <span class="mf">38.216976165771484</span> <span class="mf">54.05012130737305</span>
+<span class="mi">30</span> <span class="mf">36.2943000793457</span> <span class="mf">54.090911865234375</span>
+<span class="mi">40</span> <span class="mf">35.161956787109375</span> <span class="mf">54.361236572265625</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_13_1.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_13_1.png" />
 </section>
 <section id="backpropagation-with-pytorch-optim">
 <h3>Backpropagation with PyTorch optim<a class="headerlink" href="#backpropagation-with-pytorch-optim" title="Link to this heading">¶</a></h3>
@@ -593,6 +674,14 @@ including SGD+momentum, RMSProp, Adam, etc.</p>
              <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">losses_val</span><span class="p">)),</span> <span class="n">losses_val</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mf">121.76207733154297</span> <span class="mf">104.62301635742188</span>
+<span class="mi">10</span> <span class="mf">81.1495361328125</span> <span class="mf">76.97682189941406</span>
+<span class="mi">20</span> <span class="mf">56.0490837097168</span> <span class="mf">61.42247772216797</span>
+<span class="mi">30</span> <span class="mf">43.4493293762207</span> <span class="mf">55.462921142578125</span>
+<span class="mi">40</span> <span class="mf">38.075889587402344</span> <span class="mf">55.15611267089844</span>
+</pre></div>
+</div>
+<img alt="../_images/dl_backprop_numpy-pytorch-sklearn_15_1.png" src="../_images/dl_backprop_numpy-pytorch-sklearn_15_1.png" />
 </section>
 </section>
 </section>

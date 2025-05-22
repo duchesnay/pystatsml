@@ -55,7 +55,7 @@ Methods</a></p></li>
 <span class="c1"># Statistics</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="c1">#import statsmodels.stats.api as sms</span>
+<span class="c1"># import statsmodels.stats.api as sms</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.stattools</span><span class="w"> </span><span class="kn">import</span> <span class="n">jarque_bera</span>
 
@@ -68,7 +68,7 @@ Methods</a></p></li>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn-v0_8-whitegrid&#39;</span><span class="p">)</span>
 <span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fig_w</span><span class="p">,</span> <span class="n">fig_h</span> <span class="o">*</span> <span class="mf">.5</span><span class="p">)</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="n">colors</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">()</span>
 </pre></div>
 </div>
 <section id="monte-carlo-simulation-of-random-walk-process">
@@ -87,11 +87,11 @@ random walks (trajectories), ie, <span class="math notranslate nohighlight">\(S_
 <span class="math notranslate nohighlight">\(200\)</span></p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># make the example reproducible</span>
 
-<span class="n">n</span> <span class="o">=</span> <span class="mi">200</span> <span class="c1"># trajectory depth</span>
-<span class="n">nsamp</span> <span class="o">=</span> <span class="mi">50000</span> <span class="c1">#nb of trajectories</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># trajectory depth</span>
+<span class="n">nsamp</span> <span class="o">=</span> <span class="mi">50000</span>  <span class="c1"># nb of trajectories</span>
 
 <span class="c1"># X: each row (axis 0) contains one trajectory axis 1</span>
-<span class="c1">#Xn = np.array([np.random.choice(a=[-1, +1], size=n,</span>
+<span class="c1"># Xn = np.array([np.random.choice(a=[-1, +1], size=n,</span>
 <span class="c1">#                                replace=True, p=np.ones(2) / 2)</span>
 <span class="c1">#               for i in range(nsamp)])</span>
 
@@ -102,11 +102,11 @@ random walks (trajectories), ie, <span class="math notranslate nohighlight">\(S_
 <span class="c1"># Sum of random walks (trajectories)</span>
 <span class="n">Sn</span> <span class="o">=</span> <span class="n">Xn</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True Stat. Mean=</span><span class="si">{:.03f}</span><span class="s2">, Sd=</span><span class="si">{:.02f}</span><span class="s2">&quot;</span><span class="o">.</span>\
-    <span class="nb">format</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True Stat. Mean=</span><span class="si">{:.03f}</span><span class="s2">, Sd=</span><span class="si">{:.02f}</span><span class="s2">&quot;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span><span class="p">))</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Est. Stat. Mean=</span><span class="si">{:.03f}</span><span class="s2">, Sd=</span><span class="si">{:.02f}</span><span class="s2">&quot;</span><span class="o">.</span>\
-    <span class="nb">format</span><span class="p">(</span><span class="n">Sn</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">Sn</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Est. Stat. Mean=</span><span class="si">{:.03f}</span><span class="s2">, Sd=</span><span class="si">{:.02f}</span><span class="s2">&quot;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="n">Sn</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">Sn</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span> <span class="n">Stat</span><span class="o">.</span> <span class="n">Mean</span><span class="o">=</span><span class="mf">0.000</span><span class="p">,</span> <span class="n">Sd</span><span class="o">=</span><span class="mf">14.14</span>
@@ -122,13 +122,13 @@ random walks (trajectories), ie, <span class="math notranslate nohighlight">\(S_
 <p>Distribution of <span class="math notranslate nohighlight">\(S_n\)</span> vs <span class="math notranslate nohighlight">\(\mathcal{N}(0, \sqrt(n))\)</span></p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_low</span><span class="p">,</span> <span class="n">x_high</span> <span class="o">=</span> <span class="n">Sn</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">Sn</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">Sn</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">+</span><span class="mi">3</span><span class="o">*</span><span class="n">Sn</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
 <span class="n">h_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">Sn</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="n">x_low</span><span class="p">,</span> <span class="n">x_high</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">43</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-             <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Histogram&quot;</span><span class="p">)</span>
+              <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Histogram&quot;</span><span class="p">)</span>
 
 <span class="n">x_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_low</span><span class="p">,</span> <span class="n">x_high</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 <span class="n">prob_x_range</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x_range</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">Sn</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">scale</span><span class="o">=</span><span class="n">Sn</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_range</span><span class="p">,</span> <span class="n">prob_x_range</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PDF: P(X)&quot;</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="c1">#print(h_)</span>
+<span class="c1"># print(h_)</span>
 </pre></div>
 </div>
 <img alt="../_images/stat_montecarlo_7_0.png" src="../_images/stat_montecarlo_7_0.png" />
@@ -151,181 +151,535 @@ one, providing an estimation of the <em>p-value</em>.</p></li>
 when the distribution of the estimator (under H0) is unknown or
 requires complicated formulas.</p></li>
 </ul>
-<p>Permutation test procedure</p>
 <figure class="align-default" id="id1">
-<img alt="Bootstrapping procedure" src="../_images/stat_random_permutations.png" />
+<img alt="Permutation test procedure" src="../_images/stat_random_permutations.png" />
 <figcaption>
-<p><span class="caption-text">Bootstrapping procedure</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Permutation test procedure</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
-<ol class="arabic simple">
-<li><p>Estimate the observed parameter or statistic
-<span class="math notranslate nohighlight">\(\hat{\theta} = S(X)\)</span> on the initial dataset <span class="math notranslate nohighlight">\(X\)</span> of size
-<span class="math notranslate nohighlight">\(N\)</span>. We call it the observed statistic.</p></li>
-<li><p>Generate <span class="math notranslate nohighlight">\(R\)</span> samples (called randomized samples)
-<span class="math notranslate nohighlight">\([X_1, \ldots X_r, \ldots X_R]\)</span> from the initial dataset by
-permutation of the values between the two samples.</p></li>
-<li><p>Distribution of the estimator under HO: For each random sample
-<span class="math notranslate nohighlight">\(r\)</span>, compute the estimator <span class="math notranslate nohighlight">\(\hat{\theta}_r = S(X_r)\)</span>. The
-set of <span class="math notranslate nohighlight">\(\{\hat{\theta}_r\}\)</span> provides an estimate the
-distribution of <span class="math notranslate nohighlight">\(P(\theta | H0)\)</span> (under the null hypothesis).</p></li>
-<li><p>Compute statistics of the estimator under the null hypothesis using
-randomized estimates <span class="math notranslate nohighlight">\(\hat{\theta}_r\)</span>’s:</p></li>
+<p><strong>1. Estimate the observed parameter or statistic</strong>:</p>
+<div class="math notranslate nohighlight">
+\[T^{\text{obs}}=S(X)\]</div>
+<p>on the initial dataset <span class="math notranslate nohighlight">\(X\)</span> of size <span class="math notranslate nohighlight">\(N\)</span>. We call it the
+observed statistic.</p>
+<p>Application to mean of one sample. Note that for genericity purposes,
+the proposed Python implementation can take an iterable list of arrays
+and calculate several statistics for several variables at once.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="c1"># Can manage two variables, and return two statistics</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c1"># In our case with one variable</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">stat_obs</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="mf">2.5</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">]</span>
+<span class="mf">0.0</span>
+</pre></div>
+</div>
+<p><strong>2. Generate B samples (called randomized samples)</strong>
+<span class="math notranslate nohighlight">\([X_1, \ldots X_b, \ldots X_B]\)</span> from the initial dataset using a
+adapted permutation scheme and compute the estimator (under H0):</p>
+<div class="math notranslate nohighlight">
+\[T^{(b)} = S(X_b).\]</div>
+<p>First, we need a permutation scheme:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">onesample_sign_permutation</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Randomly change the sign of all datsets&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x_</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="n">x_</span>
+            <span class="k">for</span> <span class="n">x_</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># 10 random sign permutation of [-1, 0, +1] and mean calculation</span>
+<span class="c1"># Mean([-1,0,1])= 0 or Mean([1,0,1])= 0.66 or Mean([-1,0,-1])= -0.66</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">stats_rnd</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="o">*</span><span class="n">onesample_sign_permutation</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+             <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats_rnd</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.667</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.667</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Using a parallelized permutation procedure using
+<a class="reference external" href="https://joblib.readthedocs.io/en/stable/">Joblib</a> whose code is
+available
+<a class="reference external" href="https://github.com/duchesnay/pystatsml/blob/master/lib/pystatsml/resampling.py">here</a></p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pystatsml</span><span class="w"> </span><span class="kn">import</span> <span class="n">resampling</span>
+
+<span class="n">stats_rnd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">resampling</span><span class="o">.</span><span class="n">resample_estimate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
+                        <span class="n">resample</span><span class="o">=</span><span class="n">onesample_sign_permutation</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats_rnd</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="mf">0.</span>     <span class="mf">0.667</span>  <span class="mf">0.667</span>  <span class="mf">0.</span>     <span class="mf">0.</span>     <span class="mf">0.667</span>  <span class="mf">0.667</span> <span class="o">-</span><span class="mf">0.667</span>  <span class="mf">0.</span>     <span class="mf">0.</span>   <span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>3. Permutation test: Compute statistics of the estimator</strong> under the
+null hypothesis using randomized estimates <span class="math notranslate nohighlight">\(T^{(b)}\)</span>’s.</p>
+<ul>
+<li><p>Mean (under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\bar{T}_B = \frac{1}{B}\sum_{b=1}^B T^{(b)}\]</div>
+</li>
+<li><p>Standard Error <span class="math notranslate nohighlight">\(\sigma_{T_B}\)</span> (under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\sigma_{T_B} = \sqrt{\frac{1}{B-1}\sum_{b=1}^B (\bar{T}_B - T^{(b)})^2}\]</div>
+</li>
+<li><p><span class="math notranslate nohighlight">\(T^{(b)}\)</span>’s provides an estimate the distribution of
+<span class="math notranslate nohighlight">\(P(T | H0)\)</span> necessary to compute p-value using the distribution
+(under H0):</p>
+<ul>
+<li><p>One-sided p-value:</p>
+<div class="math notranslate nohighlight">
+\[P(T \ge T^{\text{obs}} | H0) \approx \frac{\mathbf{card}(T^{(b)} \ge T^{\text{obs}})}{B}\]</div>
+</li>
+<li><p>Two-sided p-value:</p>
+<div class="math notranslate nohighlight">
+\[P(T\le T^{\text{obs}}~\text{or}~T \ge T^{\text{obs}} | H0) \approx \frac{\mathbf{card}(T^{(b)} \le T^{\text{obs}}) + \mathbf{card}(T^{(b)} \ge T^{\text{obs}})}{B}\]</div>
+</li>
+</ul>
+</li>
+</ul>
+<p>Let randomized samples) <span class="math notranslate nohighlight">\([X_1, \ldots X_r, \ldots X_rnd]\)</span> from the
+initial dataset using a adapted permutation scheme and compute the
+estimator (under HO): <span class="math notranslate nohighlight">\(T^{(b)} = S(X_r)\)</span>.</p>
+<ol class="arabic simple" start="3">
+<li><p>Permutation test: Compute statistics of the estimator under the null
+hypothesis using randomized estimates <span class="math notranslate nohighlight">\(T^{(b)}\)</span>’s.</p></li>
 </ol>
 <ul>
 <li><p>Mean (under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
 <div class="math notranslate nohighlight">
-\[\bar{\theta}_R = \frac{1}{r}\sum_{r=1}^R \hat{\theta}_r\]</div>
+\[\bar{T}_B = \frac{1}{r}\sum_{r=1}^R T^{(b)}\]</div>
 </li>
-<li><p>Standard Error <span class="math notranslate nohighlight">\(\hat{SE}_{\theta_R}\)</span> (under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
+<li><p>Standard Error <span class="math notranslate nohighlight">\(\sigma_{T_B}\)</span> (under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
 <div class="math notranslate nohighlight">
-\[\hat{SE}_{\theta_R} = \sqrt{\frac{1}{R-1}\sum_{r=1}^K (\bar{\theta}_R - \hat{\theta}_r)^2}\]</div>
+\[\sigma_{T_B} = \sqrt{\frac{1}{R-1}\sum_{r=1}^K (\bar{T}_B - T^{(b)})^2}\]</div>
 </li>
-<li><p>Compute p-value using the distribution (under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
+<li><p><span class="math notranslate nohighlight">\(T^{(b)}\)</span>’s provides an estimate the distribution of
+<span class="math notranslate nohighlight">\(P(T | H0)\)</span> necessary to compute p-value using the distribution
+(under <span class="math notranslate nohighlight">\(H0\)</span>):</p>
 <ul>
 <li><p>One-sided p-value:</p>
 <div class="math notranslate nohighlight">
-\[P(\theta \ge \hat{\theta} | H0) \approx \frac{\mathbf{card}(\hat{\theta}_r \ge \hat{\theta})}{R}\]</div>
+\[P(T\ge T^{\text{obs}} | H0) \approx \frac{\mathbf{card}(T^{(b)} \ge T^{\text{obs}})}{R}\]</div>
 </li>
 <li><p>Two-sided p-value:</p>
 <div class="math notranslate nohighlight">
-\[P(\theta \le \hat{\theta}~\text{or}~\theta \ge \hat{\theta} | H0) \approx \frac{\mathbf{card}(\hat{\theta}_r \le \hat{\theta}) + \mathbf{card}(\hat{\theta}_r \ge \hat{\theta})}{R}\]</div>
+\[P(T\le T^{\text{obs}}~\text{or}~T \ge T^{\text{obs}} | H0) \approx \frac{\mathbf{card}(T^{(b)} \le T^{\text{obs}}) + \mathbf{card}(T^{(b)} \ge T^{\text{obs}})}{R}\]</div>
 </li>
 </ul>
 </li>
 </ul>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">randomize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">n_perms</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3. Permutation test: Compute statistics under H0, estimates distribution and</span>
+<span class="c1"># compute p-values</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">permutation_test</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stats_rnd</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute permutation test using statistic under H1 (true statistic)</span>
+<span class="sd">    and statistics under H0 (randomized statistics) for several statistics.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    x : array</span>
-<span class="sd">        the datasets</span>
-<span class="sd">    estimator : callable</span>
-<span class="sd">        the estimator function taking x as argument returning the estimator value</span>
-<span class="sd">        (scalar)</span>
-<span class="sd">    n_perms : int, optional</span>
-<span class="sd">        the number of permutation, by default 1000</span>
+<span class="sd">    stat_obs : array of shape (nb_statistics)</span>
+<span class="sd">        statistic under H1 (true statistic)</span>
+<span class="sd">    stats_rnd : array of shape (nb_permutations, nb_statistics)</span>
+<span class="sd">        statistics under H0 (randomized statistics)</span>
 
-<span class="sd">    Return</span>
-<span class="sd">    ------</span>
-<span class="sd">    Observed estimate</span>
-<span class="sd">    Mean of randomized estimates</span>
-<span class="sd">    Standard Error of randomized estimates</span>
-<span class="sd">    Two-sided p-value</span>
-<span class="sd">    Randomized distribution estimates (density_values, bins)</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        p-value, statistics mean under HO, statistics stan under HO</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; np.random.seed(42)</span>
+<span class="sd">    &gt;&gt;&gt; stats_rnd = np.random.randn(1000, 5)</span>
+<span class="sd">    &gt;&gt;&gt; stat_obs = np.arange(5)</span>
+<span class="sd">    &gt;&gt;&gt; pval, stat_mean_rnd, stat_se_rnd = permutation_test(stat_obs, stats_rnd)</span>
+<span class="sd">    &gt;&gt;&gt; print(pval)</span>
+<span class="sd">    [1.    0.315 0.049 0.002 0.   ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># 1. Estimate the observed parameter or statistic</span>
-    <span class="n">theta</span> <span class="o">=</span> <span class="n">estimator</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">n_perms</span> <span class="o">=</span> <span class="n">stats_rnd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="c1"># 2. Permuted samples</span>
-    <span class="c1"># Randomly pick the sign with the function:</span>
-    <span class="c1"># np.random.choice([-1, 1], size=len(x), replace=True)</span>
-
-    <span class="n">x_R</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span>
-        <span class="k">for</span> <span class="n">boot_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_perms</span><span class="p">)]</span>
-
-    <span class="c1"># 3. Distribution of the parameter or statistic under H0</span>
-
-    <span class="n">thetas_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">estimator</span><span class="p">(</span><span class="n">x_r</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_r</span> <span class="ow">in</span> <span class="n">x_R</span><span class="p">])</span>
-    <span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">thetas_R</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
-
-    <span class="c1"># 4. Randomized Statistics</span>
+    <span class="c1"># 1. Randomized Statistics</span>
 
     <span class="c1"># Mean of randomized estimates</span>
-    <span class="n">theta_mean_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">thetas_R</span><span class="p">)</span>
+    <span class="n">stat_mean_rnd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">stats_rnd</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># Standard Error of randomized estimates</span>
-    <span class="n">theta_se_R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_perms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span>
-                         <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">theta_mean_R</span> <span class="o">-</span> <span class="n">thetas_R</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">stat_se_rnd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_perms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span>
+                          <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">stat_mean_rnd</span> <span class="o">-</span> <span class="n">stats_rnd</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
 
-    <span class="c1"># 4. Compute two-sided p-value using the distribution under H0:</span>
+    <span class="c1"># 2. Compute two-sided p-value using the distribution under H0:</span>
 
-    <span class="n">extream_vals</span> <span class="o">=</span> <span class="p">(</span><span class="n">thetas_R</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">thetas_R</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
-    <span class="n">pval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">extream_vals</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_perms</span>
+    <span class="n">extreme_vals</span> <span class="o">=</span> <span class="p">(</span><span class="n">stats_rnd</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">)</span>
+                    <span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">stats_rnd</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">))</span>
+    <span class="n">pval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">extreme_vals</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_perms</span>
     <span class="c1"># We could use:</span>
-    <span class="c1"># (np.sum(thetas_R &lt;= -np.abs(theta)) + \</span>
-    <span class="c1">#  np.sum(thetas_R &gt;=  np.abs(theta))) / n_perms</span>
+    <span class="c1"># (np.sum(stats_rnd &lt;= -np.abs(stat_obs)) + \</span>
+    <span class="c1">#  np.sum(stats_rnd &gt;=  np.abs(stat_obs))) / n_perms</span>
 
-    <span class="k">return</span> <span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="p">(</span><span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span>
+    <span class="c1"># 3. Distribution of the parameter or statistic under H0</span>
+    <span class="c1"># stat_density_rnd, bins = np.histogram(stats_rnd, bins=50, density=True)</span>
+    <span class="c1"># dx = np.diff(bins)</span>
+
+    <span class="k">return</span> <span class="n">pval</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">stat_se_rnd</span>
+
+
+<span class="n">pval</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">stat_se_rnd</span> <span class="o">=</span> <span class="n">permutation_test</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stats_rnd</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">stat_se_rnd</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Example, we load the monthly revenue figures of for 100 stores before
-and after a marketing campaigns. We compute the difference
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">0.00</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="mf">0.2000</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">1.000000e+00</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">0.450</span>
+</pre></div>
+</div>
+<section id="one-sample-sign-permutation">
+<h3>One Sample Sign Permutation<a class="headerlink" href="#one-sample-sign-permutation" title="Link to this heading">¶</a></h3>
+<p>Consider the monthly revenue figures of for 100 stores before and after
+a marketing campaigns. We compute the difference
 (<span class="math notranslate nohighlight">\(x_i = x_i^\text{after} - x_i^\text{before}\)</span>) for each store
 <span class="math notranslate nohighlight">\(i\)</span>. Under the null hypothesis, i.e., no effect of the campaigns,
 <span class="math notranslate nohighlight">\(x_i^\text{after}\)</span> and <span class="math notranslate nohighlight">\(x_i^\text{before}\)</span> could be
 permuted, which is equivalent to randomly switch the sign of
 <span class="math notranslate nohighlight">\(x_i\)</span>. Here we will focus on the sample mean
-<span class="math notranslate nohighlight">\(\hat{\theta} = S(X) = 1/n\sum_i x_i\)</span> as statistic of interest.</p>
+<span class="math notranslate nohighlight">\(T^{\text{obs}} = S(X) = 1/n\sum_i x_i\)</span> as statistic of interest.</p>
+<p>Read data:</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../datasets/Monthly Revenue (in thousands).csv&quot;</span><span class="p">)</span>
 <span class="c1"># Reshape Keep only the 30 first samples</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;store_id&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;revenue&#39;</span><span class="p">)[:</span><span class="mi">30</span><span class="p">]</span>
-<span class="n">df</span><span class="o">.</span><span class="n">after</span> <span class="o">-=</span> <span class="mi">3</span> <span class="c1"># force to smaller effect size</span>
-</pre></div>
-</div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">after</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">before</span>
+<span class="n">df</span><span class="o">.</span><span class="n">after</span> <span class="o">-=</span> <span class="mi">3</span>  <span class="c1"># force to smaller effect size</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">after</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">before</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;No effect: 0&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\bar</span><span class="si">{x}</span><span class="s1">=</span><span class="si">%.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Distribution of the sales changes $x_i = x_i^\text</span><span class="si">{after}</span><span class="s1"> - </span><span class="se">\</span>
-<span class="s1">    x_i^\text</span><span class="si">{before}</span><span class="s1">$&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s1">&#39;Distribution of the sales changes $x_i = x_i^\text</span><span class="si">{after}</span><span class="s1"> - x_i^\text</span><span class="si">{before}</span><span class="s1">$&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_montecarlo_12_0.png" src="../_images/stat_montecarlo_12_0.png" />
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># set the seed for reproducible results</span>
+<img alt="../_images/stat_montecarlo_19_0.png" src="../_images/stat_montecarlo_19_0.png" />
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Estimate the observed parameter or statistic</span>
+<span class="n">stat_obs</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-<span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="p">(</span><span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span> <span class="o">=</span> \
-    <span class="n">randomize</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">n_perms</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="c1"># 2. Generate randomized samples and compute the estimator (under HO)</span>
+<span class="n">stats_rnd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">resampling</span><span class="o">.</span><span class="n">resample_estimate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
+                        <span class="n">resample</span><span class="o">=</span><span class="n">onesample_sign_permutation</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>\
-    <span class="nb">format</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">))</span>
+<span class="c1"># 3. Permutation test: Compute stats. under H0, and p-values</span>
+<span class="n">pval</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">stat_se_rnd</span> <span class="o">=</span> <span class="n">permutation_test</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stats_rnd</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">stat_se_rnd</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">2.26</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="o">-</span><span class="mf">0.0103</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">2.430000e-02</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.018</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">2.26</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="o">-</span><span class="mf">0.0093</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">3.900000e-02</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.051</span>
 </pre></div>
 </div>
-<p>Plot</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pystatsml</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">plot_pvalue_under_h0</span><span class="p">(</span><span class="n">stat_vals</span><span class="o">=</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">stat_probs</span><span class="o">=</span><span class="n">theta_density_R</span><span class="p">,</span>
-                     <span class="n">stat_obs</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span>  <span class="n">stat_h0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bar_width</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">),</span>
-                     <span class="n">thresh_low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">thresh_high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Randomized distribution of the estimator $\hat{\theta}_b$ (sample mean)&#39;</span><span class="p">)</span>
+<p>Plot density</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats_density_rnd</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">stats_rnd</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+
+<span class="n">pystatsml</span><span class="o">.</span><span class="n">plot_utils</span><span class="o">.</span><span class="n">plot_pvalue_under_h0</span><span class="p">(</span><span class="n">stat_vals</span><span class="o">=</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+                    <span class="n">stat_probs</span><span class="o">=</span><span class="n">stats_density_rnd</span><span class="p">,</span>
+                    <span class="n">stat_obs</span><span class="o">=</span><span class="n">stat_obs</span><span class="p">,</span>  <span class="n">stat_h0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bar_width</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">),</span>
+                    <span class="n">thresh_low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">),</span> <span class="n">thresh_high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Randomized distribution of the estimator $T$ (sample mean)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_montecarlo_15_0.png" src="../_images/stat_montecarlo_15_0.png" />
+<img alt="../_images/stat_montecarlo_22_0.png" src="../_images/stat_montecarlo_22_0.png" />
 <p>Similar procedure can be conducted with many statistic e.g., the
-t-statistic (same results):</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ttstat</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+t-statistic (more sensitive than the mean):</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ttest_1samp</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
 
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># set the seed for reproducible results</span>
-<span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="p">(</span><span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span> <span class="o">=</span> \
-    <span class="n">randomize</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">ttstat</span><span class="p">,</span> <span class="n">n_perms</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="c1"># 1. Estimate the observed parameter or statistic</span>
+<span class="n">stat_obs</span> <span class="o">=</span> <span class="n">ttest_1samp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>\
-    <span class="nb">format</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">))</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">2.36</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="o">-</span><span class="mf">0.0106</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">2.430000e-02</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.025</span>
-</pre></div>
-</div>
-<p>Or the median:</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># set the seed for reproducible results</span>
-<span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="p">(</span><span class="n">theta_density_R</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span> <span class="o">=</span> \
-    <span class="n">randomize</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">,</span> <span class="n">n_perms</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="c1"># 2. Generate randomized samples and compute the estimator (under HO)</span>
+<span class="n">stats_rnd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">resampling</span><span class="o">.</span><span class="n">resample_estimate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">ttest_1samp</span><span class="p">,</span>
+                        <span class="n">resample</span><span class="o">=</span><span class="n">onesample_sign_permutation</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>\
-    <span class="nb">format</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">theta_mean_R</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">theta_se_R</span><span class="p">))</span>
+<span class="c1"># 3. Permutation test: Compute stats. under H0, and p-values</span>
+<span class="n">pval</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">stat_se_rnd</span> <span class="o">=</span> <span class="n">permutation_test</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stats_rnd</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">stat_se_rnd</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">1.85</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="o">-</span><span class="mf">0.0144</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">9.370000e-02</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.066</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">2.36</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="mf">0.0130</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">2.800000e-02</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.064</span>
 </pre></div>
 </div>
+<p>Or the median (less sensitive than the mean):</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">median</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="c1"># 1. Estimate the observed parameter or statistic</span>
+<span class="n">stat_obs</span> <span class="o">=</span> <span class="n">median</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># 2. Generate randomized samples and compute the estimator (under HO)</span>
+<span class="n">stats_rnd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">resampling</span><span class="o">.</span><span class="n">resample_estimate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">median</span><span class="p">,</span>
+                        <span class="n">resample</span><span class="o">=</span><span class="n">onesample_sign_permutation</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
+
+<span class="c1"># 3. Permutation test: Compute stats. under H0, and p-values</span>
+<span class="n">pval</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">stat_se_rnd</span> <span class="o">=</span> <span class="n">permutation_test</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stats_rnd</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">stat_se_rnd</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="mf">1.85</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="mf">0.0255</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">1.030000e-01</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.081</span>
+</pre></div>
+</div>
+</section>
+<section id="two-samples-permutation">
+<h3>Two Samples Permutation<a class="headerlink" href="#two-samples-permutation" title="Link to this heading">¶</a></h3>
+<p><span class="math notranslate nohighlight">\(x\)</span> is a variable <span class="math notranslate nohighlight">\(y \in \{0, 1\}\)</span> is a sample label for two
+groups. To obtain sample under HO we just have to permute the group’s
+labels <span class="math notranslate nohighlight">\(y\)</span>:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pystatsml</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_twosamples</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                <span class="n">group_scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">noise_scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">shared_scale</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">],</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="c1"># Label permutation, expect label_permutation(x, label)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">label_permutation</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">label</span>
+
+
+<span class="n">xr</span><span class="p">,</span> <span class="n">yr</span> <span class="o">=</span> <span class="n">label_permutation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">xr</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original labels:&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Permuted labels:&quot;</span><span class="p">,</span> <span class="n">yr</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TtestResult</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="o">-</span><span class="mf">1.2845532458346598</span><span class="p">),</span> <span class="n">pvalue</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.2094747870423826</span><span class="p">),</span> <span class="n">df</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">28.0</span><span class="p">))</span>
+<span class="n">Original</span> <span class="n">labels</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span>
+ <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span><span class="p">]</span>
+<span class="n">Permuted</span> <span class="n">labels</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">1.</span>
+ <span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">1.</span> <span class="mf">0.</span> <span class="mf">1.</span> <span class="mf">1.</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>As statistic we use the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html">student statistic of two sample test with equal
+variance</a></p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">twosample_ttest</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ttest</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">1</span><span class="p">],</span>
+                                  <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ttest</span><span class="o">.</span><span class="n">statistic</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Estimate the observed parameter or statistic</span>
+<span class="n">stat_obs</span> <span class="o">=</span> <span class="n">twosample_ttest</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># 2. Generate randomized samples and compute the estimator (under HO)</span>
+
+<span class="c1"># Sequential version:</span>
+<span class="c1"># stats_rnd = np.array([twosample_ttest(*label_permutation(x, y))</span>
+<span class="c1">#                       for perm in range(1000)])</span>
+
+<span class="c1"># Parallel version:</span>
+<span class="n">stats_rnd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">resampling</span><span class="o">.</span><span class="n">resample_estimate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">twosample_ttest</span><span class="p">,</span>
+                     <span class="n">resample</span><span class="o">=</span><span class="n">label_permutation</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
+
+<span class="c1"># 3. Permutation test: Compute stats. under H0, and p-values</span>
+<span class="n">pval</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">stat_se_rnd</span> <span class="o">=</span> <span class="n">permutation_test</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stats_rnd</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, Mean(Estimate|HO): </span><span class="si">{:.4f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">, SE: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="n">stat_obs</span><span class="p">,</span> <span class="n">stat_mean_rnd</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">stat_se_rnd</span><span class="p">))</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Non permuted t-test:&quot;</span><span class="p">)</span>
+<span class="n">ttest</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">],</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">&quot;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="n">ttest</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">ttest</span><span class="o">.</span><span class="n">pvalue</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Permutation using scipy.stats.ttest_ind&quot;</span><span class="p">)</span>
+<span class="n">ttest</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">],</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">method</span><span class="o">=</span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">PermutationMethod</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate: </span><span class="si">{:.2f}</span><span class="s2">, p-val: </span><span class="si">{:e}</span><span class="s2">&quot;</span><span class="o">.</span>
+      <span class="nb">format</span><span class="p">(</span><span class="n">ttest</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">ttest</span><span class="o">.</span><span class="n">pvalue</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Estimate</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.28</span><span class="p">,</span> <span class="n">Mean</span><span class="p">(</span><span class="n">Estimate</span><span class="o">|</span><span class="n">HO</span><span class="p">):</span> <span class="mf">0.0015</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">1.970000e-01</span><span class="p">,</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">1.023</span>
+
+<span class="n">Non</span> <span class="n">permuted</span> <span class="n">t</span><span class="o">-</span><span class="n">test</span><span class="p">:</span>
+<span class="n">Estimate</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.28</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">2.094748e-01</span>
+
+<span class="n">Permutation</span> <span class="n">using</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span>
+<span class="n">Estimate</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.28</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="n">val</span><span class="p">:</span> <span class="mf">1.962000e-01</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="permutation-based-correction-for-multiple-testing-westfall-and-young-correction">
+<h2>Permutation-Based Correction for Multiple Testing: Westfall and Young Correction<a class="headerlink" href="#permutation-based-correction-for-multiple-testing-westfall-and-young-correction" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://www.jstor.org/stable/2532216">Westfall and Young (1993)</a>
+Correction for Multiple Testing, also known as maxT, controls the
+<strong>Family-Wise Error Rate (FWER)</strong> in the context of <strong>multiple
+hypothesis testing</strong>, particularly in high-dimensional settings (e.g.,
+genomics), where traditional methods like Bonferroni are overly
+conservative.</p>
+<ul class="simple">
+<li><p>The method relies on <strong>permutation testing</strong> to empirically estimate
+the distribution of test statistics under the <strong>global null
+hypothesis</strong>.</p></li>
+<li><p>It accounts for the <strong>dependence structure</strong> between tests, improving
+power compared to Bonferroni-type corrections.</p></li>
+</ul>
+<p><strong>Procedure</strong></p>
+<p>Let there be <span class="math notranslate nohighlight">\(P\)</span> hypotheses <span class="math notranslate nohighlight">\(H_1, \dots, H_P\)</span> and
+corresponding test statistics <span class="math notranslate nohighlight">\(T_1, \dots, T_P\)</span>:</p>
+<ol class="arabic">
+<li><p><strong>Compute observed test statistics</strong>
+<span class="math notranslate nohighlight">\(\{T_j^{\text{obs}}\}_{j=1}^P\)</span>, for each hypothesis.</p></li>
+<li><p><strong>Permute the data</strong> <span class="math notranslate nohighlight">\(B\)</span> times (e.g., shuffle labels),
+recomputing all <span class="math notranslate nohighlight">\(P\)</span> test statistics each time yielding to a
+<span class="math notranslate nohighlight">\((B \times P)\)</span> table with all permuted statistics
+<span class="math notranslate nohighlight">\(\{T_j^{(b)}\}_{(b,j)}^{(B,P)}\)</span>.</p></li>
+<li><p><strong>For each permutation</strong>, record the <strong>maximum test statistic</strong>
+across all hypotheses, yielding to a vector of <span class="math notranslate nohighlight">\(B\)</span> maximum
+which value is given by:</p>
+<div class="math notranslate nohighlight">
+\[M^{(b)} = \max_{j = 1, \dots, P} T_j^{(b)}\]</div>
+</li>
+<li><p>For each hypothesis <span class="math notranslate nohighlight">\(j\)</span>, calculate the adjusted p-value,
+yielding to a vector of <span class="math notranslate nohighlight">\(P\)</span> p-values which value is given by:</p>
+<div class="math notranslate nohighlight">
+\[\tilde{p}_j = \frac{1}{B} \sum_{b=1}^B \mathbf{card}(T_j^{\text{obs}} \leq M^{(b)})\]</div>
+<p>(For one-sided tests. For two-sided, take <span class="math notranslate nohighlight">\(|T_j|\)</span>.)</p>
+</li>
+<li><p>Reject hypotheses with <span class="math notranslate nohighlight">\(\tilde{p}_j \leq \alpha\)</span>.</p></li>
+</ol>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p><strong>Strong FWER control</strong>, even under arbitrary dependence.</p></li>
+<li><p><strong>More powerful</strong> than Bonferroni or Holm in many dependent testing
+scenarios.</p></li>
+<li><p><strong>Non-parametric</strong>: does not rely on distributional assumptions.</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p><strong>Computationally intensive</strong>, especially with large <span class="math notranslate nohighlight">\(m\)</span> and
+many permutations.</p></li>
+<li><p>Requires <strong>exchangeability</strong> of data under the null (a key assumption
+for valid permutations).</p></li>
+</ul>
+<p>Dataset</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pystatsml</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span>
+
+<span class="n">n_informative</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Number of features with signal (Positive features)</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_twosamples</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="n">n_informative</span><span class="p">,</span>
+                                <span class="n">group_scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">noise_scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">shared_scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+                                <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. **Compute observed test statistics**</span>
+<span class="n">stat_obs</span> <span class="o">=</span> <span class="n">twosample_ttest</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># 2. Randomized statistics</span>
+<span class="n">stats_rnd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">resampling</span><span class="o">.</span><span class="n">resample_estimate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">twosample_ttest</span><span class="p">,</span>
+                     <span class="n">resample</span><span class="o">=</span><span class="n">label_permutation</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">multipletests_westfall_young</span><span class="p">(</span><span class="n">stats_rnd</span><span class="p">,</span> <span class="n">stat_obs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Westfall and Young FWER correction for multiple comparisons.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    stats_rnd : array (n_resamples, n_features)</span>
+<span class="sd">        Randomized Statistics</span>
+<span class="sd">    stats_true : array (n_features)</span>
+<span class="sd">        Observed Statistics</span>
+<span class="sd">    alpha : float, optional</span>
+<span class="sd">        by default 0.05</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    Array (n_features) P-values corrected for multiple comparison</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># 3. **For each permutation**, record the **maximum test statistic**</span>
+    <span class="n">stat_rnd_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">stats_rnd</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># 4. For each hypothesis $j$, calculate the adjusted p-value</span>
+    <span class="n">pvalues_ws</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stat_rnd_max</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+        <span class="n">stat</span><span class="p">))</span> <span class="o">/</span> <span class="n">stat_rnd_max</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">stat_obs</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">pvalues_ws</span>
+
+<span class="n">pvalues_ws</span> <span class="o">=</span> <span class="n">multipletests_westfall_young</span><span class="p">(</span><span class="n">stats_rnd</span><span class="p">,</span> <span class="n">stat_obs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Compute p-values using:</p>
+<ol class="arabic simple">
+<li><p>Un-corrected p-values: High false positives rate.</p></li>
+<li><p>Bonferroni correction: Reduced sensitivity (low True positives rate).</p></li>
+<li><p>Westfall and Young correction: Improved sensitivity with controlled
+false positive:</p></li>
+</ol>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Usual t-test with uncorrected p-values:</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.sandbox.stats.multicomp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">multicomp</span>
+<span class="n">ttest</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">],</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Classical Bonferroni correction</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">pvals_bonf</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">multicomp</span><span class="o">.</span><span class="n">multipletests</span><span class="p">(</span><span class="n">ttest</span><span class="o">.</span><span class="n">pvalue</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                                              <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bonferroni&#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_positve</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">pvalues</span><span class="p">,</span> <span class="n">n_informative</span><span class="p">,</span> <span class="n">n_features</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="se">\n</span><span class="s1">Positive: </span><span class="si">%i</span><span class="s1">/</span><span class="si">%i</span><span class="s1">, True Positive: </span><span class="si">%i</span><span class="s1">/</span><span class="si">%i</span><span class="s1">, False Positive: </span><span class="si">%i</span><span class="s1">/</span><span class="si">%i</span><span class="s1">&#39;</span> <span class="o">%</span>
+          <span class="p">(</span><span class="n">title</span><span class="p">,</span>
+           <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pvalues</span> <span class="o">&lt;=</span> <span class="mf">0.05</span><span class="p">),</span> <span class="n">n_features</span><span class="p">,</span>
+           <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pvalues</span><span class="p">[:</span><span class="n">n_informative</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.05</span><span class="p">),</span> <span class="n">n_informative</span><span class="p">,</span>
+           <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pvalues</span><span class="p">[</span><span class="n">n_informative</span><span class="p">:]</span> <span class="o">&lt;=</span> <span class="mf">0.05</span><span class="p">),</span> <span class="p">(</span><span class="n">n_features</span><span class="o">-</span><span class="n">n_informative</span><span class="p">)))</span>
+
+<span class="n">print_positve</span><span class="p">(</span><span class="s2">&quot;No correction&quot;</span><span class="p">,</span> <span class="n">ttest</span><span class="o">.</span><span class="n">pvalue</span><span class="p">,</span> <span class="n">n_informative</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+<span class="n">print_positve</span><span class="p">(</span><span class="s2">&quot;Bonferroni correction&quot;</span><span class="p">,</span> <span class="n">pvals_bonf</span><span class="p">,</span> <span class="n">n_informative</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+<span class="n">print_positve</span><span class="p">(</span><span class="s2">&quot;Westfall and Young&quot;</span><span class="p">,</span> <span class="n">pvalues_ws</span><span class="p">,</span> <span class="n">n_informative</span><span class="p">,</span> <span class="n">n_features</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">No</span> <span class="n">correction</span>
+<span class="n">Positive</span><span class="p">:</span> <span class="mi">209</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="kc">True</span> <span class="n">Positive</span><span class="p">:</span> <span class="mi">94</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="kc">False</span> <span class="n">Positive</span><span class="p">:</span> <span class="mi">115</span><span class="o">/</span><span class="mi">900</span>
+<span class="n">Bonferroni</span> <span class="n">correction</span>
+<span class="n">Positive</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="kc">True</span> <span class="n">Positive</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="kc">False</span> <span class="n">Positive</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">900</span>
+<span class="n">Westfall</span> <span class="ow">and</span> <span class="n">Young</span>
+<span class="n">Positive</span><span class="p">:</span> <span class="mi">4</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="kc">True</span> <span class="n">Positive</span><span class="p">:</span> <span class="mi">4</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="kc">False</span> <span class="n">Positive</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">900</span>
+</pre></div>
+</div>
+<p>Compare P-Values distribution with Bonferroni correction for multiple
+comparison:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">q_bonferroni</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">pvals_bonf</span><span class="p">[:</span><span class="n">n_informative</span><span class="p">],</span> <span class="n">fit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">q_ws</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">pvalues_ws</span><span class="p">[:</span><span class="n">n_informative</span><span class="p">],</span> <span class="n">fit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">q_bonferroni</span><span class="p">,</span> <span class="n">q_ws</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axline</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Bonferroni Correction&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Westfall &amp; Young Correction&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Q-Q Plots of P-values distributions Corrected for Mult. Comp.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/stat_montecarlo_39_0.png" src="../_images/stat_montecarlo_39_0.png" />
 </section>
 <section id="bootstrapping">
 <h2>Bootstrapping<a class="headerlink" href="#bootstrapping" title="Link to this heading">¶</a></h2>
@@ -361,36 +715,36 @@ bootstrap is its <strong>simplicity of the procedure</strong>:</p>
 </figcaption>
 </figure>
 <ol class="arabic simple">
-<li><p>Compute the estimator <span class="math notranslate nohighlight">\(\hat{\theta} = S(X)\)</span> on the initial
+<li><p>Compute the estimator <span class="math notranslate nohighlight">\(T^{\text{obs}} = S(X)\)</span> on the initial
 dataset <span class="math notranslate nohighlight">\(X\)</span> of size <span class="math notranslate nohighlight">\(N\)</span>.</p></li>
 <li><p>Generate <span class="math notranslate nohighlight">\(B\)</span> samples (called bootstrap samples)
 <span class="math notranslate nohighlight">\([X_1, \ldots X_b, \ldots X_B]\)</span> from the initial dataset by
-randomly drawing <strong>with replacement</strong> <span class="math notranslate nohighlight">\(N\)</span> observations.</p></li>
+randomly drawing <strong>with replacement</strong> $ of the N$ observations.</p></li>
 <li><p>For each sample <span class="math notranslate nohighlight">\(b\)</span> compute the estimator
-<span class="math notranslate nohighlight">\(\hat{\theta}_b = S(X_b)\)</span>, which provides the bootstrap
-distribution <span class="math notranslate nohighlight">\(P_{\theta_B}\)</span> of the estimator.</p></li>
+<span class="math notranslate nohighlight">\(\{T^{(b)}= S(X_b)\}_{b=1}^B\)</span>, which provides the bootstrap
+distribution <span class="math notranslate nohighlight">\(P(T_B|H1)\)</span> of the estimator (under the
+alternative hypothesis H1).</p></li>
 <li><p>Compute statistics of the estimator on bootstrap estimates
-<span class="math notranslate nohighlight">\(\hat{\theta}_b\)</span>’s:</p></li>
+<span class="math notranslate nohighlight">\(T^{(b)}\)</span>’s:</p></li>
 </ol>
 <ul>
 <li><p>Bootstrap estimate (of the parameters):</p>
 <div class="math notranslate nohighlight">
-\[\bar{\theta}_B = \frac{1}{B}\sum_{b=1}^B \hat{\theta}_b\]</div>
+\[\bar{T_B} = \frac{1}{B}\sum_{b=1}^B T^{(b)}\]</div>
 </li>
 <li><p>Bias = bootstrap estimate - estimate:</p>
 <div class="math notranslate nohighlight">
-\[\hat{b}_{\theta_B} = \bar{\theta}_B - \hat{\theta}\]</div>
+\[\hat{b_{T_B}} = \bar{T}_B - T^{\text{obs}}\]</div>
 </li>
-<li><p>Standard error <span class="math notranslate nohighlight">\(\hat{S}_{\theta_B}\)</span>:</p>
+<li><p>Standard error <span class="math notranslate nohighlight">\(\hat{\sigma_{T_B}}\)</span>:</p>
 <div class="math notranslate nohighlight">
-\[\hat{S}_{\theta_B} = \sqrt{\frac{1}{B-1}\sum_{b=1}^B (\bar{\theta}_B - \hat{\theta}_b)^2}\]</div>
+\[\hat{\sigma_{T_B}} = \sqrt{\frac{1}{B-1}\sum_{b=1}^B (\bar{T_B} - T^{(b)})^2}\]</div>
 </li>
 <li><p>Confidence interval using the estimated bootstrapped distribution of
-the estimator:</p>
-<div class="math notranslate nohighlight">
-\[CI_{95\%}=[\hat{\theta}_1=Q(2.5\%), \hat{\theta}_2=Q(97.5\%)]~\text{i.e., the 2.5\%, 97.5\% quantiles estimators out of the}~\hat{\theta}_b's\]</div>
-</li>
+the estimator:</p></li>
 </ul>
+<div class="math notranslate nohighlight">
+\[CI_{95\%}=[T^{\text{obs}}_1=Q_{T^{(b)}}(2.5\%), T^{\text{obs}}_2=Q_{T^{(b)}}(97.5\%)]~\text{i.e., the 2.5\%, 97.5\% quantiles estimators out of the}~\{T^{(b)}\}_{b=1}^B\]</div>
 <p>Application using the monthly revenue of 100 stores before and after a
 marketing campaigns, using the difference
 (<span class="math notranslate nohighlight">\(x_i = x_i^\text{after} - x_i^\text{before}\)</span>) for each store
@@ -403,10 +757,10 @@ CI.</p>
 <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span>
 
 <span class="c1"># 1. Model parameters</span>
-<span class="n">theta_hat</span> <span class="o">=</span> <span class="n">S</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">stat_hat</span> <span class="o">=</span> <span class="n">S</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># set the seed for reproducible results</span>
-<span class="n">B</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># Number of bootstrap</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>  <span class="c1"># set the seed for reproducible results</span>
+<span class="n">B</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># Number of bootstrap</span>
 
 <span class="c1"># 2. Bootstrapped samples</span>
 
@@ -414,29 +768,29 @@ CI.</p>
 
 <span class="c1"># 3. Bootstrap estimates and distribution</span>
 
-<span class="n">theta_hats_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">S</span><span class="p">(</span><span class="n">x_b</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_b</span> <span class="ow">in</span> <span class="n">x_B</span><span class="p">])</span>
-<span class="n">theta_density_B</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">theta_hats_B</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">stat_hats_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">S</span><span class="p">(</span><span class="n">x_b</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_b</span> <span class="ow">in</span> <span class="n">x_B</span><span class="p">])</span>
+<span class="n">stat_density_B</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">stat_hats_B</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
 
 <span class="c1"># 4. Bootstrap Statistics</span>
 
 <span class="c1"># Bootstrap estimate</span>
-<span class="n">theta_bar_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">theta_hats_B</span><span class="p">)</span>
+<span class="n">stat_bar_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">stat_hats_B</span><span class="p">)</span>
 
 <span class="c1"># Bias = bootstrap estimate - estimate</span>
-<span class="n">bias_hat_B</span> <span class="o">=</span> <span class="n">theta_bar_B</span> <span class="o">-</span> <span class="n">theta_hat</span>
+<span class="n">bias_hat_B</span> <span class="o">=</span> <span class="n">stat_bar_B</span> <span class="o">-</span> <span class="n">stat_hat</span>
 
 <span class="c1"># Standard Error</span>
-<span class="n">se_hat_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">B</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">theta_bar_B</span> <span class="o">-</span> <span class="n">theta_hats_B</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">se_hat_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">B</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">stat_bar_B</span> <span class="o">-</span> <span class="n">stat_hats_B</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
 
 <span class="c1"># Confidence interval using the estimated bootstrapped distribution of estimator</span>
 
-<span class="n">ci95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">theta_hats_B</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">])</span>
+<span class="n">ci95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">stat_hats_B</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">])</span>
 
 <span class="nb">print</span><span class="p">(</span>
     <span class="s2">&quot;Est.: </span><span class="si">{:.2f}</span><span class="s2">, Boot Est.: </span><span class="si">{:.2f}</span><span class="s2">, bias: </span><span class="si">{:e}</span><span class="s2">,</span><span class="se">\</span>
-<span class="s2">     Boot SE: </span><span class="si">{:.2f}</span><span class="s2">, CI: [</span><span class="si">{:.5f}</span><span class="s2">, </span><span class="si">{:.5f}</span><span class="s2">]&quot;</span>\
-    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">theta_hat</span><span class="p">,</span> <span class="n">theta_bar_B</span><span class="p">,</span> <span class="n">bias_hat_B</span><span class="p">,</span> <span class="n">se_hat_B</span><span class="p">,</span> <span class="n">ci95</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ci95</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="s2">     Boot SE: </span><span class="si">{:.2f}</span><span class="s2">, CI: [</span><span class="si">{:.5f}</span><span class="s2">, </span><span class="si">{:.5f}</span><span class="s2">]&quot;</span>
+    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stat_hat</span><span class="p">,</span> <span class="n">stat_bar_B</span><span class="p">,</span> <span class="n">bias_hat_B</span><span class="p">,</span> <span class="n">se_hat_B</span><span class="p">,</span> <span class="n">ci95</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ci95</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Est</span><span class="o">.</span><span class="p">:</span> <span class="mf">2.26</span><span class="p">,</span> <span class="n">Boot</span> <span class="n">Est</span><span class="o">.</span><span class="p">:</span> <span class="mf">2.19</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.201946e-02</span><span class="p">,</span>     <span class="n">Boot</span> <span class="n">SE</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">CI</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.45256</span><span class="p">,</span> <span class="mf">4.08465</span><span class="p">]</span>
@@ -446,17 +800,19 @@ CI.</p>
 positive. Thus we can conclude the marketing campaign produced a
 significant increase of the sales.</p>
 <p>Plot</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">theta_density_B</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$P_{\theta_B}$&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">theta_hat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\hat{\theta}$ (Obs. Stat.)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">theta_bar_B</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\bar{\theta}_B$&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">stat_density_B</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$P_</span><span class="si">{T_B}</span><span class="s1">$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">stat_hat</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$T^{\text</span><span class="si">{obs}</span><span class="s1">}$ (Obs. Stat.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">stat_bar_B</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\bar</span><span class="si">{T_B}</span><span class="s1">$&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ci95</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$CI_{95\%}$&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ci95</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;No effect: 0&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Bootstrap distribution of the estimator $\hat{\theta}_b$ (sample mean)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s1">&#39;Bootstrap distribution of the estimator $\hat{\theta}_b$ (sample mean)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/stat_montecarlo_25_0.png" src="../_images/stat_montecarlo_25_0.png" />
+<img alt="../_images/stat_montecarlo_44_0.png" src="../_images/stat_montecarlo_44_0.png" />
 </section>
 </section>
 
@@ -475,7 +831,12 @@ significant increase of the sales.</p>
 <li><a class="reference internal" href="#one-dimensional-random-walk-brownian-motion">One-dimensional random walk (Brownian motion)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#permutation-tests">Permutation Tests</a></li>
+<li><a class="reference internal" href="#permutation-tests">Permutation Tests</a><ul>
+<li><a class="reference internal" href="#one-sample-sign-permutation">One Sample Sign Permutation</a></li>
+<li><a class="reference internal" href="#two-samples-permutation">Two Samples Permutation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#permutation-based-correction-for-multiple-testing-westfall-and-young-correction">Permutation-Based Correction for Multiple Testing: Westfall and Young Correction</a></li>
 <li><a class="reference internal" href="#bootstrapping">Bootstrapping</a></li>
 </ul>
 </li>

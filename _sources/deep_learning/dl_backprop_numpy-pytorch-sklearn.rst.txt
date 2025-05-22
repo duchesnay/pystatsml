@@ -26,44 +26,61 @@ Backpropagation and chain rule
 
 We will set up a two layer network:
 
-.. math::  \mathbf{Y} = \text{max}(\mathbf{X} \mathbf{W}^{(1)}, 0) \mathbf{W}^{(2)}
+.. math::
+
+
+   \mathbf{y} = \mathbf{W}^{(2)} \text{max}(\mathbf{W}^{(1)}\mathbf{x}, 0) 
 
 A fully-connected ReLU network with one hidden layer and no biases,
-trained to predict y from x using Euclidean error.
+trained to predict :math:`y` from :math:`x` using Euclidean error.
 
-**Forward pass** with **local** partial derivatives of output given
-inputs:
+**1. Forward pass** can be decomposed as:
 
-.. raw:: latex
+.. math::
 
-   \begin{align*}
-   x       \rightarrow &  \boxed{z^{(1)} = x^Tw^{(1)}} \rightarrow &  \boxed{h^{(1)} = \max(z^{(1)}, 0)} \rightarrow &  \boxed{z^{(2)}=h^{(1)T}w^{(2)}} \rightarrow &  \boxed{L(z^{(2)}, y) = (z^{(2)} - y)^2}\\
-   w^{(1)} \nearrow    &                                  &                    w^{(2)} \nearrow & &\\
-                       & \frac{\partial z^{(1)}}{\partial w^{(1)}}=x & \frac{\partial h^{(1)}}{\partial z^{(1)}} = \{^{1~\text{if}~z^{(1)}>0}_{\text{else}~0}& \frac{\partial z^{(2)} }{\partial w^{(2)}}=h^{(1)} & \frac{\partial L}{\partial z^{(2)}}=2(z^{(2)}-y)\\
-                       & \frac{\partial z^{(1)}}{\partial x}=w^{(1)} & & \frac{\partial z^{(2)} }{\partial h^{(1)}}= w^{(2)} &
-   \end{align*}
 
-**Backward pass**: compute gradient of the loss given each parameters
+   x       \rightarrow \boxed{z^{(1)} = x^\top w^{(1)}} \rightarrow \boxed{h^{(1)} = \max(z^{(1)}, 0)} \rightarrow \boxed{z^{(2)}=h^{(1)\top}w^{(2)}} \rightarrow   \boxed{L(z^{(2)}, y) = (z^{(2)} - y)^2}
+
+With **local** partial derivatives of output given inputs for each the
+four steps:
+
+1. :math:`z^{(1)} = x^\top w^{(1)}`
+
+   - :math:`\frac{\partial z^{(1)}}{\partial w^{(1)}} = x`
+   - :math:`\frac{\partial z^{(1)}}{\partial x} = w^{(1)}`
+
+2. :math:`h^{(1)} = \max(z^{(1)}, 0)`
+
+   - :math:`\frac{\partial h^{(1)}}{\partial z^{(1)}} = \{^{1~\text{if}~z^{(1)}>0}_{\text{else}~0}`
+
+3. :math:`z^{(2)}=h^{(1)\top}w^{(2)}`
+
+   - :math:`\frac{\partial z^{(2)} }{\partial w^{(2)}}=h^{(1)}`
+   - :math:`\frac{\partial z^{(2)} }{\partial h^{(1)}}= w^{(2)}`
+
+4. :math:`L(z^{(2)}, y) = (z^{(2)} - y)^2`
+
+   - :math:`\frac{\partial L}{\partial z^{(2)}}=2(z^{(2)}-y)`
+
+**2. Backward pass**: compute gradient of the loss given each parameters
 vectors applying the chain rule from the loss downstream to the
 parameters:
 
 For :math:`w^{(2)}`:
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
-   \frac{\partial L}{\partial w^{(2)}} =& \frac{\partial L}{\partial z^{(2)}} \frac{\partial z^{(2)}}{\partial w^{(2)}}\\
-                                       =& 2(z^{(2)}-y) h^{(1)}
-   \end{align}
+
+   \frac{\partial L}{\partial w^{(2)}} = \frac{\partial L}{\partial z^{(2)}} \frac{\partial z^{(2)}}{\partial w^{(2)}}
+                                       = 2(z^{(2)}-y) h^{(1)}
 
 For :math:`w^{(1)}`:
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
-   \frac{\partial L}{\partial w^{(1)}} =& \frac{\partial L}{\partial z^{(2)}} \frac{\partial z^{(2)}}{\partial h^{(1)}} \frac{\partial h^{(1)}}{\partial z^{(1)}} \frac{\partial z^{(1)}}{\partial w^{(1)}}\\
-                                       =& 2(z^{(2)}-y) w^{(2)} \{^{1~\text{if}~z^{(1)}>0}_{\text{else}~0} x
-   \end{align}
+
+   \frac{\partial L}{\partial w^{(1)}} = \frac{\partial L}{\partial z^{(2)}} \frac{\partial z^{(2)}}{\partial h^{(1)}} \frac{\partial h^{(1)}}{\partial z^{(1)}} \frac{\partial z^{(1)}}{\partial w^{(1)}}
+                                       = 2(z^{(2)}-y) w^{(2)} \{^{1~\text{if}~z^{(1)}>0}_{\text{else}~0} x
 
 Recap: Vector derivatives
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,17 +103,16 @@ If :math:`w` changes by a small amount, how much will :math:`z` change?
 partial derivative:
 :math:`\frac{\partial z}{\partial w} \in \mathbb{R}^N`
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
-   \frac{\partial z}{\partial w} = \nabla_w z &= \begin{bmatrix}
+
+   \frac{\partial z}{\partial w} = \nabla_w z = \begin{bmatrix}
           \frac{\partial z}{\partial w_1} \\
           \vdots \\
           \frac{\partial z}{\partial w_i} \\
           \vdots \\
           \frac{\partial z}{\partial w_N}
         \end{bmatrix}
-   \end{align}
 
 For each element :math:`w_i` of :math:`w`, if it changes by a small
 amount then how much will y change?
@@ -143,7 +159,6 @@ Think locally and remember that at each node:
     plt.style.use('seaborn-v0_8-whitegrid')
     fig_w, fig_h = plt.rcParams.get('figure.figsize')
     plt.rcParams['figure.figsize'] = (fig_w, fig_h * .5)
-    %matplotlib inline
 
 Hands-on with Numpy and pytorch
 -------------------------------
@@ -183,6 +198,21 @@ sepal_width])
     X_iris_tr, X_iris_val, Y_iris_tr, Y_iris_val, label_iris_tr, label_iris_val = \
         sklearn.model_selection.train_test_split(X_iris, Y_iris, label_iris,
                                                  train_size=0.5, stratify=label_iris)
+
+
+.. parsed-literal::
+
+    /tmp/ipykernel_181680/2720649438.py:5: SettingWithCopyWarning: 
+    A value is trying to be set on a copy of a slice from a DataFrame.
+    Try using .loc[row_indexer,col_indexer] = value instead
+    
+    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+      df['species_n'] = iris.species.map({'versicolor':1, 'virginica':2})
+
+
+
+.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_5_1.png
+
 
 Backpropagation with Numpy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -247,6 +277,20 @@ loss, and backward pass.
                                         lr=1e-4, nite=50)
     _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
                  np.arange(len(losses_val)), losses_val, "-r")
+
+
+.. parsed-literal::
+
+    0 8320.86283567932 566.4003298191709
+    10 69.1144254443256 78.183681464354
+    20 55.983394365066715 77.33285806985458
+    30 50.57373709813517 77.19249121024394
+    40 47.19138471346897 76.77478593928662
+
+
+
+.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_7_1.png
+
 
 Backpropagation with PyTorch Tensors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -341,6 +385,20 @@ network:
     
     _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
                  np.arange(len(losses_val)), losses_val, "-r")
+
+
+.. parsed-literal::
+
+    0 4303.93603515625 418.63006591796875
+    10 71.38607025146484 116.78504943847656
+    20 51.27054214477539 87.81427001953125
+    30 45.72554397583008 80.99897003173828
+    40 43.343406677246094 78.32192993164062
+
+
+
+.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_9_1.png
+
 
 Backpropagation with PyTorch: Tensors and autograd
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -441,6 +499,20 @@ Tensor holding the gradient of ``x`` with respect to some scalar value.
     _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
                  np.arange(len(losses_val)), losses_val, "-r")
 
+
+.. parsed-literal::
+
+    0 6619.669921875 4738.6064453125
+    10 278.9159851074219 521.75732421875
+    20 93.21061706542969 257.3363037109375
+    30 64.7365493774414 219.1724853515625
+    40 56.20269012451172 206.47886657714844
+
+
+
+.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_11_1.png
+
+
 Backpropagation with PyTorch: nn
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -535,6 +607,20 @@ some trainable weights.
     _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
                  np.arange(len(losses_val)), losses_val, "-r")
 
+
+.. parsed-literal::
+
+    0 60.84171676635742 65.23538970947266
+    10 42.599857330322266 55.307090759277344
+    20 38.216976165771484 54.05012130737305
+    30 36.2943000793457 54.090911865234375
+    40 35.161956787109375 54.361236572265625
+
+
+
+.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_13_1.png
+
+
 Backpropagation with PyTorch optim
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -618,4 +704,18 @@ including SGD+momentum, RMSProp, Adam, etc.
                                             lr=1e-3, nite=50)
     _ = plt.plot(np.arange(len(losses_tr)), losses_tr, "-b",
                  np.arange(len(losses_val)), losses_val, "-r")
+
+
+.. parsed-literal::
+
+    0 121.76207733154297 104.62301635742188
+    10 81.1495361328125 76.97682189941406
+    20 56.0490837097168 61.42247772216797
+    30 43.4493293762207 55.462921142578125
+    40 38.075889587402344 55.15611267089844
+
+
+
+.. image:: dl_backprop_numpy-pytorch-sklearn_files/dl_backprop_numpy-pytorch-sklearn_15_1.png
+
 

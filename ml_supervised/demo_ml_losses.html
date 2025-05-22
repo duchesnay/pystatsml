@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Negative Log-Likelihood (NLL) for Binary Classification with Sigmoid Activation &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Bag-of-Words Models" href="../nlp/nlp_bow.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="negative-log-likelihood-nll-for-binary-classification-with-sigmoid-activation">
+<h1>Negative Log-Likelihood (NLL) for Binary Classification with Sigmoid Activation<a class="headerlink" href="#negative-log-likelihood-nll-for-binary-classification-with-sigmoid-activation" title="Link to this heading">¶</a></h1>
+<section id="demonstration-of-negative-log-likelihood-nll">
+<span id="ref-demonstration-nll"></span><h2>Demonstration of Negative Log-Likelihood (NLL)<a class="headerlink" href="#demonstration-of-negative-log-likelihood-nll" title="Link to this heading">¶</a></h2>
+<p><strong>Setup</strong></p>
+<ul>
+<li><p>Inputs: <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}_{i=1}^n\)</span>, with <span class="math notranslate nohighlight">\(y_i \in \{0, 1\}\)</span></p></li>
+<li><p>Model:</p>
+<div class="math notranslate nohighlight">
+\[\hat{p}_i = \sigma(\mathbf{w}^\top \mathbf{x}_i) = \frac{1}{1 + e^{-\mathbf{w}^\top \mathbf{x}_i}}\]</div>
+</li>
+<li><p>Objective:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \log P(y_i \mid \mathbf{x}_i; \mathbf{w})\]</div>
+</li>
+</ul>
+<p>Since <span class="math notranslate nohighlight">\(y_i \in \{0, 1\}\)</span>, we model the likelihood as:</p>
+<div class="math notranslate nohighlight">
+\[P(y_i \mid \mathbf{x}_i; \mathbf{w}) = \hat{p}_i^{y_i} (1 - \hat{p}_i)^{1 - y_i}\]</div>
+<p><strong>Step-by-step Expansion</strong></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \log \left( \hat{p}_i^{y_i} (1 - \hat{p}_i)^{1 - y_i} \right)\]</div>
+<p>Apply log properties:</p>
+<div class="math notranslate nohighlight">
+\[= - \sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]\]</div>
+<p>Now substitute <span class="math notranslate nohighlight">\(\hat{p}_i = \sigma(z_i) = \frac{1}{1 + e^{-z_i}}\)</span>
+where <span class="math notranslate nohighlight">\(z_i = \mathbf{w}^\top \mathbf{x}_i\)</span>:</p>
+<ul>
+<li><p>Use:</p>
+<div class="math notranslate nohighlight">
+\[\log(\sigma(z)) = -\log(1 + e^{-z}), \quad \log(1 - \sigma(z)) = -z - \log(1 + e^{-z})\]</div>
+</li>
+</ul>
+<p>So the per-example loss becomes:</p>
+<div class="math notranslate nohighlight">
+\[\ell_i(\mathbf{w}) = - \left[ y_i \log \sigma(z_i) + (1 - y_i) \log (1 - \sigma(z_i)) \right]\]</div>
+<div class="math notranslate nohighlight">
+\[= - \left[ y_i (-\log(1 + e^{-z_i})) + (1 - y_i)(-z_i - \log(1 + e^{-z_i})) \right]\]</div>
+<p>Simplify:</p>
+<div class="math notranslate nohighlight">
+\[\ell_i(\mathbf{w}) = \log(1 + e^{-z_i}) + (1 - y_i) z_i\]</div>
+<p>Therefore, the total loss over <span class="math notranslate nohighlight">\(n\)</span> examples is:</p>
+<p><strong>Final Simplified Expression</strong></p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \left[ \log(1 + e^{-z_i}) + (1 - y_i) z_i \right] \quad \text{with } y_i \in \{0, 1\},\]</div>
+<p>simplifies to</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \log\left(1 + e^{-y_i \cdot z_i} \right) \quad \text{with } y_i \in \{-1, +1\}.\]</div>
+<p>This final form is particularly elegant and often used in optimization
+routines.</p>
+</section>
+<section id="gradient-of-negative-log-likelihood-nll">
+<h2>Gradient of Negative Log-Likelihood (NLL)<a class="headerlink" href="#gradient-of-negative-log-likelihood-nll" title="Link to this heading">¶</a></h2>
+<p><strong>Recap: The Model and Loss</strong></p>
+<p>We have:</p>
+<ul>
+<li><p>Input–label pairs: <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}_{i=1}^n\)</span>, where
+<span class="math notranslate nohighlight">\(y_i \in \{0, 1\}\)</span></p></li>
+<li><p>Linear logit: <span class="math notranslate nohighlight">\(z_i = \mathbf{w}^\top \mathbf{x}_i\)</span></p></li>
+<li><p>Sigmoid output:</p>
+<div class="math notranslate nohighlight">
+\[\hat{p}_i = \sigma(z_i) = \frac{1}{1 + e^{-z_i}}\]</div>
+</li>
+<li><p>NLL loss:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\mathbf{w}) = -\sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]\]</div>
+</li>
+</ul>
+<p>We aim to compute the gradient
+<span class="math notranslate nohighlight">\(\nabla_{\mathbf{w}} \mathcal{L}(\mathbf{w})\)</span></p>
+<p><strong>Step 1: Loss per Sample</strong></p>
+<p>Define per-sample loss:</p>
+<div class="math notranslate nohighlight">
+\[\ell_i(\mathbf{w}) = -\left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]\]</div>
+<p>Take derivative w.r.t. <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>. Using the chain rule:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\mathbf{w}} \ell_i = \frac{d\ell_i}{d\hat{p}_i} \cdot \frac{d\hat{p}_i}{dz_i} \cdot \frac{dz_i}{d\mathbf{w}}\]</div>
+<p><strong>Step 2: Compute Gradients</strong></p>
+<ul>
+<li><p>Derivative of the loss w.r.t. <span class="math notranslate nohighlight">\(\hat{p}_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\ell_i}{d\hat{p}_i} = -\left( \frac{y_i}{\hat{p}_i} - \frac{1 - y_i}{1 - \hat{p}_i} \right)\]</div>
+</li>
+<li><p>Derivative of sigmoid:</p>
+<div class="math notranslate nohighlight">
+\[\frac{d\hat{p}_i}{dz_i} = \hat{p}_i(1 - \hat{p}_i)\]</div>
+</li>
+<li><p>Derivative of <span class="math notranslate nohighlight">\(z_i = \mathbf{w}^\top \mathbf{x}_i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\frac{dz_i}{d\mathbf{w}} = \mathbf{x}_i\]</div>
+</li>
+</ul>
+<p>Putting it all together:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\mathbf{w}} \ell_i = \left[ \hat{p}_i - y_i \right] \mathbf{x}_i\]</div>
+<p><strong>Step 3: Final Gradient over Dataset</strong></p>
+<p>Sum over all samples:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\mathbf{w}} \mathcal{L}(\mathbf{w}) = \sum_{i=1}^n (\hat{p}_i - y_i) \mathbf{x}_i\]</div>
+<p>Or in matrix form, if <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{n \times p}\)</span>,
+<span class="math notranslate nohighlight">\(\hat{\mathbf{p}} \in \mathbb{R}^n\)</span>, and
+<span class="math notranslate nohighlight">\(\mathbf{y} \in \mathbb{R}^n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\mathbf{w}} \mathcal{L}(\mathbf{w}) = \mathbf{X}^\top (\hat{\mathbf{p}} - \mathbf{y})\]</div>
+<p><strong>Summary</strong></p>
+<ul>
+<li><p>Gradient of binary NLL with sigmoid:</p>
+<div class="math notranslate nohighlight">
+\[\boxed{\nabla_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n (\sigma(\mathbf{w}^\top \mathbf{x}_i) - y_i)\mathbf{x}_i}\]</div>
+</li>
+<li><p>In matrix form:</p>
+<div class="math notranslate nohighlight">
+\[\boxed{\nabla_{\mathbf{w}} \mathcal{L} = \mathbf{X}^\top (\hat{\mathbf{p}} - \mathbf{y})}\]</div>
+</li>
+</ul>
+<p>This form is used in logistic regression and binary classifiers trained
+via gradient descent.</p>
+</section>
+<section id="hessian-matrix-i-e-the-matrix-of-second-derivatives-for-negative-log-likelihood-nll">
+<h2>Hessian matrix (i.e., the matrix of second derivatives) for Negative Log-Likelihood (NLL)<a class="headerlink" href="#hessian-matrix-i-e-the-matrix-of-second-derivatives-for-negative-log-likelihood-nll" title="Link to this heading">¶</a></h2>
+<p><strong>Recap: Setup</strong></p>
+<div class="line-block">
+<div class="line">We are given: - Dataset: <span class="math notranslate nohighlight">\(\{(x_i, y_i)\}_{i=1}^n\)</span>, with
+<span class="math notranslate nohighlight">\(y_i \in \{0, 1\}\)</span> - Model:</div>
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\hat{p}_i = \sigma(z_i) = \frac{1}{1 + e^{-z_i}}, \quad \text{where } z_i = \mathbf{w}^\top \mathbf{x}_i\]</div>
+<ul class="simple">
+<li><p>Loss function:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\mathbf{w}) = -\sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]\]</div>
+</div></blockquote>
+<p>We already know the gradient is:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n (\hat{p}_i - y_i) \mathbf{x}_i\]</div>
+<p><strong>Goal: Hessian :math:`nabla^2_{mathbf{w}} mathcal{L}`</strong></p>
+<p>We now compute the second derivative of <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>, i.e., the
+<strong>Hessian matrix</strong> <span class="math notranslate nohighlight">\(\mathbf{H} \in \mathbb{R}^{p \times p}\)</span>, where
+each entry is:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{H}_{jk} = \frac{\partial^2 \mathcal{L}}{\partial w_j \partial w_k}\]</div>
+<p><strong>Step-by-Step Derivation</strong></p>
+<p>Recall:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n (\hat{p}_i - y_i) \mathbf{x}_i\]</div>
+<p>But note that
+<span class="math notranslate nohighlight">\(\hat{p}_i = \sigma(z_i) = \sigma(\mathbf{w}^\top \mathbf{x}_i)\)</span>,
+so <span class="math notranslate nohighlight">\(\hat{p}_i\)</span> depends on <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> too.</p>
+<p>We differentiate the gradient:</p>
+<div class="math notranslate nohighlight">
+\[\nabla^2_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n \nabla_{\mathbf{w}} \left[ (\hat{p}_i - y_i) \mathbf{x}_i \right]\]</div>
+<p>The only term depending on <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> is <span class="math notranslate nohighlight">\(\hat{p}_i\)</span>. We
+apply the chain rule:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\mathbf{w}} \hat{p}_i = \sigma'(z_i) \cdot \nabla_{\mathbf{w}} z_i = \hat{p}_i (1 - \hat{p}_i) \mathbf{x}_i\]</div>
+<p>So the outer derivative becomes:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\mathbf{w}} \left[ (\hat{p}_i - y_i) \mathbf{x}_i \right] = \hat{p}_i (1 - \hat{p}_i) \mathbf{x}_i \mathbf{x}_i^\top\]</div>
+<p>Hence:</p>
+<div class="math notranslate nohighlight">
+\[\boxed{
+\nabla^2_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n \hat{p}_i (1 - \hat{p}_i) \mathbf{x}_i \mathbf{x}_i^\top
+}\]</div>
+<p>This is a <strong>weighted sum of outer products</strong> of input vectors.</p>
+<p><strong>Matrix Form</strong></p>
+<p>Let: - <span class="math notranslate nohighlight">\(\mathbf{X} \in \mathbb{R}^{n \times p}\)</span>: input matrix
+(rows = <span class="math notranslate nohighlight">\(x_i^\top\)</span>) - <span class="math notranslate nohighlight">\(\hat{\mathbf{p}} \in \mathbb{R}^n\)</span>:
+predicted probabilities - Define
+<span class="math notranslate nohighlight">\(\mathbf{S} = \text{diag}(\hat{p}_i (1 - \hat{p}_i)) \in \mathbb{R}^{n \times n}\)</span></p>
+<p>Then the Hessian is:</p>
+<div class="math notranslate nohighlight">
+\[\boxed{
+\nabla^2_{\mathbf{w}} \mathcal{L} = \mathbf{X}^\top \mathbf{S} \mathbf{X}
+}\]</div>
+<p><strong>Summary</strong></p>
+<ul>
+<li><p>The Hessian of the NLL loss with sigmoid output is:</p>
+<div class="math notranslate nohighlight">
+\[\nabla^2_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n \hat{p}_i (1 - \hat{p}_i) \mathbf{x}_i \mathbf{x}_i^\top\]</div>
+</li>
+<li><p>In matrix form:</p>
+<div class="math notranslate nohighlight">
+\[\nabla^2_{\mathbf{w}} \mathcal{L} = \mathbf{X}^\top \mathbf{S} \mathbf{X}\]</div>
+</li>
+<li><p>This is <strong>positive semi-definite</strong>, hence the NLL is convex for
+logistic regression.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Negative Log-Likelihood (NLL) for Binary Classification with Sigmoid Activation</a><ul>
+<li><a class="reference internal" href="#demonstration-of-negative-log-likelihood-nll">Demonstration of Negative Log-Likelihood (NLL)</a></li>
+<li><a class="reference internal" href="#gradient-of-negative-log-likelihood-nll">Gradient of Negative Log-Likelihood (NLL)</a></li>
+<li><a class="reference internal" href="#hessian-matrix-i-e-the-matrix-of-second-derivatives-for-negative-log-likelihood-nll">Hessian matrix (i.e., the matrix of second derivatives) for Negative Log-Likelihood (NLL)</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ml_supervised/demo_ml_losses.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/ml_supervised/demo_ml_losses.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

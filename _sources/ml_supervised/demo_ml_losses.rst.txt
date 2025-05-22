@@ -1,0 +1,320 @@
+Negative Log-Likelihood (NLL) for Binary Classification with Sigmoid Activation
+-------------------------------------------------------------------------------
+
+.. _`ref:demonstration-nll`:
+
+Demonstration of Negative Log-Likelihood (NLL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Setup**
+
+- Inputs: :math:`\{(x_i, y_i)\}_{i=1}^n`, with :math:`y_i \in \{0, 1\}`
+- Model:
+
+  .. math::
+
+
+     \hat{p}_i = \sigma(\mathbf{w}^\top \mathbf{x}_i) = \frac{1}{1 + e^{-\mathbf{w}^\top \mathbf{x}_i}}
+- Objective:
+
+  .. math::
+
+
+     \mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \log P(y_i \mid \mathbf{x}_i; \mathbf{w})
+
+Since :math:`y_i \in \{0, 1\}`, we model the likelihood as:
+
+.. math::
+
+
+   P(y_i \mid \mathbf{x}_i; \mathbf{w}) = \hat{p}_i^{y_i} (1 - \hat{p}_i)^{1 - y_i}
+
+**Step-by-step Expansion**
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \log \left( \hat{p}_i^{y_i} (1 - \hat{p}_i)^{1 - y_i} \right)
+
+Apply log properties:
+
+.. math::
+
+
+   = - \sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]
+
+Now substitute :math:`\hat{p}_i = \sigma(z_i) = \frac{1}{1 + e^{-z_i}}`
+where :math:`z_i = \mathbf{w}^\top \mathbf{x}_i`:
+
+- Use:
+
+  .. math::
+
+
+     \log(\sigma(z)) = -\log(1 + e^{-z}), \quad \log(1 - \sigma(z)) = -z - \log(1 + e^{-z})
+
+So the per-example loss becomes:
+
+.. math::
+
+
+   \ell_i(\mathbf{w}) = - \left[ y_i \log \sigma(z_i) + (1 - y_i) \log (1 - \sigma(z_i)) \right]
+
+.. math::
+
+
+   = - \left[ y_i (-\log(1 + e^{-z_i})) + (1 - y_i)(-z_i - \log(1 + e^{-z_i})) \right]
+
+Simplify:
+
+.. math::
+
+
+   \ell_i(\mathbf{w}) = \log(1 + e^{-z_i}) + (1 - y_i) z_i
+
+Therefore, the total loss over :math:`n` examples is:
+
+**Final Simplified Expression**
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \left[ \log(1 + e^{-z_i}) + (1 - y_i) z_i \right] \quad \text{with } y_i \in \{0, 1\},
+
+simplifies to
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}}(\mathbf{w}) = \sum_{i=1}^n \log\left(1 + e^{-y_i \cdot z_i} \right) \quad \text{with } y_i \in \{-1, +1\}.
+
+This final form is particularly elegant and often used in optimization
+routines.
+
+Gradient of Negative Log-Likelihood (NLL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Recap: The Model and Loss**
+
+We have:
+
+- Input–label pairs: :math:`\{(x_i, y_i)\}_{i=1}^n`, where
+  :math:`y_i \in \{0, 1\}`
+- Linear logit: :math:`z_i = \mathbf{w}^\top \mathbf{x}_i`
+- Sigmoid output:
+
+  .. math::
+
+
+     \hat{p}_i = \sigma(z_i) = \frac{1}{1 + e^{-z_i}}
+- NLL loss:
+
+  .. math::
+
+
+     \mathcal{L}(\mathbf{w}) = -\sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]
+
+We aim to compute the gradient
+:math:`\nabla_{\mathbf{w}} \mathcal{L}(\mathbf{w})`
+
+**Step 1: Loss per Sample**
+
+Define per-sample loss:
+
+.. math::
+
+
+   \ell_i(\mathbf{w}) = -\left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]
+
+Take derivative w.r.t. :math:`\mathbf{w}`. Using the chain rule:
+
+.. math::
+
+
+   \nabla_{\mathbf{w}} \ell_i = \frac{d\ell_i}{d\hat{p}_i} \cdot \frac{d\hat{p}_i}{dz_i} \cdot \frac{dz_i}{d\mathbf{w}}
+
+**Step 2: Compute Gradients**
+
+- Derivative of the loss w.r.t. :math:`\hat{p}_i`:
+
+  .. math::
+
+
+     \frac{d\ell_i}{d\hat{p}_i} = -\left( \frac{y_i}{\hat{p}_i} - \frac{1 - y_i}{1 - \hat{p}_i} \right)
+
+- Derivative of sigmoid:
+
+  .. math::
+
+
+     \frac{d\hat{p}_i}{dz_i} = \hat{p}_i(1 - \hat{p}_i)
+
+- Derivative of :math:`z_i = \mathbf{w}^\top \mathbf{x}_i`:
+
+  .. math::
+
+
+     \frac{dz_i}{d\mathbf{w}} = \mathbf{x}_i
+
+Putting it all together:
+
+.. math::
+
+
+   \nabla_{\mathbf{w}} \ell_i = \left[ \hat{p}_i - y_i \right] \mathbf{x}_i
+
+**Step 3: Final Gradient over Dataset**
+
+Sum over all samples:
+
+.. math::
+
+
+   \nabla_{\mathbf{w}} \mathcal{L}(\mathbf{w}) = \sum_{i=1}^n (\hat{p}_i - y_i) \mathbf{x}_i
+
+Or in matrix form, if :math:`\mathbf{X} \in \mathbb{R}^{n \times p}`,
+:math:`\hat{\mathbf{p}} \in \mathbb{R}^n`, and
+:math:`\mathbf{y} \in \mathbb{R}^n`:
+
+.. math::
+
+
+   \nabla_{\mathbf{w}} \mathcal{L}(\mathbf{w}) = \mathbf{X}^\top (\hat{\mathbf{p}} - \mathbf{y})
+
+**Summary**
+
+- Gradient of binary NLL with sigmoid:
+
+  .. math::
+
+
+     \boxed{\nabla_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n (\sigma(\mathbf{w}^\top \mathbf{x}_i) - y_i)\mathbf{x}_i}
+- In matrix form:
+
+  .. math::
+
+
+     \boxed{\nabla_{\mathbf{w}} \mathcal{L} = \mathbf{X}^\top (\hat{\mathbf{p}} - \mathbf{y})}
+
+This form is used in logistic regression and binary classifiers trained
+via gradient descent.
+
+Hessian matrix (i.e., the matrix of second derivatives) for Negative Log-Likelihood (NLL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Recap: Setup**
+
+| We are given: - Dataset: :math:`\{(x_i, y_i)\}_{i=1}^n`, with
+  :math:`y_i \in \{0, 1\}` - Model:
+| 
+
+  .. math::
+
+
+       \hat{p}_i = \sigma(z_i) = \frac{1}{1 + e^{-z_i}}, \quad \text{where } z_i = \mathbf{w}^\top \mathbf{x}_i
+       
+
+  - Loss function:
+
+  .. math::
+
+
+       \mathcal{L}(\mathbf{w}) = -\sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]
+       
+
+We already know the gradient is:
+
+.. math::
+
+
+   \nabla_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n (\hat{p}_i - y_i) \mathbf{x}_i
+
+**Goal: Hessian :math:`\nabla^2_{\mathbf{w}} \mathcal{L}`**
+
+We now compute the second derivative of :math:`\mathcal{L}`, i.e., the
+**Hessian matrix** :math:`\mathbf{H} \in \mathbb{R}^{p \times p}`, where
+each entry is:
+
+.. math::
+
+
+   \mathbf{H}_{jk} = \frac{\partial^2 \mathcal{L}}{\partial w_j \partial w_k}
+
+**Step-by-Step Derivation**
+
+Recall:
+
+.. math::
+
+
+   \nabla_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n (\hat{p}_i - y_i) \mathbf{x}_i
+
+But note that
+:math:`\hat{p}_i = \sigma(z_i) = \sigma(\mathbf{w}^\top \mathbf{x}_i)`,
+so :math:`\hat{p}_i` depends on :math:`\mathbf{w}` too.
+
+We differentiate the gradient:
+
+.. math::
+
+
+   \nabla^2_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n \nabla_{\mathbf{w}} \left[ (\hat{p}_i - y_i) \mathbf{x}_i \right]
+
+The only term depending on :math:`\mathbf{w}` is :math:`\hat{p}_i`. We
+apply the chain rule:
+
+.. math::
+
+
+   \nabla_{\mathbf{w}} \hat{p}_i = \sigma'(z_i) \cdot \nabla_{\mathbf{w}} z_i = \hat{p}_i (1 - \hat{p}_i) \mathbf{x}_i
+
+So the outer derivative becomes:
+
+.. math::
+
+
+   \nabla_{\mathbf{w}} \left[ (\hat{p}_i - y_i) \mathbf{x}_i \right] = \hat{p}_i (1 - \hat{p}_i) \mathbf{x}_i \mathbf{x}_i^\top
+
+Hence:
+
+.. math::
+
+
+   \boxed{
+   \nabla^2_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n \hat{p}_i (1 - \hat{p}_i) \mathbf{x}_i \mathbf{x}_i^\top
+   }
+
+This is a **weighted sum of outer products** of input vectors.
+
+**Matrix Form**
+
+Let: - :math:`\mathbf{X} \in \mathbb{R}^{n \times p}`: input matrix
+(rows = :math:`x_i^\top`) - :math:`\hat{\mathbf{p}} \in \mathbb{R}^n`:
+predicted probabilities - Define
+:math:`\mathbf{S} = \text{diag}(\hat{p}_i (1 - \hat{p}_i)) \in \mathbb{R}^{n \times n}`
+
+Then the Hessian is:
+
+.. math::
+
+
+   \boxed{
+   \nabla^2_{\mathbf{w}} \mathcal{L} = \mathbf{X}^\top \mathbf{S} \mathbf{X}
+   }
+
+**Summary**
+
+- The Hessian of the NLL loss with sigmoid output is:
+
+  .. math::
+
+
+     \nabla^2_{\mathbf{w}} \mathcal{L} = \sum_{i=1}^n \hat{p}_i (1 - \hat{p}_i) \mathbf{x}_i \mathbf{x}_i^\top
+- In matrix form:
+
+  .. math::
+
+
+     \nabla^2_{\mathbf{w}} \mathcal{L} = \mathbf{X}^\top \mathbf{S} \mathbf{X}
+- This is **positive semi-definite**, hence the NLL is convex for
+  logistic regression.

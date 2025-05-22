@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:01.989** total execution time for 2 files **from auto_gallery**:
+**00:01.056** total execution time for 2 files **from auto_gallery**:
 
 .. container::
 
@@ -32,9 +32,9 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_gallery_ml_lab_face_recognition.py` (``ml_lab_face_recognition.py``)
-     - 00:01.989
+   * - :ref:`sphx_glr_auto_gallery_ensemble_learning.py` (``ensemble_learning.py``)
+     - 00:01.056
      - 0.0
-   * - :ref:`sphx_glr_auto_gallery_stat_univ_lab_brain-volume.py` (``stat_univ_lab_brain-volume.py``)
+   * - :ref:`sphx_glr_auto_gallery_kernel_svm.py` (``kernel_svm.py``)
      - 00:00.000
      - 0.0

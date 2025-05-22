@@ -43,53 +43,55 @@
             
   <section id="linear-models-for-regression">
 <h1>Linear Models for Regression<a class="headerlink" href="#linear-models-for-regression" title="Link to this heading">¶</a></h1>
-<figure class="align-default" id="id1">
+<figure class="align-default" id="id3">
 <img alt="Linear regression" src="../_images/linear_regression.png" />
 <figcaption>
-<p><span class="caption-text">Linear regression</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Linear regression</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <section id="minimizing-the-sum-of-squared-errors-sse-loss">
 <h2>Minimizing the Sum of Squared Errors (SSE) Loss<a class="headerlink" href="#minimizing-the-sum-of-squared-errors-sse-loss" title="Link to this heading">¶</a></h2>
-<p>Linear regression models the <strong>output</strong>, or <strong>target</strong> variable
-<span class="math notranslate nohighlight">\(y \in \mathrm{R}\)</span> as a linear combination of the
-<span class="math notranslate nohighlight">\(P\)</span>-dimensional input <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^{P}\)</span>. Let
-<span class="math notranslate nohighlight">\(\mathbf{X}\)</span> be the <span class="math notranslate nohighlight">\(N \times P\)</span> matrix with each row an
-input vector (with a 1 in the first position), and similarly let
-<span class="math notranslate nohighlight">\(\mathbf{y}\)</span> be the <span class="math notranslate nohighlight">\(N\)</span>-dimensional vector of outputs in the
-<strong>training set</strong>, the linear model will predict the <span class="math notranslate nohighlight">\(\mathbf{y}\)</span>
-given <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> using the <strong>parameter vector</strong>, or <strong>weight
-vector</strong> <span class="math notranslate nohighlight">\(\mathbf{w} \in \mathbb{R}^P\)</span> according to</p>
+<p>A linear model assumes a linear relationship between input features of
+observation <span class="math notranslate nohighlight">\(i\)</span> <span class="math notranslate nohighlight">\(\mathbf{x}_i \in \mathbb{R}^{P}\)</span> and an
+output <span class="math notranslate nohighlight">\(y \in \mathrm{R}\)</span> using:</p>
 <div class="math notranslate nohighlight">
-\[y_i = \mathbf{x}_i^T \mathbf{w}+ \varepsilon_i,\]</div>
-<p>for all observation <span class="math notranslate nohighlight">\(i\)</span>. For the whole dataset this is equivalent
-to:</p>
+\[y_i = \mathbf{x}_i^\top \mathbf{w}+ \varepsilon_i,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon}_i \in \mathrm{R}\)</span> is the
+<strong>residual</strong> or the error of the prediction. <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> is the
+weight vector (model’s parameters) of coefficients. <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>
+is found by minimizing an <strong>objective function</strong>, which is the <strong>loss
+function</strong>, <span class="math notranslate nohighlight">\(L(\mathbf{w})\)</span>, i.e. the error measured on the data.
+This error is the <strong>sum of squared errors (SSE) loss</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\text{SSE}(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2\]</div>
+<p>The equivalent matrix notation is:</p>
 <div class="math notranslate nohighlight">
 \[\mathbf{y} = \mathbf{X} \mathbf{w} + \boldsymbol{\varepsilon},\]</div>
-<p>where <span class="math notranslate nohighlight">\(\boldsymbol{\varepsilon} \in \mathrm{R}^N\)</span> are the
-<strong>residuals</strong> (<span class="math notranslate nohighlight">\(\varepsilon_i\)</span>), or the errors of the prediction.
-The <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> is found by minimizing an <strong>objective function</strong>,
-which is the <strong>loss function</strong>, <span class="math notranslate nohighlight">\(L(\mathbf{w})\)</span>, i.e. the error
-measured on the data. This error is the <strong>sum of squared errors (SSE)
-loss</strong>.</p>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> be the <span class="math notranslate nohighlight">\(N \times P\)</span> matrix with each row
+an input vector and similarly let <span class="math notranslate nohighlight">\(\mathbf{y}\)</span> the
+<span class="math notranslate nohighlight">\(N\)</span>-dimensional vector of outputs.</p>
+<p>The loss is given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\text{SSE}(\mathbf{w}) = (\mathbf{y} - \mathbf{X}\mathbf{w})^\top (\mathbf{y} - \mathbf{X}\mathbf{w})\\
+= \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2,\end{split}\]</div>
 <p>Minimizing the SSE is the Ordinary Least Square <strong>OLS</strong> regression as
 objective function. which is a simple <strong>ordinary least squares (OLS)</strong>
 minimization whose analytic solution is:</p>
 <div class="math notranslate nohighlight">
-\[\mathbf{w}_{\text{OLS}} = (\mathbf{X}^T\mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}\]</div>
+\[\mathbf{w}_{\text{OLS}} = (\mathbf{X}^\top\mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}\]</div>
 <p>The solution could also be found using gradient descent using the
 gradient of the loss:</p>
 <div class="math notranslate nohighlight">
-\[\partial\frac{L(\mathbf{w}, \mathbf{X}, \mathbf{y})}{\partial\mathbf{w}} = 2 \sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i)\]</div>
+\[\partial\frac{SSE(\mathbf{w})}{\partial\mathbf{w}} = 2 \sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i)\]</div>
 <p>Linear regression of <code class="docutils literal notranslate"><span class="pre">Advertising.csv</span></code> dataset with TV and Radio
 advertising as input features and Sales as target. The linear model that
 minimizes the MSE is a plan (2 input features) defined as: Sales = 0.05
 TV + .19 Radio + 3:</p>
-<figure class="align-default" id="id2">
+<figure class="align-default" id="id4">
 <a class="reference internal image-reference" href="../_images/linear_regression_plan.png"><img alt="Linear regression" src="../_images/linear_regression_plan.png" style="width: 10cm;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Linear regression</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+<p><span class="caption-text">Linear regression</span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 </section>
@@ -147,20 +149,171 @@ by the regularization parameter <span class="math notranslate nohighlight">\(\la
 <strong>penalty function</strong> <span class="math notranslate nohighlight">\(\Omega(\mathbf{w})\)</span> leading to the general
 form:</p>
 <div class="math notranslate nohighlight">
-\[J(\mathbf{w}) = L(\mathbf{w}) + \lambda \Omega(\mathbf{w}).\]</div>
+\[J(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2 + \lambda \Omega(\mathbf{w})\]</div>
 <p>The respective contribution of the loss and the penalty is controlled by
-the <strong>regularization parameter</strong> <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
-<p>Popular penalties are:</p>
-<ul class="simple">
-<li><p>Ridge (also called <span class="math notranslate nohighlight">\(\ell_2\)</span>) penalty:
-<span class="math notranslate nohighlight">\(\|\mathbf{w}\|_2^2\)</span>. It shrinks coefficients toward 0.</p></li>
-<li><p>Lasso (also called <span class="math notranslate nohighlight">\(\ell_1\)</span>) penalty: <span class="math notranslate nohighlight">\(\|\mathbf{w}\|_1\)</span>.
-It performs feature selection by setting some coefficients to 0.</p></li>
-<li><p>ElasticNet (also called <span class="math notranslate nohighlight">\(\ell_1\ell_2\)</span>) penalty:
-<span class="math notranslate nohighlight">\(\alpha \left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right)\)</span>.
-It performs selection of group of correlated features by setting some
-coefficients to 0.</p></li>
+the <strong>regularization hyper-parameter</strong> <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
+<p><strong>Regularization exploits Occam’s razor is a principle</strong></p>
+<p>Occam’s razor is a principle stating that, among competing hypotheses,
+the one with the fewest assumptions should be selected. This is also
+known as the principle of parsimony, favoring simpler explanations or
+models when possible. In machine learning, this translates to preferring
+models with similar loss but lower complexity.</p>
+</section>
+<section id="ridge-regression-ell-2-or-l2-regularization">
+<h2>Ridge Regression (<span class="math notranslate nohighlight">\(\ell_2\)</span> or L2 regularization)<a class="headerlink" href="#ridge-regression-ell-2-or-l2-regularization" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p><strong>Penalty</strong>:
+<span class="math notranslate nohighlight">\(\Omega(\mathbf{w}) = \|\mathbf{w}\|_2^2 = \sum_{j} w_j^2\)</span></p></li>
+<li><p><strong>Objective function</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\text{Ridge}(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2 + \lambda \|\mathbf{w}\|_2^2\]</div>
+</li>
+<li><p><strong>Effect</strong>: Shrinks all coefficients smoothly towards zero, but <strong>does
+not enforce sparsity</strong> (no coefficients become exactly zero).</p></li>
+<li><p>The gradient of the loss:</p>
+<div class="math notranslate nohighlight">
+\[\partial\frac{L(\mathbf{w}, \mathbf{X}, \mathbf{y})}{\partial\mathbf{w}} = 2 (\sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i) + \lambda \mathbf{w})\]</div>
+</li>
 </ul>
+<section id="numerical-interpretation">
+<h3>Numerical Interpretation<a class="headerlink" href="#numerical-interpretation" title="Link to this heading">¶</a></h3>
+<p>Using the matrix notation, he Ridge objective function can be rewritten
+as</p>
+<div class="math notranslate nohighlight">
+\[\text{Ridge}(\mathbf{w}) = \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2 + \lambda \|\mathbf{w}\|_2^2\]</div>
+<p>The <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> that minimizes <span class="math notranslate nohighlight">\(F_{Ridge}(\mathbf{w})\)</span> can
+be found by the following derivation:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\nabla_{\mathbf{w}}\text{Ridge}(\mathbf{w}) = 0\\
+\nabla_{\mathbf{w}}\big((\mathbf{y} - \mathbf{X}\mathbf{w})^\top (\mathbf{y} - \mathbf{X}\mathbf{w}) + \lambda \mathbf{w}^\top\mathbf{w}\big) = 0\\
+\nabla_{\mathbf{w}}\big(\mathbf{y}^\top\mathbf{y} - 2 \mathbf{w}^\top\mathbf{X}^\top\mathbf{y} + \mathbf{w}^\top\mathbf{X}^\top\mathbf{X}\mathbf{w} + \lambda \mathbf{w}^\top\mathbf{w}\big) = 0\\
+-2\mathbf{X}^\top\mathbf{y} + 2 \mathbf{X}^\top\mathbf{X}\mathbf{w} + 2 \lambda \mathbf{w} = 0\\
+-\mathbf{X}^\top\mathbf{y} + (\mathbf{X}^\top\mathbf{X} + \lambda \mathbf{I}) \mathbf{w} = 0\\
+(\mathbf{X}^\top\mathbf{X} + \lambda \mathbf{I}) \mathbf{w} = \mathbf{X}^\top\mathbf{y}\\
+\mathbf{w} = (\mathbf{X}^\top\mathbf{X} + \lambda \mathbf{I})^{-1} \mathbf{X}^\top\mathbf{y}\end{split}\]</div>
+<ul class="simple">
+<li><p>The solution adds a positive constant to the diagonal of
+<span class="math notranslate nohighlight">\(\mathbf{X}^\top\mathbf{X}\)</span> before inversion. This makes the
+problem nonsingular, even if <span class="math notranslate nohighlight">\(\mathbf{X}^\top\mathbf{X}\)</span> is not
+of full rank, and was the main motivation behind ridge regression.</p></li>
+<li><p>Increasing <span class="math notranslate nohighlight">\(\lambda\)</span> shrinks the <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> coefficients
+toward 0.</p></li>
+<li><p>Solutions with large coefficients become unattractive.</p></li>
+</ul>
+</section>
+</section>
+<section id="lasso-regression-ell-1-or-l1-regularization">
+<h2>Lasso Regression (<span class="math notranslate nohighlight">\(\ell_1\)</span> or L1 regularization)<a class="headerlink" href="#lasso-regression-ell-1-or-l1-regularization" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p><strong>Penalty</strong>:
+<span class="math notranslate nohighlight">\(\Omega(\mathbf{w}) = \|\mathbf{w}\|_1 = \sum_{j} |w_j|\)</span></p></li>
+<li><p><strong>Objective function</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\text{Lasso}(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2 + \lambda \sum_{j} |w_j|\]</div>
+</li>
+<li><p><strong>Effect</strong>: Promotes <strong>sparsity</strong>, i.e., forces some coefficients to
+be exactly zero, ie. performs feature selection.</p></li>
+<li><p><strong>No closed-form solution</strong>, It is convex but not differentiable.
+Requires specific optimization algorithms, such as the fast iterative
+shrinkage-thresholding algorithm (FISTA): Amir Beck and Marc Teboulle,
+<em>A Fast Iterative Shrinkage-Thresholding Algorithm for Linear Inverse
+Problems</em> SIAM J. Imaging Sci., 2009.</p></li>
+</ul>
+<section id="geometric-interpretation">
+<h3>Geometric interpretation<a class="headerlink" href="#geometric-interpretation" title="Link to this heading">¶</a></h3>
+<figure class="align-default" id="id5">
+<img alt="Sparsity of L1 norm" src="../_images/l1_sparse.png" />
+<figcaption>
+<p><span class="caption-text">Sparsity of L1 norm</span><a class="headerlink" href="#id5" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="elastic-net">
+<h2>Elastic Net<a class="headerlink" href="#elastic-net" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Penalty</strong>: Combination of L1 and L2:
+<span class="math notranslate nohighlight">\(\Omega(\mathbf{w}) = \alpha \|\mathbf{w}\|_1 + (1 - \alpha) \|\mathbf{w}\|_2^2\)</span>
+where <span class="math notranslate nohighlight">\(\alpha \in [0, 1]\)</span> controls the mix of Lasso and Ridge.</p></li>
+<li><p><strong>Effect</strong>: Balances sparsity (L1) and stability (L2), especially
+useful when features are correlated.</p></li>
+</ul>
+<p>The Elastic-net estimator combines the <span class="math notranslate nohighlight">\(\ell_1\)</span> and <span class="math notranslate nohighlight">\(\ell_2\)</span>
+penalties, and results in the problem to</p>
+<div class="math notranslate nohighlight">
+\[\text{Enet}(\mathbf{w}) = \sum_i^N (y_i - \mathbf{x}_i^\top\mathbf{w})^2 + \alpha \left(\rho~\|\mathbf{w}\|_1 + (1-\rho)~\|\mathbf{w}\|_2^2 \right),\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha\)</span> acts as a global penalty and <span class="math notranslate nohighlight">\(\rho\)</span> as an
+<span class="math notranslate nohighlight">\(\ell_1 / \ell_2\)</span> ratio.</p>
+<section id="rational">
+<h3>Rational<a class="headerlink" href="#rational" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>If there are groups of highly correlated variables, Lasso tends to
+arbitrarily select only one from each group. These models are
+difficult to interpret because covariates that are strongly associated
+with the outcome are not included in the predictive model. Conversely,
+the elastic net encourages a grouping effect, where strongly
+correlated predictors tend to be in or out of the model together.</p></li>
+<li><p>Studies on real world data and simulation studies show that the
+elastic net often outperforms the lasso, while enjoying a similar
+sparsity of representation.</p></li>
+</ul>
+</section>
+<section id="penalization-summary-and-and-application-with-scikit-learn">
+<h3>Penalization: summary and and Application with scikit-learn<a class="headerlink" href="#penalization-summary-and-and-application-with-scikit-learn" title="Link to this heading">¶</a></h3>
+<section id="summary">
+<h4>Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Penalty
+Type</p></th>
+<th class="head"><p>Promotes
+Sparsity</p></th>
+<th class="head"><p>Handles
+M
+ulticollinearity</p></th>
+<th class="head"><p>Closed-Form
+Solution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ridge</p></td>
+<td><p>L2:
+:m
+ath:<cite>sum
+_j w_j^2</cite></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lasso</p></td>
+<td><p>L1:
+:mat
+h:<a href="#id1"><span class="problematic" id="id2">`</span></a>sum_j</p>
+<blockquote>
+<div><p>|w_j|`</p>
+</div></blockquote>
+</td>
+<td><p>Yes</p></td>
+<td><p>No (can be
+unstable)</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p>E
+lastic
+Net</p></td>
+<td><p>L1 + L2</p></td>
+<td><p>Yes (less
+than
+Lasso)</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="effect-on-problems-with-increasing-dimension">
+<h4>Effect on problems with increasing dimension<a class="headerlink" href="#effect-on-problems-with-increasing-dimension" title="Link to this heading">¶</a></h4>
 <p>The next figure shows the predicted performance (r-squared) on train and
 test sets with an increasing number of input features. The number of
 predictive features is always 10% of the total number of input features.
@@ -169,9 +322,27 @@ number of input features. The performances on the training set rapidly
 reach 100% (R2=1). However, the performance on the test set decreases
 with the increase of the input dimensionality. The difference between
 the train and test performances (blue shaded region) depicts the
-overfitting phenomena. Regularisation using penalties of the coefficient
+overfitting phenomena. Regularization using penalties of the coefficient
 vector norm greatly limits the overfitting phenomena.</p>
-<p>With scikit-learn:</p>
+</section>
+<section id="effect-on-solution-finding">
+<h4>Effect on solution finding<a class="headerlink" href="#effect-on-solution-finding" title="Link to this heading">¶</a></h4>
+<p>The ridge penalty shrinks the coefficients toward zero. The figure
+illustrates: the OLS solution on the left. The <span class="math notranslate nohighlight">\(\ell_1\)</span> and
+<span class="math notranslate nohighlight">\(\ell_2\)</span> penalties in the middle pane. The penalized OLS in the
+right pane. The right pane shows how the penalties shrink the
+coefficients toward zero. The black points are the minimum found in each
+case, and the white points represents the true solution used to generate
+the data.</p>
+<figure class="align-default" id="id6">
+<img alt=":math:`\ell_1` and :math:`\ell_2` shrinkages" src="../_images/ols_l1_l2.png" />
+<figcaption>
+<p><span class="caption-text"><span class="math notranslate nohighlight">\(\ell_1\)</span> and <span class="math notranslate nohighlight">\(\ell_2\)</span> shrinkages</span><a class="headerlink" href="#id6" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="application-with-scikit-learn">
+<h4>Application with scikit-learn<a class="headerlink" href="#application-with-scikit-learn" title="Link to this heading">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">l2</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>  <span class="c1"># lambda is alpha!</span>
 
 <span class="n">l1</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>  <span class="c1"># lambda is alpha !</span>
@@ -191,37 +362,7 @@ vector norm greatly limits the overfitting phenomena.</p>
 </pre></div>
 </div>
 </section>
-<section id="ridge-regression-ell-2-regularization">
-<h2>Ridge regression (<span class="math notranslate nohighlight">\(\ell_2\)</span>-regularization)<a class="headerlink" href="#ridge-regression-ell-2-regularization" title="Link to this heading">¶</a></h2>
-<p>Ridge regression impose a <span class="math notranslate nohighlight">\(\ell_2\)</span> penalty on the coefficients,
-i.e. it penalizes with the Euclidean norm of the coefficients while
-minimizing SSE. The objective function becomes:</p>
-<p>The <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> that minimises <span class="math notranslate nohighlight">\(F_{Ridge}(\mathbf{w})\)</span> can
-be found by the following derivation:</p>
-<ul class="simple">
-<li><p>The solution adds a positive constant to the diagonal of
-<span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span> before inversion. This makes the
-problem nonsingular, even if <span class="math notranslate nohighlight">\(\mathbf{X}^T\mathbf{X}\)</span> is not of
-full rank, and was the main motivation behind ridge regression.</p></li>
-<li><p>Increasing <span class="math notranslate nohighlight">\(\lambda\)</span> shrinks the <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> coefficients
-toward 0.</p></li>
-<li><p>This approach <strong>penalizes</strong> the objective function by the <strong>Euclidian
-(:math:`ell_2`) norm</strong> of the coefficients such that solutions with
-large coefficients become unattractive.</p></li>
-</ul>
-<p>The gradient of the loss:</p>
-<div class="math notranslate nohighlight">
-\[\partial\frac{L(\mathbf{w}, \mathbf{X}, \mathbf{y})}{\partial\mathbf{w}} = 2 (\sum_i \mathbf{x}_i (\mathbf{x}_i \cdot \mathbf{w} - y_i) + \lambda \mathbf{w})\]</div>
 </section>
-<section id="lasso-regression-ell-1-regularization">
-<h2>Lasso regression (<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)<a class="headerlink" href="#lasso-regression-ell-1-regularization" title="Link to this heading">¶</a></h2>
-<p>Lasso regression penalizes the coefficients by the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm.
-This constraint will reduce (bias) the capacity of the learning
-algorithm. To add such a penalty forces the coefficients to be small,
-i.e. it shrinks them toward zero. The objective function to minimize
-becomes:</p>
-<p>This penalty forces some coefficients to be exactly zero, providing a
-feature selection property.</p>
 <section id="sparsity-of-the-ell-1-norm">
 <h3>Sparsity of the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm<a class="headerlink" href="#sparsity-of-the-ell-1-norm" title="Link to this heading">¶</a></h3>
 <section id="occams-razor">
@@ -252,72 +393,6 @@ or (ii) embed the feature selection procedure within the learning
 process.</p></li>
 </ul>
 </section>
-<section id="sparsity-induced-penalty-or-embedded-feature-selection-with-the-ell-1-penalty">
-<h4>Sparsity-induced penalty or embedded feature selection with the <span class="math notranslate nohighlight">\(\ell_1\)</span> penalty<a class="headerlink" href="#sparsity-induced-penalty-or-embedded-feature-selection-with-the-ell-1-penalty" title="Link to this heading">¶</a></h4>
-<p>The penalty based on the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm promotes <strong>sparsity</strong>
-(scattered, or not dense): it forces many coefficients to be exactly
-zero. This also makes the coefficient vector scattered.</p>
-<p>The figure bellow illustrates the OLS loss under a constraint acting on
-the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm of the coefficient vector. I.e., it illustrates
-the following optimization problem:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{aligned}
-    \underset{\mathbf{w}}{\text{minimize}} ~&amp; \|\mathbf{y} - \mathbf{X}\mathbf{w}\|_2^2 \\
-    \text{subject to}                 ~&amp; \|\mathbf{w}\|_1 \leq 1.
-\end{aligned}\end{split}\]</div>
-<figure class="align-default" id="id3">
-<img alt="Sparsity of L1 norm" src="../_images/l1_sparse.png" />
-<figcaption>
-<p><span class="caption-text">Sparsity of L1 norm</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-</section>
-<section id="optimization-issues">
-<h3>Optimization issues<a class="headerlink" href="#optimization-issues" title="Link to this heading">¶</a></h3>
-<p><em>Section to be completed</em></p>
-<ul class="simple">
-<li><p>No more closed-form solution.</p></li>
-<li><p>Convex but not differentiable.</p></li>
-<li><p>Requires specific optimization algorithms, such as the fast iterative
-shrinkage-thresholding algorithm (FISTA): Amir Beck and Marc Teboulle,
-<em>A Fast Iterative Shrinkage-Thresholding Algorithm for Linear Inverse
-Problems</em> SIAM J. Imaging Sci., 2009.</p></li>
-</ul>
-<p>The ridge penalty shrinks the coefficients toward zero. The figure
-illustrates: the OLS solution on the left. The <span class="math notranslate nohighlight">\(\ell_1\)</span> and
-<span class="math notranslate nohighlight">\(\ell_2\)</span> penalties in the middle pane. The penalized OLS in the
-right pane. The right pane shows how the penalties shrink the
-coefficients toward zero. The black points are the minimum found in each
-case, and the white points represents the true solution used to generate
-the data.</p>
-<figure class="align-default" id="id4">
-<img alt=":math:`\ell_1` and :math:`\ell_2` shrinkages" src="../_images/ols_l1_l2.png" />
-<figcaption>
-<p><span class="caption-text"><span class="math notranslate nohighlight">\(\ell_1\)</span> and <span class="math notranslate nohighlight">\(\ell_2\)</span> shrinkages</span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
-</figcaption>
-</figure>
-</section>
-</section>
-<section id="elastic-net-regression-ell-1-ell-2-regularization">
-<h2>Elastic-net regression (<span class="math notranslate nohighlight">\(\ell_1\)</span>-<span class="math notranslate nohighlight">\(\ell_2\)</span>-regularization)<a class="headerlink" href="#elastic-net-regression-ell-1-ell-2-regularization" title="Link to this heading">¶</a></h2>
-<p>The Elastic-net estimator combines the <span class="math notranslate nohighlight">\(\ell_1\)</span> and <span class="math notranslate nohighlight">\(\ell_2\)</span>
-penalties, and results in the problem to</p>
-<p>where <span class="math notranslate nohighlight">\(\alpha\)</span> acts as a global penalty and <span class="math notranslate nohighlight">\(\rho\)</span> as an
-<span class="math notranslate nohighlight">\(\ell_1 / \ell_2\)</span> ratio.</p>
-<section id="rational">
-<h3>Rational<a class="headerlink" href="#rational" title="Link to this heading">¶</a></h3>
-<ul class="simple">
-<li><p>If there are groups of highly correlated variables, Lasso tends to
-arbitrarily select only one from each group. These models are
-difficult to interpret because covariates that are strongly associated
-with the outcome are not included in the predictive model. Conversely,
-the elastic net encourages a grouping effect, where strongly
-correlated predictors tend to be in or out of the model together.</p></li>
-<li><p>Studies on real world data and simulation studies show that the
-elastic net often outperforms the lasso, while enjoying a similar
-sparsity of representation.</p></li>
-</ul>
 </section>
 </section>
 <section id="regression-performance-evaluation-metrics-r-squared-mse-and-mae">
@@ -344,10 +419,10 @@ of squares of residuals unexplained by the regression,
 <span class="math notranslate nohighlight">\(SS_\text{res}\)</span>, also called the SSE, i.e. such that</p>
 <div class="math notranslate nohighlight">
 \[SS_\text{tot} = SS_\text{reg} + SS_\text{res}\]</div>
-<figure class="align-default" id="id5">
+<figure class="align-default" id="id7">
 <img alt="title" src="../_images/Coefficient_of_Determination.png" />
 <figcaption>
-<p><span class="caption-text">title</span><a class="headerlink" href="#id5" title="Link to this image">¶</a></p>
+<p><span class="caption-text">title</span><a class="headerlink" href="#id7" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>The mean of <span class="math notranslate nohighlight">\(y\)</span> is</p>
@@ -450,19 +525,28 @@ the given <span class="math notranslate nohighlight">\(F\)</span>-distribution.<
 <li><a class="reference internal" href="#minimizing-the-sum-of-squared-errors-sse-loss">Minimizing the Sum of Squared Errors (SSE) Loss</a></li>
 <li><a class="reference internal" href="#linear-regression-with-scikit-learn">Linear regression with scikit-learn</a></li>
 <li><a class="reference internal" href="#regularization-using-penalization-of-coefficients">Regularization using penalization of coefficients</a></li>
-<li><a class="reference internal" href="#ridge-regression-ell-2-regularization">Ridge regression (<span class="math notranslate nohighlight">\(\ell_2\)</span>-regularization)</a></li>
-<li><a class="reference internal" href="#lasso-regression-ell-1-regularization">Lasso regression (<span class="math notranslate nohighlight">\(\ell_1\)</span>-regularization)</a><ul>
+<li><a class="reference internal" href="#ridge-regression-ell-2-or-l2-regularization">Ridge Regression (<span class="math notranslate nohighlight">\(\ell_2\)</span> or L2 regularization)</a><ul>
+<li><a class="reference internal" href="#numerical-interpretation">Numerical Interpretation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#lasso-regression-ell-1-or-l1-regularization">Lasso Regression (<span class="math notranslate nohighlight">\(\ell_1\)</span> or L1 regularization)</a><ul>
+<li><a class="reference internal" href="#geometric-interpretation">Geometric interpretation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#elastic-net">Elastic Net</a><ul>
+<li><a class="reference internal" href="#rational">Rational</a></li>
+<li><a class="reference internal" href="#penalization-summary-and-and-application-with-scikit-learn">Penalization: summary and and Application with scikit-learn</a><ul>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#effect-on-problems-with-increasing-dimension">Effect on problems with increasing dimension</a></li>
+<li><a class="reference internal" href="#effect-on-solution-finding">Effect on solution finding</a></li>
+<li><a class="reference internal" href="#application-with-scikit-learn">Application with scikit-learn</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#sparsity-of-the-ell-1-norm">Sparsity of the <span class="math notranslate nohighlight">\(\ell_1\)</span> norm</a><ul>
 <li><a class="reference internal" href="#occams-razor">Occam’s razor</a></li>
 <li><a class="reference internal" href="#principle-of-parsimony">Principle of parsimony</a></li>
-<li><a class="reference internal" href="#sparsity-induced-penalty-or-embedded-feature-selection-with-the-ell-1-penalty">Sparsity-induced penalty or embedded feature selection with the <span class="math notranslate nohighlight">\(\ell_1\)</span> penalty</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#optimization-issues">Optimization issues</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#elastic-net-regression-ell-1-ell-2-regularization">Elastic-net regression (<span class="math notranslate nohighlight">\(\ell_1\)</span>-<span class="math notranslate nohighlight">\(\ell_2\)</span>-regularization)</a><ul>
-<li><a class="reference internal" href="#rational">Rational</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#regression-performance-evaluation-metrics-r-squared-mse-and-mae">Regression performance evaluation metrics: R-squared, MSE and MAE</a><ul>

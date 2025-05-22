@@ -126,7 +126,7 @@ This process is repeated on each derived subset in a recursive manner called rec
       <span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_score</span><span class="o">=</span><span class="n">y_prob</span><span class="p">)))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.92, AUC: 0.92
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.90, AUC: 0.90
 </pre></div>
 </div>
 </section>
@@ -155,7 +155,7 @@ This process is repeated on each derived subset in a recursive manner called rec
       <span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_score</span><span class="o">=</span><span class="n">y_prob</span><span class="p">)))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.91, AUC: 0.97
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.95, AUC: 0.98
 </pre></div>
 </div>
 <section id="random-forest">
@@ -181,7 +181,7 @@ Random forest models reduce the risk of overfitting by introducing randomness by
       <span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_score</span><span class="o">=</span><span class="n">y_prob</span><span class="p">)))</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.98
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.95, AUC: 0.99
 </pre></div>
 </div>
 </section>
@@ -193,11 +193,10 @@ Random forest models reduce the risk of overfitting by introducing randomness by
 <li><p>Train an initial weak model on the training data.</p></li>
 <li><p>Assign higher weights to misclassified instances to emphasize difficult cases.</p></li>
 <li><p>Train a new model on the updated dataset, repeating the process iteratively.</p></li>
+<li><p>Combine the predictions of all models using a weighted sum.</p></li>
 </ol>
-<p>4. Combine the predictions of all models using a weighted sum.
-%%
-Gradient boosting
-~~~~~~~~~~~~~~~~~</p>
+<section id="gradient-boosting">
+<h3>Gradient boosting<a class="headerlink" href="#gradient-boosting" title="Link to this heading">¶</a></h3>
 <p>Popular boosting algorithms include <strong>AdaBoost</strong>, <strong>Gradient Boosting Machines (GBM)</strong>, <strong>XGBoost</strong>, and <strong>LightGBM</strong>.</p>
 <p><strong>Key Benefits:</strong></p>
 <ul class="simple">
@@ -233,6 +232,7 @@ It thus controls for over-fitting reducing variance and increasing bias.</p></li
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.94, AUC: 0.99
 </pre></div>
 </div>
+</section>
 </section>
 <section id="stacking">
 <h2>Stacking<a class="headerlink" href="#stacking" title="Link to this heading">¶</a></h2>
@@ -270,7 +270,7 @@ It thus controls for over-fitting reducing variance and increasing bias.</p></li
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>bAcc: 0.97, AUC: 0.99
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.459 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.056 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-gallery-ensemble-learning-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/600006aa44e07fbd36399eea548d60e9/ensemble_learning.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ensemble_learning.ipynb</span></code></a></p>
@@ -303,7 +303,10 @@ It thus controls for over-fitting reducing variance and increasing bias.</p></li
 <li><a class="reference internal" href="#random-forest">Random Forest</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#boosting-and-gradient-boosting">Boosting and Gradient boosting</a></li>
+<li><a class="reference internal" href="#boosting-and-gradient-boosting">Boosting and Gradient boosting</a><ul>
+<li><a class="reference internal" href="#gradient-boosting">Gradient boosting</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#stacking">Stacking</a></li>
 </ul>
 </li>

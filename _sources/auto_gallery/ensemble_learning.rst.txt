@@ -152,7 +152,7 @@ A single decision tree is usually overfits the data it is learning from because 
 
  .. code-block:: none
 
-    bAcc: 0.92, AUC: 0.92 
+    bAcc: 0.90, AUC: 0.90 
 
 
 
@@ -199,7 +199,7 @@ Bagging is an ensemble method that aims to reduce variance by training multiple 
 
  .. code-block:: none
 
-    bAcc: 0.91, AUC: 0.97 
+    bAcc: 0.95, AUC: 0.98 
 
 
 
@@ -244,12 +244,12 @@ Random forest models reduce the risk of overfitting by introducing randomness by
 
  .. code-block:: none
 
-    bAcc: 0.94, AUC: 0.98 
+    bAcc: 0.95, AUC: 0.99 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-173
+.. GENERATED FROM PYTHON SOURCE LINES 139-148
 
 Boosting and Gradient boosting
 ------------------------------
@@ -260,7 +260,9 @@ Boosting is an ensemble method that focuses on reducing bias by training models 
 2. Assign higher weights to misclassified instances to emphasize difficult cases.
 3. Train a new model on the updated dataset, repeating the process iteratively.
 4. Combine the predictions of all models using a weighted sum.
-%%
+
+.. GENERATED FROM PYTHON SOURCE LINES 150-174
+
 Gradient boosting
 ~~~~~~~~~~~~~~~~~
 
@@ -286,7 +288,7 @@ The two main hyper-parameters are:
    :width: 500
    :alt: Gradient boosting.
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-186
+.. GENERATED FROM PYTHON SOURCE LINES 174-187
 
 .. code-block:: Python
 
@@ -316,7 +318,7 @@ The two main hyper-parameters are:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-203
+.. GENERATED FROM PYTHON SOURCE LINES 188-204
 
 Stacking
 --------
@@ -335,7 +337,7 @@ Stacking (or stacked generalization) is a more complex ensemble technique that c
 - Captures complex relationships between models.
 - Can outperform traditional ensemble methods when well-tuned.
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-220
+.. GENERATED FROM PYTHON SOURCE LINES 204-221
 
 .. code-block:: Python
 
@@ -372,7 +374,7 @@ Stacking (or stacked generalization) is a more complex ensemble technique that c
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.459 seconds)
+   **Total running time of the script:** (0 minutes 1.056 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_ensemble_learning.py:

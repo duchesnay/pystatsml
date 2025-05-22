@@ -60,8 +60,8 @@ Computation time:
 
  .. code-block:: none
 
-    Python code, time ellapsed: 6.44s
-    Numpy code, time ellapsed: 0.44s
+    Python code, time ellapsed: 7.72s
+    Numpy code, time ellapsed: 0.56s
 
 
 
@@ -1031,7 +1031,7 @@ Given the array:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.898 seconds)
+   **Total running time of the script:** (0 minutes 8.314 seconds)
 
 
 .. _sphx_glr_download_auto_gallery_data_numpy.py:

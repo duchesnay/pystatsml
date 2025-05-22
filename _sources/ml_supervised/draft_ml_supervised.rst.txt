@@ -1,0 +1,68 @@
+Loss Functions for Classification
+---------------------------------
+
+In classification tasks, the goal is to assign inputs to discrete
+classes. Unlike regression, we model probabilities of class membership
+and use loss functions that penalize incorrect class predictions by
+comparing predicted probabilities to true labels.
+
+Negative Log-Likelihood (NLL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The **Negative Log-Likelihood (NLL)** for a dataset of observations
+:math:`\{(\mathbf{x}_i, y_i)\}_{i=1}^n`, where each :math:`\mathbf{x}_i`
+is an input and :math:`y_i` is the corresponding label. The NLL measures
+how well a probabilistic model predicts the true class label.
+
+**General Formulation of NLL**
+
+Given a **probabilistic model** that predicts
+:math:`P(y_i \mid \mathbf{x}_i; \theta)`, where :math:`\theta` are the
+model parameters (e.g., weights in a neural network or logistic
+regression), the **Negative Log-Likelihood** over the dataset is:
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}}(\theta) = - \sum_{i=1}^n \log P(y_i \mid \mathbf{x}_i; \theta)
+
+This expression encourages the model to assign **high probability** to
+the **correct labels**.
+
+**Binary Classification (Sigmoid Output)**
+
+For binary labels :math:`y_i \in \{0, 1\}`, and using:
+
+.. math::
+
+
+   P(y_i = 1 \mid \mathbf{x}_i; \theta) = \hat{p}_i = \sigma(\mathbf{w}^\top \mathbf{x}_i)
+
+The NLL becomes:
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]
+
+**Multiclass Classification (Softmax Output)**
+
+Assume :math:`y_i \in \{1, 2, \dots, K\}`, and the model outputs softmax
+probabilities
+:math:`\hat{p}_{i,k} = P(y_i = k \mid \mathbf{x}_i; \theta)`. Then:
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \log \hat{p}_{i, y_i}
+
+If you use one-hot encoded labels :math:`\mathbf{y}_i`, the NLL is also
+written as:
+
+.. math::
+
+
+   \mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \sum_{k=1}^K y_{i,k} \log(\hat{p}_{i,k})
+
+This is equivalent to the **cross-entropy loss** when combined with
+softmax.

@@ -98,13 +98,12 @@ Mean
 Properties of the expected value operator
 :math:`\operatorname{E}(\cdot)` of a random variable :math:`X`
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
+
        E(X + c) &= E(X) + c \\ 
        E(X + Y) &= E(X) + E(Y) \\ 
        E(aX)    &= a E(X)
-   \end{align}
 
 The estimator :math:`\bar{x}` on a sample of size :math:`n`:
 :math:`x = x_1, ..., x_n` is given by
@@ -112,7 +111,7 @@ The estimator :math:`\bar{x}` on a sample of size :math:`n`:
 .. math::
 
 
-       \bar{x} = \frac{1}{n} \sum_i x_i
+   \boxed{\bar{x} = \frac{1}{n} \sum_i x_i}
 
 :math:`\bar{x}` is itself a random variable with properties:
 
@@ -133,7 +132,7 @@ The estimator is
 .. math::
 
 
-       \sigma_x^2 = \frac{1}{n-1} \sum_i (x_i - \bar{x})^2
+   \boxed{\sigma_x^2 = \frac{1}{n-1} \sum_i (x_i - \bar{x})^2}
 
 Note here the subtracted 1 degree of freedom (df) in the divisor. In
 standard statistical practice, :math:`df=1` provides an unbiased
@@ -161,14 +160,13 @@ Covariance
 
 Properties:
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
+
        \operatorname{Cov}(X, X) &= \operatorname{Var}(X)\\
        \operatorname{Cov}(X, Y) &= \operatorname{Cov}(Y, X)\\
        \operatorname{Cov}(cX, Y) &= c \operatorname{Cov}(X, Y)\\
        \operatorname{Cov}(X+c, Y) &= \operatorname{Cov}(X, Y)\\
-   \end{align}
 
 The estimator with :math:`df=1` is
 
@@ -196,24 +194,17 @@ Standard Error (SE)
 ~~~~~~~~~~~~~~~~~~~
 
 The standard error (SE) is the standard deviation (of the sampling
-distribution) of a statistic:
+distribution) of a statistic. It is most commonly considered for the
+estimator of the mean (:math:`\bar{x}`) whose estimator
+:math:`\sigma_{\bar{x}}` is:
 
 .. math::
 
 
-       \operatorname{SE}(X) = \frac{\operatorname{Std}(X)}{\sqrt{n}}.
+   \boxed{\sigma_{\bar{x}} = \frac{\sigma_x}{\sqrt{n}}}
 
-It is most commonly considered for the mean with the estimator
-
-.. raw:: latex
-
-   \begin{align}
-   \operatorname{SE}(X) &= \operatorname{Std}(X) = \sigma_{\bar{x}}\\
-         &= \frac{\sigma_x}{\sqrt{n}}.
-   \end{align}
-
-Descriptives statistics with Numpy
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Descriptive statistics with Numpy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Generate 2 random samples: :math:`x \sim N(1.78, 0.1)` and
   :math:`y \sim N(1.66, 0.1)`, both of size 10.
@@ -666,24 +657,26 @@ samples of size 30 or more, is approximately normally distributed:
 
 Simple but useful demonstrations:
 
-.. raw:: latex
+.. math::
 
-   \begin{align*}
-   E[\bar{X}_n] = & E[\frac{1}{n}\sum^n_i X_i]\\
-   & \frac{1}{n} \sum^n_i E[X_i], X_i~\text{are i.i.d., i.e., }~E[X_i] = \mu_X \forall i\\
-   & \frac{1}{n}  n \mu_X\\
-   &  \mu_X\\
-   \end{align*}
 
-.. raw:: latex
+   E[\bar{X}_n] =  E[\frac{1}{n}\sum^n_i X_i] =\frac{1}{n} \sum^n_i E[X_i],\\
+   \text{since}~X_i~\text{are i.i.d., i.e., }~E[X_i] = \mu_X \forall i~\text{then} \\
+   =\frac{1}{n}  n \mu_X = \mu_X
 
-   \begin{align*}
-   Var[\bar{X}_n] = & Var[\frac{1}{n}\sum^n_i X_i] \\
-   & (\frac{1}{n})^2  \sum^2_X, X_i~\text{are i.i.d., i.e., }~Var[X_i] = \sigma^2_X \forall i\\
-   & (\frac{1}{n})^2  n \sigma^2_X\\
-   & \sigma_X^2/n\\
-   Sd[\bar{X}_n] = & \sigma_X/\sqrt{n}
-   \end{align*}
+.. math::
+
+
+   Var[\bar{X}_n] = Var[\frac{1}{n}\sum^n_i X_i] = (\frac{1}{n})^2  \sum^2_X Var[X_i],\\
+   \text{since}~X_i~\text{are i.i.d., i.e., }~Var[X_i] = \sigma^2_X \forall i~\text{then}\\
+   = (\frac{1}{n})^2  n \sigma^2_X = \sigma_X^2/n
+
+and
+
+.. math::
+
+
+   Sd[\bar{X}_n] = \sigma_X/\sqrt{n}
 
 Note that the **standard deviation of the sample mean is the standard
 deviation of the parent RV scaled by** :math:`\sqrt{n}`. The larger the
@@ -889,14 +882,18 @@ Assess the deviation of the test statistic from its expected value under
 What is the probability that the computed test statistic :math:`\bar{X}`
 would be observed under pure chance? I.e., What is the probability that
 the test statistics under :math:`H_0` would be more extreme, i.e.,
-“larger” or “smaller” than :math:`\bar{X}`? \* Calculate the
-distribution of test statistic :math:`X` under :math:`H_0`. \* Compute
-the probability (P-value) to obtain a larger test statistic by chance
-(under the null hypothesis).
+“larger” or “smaller” than :math:`\bar{X}`?
+
+- Calculate the distribution of test statistic :math:`X` under
+  :math:`H_0`.
+- Compute the probability (P-value) to obtain a larger test statistic by
+  chance (under the null hypothesis).
 
 For a symmetric distribution the two sided p-value :math:`P` is defined
-as: - :math:`P(\bar{X} \leq X | H_0) = P/2`, or -
-:math:`P(X \geq \bar{X}) = P/2`
+as:
+
+- :math:`P(\bar{X} \leq X | H_0) = P/2`, or
+- :math:`P(X \geq \bar{X}) = P/2`
 
 :math:`\bar{X}` is declared to be **significantly different to the null
 hypothesis** if the p-value is less than a **significance level**
@@ -915,9 +912,10 @@ The 95% CI (Confidence Interval) is the range of values :math:`x_1, x_2`
 such :math:`P(x_1 < \bar{X} < x_2) = 95\%`.
 
 For a symmetric distribution the two sided :math:`95\% (= 1 - 5\%)`
-confidence interval, is defined as: - :math:`x_1` such
-:math:`P(\bar{X} \leq x_1) = 2.5\% =5\%/2` - :math:`x_2` such
-:math:`P(x_2 \leq \bar{X}) = 2.5\%`
+confidence interval, is defined as:
+
+- :math:`x_1` such :math:`P(\bar{X} \leq x_1) = 2.5\% =5\%/2`
+- :math:`x_2` such :math:`P(x_2 \leq \bar{X}) = 2.5\%`
 
 Terminology
 
@@ -1444,22 +1442,19 @@ Fit: estimate the model parameters, means and variances:
 
 The general principle is
 
-.. raw:: latex
+.. math::
 
-   \begin{align*}
+
    t &= \frac{\text{difference of means}}{\text{standard dev of error}} = \frac{\bar{y_1}-\bar{y_2}}{s_{\bar{y_1}-\bar{y_2}}}\\
      &= \frac{\bar{y_1}-\bar{y_2}}{\sqrt{\sum\varepsilon^2}}\sqrt{n-2}
-   \end{align*}
 
-Since :math:`y_1` and :math:`y_2` are independant:
+Since :math:`y_1` and :math:`y_2` are independent:
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
-   s^2_{\bar{y_1}-\bar{y_2}} &= s^2_{\bar{y_1}} + s^2_{\bar{y_2}} = \frac{s^2_{y_1}}{n_1} + \frac{s^2_{y_2}}{n_2}\\
-   \text{thus}\\
+
+   s^2_{\bar{y_1}-\bar{y_2}} &= s^2_{\bar{y_1}} + s^2_{\bar{y_2}} = \frac{s^2_{y_1}}{n_1} + \frac{s^2_{y_2}}{n_2},~\text{thus}\\
    s_{\bar{y_1}-\bar{y_2}} &= \sqrt{\frac{s^2_{y_1}}{n_1} + \frac{s^2_{y_2}}{n_2}}
-   \end{align}
 
 Equal or unequal sample sizes, unequal variances (Welch’s :math:`t`-test)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1487,12 +1482,11 @@ If we assume equal variance (ie, :math:`s^2_{y_1} = s^2_{y_1} = s^2`),
 where :math:`s^2` is an estimator of the common variance of the two
 samples:
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
+
    s^2 &= \frac{s_{y_1}^2(n_1-1)+s_{y_2}^2(n_2-1)}{n_1+n_2-2}\\
        &= \frac{\sum_i^{n_1} (y_{1i} -\bar{y_1})^2 + \sum_j^{n_2} (y_{2j} -\bar{y_2})^2}{(n_1 - 1) + (n_2 - 1)}
-   \end{align}
 
 then
 
@@ -1515,12 +1509,11 @@ Equal sample sizes, equal variances
 If we simplify the problem assuming equal samples of size
 :math:`n_1 = n_2 = n/2` we get
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
+
    t &= \frac{\bar{y_1} - \bar{y_2}}{s} \cdot \sqrt{n}\\
-   &\approx \frac{\text{difference of means}}{\text{standard deviation of the noise}} \cdot \sqrt{n} = &\approx \text{effect size} \cdot \sqrt{n}
-   \end{align}
+   &\approx \frac{\text{difference of means}}{\text{standard deviation of the noise}} \cdot \sqrt{n} = \approx \text{effect size} \cdot \sqrt{n}
 
 Example
 ^^^^^^^
@@ -1558,9 +1551,7 @@ statistical significance. It is conceptually similar to multiple
 two-sample :math:`t`-tests, but is less conservative.
 
 Here we will consider one-way ANOVA with one independent variable, ie
-one-way anova.
-
-`Wikipedia <https://en.wikipedia.org/wiki/F-test>`__:
+one-way ANOVA, `see <https://en.wikipedia.org/wiki/F-test>`__:
 
 - Test if any group is on average superior, or inferior, to the others
   versus the null hypothesis that all four strategies yield the same
@@ -1605,12 +1596,11 @@ Estimate means and variances:
 
 The formula for the one-way ANOVA F-test statistic is
 
-.. raw:: latex
+.. math::
 
-   \begin{align}
+
    F &= \frac{\text{Explained variance}}{\text{Unexplained variance}}\\
    &=\frac{\text{Between-group variability}}{\text{Within-group variability}} = \frac{s^2_B}{s^2_W}.
-   \end{align}
 
 The “explained variance”, or “between-group variability” is
 
@@ -2226,16 +2216,14 @@ rewritten**:
 
 The :math:`\beta` that minimizes the MSE can be found by:
 
-.. raw:: latex
-
-   \begin{align}
-   \nabla_\beta \left(\frac{1}{N} ||y - X\beta||_2^2\right) &= 0\\
-   \frac{1}{N}\nabla_\beta (y - X\beta)^T (y - X\beta) &= 0\\
-   \frac{1}{N}\nabla_\beta (y^Ty - 2 \beta^TX^Ty + \beta^T X^TX\beta) &= 0\\
-       -2X^Ty + 2 X^TX\beta &= 0\\
-       X^TX\beta &= X^Ty\\
-       \beta &= (X^TX)^{-1} X^Ty,
-   \end{align}
+:raw-latex:`\begin{align}
+\nabla_\beta \left(\frac{1}{N} ||y - X\beta||_2^2\right) &= 0\\
+\frac{1}{N}\nabla_\beta (y - X\beta)^T (y - X\beta) &= 0\\
+\frac{1}{N}\nabla_\beta (y^Ty - 2 \beta^TX^Ty + \beta^T X^TX\beta) &= 0\\
+    -2X^Ty + 2 X^TX\beta &= 0\\
+    X^TX\beta &= X^Ty\\
+    \beta &= (X^TX)^{-1} X^Ty,
+\end{align}`
 
 where :math:`(X^TX)^{-1} X^T` is a pseudo inverse of :math:`X`.
 
@@ -2329,8 +2317,8 @@ Interface with statsmodels without formulae (``sm``)
     Dep. Variable:                      y   R-squared:                       0.363
     Model:                            OLS   Adj. R-squared:                  0.322
     Method:                 Least Squares   F-statistic:                     8.748
-    Date:                Thu, 03 Apr 2025   Prob (F-statistic):           0.000106
-    Time:                        13:00:31   Log-Likelihood:                -71.271
+    Date:                Wed, 14 May 2025   Prob (F-statistic):           0.000106
+    Time:                        23:26:21   Log-Likelihood:                -71.271
     No. Observations:                  50   AIC:                             150.5
     Df Residuals:                      46   BIC:                             158.2
     Df Model:                           3                                         
@@ -2379,8 +2367,8 @@ Use ``R`` language syntax for data.frame. For an additive model:
     Dep. Variable:                      y   R-squared:                       0.363
     Model:                            OLS   Adj. R-squared:                  0.322
     Method:                 Least Squares   F-statistic:                     8.748
-    Date:                Thu, 03 Apr 2025   Prob (F-statistic):           0.000106
-    Time:                        13:00:31   Log-Likelihood:                -71.271
+    Date:                Wed, 14 May 2025   Prob (F-statistic):           0.000106
+    Time:                        23:26:21   Log-Likelihood:                -71.271
     No. Observations:                  50   AIC:                             150.5
     Df Residuals:                      46   BIC:                             158.2
     Df Model:                           3                                         
@@ -2600,27 +2588,25 @@ Multiple Comparisons
 
 .. code:: ipython3
 
-    np.random.seed(seed=42)  # make example reproducible
-    
     # Dataset
-    n_samples, n_features = 100, 1000
-    n_info = int(n_features/10)  # number of features with information
-    n1, n2 = int(n_samples/2), n_samples - int(n_samples/2)
-    snr = .5
-    Y = np.random.randn(n_samples, n_features)
-    grp = np.array(["g1"] * n1 + ["g2"] * n2)
     
-    # Add some group effect for Pinfo features
-    Y[grp=="g1", :n_info] += snr
+    from pystatsml import datasets
     
-    # 
+    n_features, n_informative = 1000, 100
+    Y, grp = datasets.make_twosamples(n_samples=100,
+                                      n_features=n_features, n_informative=n_informative,
+                             group_scale=.5, noise_scale=1, shared_scale=0,
+                             random_state=42)
+    
+    # Stats
     import scipy.stats as stats
     #import matplotlib.pyplot as plt
     tvals, pvals = np.full(n_features, np.nan), np.full(n_features, np.nan)
     for j in range(n_features):
-        tvals[j], pvals[j] = stats.ttest_ind(Y[grp=="g1", j], Y[grp=="g2", j],
+        tvals[j], pvals[j] = stats.ttest_ind(Y[grp==0, j], Y[grp==1, j],
                                              equal_var=True)
     
+    # Plot
     fig, axis = plt.subplots(3, 1, figsize=(9, 9))#, sharex='col')
     
     axis[0].plot(range(n_features), tvals, 'o')
@@ -2632,7 +2618,7 @@ Multiple Comparisons
     axis[1].set_ylabel("p-value")
     axis[1].legend()
     
-    axis[2].hist([pvals[n_info:], pvals[:n_info]], 
+    axis[2].hist([pvals[n_informative:], pvals[:n_informative]], 
         stacked=True, bins=100, label=["Negatives", "Positives"])
     axis[2].set_xlabel("p-value histogram")
     axis[2].set_ylabel("density")
@@ -2670,12 +2656,6 @@ Statistical measures:
     FP = np.sum(pvals[n_info: ] < 0.05)  # False Positives
     print("No correction, FP: %i (expected: %.2f), TP: %i" % (FP, N * 0.05, TP))
 
-
-.. parsed-literal::
-
-    No correction, FP: 47 (expected: 45.00), TP: 71
-
-
 Bonferroni Correction for Multiple Comparisons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2703,12 +2683,6 @@ each individual hypothesis at :math:`\alpha = 0.05/8 = 0.00625`.
     FP = np.sum(pvals_fwer[n_info: ] < 0.05)  # False Positives
     print("FWER correction, FP: %i, TP: %i" % (FP, TP))
 
-
-.. parsed-literal::
-
-    FWER correction, FP: 0, TP: 6
-
-
 The False Discovery Rate (FDR) Correction for Multiple Comparisons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2729,9 +2703,3 @@ rates of Type I errors.
     FP = np.sum(pvals_fdr[n_info: ] < 0.05)  # False Positives
     
     print("FDR correction, FP: %i, TP: %i" % (FP, TP))
-
-
-.. parsed-literal::
-
-    FDR correction, FP: 3, TP: 20
-

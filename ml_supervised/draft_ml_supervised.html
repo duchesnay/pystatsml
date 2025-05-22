@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Loss Functions for Classification &#8212; Statistics and Machine Learning in Python 0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Statistics and Machine Learning in Python 0.8 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="loss-functions-for-classification">
+<h1>Loss Functions for Classification<a class="headerlink" href="#loss-functions-for-classification" title="Link to this heading">¶</a></h1>
+<p>In classification tasks, the goal is to assign inputs to discrete
+classes. Unlike regression, we model probabilities of class membership
+and use loss functions that penalize incorrect class predictions by
+comparing predicted probabilities to true labels.</p>
+<section id="negative-log-likelihood-nll">
+<h2>Negative Log-Likelihood (NLL)<a class="headerlink" href="#negative-log-likelihood-nll" title="Link to this heading">¶</a></h2>
+<p>The <strong>Negative Log-Likelihood (NLL)</strong> for a dataset of observations
+<span class="math notranslate nohighlight">\(\{(\mathbf{x}_i, y_i)\}_{i=1}^n\)</span>, where each <span class="math notranslate nohighlight">\(\mathbf{x}_i\)</span>
+is an input and <span class="math notranslate nohighlight">\(y_i\)</span> is the corresponding label. The NLL measures
+how well a probabilistic model predicts the true class label.</p>
+<p><strong>General Formulation of NLL</strong></p>
+<p>Given a <strong>probabilistic model</strong> that predicts
+<span class="math notranslate nohighlight">\(P(y_i \mid \mathbf{x}_i; \theta)\)</span>, where <span class="math notranslate nohighlight">\(\theta\)</span> are the
+model parameters (e.g., weights in a neural network or logistic
+regression), the <strong>Negative Log-Likelihood</strong> over the dataset is:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}}(\theta) = - \sum_{i=1}^n \log P(y_i \mid \mathbf{x}_i; \theta)\]</div>
+<p>This expression encourages the model to assign <strong>high probability</strong> to
+the <strong>correct labels</strong>.</p>
+<p><strong>Binary Classification (Sigmoid Output)</strong></p>
+<p>For binary labels <span class="math notranslate nohighlight">\(y_i \in \{0, 1\}\)</span>, and using:</p>
+<div class="math notranslate nohighlight">
+\[P(y_i = 1 \mid \mathbf{x}_i; \theta) = \hat{p}_i = \sigma(\mathbf{w}^\top \mathbf{x}_i)\]</div>
+<p>The NLL becomes:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \left[ y_i \log(\hat{p}_i) + (1 - y_i) \log(1 - \hat{p}_i) \right]\]</div>
+<p><strong>Multiclass Classification (Softmax Output)</strong></p>
+<p>Assume <span class="math notranslate nohighlight">\(y_i \in \{1, 2, \dots, K\}\)</span>, and the model outputs softmax
+probabilities
+<span class="math notranslate nohighlight">\(\hat{p}_{i,k} = P(y_i = k \mid \mathbf{x}_i; \theta)\)</span>. Then:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \log \hat{p}_{i, y_i}\]</div>
+<p>If you use one-hot encoded labels <span class="math notranslate nohighlight">\(\mathbf{y}_i\)</span>, the NLL is also
+written as:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_{\text{NLL}} = - \sum_{i=1}^n \sum_{k=1}^K y_{i,k} \log(\hat{p}_{i,k})\]</div>
+<p>This is equivalent to the <strong>cross-entropy loss</strong> when combined with
+softmax.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Loss Functions for Classification</a><ul>
+<li><a class="reference internal" href="#negative-log-likelihood-nll">Negative Log-Likelihood (NLL)</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ml_supervised/draft_ml_supervised.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2020, Edouard Duchesnay, NeuroSpin CEA Université Paris-Saclay, France.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/ml_supervised/draft_ml_supervised.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
