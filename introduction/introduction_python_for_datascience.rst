@@ -83,7 +83,7 @@ Overview of Python ecosystem for data-science
 ::
 
     import pandas as pd
-    data = pandas.read_excel("datasets/iris.xls")
+    data = pd.read_excel("datasets/iris.xls")
     print(data.head())
     Out[8]: 
     sepal_length  sepal_width  petal_length  petal_width species
@@ -196,7 +196,7 @@ Linux & macOS
 Windows
 ::
 
-    iwr -useb https://pixi.sh/install.ps1 | iex
+    powershell -ExecutionPolicy ByPass -c "irm -useb https://pixi.sh/install.ps1 | iex"
 
 
 
@@ -207,8 +207,9 @@ Windows
 
     pixi init myenv
     cd myenv
-    pixi add python=3.8
-    pixi add scikit-learn pandas statsmodels seaborn
+    pixi add python
+    pixi add ipykernel
+    pixi add scikit-learn pandas statsmodels seaborn openpyxl
     pixi add spyder spyder-kernels
 
 
@@ -418,7 +419,7 @@ Visual Studio Code (VS Code)
 Setup
 
 - `Installation <https://code.visualstudio.com/>`_.
-- Tuto for `Linux <https://linuxhint.com/install-visual-studio-code-ubuntu22-04/>`_.pen the Command Palette (Ctrl+Shift+P)
+- Tuto for `Linux <https://linuxhint.com/install-visual-studio-code-ubuntu22-04/>`_.
 - Useful settings for python: `VS Code for python <https://code.visualstudio.com/docs/python/python-quick-start>`_
 - Extensions for data-science in python: ``Python, Jupyter, Python Extension Pack, Python Pylance, Path Intellisense``
 
@@ -435,6 +436,7 @@ Execution, three possibilities:
       in settings (gear wheel or ``CTL,``: press control and comma keys),
       check box: ``Jupyter > Interactive Window Text Editor > Execute Selection``
 
+`VS code with pixi` <https://pixi.sh/dev/integration/editor/vscode/>`_
 
 `Remote Development using SSH <https://code.visualstudio.com/docs/remote/ssh>`_
 
