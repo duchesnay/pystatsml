@@ -27,10 +27,42 @@ import pandas as pd
 import numpy as np
 
 ##############################################################################
+# The pandas library at a glance
+# ------------------------------
+
+data = pd.read_excel("../datasets/brain_volumes/brain_volumes.xlsx")
+data.columns
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Boxplot of gm_vol by sex
+sns.boxplot(x="sex", y="gm_vol", data=data)
+
+
+# Scatterplot with regression line
+sns.lmplot(x="age", y="gm_vol", data=data,
+           scatter_kws={"alpha":0.6},   # transparency for points
+           line_kws={"color":"red"})    # regression line color
+
+
+sns.lmplot(
+    x="age", y="gm_vol",
+    hue="sex",           # couleurs par sexe
+    data=data,
+    scatter_kws={"alpha": 0.6},  # transparence des points
+    ci=None               # supprime l'intervalle de confiance (optionnel)
+)
+
+
+
+##############################################################################
 # Create DataFrame
 # ----------------
 
 columns = ['name', 'age', 'gender', 'job']
+
 
 user1 = pd.DataFrame([['alice', 19, "F", "student"],
                       ['john', 26, "M", "student"]],
